@@ -1,0 +1,516 @@
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccZMwLeU.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"rt_nonfinite.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.text.rt_InitInfAndNaN,"ax",%progbits
+  20              		.align	1
+  21              		.global	rt_InitInfAndNaN
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	rt_InitInfAndNaN:
+  27              	.LVL0:
+  28              	.LFB0:
+  29              		.file 1 "rt_nonfinite.c"
+   1:rt_nonfinite.c **** /*
+   2:rt_nonfinite.c ****  * File: rt_nonfinite.c
+   3:rt_nonfinite.c ****  *
+   4:rt_nonfinite.c ****  * Code generated for Simulink model 'StandSpeed_Balance'.
+   5:rt_nonfinite.c ****  *
+   6:rt_nonfinite.c ****  * Model version                  : 1.5
+   7:rt_nonfinite.c ****  * Simulink Coder version         : 9.6 (R2021b) 14-May-2021
+   8:rt_nonfinite.c ****  * C/C++ source code generated on : Fri Feb 24 14:50:35 2023
+   9:rt_nonfinite.c ****  *
+  10:rt_nonfinite.c ****  * Target selection: stacklite_dualdrive.tlc
+  11:rt_nonfinite.c ****  * Embedded hardware selection: Intel->x86-64 (Windows64)
+  12:rt_nonfinite.c ****  * Code generation objectives: Unspecified
+  13:rt_nonfinite.c ****  * Validation result: Not run
+  14:rt_nonfinite.c ****  */
+  15:rt_nonfinite.c **** 
+  16:rt_nonfinite.c **** /*
+  17:rt_nonfinite.c ****  * Abstract:
+  18:rt_nonfinite.c ****  *      Function to initialize non-finites,
+  19:rt_nonfinite.c ****  *      (Inf, NaN and -Inf).
+  20:rt_nonfinite.c ****  */
+  21:rt_nonfinite.c **** #include "rt_nonfinite.h"
+  22:rt_nonfinite.c **** #include "rtGetNaN.h"
+  23:rt_nonfinite.c **** #include "rtGetInf.h"
+  24:rt_nonfinite.c **** #define NumBitsPerChar                 8U
+  25:rt_nonfinite.c **** 
+  26:rt_nonfinite.c **** real_T rtInf;
+  27:rt_nonfinite.c **** real_T rtMinusInf;
+  28:rt_nonfinite.c **** real_T rtNaN;
+  29:rt_nonfinite.c **** real32_T rtInfF;
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccZMwLeU.s 			page 2
+
+
+  30:rt_nonfinite.c **** real32_T rtMinusInfF;
+  31:rt_nonfinite.c **** real32_T rtNaNF;
+  32:rt_nonfinite.c **** 
+  33:rt_nonfinite.c **** /*
+  34:rt_nonfinite.c ****  * Initialize the rtInf, rtMinusInf, and rtNaN needed by the
+  35:rt_nonfinite.c ****  * generated code. NaN is initialized as non-signaling. Assumes IEEE.
+  36:rt_nonfinite.c ****  */
+  37:rt_nonfinite.c **** void rt_InitInfAndNaN(size_t realSize)
+  38:rt_nonfinite.c **** {
+  30              		.loc 1 38 1 view -0
+  31              		.cfi_startproc
+  32              		@ args = 0, pretend = 0, frame = 0
+  33              		@ frame_needed = 0, uses_anonymous_args = 0
+  34              		.loc 1 38 1 is_stmt 0 view .LVU1
+  35 0000 08B5     		push	{r3, lr}
+  36              	.LCFI0:
+  37              		.cfi_def_cfa_offset 8
+  38              		.cfi_offset 3, -8
+  39              		.cfi_offset 14, -4
+  39:rt_nonfinite.c ****   (void) (realSize);
+  40              		.loc 1 39 3 is_stmt 1 view .LVU2
+  40:rt_nonfinite.c ****   rtNaN = rtGetNaN();
+  41              		.loc 1 40 3 view .LVU3
+  42              		.loc 1 40 11 is_stmt 0 view .LVU4
+  43 0002 FFF7FEFF 		bl	rtGetNaN
+  44              	.LVL1:
+  45              		.loc 1 40 9 view .LVU5
+  46 0006 0E4B     		ldr	r3, .L3
+  47 0008 83ED000B 		vstr.64	d0, [r3]
+  41:rt_nonfinite.c ****   rtNaNF = rtGetNaNF();
+  48              		.loc 1 41 3 is_stmt 1 view .LVU6
+  49              		.loc 1 41 12 is_stmt 0 view .LVU7
+  50 000c FFF7FEFF 		bl	rtGetNaNF
+  51              	.LVL2:
+  52              		.loc 1 41 10 view .LVU8
+  53 0010 0C4B     		ldr	r3, .L3+4
+  54 0012 83ED000A 		vstr.32	s0, [r3]
+  42:rt_nonfinite.c ****   rtInf = rtGetInf();
+  55              		.loc 1 42 3 is_stmt 1 view .LVU9
+  56              		.loc 1 42 11 is_stmt 0 view .LVU10
+  57 0016 FFF7FEFF 		bl	rtGetInf
+  58              	.LVL3:
+  59              		.loc 1 42 9 view .LVU11
+  60 001a 0B4B     		ldr	r3, .L3+8
+  61 001c 83ED000B 		vstr.64	d0, [r3]
+  43:rt_nonfinite.c ****   rtInfF = rtGetInfF();
+  62              		.loc 1 43 3 is_stmt 1 view .LVU12
+  63              		.loc 1 43 12 is_stmt 0 view .LVU13
+  64 0020 FFF7FEFF 		bl	rtGetInfF
+  65              	.LVL4:
+  66              		.loc 1 43 10 view .LVU14
+  67 0024 094B     		ldr	r3, .L3+12
+  68 0026 83ED000A 		vstr.32	s0, [r3]
+  44:rt_nonfinite.c ****   rtMinusInf = rtGetMinusInf();
+  69              		.loc 1 44 3 is_stmt 1 view .LVU15
+  70              		.loc 1 44 16 is_stmt 0 view .LVU16
+  71 002a FFF7FEFF 		bl	rtGetMinusInf
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccZMwLeU.s 			page 3
+
+
+  72              	.LVL5:
+  73              		.loc 1 44 14 view .LVU17
+  74 002e 084B     		ldr	r3, .L3+16
+  75 0030 83ED000B 		vstr.64	d0, [r3]
+  45:rt_nonfinite.c ****   rtMinusInfF = rtGetMinusInfF();
+  76              		.loc 1 45 3 is_stmt 1 view .LVU18
+  77              		.loc 1 45 17 is_stmt 0 view .LVU19
+  78 0034 FFF7FEFF 		bl	rtGetMinusInfF
+  79              	.LVL6:
+  80              		.loc 1 45 15 view .LVU20
+  81 0038 064B     		ldr	r3, .L3+20
+  82 003a 83ED000A 		vstr.32	s0, [r3]
+  46:rt_nonfinite.c **** }
+  83              		.loc 1 46 1 view .LVU21
+  84 003e 08BD     		pop	{r3, pc}
+  85              	.L4:
+  86              		.align	2
+  87              	.L3:
+  88 0040 00000000 		.word	.LANCHOR0
+  89 0044 00000000 		.word	.LANCHOR1
+  90 0048 00000000 		.word	.LANCHOR2
+  91 004c 00000000 		.word	.LANCHOR3
+  92 0050 00000000 		.word	.LANCHOR4
+  93 0054 00000000 		.word	.LANCHOR5
+  94              		.cfi_endproc
+  95              	.LFE0:
+  97              		.global	__aeabi_dcmpeq
+  98              		.section	.text.rtIsInf,"ax",%progbits
+  99              		.align	1
+ 100              		.global	rtIsInf
+ 101              		.syntax unified
+ 102              		.thumb
+ 103              		.thumb_func
+ 105              	rtIsInf:
+ 106              	.LVL7:
+ 107              	.LFB1:
+  47:rt_nonfinite.c **** 
+  48:rt_nonfinite.c **** /* Test if value is infinite */
+  49:rt_nonfinite.c **** boolean_T rtIsInf(real_T value)
+  50:rt_nonfinite.c **** {
+ 108              		.loc 1 50 1 is_stmt 1 view -0
+ 109              		.cfi_startproc
+ 110              		@ args = 0, pretend = 0, frame = 0
+ 111              		@ frame_needed = 0, uses_anonymous_args = 0
+ 112              		.loc 1 50 1 is_stmt 0 view .LVU23
+ 113 0000 38B5     		push	{r3, r4, r5, lr}
+ 114              	.LCFI1:
+ 115              		.cfi_def_cfa_offset 16
+ 116              		.cfi_offset 3, -16
+ 117              		.cfi_offset 4, -12
+ 118              		.cfi_offset 5, -8
+ 119              		.cfi_offset 14, -4
+ 120 0002 55EC104B 		vmov	r4, r5, d0
+  51:rt_nonfinite.c ****   return (boolean_T)((value==rtInf || value==rtMinusInf) ? 1U : 0U);
+ 121              		.loc 1 51 3 is_stmt 1 view .LVU24
+ 122              		.loc 1 51 10 is_stmt 0 view .LVU25
+ 123 0006 10EE102A 		vmov	r2, s0	@ int
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccZMwLeU.s 			page 4
+
+
+ 124 000a 2B46     		mov	r3, r5
+ 125 000c 0949     		ldr	r1, .L13
+ 126 000e D1E90001 		ldrd	r0, [r1]
+ 127 0012 FFF7FEFF 		bl	__aeabi_dcmpeq
+ 128              	.LVL8:
+ 129              		.loc 1 51 10 view .LVU26
+ 130 0016 48B9     		cbnz	r0, .L8
+ 131              		.loc 1 51 36 discriminator 2 view .LVU27
+ 132 0018 2246     		mov	r2, r4
+ 133 001a 2B46     		mov	r3, r5
+ 134 001c 0649     		ldr	r1, .L13+4
+ 135 001e D1E90001 		ldrd	r0, [r1]
+ 136 0022 FFF7FEFF 		bl	__aeabi_dcmpeq
+ 137              	.LVL9:
+ 138 0026 18B1     		cbz	r0, .L11
+ 139              		.loc 1 51 10 view .LVU28
+ 140 0028 0120     		movs	r0, #1
+ 141 002a 00E0     		b	.L6
+ 142              	.L8:
+ 143 002c 0120     		movs	r0, #1
+ 144              	.L6:
+  52:rt_nonfinite.c **** }
+ 145              		.loc 1 52 1 discriminator 6 view .LVU29
+ 146 002e 38BD     		pop	{r3, r4, r5, pc}
+ 147              	.LVL10:
+ 148              	.L11:
+  51:rt_nonfinite.c ****   return (boolean_T)((value==rtInf || value==rtMinusInf) ? 1U : 0U);
+ 149              		.loc 1 51 10 view .LVU30
+ 150 0030 0020     		movs	r0, #0
+ 151 0032 FCE7     		b	.L6
+ 152              	.L14:
+ 153              		.align	2
+ 154              	.L13:
+ 155 0034 00000000 		.word	.LANCHOR2
+ 156 0038 00000000 		.word	.LANCHOR4
+ 157              		.cfi_endproc
+ 158              	.LFE1:
+ 160              		.section	.text.rtIsInfF,"ax",%progbits
+ 161              		.align	1
+ 162              		.global	rtIsInfF
+ 163              		.syntax unified
+ 164              		.thumb
+ 165              		.thumb_func
+ 167              	rtIsInfF:
+ 168              	.LVL11:
+ 169              	.LFB2:
+  53:rt_nonfinite.c **** 
+  54:rt_nonfinite.c **** /* Test if single-precision value is infinite */
+  55:rt_nonfinite.c **** boolean_T rtIsInfF(real32_T value)
+  56:rt_nonfinite.c **** {
+ 170              		.loc 1 56 1 is_stmt 1 view -0
+ 171              		.cfi_startproc
+ 172              		@ args = 0, pretend = 0, frame = 0
+ 173              		@ frame_needed = 0, uses_anonymous_args = 0
+ 174              		@ link register save eliminated.
+  57:rt_nonfinite.c ****   return (boolean_T)(((value)==rtInfF || (value)==rtMinusInfF) ? 1U : 0U);
+ 175              		.loc 1 57 3 view .LVU32
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccZMwLeU.s 			page 5
+
+
+ 176              		.loc 1 57 30 is_stmt 0 view .LVU33
+ 177 0000 0A4B     		ldr	r3, .L19
+ 178 0002 D3ED007A 		vldr.32	s15, [r3]
+ 179              		.loc 1 57 10 view .LVU34
+ 180 0006 F4EE407A 		vcmp.f32	s15, s0
+ 181 000a F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 182 000e 09D0     		beq	.L17
+ 183              		.loc 1 57 49 discriminator 2 view .LVU35
+ 184 0010 074B     		ldr	r3, .L19+4
+ 185 0012 D3ED007A 		vldr.32	s15, [r3]
+ 186              		.loc 1 57 39 discriminator 2 view .LVU36
+ 187 0016 F4EE407A 		vcmp.f32	s15, s0
+ 188 001a F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 189 001e 03D1     		bne	.L18
+ 190              		.loc 1 57 10 view .LVU37
+ 191 0020 0120     		movs	r0, #1
+ 192 0022 7047     		bx	lr
+ 193              	.L17:
+ 194 0024 0120     		movs	r0, #1
+ 195 0026 7047     		bx	lr
+ 196              	.L18:
+ 197 0028 0020     		movs	r0, #0
+  58:rt_nonfinite.c **** }
+ 198              		.loc 1 58 1 view .LVU38
+ 199 002a 7047     		bx	lr
+ 200              	.L20:
+ 201              		.align	2
+ 202              	.L19:
+ 203 002c 00000000 		.word	.LANCHOR3
+ 204 0030 00000000 		.word	.LANCHOR5
+ 205              		.cfi_endproc
+ 206              	.LFE2:
+ 208              		.section	.text.rtIsNaN,"ax",%progbits
+ 209              		.align	1
+ 210              		.global	rtIsNaN
+ 211              		.syntax unified
+ 212              		.thumb
+ 213              		.thumb_func
+ 215              	rtIsNaN:
+ 216              	.LVL12:
+ 217              	.LFB3:
+  59:rt_nonfinite.c **** 
+  60:rt_nonfinite.c **** /* Test if value is not a number */
+  61:rt_nonfinite.c **** boolean_T rtIsNaN(real_T value)
+  62:rt_nonfinite.c **** {
+ 218              		.loc 1 62 1 is_stmt 1 view -0
+ 219              		.cfi_startproc
+ 220              		@ args = 0, pretend = 0, frame = 0
+ 221              		@ frame_needed = 0, uses_anonymous_args = 0
+ 222              		@ link register save eliminated.
+ 223              		.loc 1 62 1 is_stmt 0 view .LVU40
+ 224 0000 53EC102B 		vmov	r2, r3, d0
+  63:rt_nonfinite.c ****   boolean_T result = (boolean_T) 0;
+ 225              		.loc 1 63 3 is_stmt 1 view .LVU41
+ 226              	.LVL13:
+  64:rt_nonfinite.c ****   size_t bitsPerReal = sizeof(real_T) * (NumBitsPerChar);
+ 227              		.loc 1 64 3 view .LVU42
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccZMwLeU.s 			page 6
+
+
+  65:rt_nonfinite.c ****   if (bitsPerReal == 32U) {
+ 228              		.loc 1 65 3 view .LVU43
+ 229              	.LBB2:
+  66:rt_nonfinite.c ****     result = rtIsNaNF((real32_T)value);
+  67:rt_nonfinite.c ****   } else {
+  68:rt_nonfinite.c ****     union {
+ 230              		.loc 1 68 5 view .LVU44
+  69:rt_nonfinite.c ****       LittleEndianIEEEDouble bitVal;
+  70:rt_nonfinite.c ****       real_T fltVal;
+  71:rt_nonfinite.c ****     } tmpVal;
+  72:rt_nonfinite.c **** 
+  73:rt_nonfinite.c ****     tmpVal.fltVal = value;
+ 231              		.loc 1 73 5 view .LVU45
+  74:rt_nonfinite.c ****     result = (boolean_T)((tmpVal.bitVal.words.wordH & 0x7FF00000) == 0x7FF00000 &&
+ 232              		.loc 1 74 5 view .LVU46
+ 233              		.loc 1 74 81 is_stmt 0 view .LVU47
+ 234 0004 0748     		ldr	r0, .L27
+ 235 0006 9843     		bics	r0, r0, r3
+ 236 0008 01D0     		beq	.L26
+ 237 000a 0020     		movs	r0, #0
+ 238 000c 7047     		bx	lr
+ 239              	.L26:
+  75:rt_nonfinite.c ****                          ( (tmpVal.bitVal.words.wordH & 0x000FFFFF) != 0 ||
+ 240              		.loc 1 75 55 discriminator 1 view .LVU48
+ 241 000e C3F31301 		ubfx	r1, r3, #0, #20
+  74:rt_nonfinite.c ****     result = (boolean_T)((tmpVal.bitVal.words.wordH & 0x7FF00000) == 0x7FF00000 &&
+ 242              		.loc 1 74 81 discriminator 1 view .LVU49
+ 243 0012 11B9     		cbnz	r1, .L24
+ 244              		.loc 1 75 74 view .LVU50
+ 245 0014 1AB9     		cbnz	r2, .L25
+  74:rt_nonfinite.c ****     result = (boolean_T)((tmpVal.bitVal.words.wordH & 0x7FF00000) == 0x7FF00000 &&
+ 246              		.loc 1 74 81 view .LVU51
+ 247 0016 0020     		movs	r0, #0
+ 248 0018 7047     		bx	lr
+ 249              	.L24:
+ 250 001a 0120     		movs	r0, #1
+ 251 001c 7047     		bx	lr
+ 252              	.L25:
+ 253 001e 0120     		movs	r0, #1
+ 254              	.LVL14:
+  74:rt_nonfinite.c ****     result = (boolean_T)((tmpVal.bitVal.words.wordH & 0x7FF00000) == 0x7FF00000 &&
+ 255              		.loc 1 74 81 view .LVU52
+ 256              	.LBE2:
+  76:rt_nonfinite.c ****                           (tmpVal.bitVal.words.wordL != 0) ));
+  77:rt_nonfinite.c ****   }
+  78:rt_nonfinite.c **** 
+  79:rt_nonfinite.c ****   return result;
+ 257              		.loc 1 79 3 is_stmt 1 view .LVU53
+  80:rt_nonfinite.c **** }
+ 258              		.loc 1 80 1 is_stmt 0 view .LVU54
+ 259 0020 7047     		bx	lr
+ 260              	.L28:
+ 261 0022 00BF     		.align	2
+ 262              	.L27:
+ 263 0024 0000F07F 		.word	2146435072
+ 264              		.cfi_endproc
+ 265              	.LFE3:
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccZMwLeU.s 			page 7
+
+
+ 267              		.section	.text.rtIsNaNF,"ax",%progbits
+ 268              		.align	1
+ 269              		.global	rtIsNaNF
+ 270              		.syntax unified
+ 271              		.thumb
+ 272              		.thumb_func
+ 274              	rtIsNaNF:
+ 275              	.LVL15:
+ 276              	.LFB4:
+  81:rt_nonfinite.c **** 
+  82:rt_nonfinite.c **** /* Test if single-precision value is not a number */
+  83:rt_nonfinite.c **** boolean_T rtIsNaNF(real32_T value)
+  84:rt_nonfinite.c **** {
+ 277              		.loc 1 84 1 is_stmt 1 view -0
+ 278              		.cfi_startproc
+ 279              		@ args = 0, pretend = 0, frame = 8
+ 280              		@ frame_needed = 0, uses_anonymous_args = 0
+ 281              		@ link register save eliminated.
+ 282              		.loc 1 84 1 is_stmt 0 view .LVU56
+ 283 0000 82B0     		sub	sp, sp, #8
+ 284              	.LCFI2:
+ 285              		.cfi_def_cfa_offset 8
+ 286 0002 8DED010A 		vstr.32	s0, [sp, #4]
+  85:rt_nonfinite.c ****   IEEESingle tmp;
+ 287              		.loc 1 85 3 is_stmt 1 view .LVU57
+  86:rt_nonfinite.c ****   tmp.wordL.wordLreal = value;
+ 288              		.loc 1 86 3 view .LVU58
+  87:rt_nonfinite.c ****   return (boolean_T)( (tmp.wordL.wordLuint & 0x7F800000) == 0x7F800000 &&
+ 289              		.loc 1 87 3 view .LVU59
+ 290 0006 019B     		ldr	r3, [sp, #4]
+ 291              		.loc 1 87 44 is_stmt 0 view .LVU60
+ 292 0008 03F0FF42 		and	r2, r3, #2139095040
+ 293              		.loc 1 87 72 view .LVU61
+ 294 000c B2F1FF4F 		cmp	r2, #2139095040
+ 295 0010 02D0     		beq	.L34
+ 296 0012 0020     		movs	r0, #0
+ 297              	.L30:
+  88:rt_nonfinite.c ****                      (tmp.wordL.wordLuint & 0x007FFFFF) != 0 );
+  89:rt_nonfinite.c **** }
+ 298              		.loc 1 89 1 discriminator 6 view .LVU62
+ 299 0014 02B0     		add	sp, sp, #8
+ 300              	.LCFI3:
+ 301              		.cfi_remember_state
+ 302              		.cfi_def_cfa_offset 0
+ 303              		@ sp needed
+ 304 0016 7047     		bx	lr
+ 305              	.L34:
+ 306              	.LCFI4:
+ 307              		.cfi_restore_state
+  88:rt_nonfinite.c ****                      (tmp.wordL.wordLuint & 0x007FFFFF) != 0 );
+ 308              		.loc 1 88 43 discriminator 1 view .LVU63
+ 309 0018 C3F31603 		ubfx	r3, r3, #0, #23
+  87:rt_nonfinite.c ****   return (boolean_T)( (tmp.wordL.wordLuint & 0x7F800000) == 0x7F800000 &&
+ 310              		.loc 1 87 72 discriminator 1 view .LVU64
+ 311 001c 0BB9     		cbnz	r3, .L32
+  87:rt_nonfinite.c ****   return (boolean_T)( (tmp.wordL.wordLuint & 0x7F800000) == 0x7F800000 &&
+ 312              		.loc 1 87 72 view .LVU65
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccZMwLeU.s 			page 8
+
+
+ 313 001e 0020     		movs	r0, #0
+ 314 0020 F8E7     		b	.L30
+ 315              	.L32:
+ 316 0022 0120     		movs	r0, #1
+ 317 0024 F6E7     		b	.L30
+ 318              		.cfi_endproc
+ 319              	.LFE4:
+ 321              		.global	rtNaNF
+ 322              		.global	rtMinusInfF
+ 323              		.global	rtInfF
+ 324              		.global	rtNaN
+ 325              		.global	rtMinusInf
+ 326              		.global	rtInf
+ 327              		.section	.bss.rtInf,"aw",%nobits
+ 328              		.align	3
+ 329              		.set	.LANCHOR2,. + 0
+ 332              	rtInf:
+ 333 0000 00000000 		.space	8
+ 333      00000000 
+ 334              		.section	.bss.rtInfF,"aw",%nobits
+ 335              		.align	2
+ 336              		.set	.LANCHOR3,. + 0
+ 339              	rtInfF:
+ 340 0000 00000000 		.space	4
+ 341              		.section	.bss.rtMinusInf,"aw",%nobits
+ 342              		.align	3
+ 343              		.set	.LANCHOR4,. + 0
+ 346              	rtMinusInf:
+ 347 0000 00000000 		.space	8
+ 347      00000000 
+ 348              		.section	.bss.rtMinusInfF,"aw",%nobits
+ 349              		.align	2
+ 350              		.set	.LANCHOR5,. + 0
+ 353              	rtMinusInfF:
+ 354 0000 00000000 		.space	4
+ 355              		.section	.bss.rtNaN,"aw",%nobits
+ 356              		.align	3
+ 357              		.set	.LANCHOR0,. + 0
+ 360              	rtNaN:
+ 361 0000 00000000 		.space	8
+ 361      00000000 
+ 362              		.section	.bss.rtNaNF,"aw",%nobits
+ 363              		.align	2
+ 364              		.set	.LANCHOR1,. + 0
+ 367              	rtNaNF:
+ 368 0000 00000000 		.space	4
+ 369              		.text
+ 370              	.Letext0:
+ 371              		.file 2 "c:\\program files (x86)\\arm gnu toolchain arm-none-eabi\\11.2 2022.02\\lib\\gcc\\arm-non
+ 372              		.file 3 "rtwtypes.h"
+ 373              		.file 4 "rt_nonfinite.h"
+ 374              		.file 5 "rtGetInf.h"
+ 375              		.file 6 "rtGetNaN.h"
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccZMwLeU.s 			page 9
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 rt_nonfinite.c
+C:\Users\ysl\AppData\Local\Temp\ccZMwLeU.s:20     .text.rt_InitInfAndNaN:00000000 $t
+C:\Users\ysl\AppData\Local\Temp\ccZMwLeU.s:26     .text.rt_InitInfAndNaN:00000000 rt_InitInfAndNaN
+C:\Users\ysl\AppData\Local\Temp\ccZMwLeU.s:88     .text.rt_InitInfAndNaN:00000040 $d
+C:\Users\ysl\AppData\Local\Temp\ccZMwLeU.s:99     .text.rtIsInf:00000000 $t
+C:\Users\ysl\AppData\Local\Temp\ccZMwLeU.s:105    .text.rtIsInf:00000000 rtIsInf
+C:\Users\ysl\AppData\Local\Temp\ccZMwLeU.s:155    .text.rtIsInf:00000034 $d
+C:\Users\ysl\AppData\Local\Temp\ccZMwLeU.s:161    .text.rtIsInfF:00000000 $t
+C:\Users\ysl\AppData\Local\Temp\ccZMwLeU.s:167    .text.rtIsInfF:00000000 rtIsInfF
+C:\Users\ysl\AppData\Local\Temp\ccZMwLeU.s:203    .text.rtIsInfF:0000002c $d
+C:\Users\ysl\AppData\Local\Temp\ccZMwLeU.s:209    .text.rtIsNaN:00000000 $t
+C:\Users\ysl\AppData\Local\Temp\ccZMwLeU.s:215    .text.rtIsNaN:00000000 rtIsNaN
+C:\Users\ysl\AppData\Local\Temp\ccZMwLeU.s:263    .text.rtIsNaN:00000024 $d
+C:\Users\ysl\AppData\Local\Temp\ccZMwLeU.s:268    .text.rtIsNaNF:00000000 $t
+C:\Users\ysl\AppData\Local\Temp\ccZMwLeU.s:274    .text.rtIsNaNF:00000000 rtIsNaNF
+C:\Users\ysl\AppData\Local\Temp\ccZMwLeU.s:367    .bss.rtNaNF:00000000 rtNaNF
+C:\Users\ysl\AppData\Local\Temp\ccZMwLeU.s:353    .bss.rtMinusInfF:00000000 rtMinusInfF
+C:\Users\ysl\AppData\Local\Temp\ccZMwLeU.s:339    .bss.rtInfF:00000000 rtInfF
+C:\Users\ysl\AppData\Local\Temp\ccZMwLeU.s:360    .bss.rtNaN:00000000 rtNaN
+C:\Users\ysl\AppData\Local\Temp\ccZMwLeU.s:346    .bss.rtMinusInf:00000000 rtMinusInf
+C:\Users\ysl\AppData\Local\Temp\ccZMwLeU.s:332    .bss.rtInf:00000000 rtInf
+C:\Users\ysl\AppData\Local\Temp\ccZMwLeU.s:328    .bss.rtInf:00000000 $d
+C:\Users\ysl\AppData\Local\Temp\ccZMwLeU.s:335    .bss.rtInfF:00000000 $d
+C:\Users\ysl\AppData\Local\Temp\ccZMwLeU.s:342    .bss.rtMinusInf:00000000 $d
+C:\Users\ysl\AppData\Local\Temp\ccZMwLeU.s:349    .bss.rtMinusInfF:00000000 $d
+C:\Users\ysl\AppData\Local\Temp\ccZMwLeU.s:356    .bss.rtNaN:00000000 $d
+C:\Users\ysl\AppData\Local\Temp\ccZMwLeU.s:363    .bss.rtNaNF:00000000 $d
+
+UNDEFINED SYMBOLS
+rtGetNaN
+rtGetNaNF
+rtGetInf
+rtGetInfF
+rtGetMinusInf
+rtGetMinusInfF
+__aeabi_dcmpeq

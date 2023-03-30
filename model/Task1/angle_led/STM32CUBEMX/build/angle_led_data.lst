@@ -1,0 +1,40 @@
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc7xOkQ8.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"angle_led_data.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.global	angle_led_ConstP
+  20              		.section	.rodata.angle_led_ConstP,"a"
+  21              		.align	2
+  24              	angle_led_ConstP:
+  25 0000 000000   		.space	3
+  26              		.text
+  27              	.Letext0:
+  28              		.file 1 "rtwtypes.h"
+  29              		.file 2 "angle_led.h"
+  30              		.file 3 "angle_led_data.c"
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc7xOkQ8.s 			page 2
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 angle_led_data.c
+C:\Users\ysl\AppData\Local\Temp\cc7xOkQ8.s:24     .rodata.angle_led_ConstP:00000000 angle_led_ConstP
+C:\Users\ysl\AppData\Local\Temp\cc7xOkQ8.s:21     .rodata.angle_led_ConstP:00000000 $d
+
+NO UNDEFINED SYMBOLS

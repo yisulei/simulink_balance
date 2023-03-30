@@ -1,0 +1,1470 @@
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc2kCmn9.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"ifr-scope_device.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.text.Compare_QueryQueue,"ax",%progbits
+  20              		.align	1
+  21              		.global	Compare_QueryQueue
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	Compare_QueryQueue:
+  27              	.LVL0:
+  28              	.LFB238:
+  29              		.file 1 "../STM32CUBEMX/Core/Src/ifr-scope_device.c"
+   1:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** //author YuXin
+   2:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** //time 2022/10/18
+   3:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** //Version 1.0
+   4:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** #include "ifr-scope_device.h"
+   5:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** #include "uart_fifo.h"
+   6:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** #include "string.h"
+   7:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** #include "stdbool.h"
+   8:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** #include "stdio.h"
+   9:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** #include "usart.h"
+  10:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** #include "simulink_defines.h"
+  11:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** #include "ws2812.h"
+  12:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** //todo: Synchronisation of the WIFI connection status from esp to stm32 to be added
+  13:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** extern unsigned int time_5ms_count;
+  14:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** extern USART_CircularQueueTypeDef USART1_Software_FIFO;
+  15:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 
+  16:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 
+  17:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** enum _IFRScopeRunState IFRScopeRunState;
+  18:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 
+  19:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** char WFDBG_REPDCY[40]={0};//"#IFR=1:IM=Balance-Test;STA=1;#END";
+  20:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** #ifndef DATALINK_IDENTIFIER	//should defined by simulink
+  21:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** char WFDBG_REP_DESCRI[15]="Unnamed";
+  22:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** #else
+  23:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** char WFDBG_REP_DESCRI[15]=DATALINK_IDENTIFIER;
+  24:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** #endif
+  25:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 
+  26:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** #ifndef DATALINK_VERIFICATIO_CODE
+  27:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** char WFDBG_HANDSHAKE[6]="IFR00";
+  28:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** #else
+  29:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** char WFDBG_HANDSHAKE[6]=DATALINK_VERIFICATIO_CODE;
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc2kCmn9.s 			page 2
+
+
+  30:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** #endif
+  31:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** /**********C************/
+  32:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** /*       ??       */
+  33:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** const char WFDBG_HEAD[]="#IFR=";
+  34:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** const char WFDBG_END[]="#END";
+  35:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 
+  36:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** /*       ??????       */
+  37:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** const char WFDBG_REP_DCY1[]="#IFR=1:IM=";
+  38:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** const char WFDBG_REP_DCY2[]=";STA=1;#END";
+  39:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 
+  40:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** const char WFDBG_IM[]="IM=";
+  41:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** const char WFDBG_STA[]="STA=";
+  42:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** /*      HOST?????     */
+  43:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** const char WFDBG_HANDSHAKE_HEAD[]="#IFR=_:";//!!!!!
+  44:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** const char WFDBG_HANDSHAKE_KEY[]="KEY=";
+  45:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 
+  46:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** /*        connect ok         */
+  47:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** const char WFDBG_HANDSHAKE_OK[]="#IFR=`:#END";
+  48:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** const char WFDBG_HANDSHAKE_Fail[]="#IFR=a:#END";
+  49:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** /**data**/
+  50:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** const char WFDBG_DATA_MASK[]="MASK=";
+  51:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 
+  52:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** /**Query queue based comparison with specified string**/
+  53:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** bool Compare_QueryQueue(USART_CircularQueueTypeDef const * queue, const char ch_source[])	//???????
+  54:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** {
+  30              		.loc 1 54 1 view -0
+  31              		.cfi_startproc
+  32              		@ args = 0, pretend = 0, frame = 0
+  33              		@ frame_needed = 0, uses_anonymous_args = 0
+  34              		.loc 1 54 1 is_stmt 0 view .LVU1
+  35 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+  36              	.LCFI0:
+  37              		.cfi_def_cfa_offset 24
+  38              		.cfi_offset 3, -24
+  39              		.cfi_offset 4, -20
+  40              		.cfi_offset 5, -16
+  41              		.cfi_offset 6, -12
+  42              		.cfi_offset 7, -8
+  43              		.cfi_offset 14, -4
+  44 0002 0646     		mov	r6, r0
+  45 0004 0F46     		mov	r7, r1
+  55:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 	uint16_t ch_len=strlen(ch_source);
+  46              		.loc 1 55 2 is_stmt 1 view .LVU2
+  47              		.loc 1 55 18 is_stmt 0 view .LVU3
+  48 0006 0846     		mov	r0, r1
+  49              	.LVL1:
+  50              		.loc 1 55 18 view .LVU4
+  51 0008 FFF7FEFF 		bl	strlen
+  52              	.LVL2:
+  53              		.loc 1 55 18 view .LVU5
+  54 000c 0546     		mov	r5, r0
+  55              		.loc 1 55 11 view .LVU6
+  56 000e 84B2     		uxth	r4, r0
+  57              	.LVL3:
+  56:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 	
+  57:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 	if(ch_len>GetQueueReadCount(queue)) return false;
+  58              		.loc 1 57 2 is_stmt 1 view .LVU7
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc2kCmn9.s 			page 3
+
+
+  59              		.loc 1 57 12 is_stmt 0 view .LVU8
+  60 0010 3046     		mov	r0, r6
+  61 0012 FFF7FEFF 		bl	GetQueueReadCount
+  62              	.LVL4:
+  63              		.loc 1 57 4 view .LVU9
+  64 0016 A042     		cmp	r0, r4
+  65 0018 0ED3     		bcc	.L5
+  66              	.LBB2:
+  58:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 	
+  59:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 	for(int i=0;i<ch_len;i++)
+  67              		.loc 1 59 10 view .LVU10
+  68 001a 0024     		movs	r4, #0
+  69              	.LVL5:
+  70              	.L3:
+  71              		.loc 1 59 15 is_stmt 1 discriminator 1 view .LVU11
+  72 001c ABB2     		uxth	r3, r5
+  73 001e A342     		cmp	r3, r4
+  74 0020 08DD     		ble	.L8
+  60:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 	{
+  61:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 		if(QueryAQueue(queue,i)!=ch_source[i])	return false;
+  75              		.loc 1 61 3 view .LVU12
+  76              		.loc 1 61 6 is_stmt 0 view .LVU13
+  77 0022 A1B2     		uxth	r1, r4
+  78 0024 3046     		mov	r0, r6
+  79 0026 FFF7FEFF 		bl	QueryAQueue
+  80              	.LVL6:
+  81              		.loc 1 61 26 view .LVU14
+  82 002a 3B5D     		ldrb	r3, [r7, r4]	@ zero_extendqisi2
+  83              		.loc 1 61 5 view .LVU15
+  84 002c 9842     		cmp	r0, r3
+  85 002e 05D1     		bne	.L6
+  59:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 	{
+  86              		.loc 1 59 24 is_stmt 1 discriminator 2 view .LVU16
+  87 0030 0134     		adds	r4, r4, #1
+  88              	.LVL7:
+  59:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 	{
+  89              		.loc 1 59 24 is_stmt 0 discriminator 2 view .LVU17
+  90 0032 F3E7     		b	.L3
+  91              	.L8:
+  59:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 	{
+  92              		.loc 1 59 24 discriminator 2 view .LVU18
+  93              	.LBE2:
+  62:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 	}
+  63:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 	return true;
+  94              		.loc 1 63 9 view .LVU19
+  95 0034 0120     		movs	r0, #1
+  96              	.LBB3:
+  97 0036 00E0     		b	.L2
+  98              	.LVL8:
+  99              	.L5:
+ 100              		.loc 1 63 9 view .LVU20
+ 101              	.LBE3:
+  57:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 	
+ 102              		.loc 1 57 45 view .LVU21
+ 103 0038 0020     		movs	r0, #0
+ 104              	.LVL9:
+ 105              	.L2:
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc2kCmn9.s 			page 4
+
+
+  64:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** }
+ 106              		.loc 1 64 1 view .LVU22
+ 107 003a F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 108              	.LVL10:
+ 109              	.L6:
+ 110              	.LBB4:
+  61:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 	}
+ 111              		.loc 1 61 49 view .LVU23
+ 112 003c 0020     		movs	r0, #0
+ 113 003e FCE7     		b	.L2
+ 114              	.LBE4:
+ 115              		.cfi_endproc
+ 116              	.LFE238:
+ 118              		.section	.text.Get_Str_IndexOf,"ax",%progbits
+ 119              		.align	1
+ 120              		.global	Get_Str_IndexOf
+ 121              		.syntax unified
+ 122              		.thumb
+ 123              		.thumb_func
+ 125              	Get_Str_IndexOf:
+ 126              	.LVL11:
+ 127              	.LFB239:
+  65:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** /**    Query the first occurrence of a substring in the string Return -1 if none   **/
+  66:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** uint32_t Get_Str_IndexOf(const char * str1, const char * str2)	//??strstr()
+  67:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** {
+ 128              		.loc 1 67 1 is_stmt 1 view -0
+ 129              		.cfi_startproc
+ 130              		@ args = 0, pretend = 0, frame = 0
+ 131              		@ frame_needed = 0, uses_anonymous_args = 0
+ 132              		.loc 1 67 1 is_stmt 0 view .LVU25
+ 133 0000 10B5     		push	{r4, lr}
+ 134              	.LCFI1:
+ 135              		.cfi_def_cfa_offset 8
+ 136              		.cfi_offset 4, -8
+ 137              		.cfi_offset 14, -4
+ 138 0002 0446     		mov	r4, r0
+  68:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 	char* index=strstr(str1,str2);
+ 139              		.loc 1 68 2 is_stmt 1 view .LVU26
+ 140              		.loc 1 68 14 is_stmt 0 view .LVU27
+ 141 0004 FFF7FEFF 		bl	strstr
+ 142              	.LVL12:
+  69:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 	if(index!=NULL)
+ 143              		.loc 1 69 2 is_stmt 1 view .LVU28
+ 144              		.loc 1 69 4 is_stmt 0 view .LVU29
+ 145 0008 08B1     		cbz	r0, .L11
+  70:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 	{
+  71:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 		return (uint32_t)(index-str1);
+ 146              		.loc 1 71 3 is_stmt 1 view .LVU30
+ 147              		.loc 1 71 26 is_stmt 0 view .LVU31
+ 148 000a 001B     		subs	r0, r0, r4
+ 149              	.LVL13:
+ 150              	.L9:
+  72:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 	}
+  73:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 	else
+  74:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 	{
+  75:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 		return 0;
+  76:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 	}
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc2kCmn9.s 			page 5
+
+
+  77:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** }
+ 151              		.loc 1 77 1 view .LVU32
+ 152 000c 10BD     		pop	{r4, pc}
+ 153              	.LVL14:
+ 154              	.L11:
+  75:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 	}
+ 155              		.loc 1 75 10 view .LVU33
+ 156 000e 0020     		movs	r0, #0
+ 157              	.LVL15:
+  75:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 	}
+ 158              		.loc 1 75 10 view .LVU34
+ 159 0010 FCE7     		b	.L9
+ 160              		.cfi_endproc
+ 161              	.LFE239:
+ 163              		.section	.text.Get_Str_IndexOfQueue,"ax",%progbits
+ 164              		.align	1
+ 165              		.global	Get_Str_IndexOfQueue
+ 166              		.syntax unified
+ 167              		.thumb
+ 168              		.thumb_func
+ 170              	Get_Str_IndexOfQueue:
+ 171              	.LVL16:
+ 172              	.LFB240:
+  78:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 
+  79:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** /**     Querying a substring in a queue without taking out the queue    **/
+  80:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** int32_t Get_Str_IndexOfQueue(USART_CircularQueueTypeDef const * queue, const char ch_source[])
+  81:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** {
+ 173              		.loc 1 81 1 is_stmt 1 view -0
+ 174              		.cfi_startproc
+ 175              		@ args = 0, pretend = 0, frame = 0
+ 176              		@ frame_needed = 0, uses_anonymous_args = 0
+ 177              		.loc 1 81 1 is_stmt 0 view .LVU36
+ 178 0000 2DE9F047 		push	{r4, r5, r6, r7, r8, r9, r10, lr}
+ 179              	.LCFI2:
+ 180              		.cfi_def_cfa_offset 32
+ 181              		.cfi_offset 4, -32
+ 182              		.cfi_offset 5, -28
+ 183              		.cfi_offset 6, -24
+ 184              		.cfi_offset 7, -20
+ 185              		.cfi_offset 8, -16
+ 186              		.cfi_offset 9, -12
+ 187              		.cfi_offset 10, -8
+ 188              		.cfi_offset 14, -4
+ 189 0004 8046     		mov	r8, r0
+ 190 0006 8946     		mov	r9, r1
+  82:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 	uint16_t ch_len=strlen(ch_source);
+ 191              		.loc 1 82 2 is_stmt 1 view .LVU37
+ 192              		.loc 1 82 18 is_stmt 0 view .LVU38
+ 193 0008 0846     		mov	r0, r1
+ 194              	.LVL17:
+ 195              		.loc 1 82 18 view .LVU39
+ 196 000a FFF7FEFF 		bl	strlen
+ 197              	.LVL18:
+ 198              		.loc 1 82 18 view .LVU40
+ 199 000e 0746     		mov	r7, r0
+ 200              		.loc 1 82 11 view .LVU41
+ 201 0010 84B2     		uxth	r4, r0
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc2kCmn9.s 			page 6
+
+
+ 202              	.LVL19:
+  83:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 	uint16_t data_lengh=GetQueueReadCount(queue);
+ 203              		.loc 1 83 2 is_stmt 1 view .LVU42
+ 204              		.loc 1 83 22 is_stmt 0 view .LVU43
+ 205 0012 4046     		mov	r0, r8
+ 206 0014 FFF7FEFF 		bl	GetQueueReadCount
+ 207              	.LVL20:
+  84:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 	
+  85:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 	if(ch_len>data_lengh) return -1;
+ 208              		.loc 1 85 2 is_stmt 1 view .LVU44
+ 209              		.loc 1 85 4 is_stmt 0 view .LVU45
+ 210 0018 8442     		cmp	r4, r0
+ 211 001a 24D8     		bhi	.L21
+ 212 001c 8246     		mov	r10, r0
+ 213              	.LBB5:
+  86:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 	
+  87:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 	for(int i=0;i<=data_lengh-ch_len;i++)
+ 214              		.loc 1 87 10 view .LVU46
+ 215 001e 0024     		movs	r4, #0
+ 216              	.LVL21:
+ 217              		.loc 1 87 10 view .LVU47
+ 218 0020 00E0     		b	.L15
+ 219              	.LVL22:
+ 220              	.L23:
+ 221              		.loc 1 87 36 is_stmt 1 discriminator 2 view .LVU48
+ 222 0022 0134     		adds	r4, r4, #1
+ 223              	.LVL23:
+ 224              	.L15:
+ 225              		.loc 1 87 15 discriminator 1 view .LVU49
+ 226              		.loc 1 87 27 is_stmt 0 discriminator 1 view .LVU50
+ 227 0024 BDB2     		uxth	r5, r7
+ 228 0026 AAEB0503 		sub	r3, r10, r5
+ 229              		.loc 1 87 15 discriminator 1 view .LVU51
+ 230 002a A342     		cmp	r3, r4
+ 231 002c 16DB     		blt	.L25
+  88:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 	{//QueryQueue(data,queue,len) //It is more efficient to retrieve all the data at once and then com
+  89:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 		if(QueryAQueue(queue,i)==ch_source[0])
+ 232              		.loc 1 89 3 is_stmt 1 view .LVU52
+ 233              		.loc 1 89 6 is_stmt 0 view .LVU53
+ 234 002e A6B2     		uxth	r6, r4
+ 235 0030 3146     		mov	r1, r6
+ 236 0032 4046     		mov	r0, r8
+ 237 0034 FFF7FEFF 		bl	QueryAQueue
+ 238              	.LVL24:
+ 239              		.loc 1 89 26 view .LVU54
+ 240 0038 99F80030 		ldrb	r3, [r9]	@ zero_extendqisi2
+ 241              		.loc 1 89 5 view .LVU55
+ 242 003c 9842     		cmp	r0, r3
+ 243 003e F0D1     		bne	.L23
+ 244              	.LBB6:
+  90:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 		{
+  91:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 			//uint8_t compflag=1;
+  92:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 			for(int stri=1;stri<ch_len;stri++)
+ 245              		.loc 1 92 12 view .LVU56
+ 246 0040 0127     		movs	r7, #1
+ 247              	.L16:
+ 248              	.LVL25:
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc2kCmn9.s 			page 7
+
+
+ 249              		.loc 1 92 23 is_stmt 1 discriminator 1 view .LVU57
+ 250 0042 BD42     		cmp	r5, r7
+ 251 0044 0CDD     		ble	.L13
+  93:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 			{
+  94:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 				if(QueryAQueue(queue,i+stri)!=ch_source[stri]) break;
+ 252              		.loc 1 94 5 view .LVU58
+ 253              		.loc 1 94 8 is_stmt 0 view .LVU59
+ 254 0046 F119     		adds	r1, r6, r7
+ 255 0048 89B2     		uxth	r1, r1
+ 256 004a 4046     		mov	r0, r8
+ 257 004c FFF7FEFF 		bl	QueryAQueue
+ 258              	.LVL26:
+ 259              		.loc 1 94 33 view .LVU60
+ 260 0050 19F80730 		ldrb	r3, [r9, r7]	@ zero_extendqisi2
+ 261              		.loc 1 94 7 view .LVU61
+ 262 0054 9842     		cmp	r0, r3
+ 263 0056 03D1     		bne	.L13
+  92:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 			{
+ 264              		.loc 1 92 35 is_stmt 1 discriminator 2 view .LVU62
+ 265 0058 0137     		adds	r7, r7, #1
+ 266              	.LVL27:
+  92:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 			{
+ 267              		.loc 1 92 35 is_stmt 0 discriminator 2 view .LVU63
+ 268 005a F2E7     		b	.L16
+ 269              	.LVL28:
+ 270              	.L25:
+  92:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 			{
+ 271              		.loc 1 92 35 discriminator 2 view .LVU64
+ 272              	.LBE6:
+ 273              	.LBE5:
+  95:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 			}
+  96:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 			return i;
+  97:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 		}
+  98:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 	}
+  99:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 	return -1;
+ 274              		.loc 1 99 9 view .LVU65
+ 275 005c 4FF0FF34 		mov	r4, #-1
+ 276              	.LVL29:
+ 277              	.L13:
+ 100:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** }
+ 278              		.loc 1 100 1 view .LVU66
+ 279 0060 2046     		mov	r0, r4
+ 280 0062 BDE8F087 		pop	{r4, r5, r6, r7, r8, r9, r10, pc}
+ 281              	.LVL30:
+ 282              	.L21:
+  85:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 	
+ 283              		.loc 1 85 31 view .LVU67
+ 284 0066 4FF0FF34 		mov	r4, #-1
+ 285              	.LVL31:
+  85:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 	
+ 286              		.loc 1 85 31 view .LVU68
+ 287 006a F9E7     		b	.L13
+ 288              		.cfi_endproc
+ 289              	.LFE240:
+ 291              		.section	.text.Find_IFR_Head,"ax",%progbits
+ 292              		.align	1
+ 293              		.global	Find_IFR_Head
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc2kCmn9.s 			page 8
+
+
+ 294              		.syntax unified
+ 295              		.thumb
+ 296              		.thumb_func
+ 298              	Find_IFR_Head:
+ 299              	.LVL32:
+ 300              	.LFB241:
+ 101:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 
+ 102:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** /**      Move forward based on the current tail of the queue to find the head of the protocol: #IFR
+ 103:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** bool Find_IFR_Head(USART_CircularQueueTypeDef * queue)	//???????????:#RM-DT=
+ 104:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** {
+ 301              		.loc 1 104 1 is_stmt 1 view -0
+ 302              		.cfi_startproc
+ 303              		@ args = 0, pretend = 0, frame = 0
+ 304              		@ frame_needed = 0, uses_anonymous_args = 0
+ 305              		.loc 1 104 1 is_stmt 0 view .LVU70
+ 306 0000 38B5     		push	{r3, r4, r5, lr}
+ 307              	.LCFI3:
+ 308              		.cfi_def_cfa_offset 16
+ 309              		.cfi_offset 3, -16
+ 310              		.cfi_offset 4, -12
+ 311              		.cfi_offset 5, -8
+ 312              		.cfi_offset 14, -4
+ 313 0002 0446     		mov	r4, r0
+ 105:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 	if(RemoveAQueue(&USART1_Software_FIFO)==WFDBG_HEAD[0])	//??OK	WFDBG_HEAD[0]='#'
+ 314              		.loc 1 105 2 is_stmt 1 view .LVU71
+ 315              		.loc 1 105 5 is_stmt 0 view .LVU72
+ 316 0004 0948     		ldr	r0, .L31
+ 317              	.LVL33:
+ 318              		.loc 1 105 5 view .LVU73
+ 319 0006 FFF7FEFF 		bl	RemoveAQueue
+ 320              	.LVL34:
+ 321              		.loc 1 105 4 view .LVU74
+ 322 000a 2328     		cmp	r0, #35
+ 323 000c 02D0     		beq	.L30
+ 106:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 	{
+ 107:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 		if(Compare_QueryQueue(queue,&WFDBG_HEAD[1])==true)	//Find #IFR=
+ 108:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 		{
+ 109:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 			DeleteQueue(queue,strlen(&WFDBG_HEAD[1]));
+ 110:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 			
+ 111:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 			return true;
+ 112:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 
+ 113:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 		}
+ 114:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 	}
+ 115:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 	
+ 116:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 	return false;
+ 324              		.loc 1 116 9 view .LVU75
+ 325 000e 0025     		movs	r5, #0
+ 326              	.L27:
+ 117:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** }
+ 327              		.loc 1 117 1 view .LVU76
+ 328 0010 2846     		mov	r0, r5
+ 329 0012 38BD     		pop	{r3, r4, r5, pc}
+ 330              	.LVL35:
+ 331              	.L30:
+ 107:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 		{
+ 332              		.loc 1 107 3 is_stmt 1 view .LVU77
+ 107:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 		{
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc2kCmn9.s 			page 9
+
+
+ 333              		.loc 1 107 6 is_stmt 0 view .LVU78
+ 334 0014 0649     		ldr	r1, .L31+4
+ 335 0016 2046     		mov	r0, r4
+ 336 0018 FFF7FEFF 		bl	Compare_QueryQueue
+ 337              	.LVL36:
+ 107:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 		{
+ 338              		.loc 1 107 5 view .LVU79
+ 339 001c 0546     		mov	r5, r0
+ 340 001e 0028     		cmp	r0, #0
+ 341 0020 F6D0     		beq	.L27
+ 109:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 			
+ 342              		.loc 1 109 4 is_stmt 1 view .LVU80
+ 343 0022 0421     		movs	r1, #4
+ 344 0024 2046     		mov	r0, r4
+ 345 0026 FFF7FEFF 		bl	DeleteQueue
+ 346              	.LVL37:
+ 111:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 
+ 347              		.loc 1 111 4 view .LVU81
+ 111:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 
+ 348              		.loc 1 111 11 is_stmt 0 view .LVU82
+ 349 002a F1E7     		b	.L27
+ 350              	.L32:
+ 351              		.align	2
+ 352              	.L31:
+ 353 002c 00000000 		.word	USART1_Software_FIFO
+ 354 0030 01000000 		.word	.LANCHOR0+1
+ 355              		.cfi_endproc
+ 356              	.LFE241:
+ 358              		.section	.rodata.IFR_Scope_Main.str1.4,"aMS",%progbits,1
+ 359              		.align	2
+ 360              	.LC0:
+ 361 0000 25732573 		.ascii	"%s%s%s\000"
+ 361      257300
+ 362              		.section	.text.IFR_Scope_Main,"ax",%progbits
+ 363              		.align	1
+ 364              		.global	IFR_Scope_Main
+ 365              		.syntax unified
+ 366              		.thumb
+ 367              		.thumb_func
+ 369              	IFR_Scope_Main:
+ 370              	.LFB242:
+ 118:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 
+ 119:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** struct _datalink_upframedata DataLink_UpFrameData={
+ 120:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** .head="#IFR=7:",
+ 121:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** .link='=',
+ 122:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** .end=";#END"
+ 123:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** };
+ 124:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 
+ 125:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** union _floatchar DataLink_RevData[10];
+ 126:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 
+ 127:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** uint32_t last_revtime=0;
+ 128:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 
+ 129:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** uint32_t error_uart1tx=0;
+ 130:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** //5ms
+ 131:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** void IFR_Scope_Main(void)
+ 132:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** {
+ 371              		.loc 1 132 1 is_stmt 1 view -0
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc2kCmn9.s 			page 10
+
+
+ 372              		.cfi_startproc
+ 373              		@ args = 0, pretend = 0, frame = 16
+ 374              		@ frame_needed = 0, uses_anonymous_args = 0
+ 375 0000 10B5     		push	{r4, lr}
+ 376              	.LCFI4:
+ 377              		.cfi_def_cfa_offset 8
+ 378              		.cfi_offset 4, -8
+ 379              		.cfi_offset 14, -4
+ 380 0002 86B0     		sub	sp, sp, #24
+ 381              	.LCFI5:
+ 382              		.cfi_def_cfa_offset 32
+ 133:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 	switch(IFRScopeRunState)
+ 383              		.loc 1 133 2 view .LVU84
+ 384 0004 794B     		ldr	r3, .L63
+ 385 0006 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 386 0008 012B     		cmp	r3, #1
+ 387 000a 64D0     		beq	.L34
+ 388 000c 022B     		cmp	r3, #2
+ 389 000e 00F08580 		beq	.L35
+ 390 0012 0BB1     		cbz	r3, .L55
+ 391              	.L33:
+ 134:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 	{
+ 135:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 		case Unconnected:
+ 136:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 		{
+ 137:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 			//check handshake frame
+ 138:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 			if(Find_IFR_Head(&USART1_Software_FIFO)==true)
+ 139:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 			{
+ 140:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 				//if(Compare_QueryQueue(&USART1_Software_FIFO,WFDBG_END)==false) return;//No full frame,wait ne
+ 141:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 				if(RemoveAQueue(&USART1_Software_FIFO)==FrameID_SimpHandShake)
+ 142:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 				{
+ 143:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 					if(Get_Str_IndexOfQueue(&USART1_Software_FIFO,WFDBG_HANDSHAKE_KEY)!=-1)	//Find #IFR=
+ 144:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 					{
+ 145:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 						char keydata[6]={0};
+ 146:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 						DeleteQueue(&USART1_Software_FIFO,strlen(WFDBG_HANDSHAKE_KEY)+1);
+ 147:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 						
+ 148:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 						RemoveQueue((uint8_t*)keydata,&USART1_Software_FIFO,5);
+ 149:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 						if(strcmp(keydata,WFDBG_HANDSHAKE)==0)
+ 150:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 						{
+ 151:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 							IFRScopeRunState=ConnectedNoData;
+ 152:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 							HAL_UART_Transmit_DMA(&huart1, (uint8_t*)WFDBG_HANDSHAKE_OK, strlen(WFDBG_HANDSHAKE_OK));
+ 153:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 						}
+ 154:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 						else
+ 155:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 						{//Key verification failure
+ 156:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 							
+ 157:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 							HAL_UART_Transmit_DMA(&huart1, (uint8_t*)WFDBG_HANDSHAKE_Fail, strlen(WFDBG_HANDSHAKE_Fail))
+ 158:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 						}
+ 159:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 					}
+ 160:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 				}
+ 161:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 				last_revtime=time_5ms_count;
+ 162:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 			}
+ 163:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 			else
+ 164:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 			{
+ 165:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 				DeleteAllQueue(&USART1_Software_FIFO);
+ 166:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 				if(time_5ms_count%400==100)
+ 167:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 				{
+ 168:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 					sprintf(WFDBG_REPDCY,"%s%s%s",WFDBG_REP_DCY1,WFDBG_REP_DESCRI,WFDBG_REP_DCY2);
+ 169:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 					HAL_UART_Transmit_DMA(&huart1, (uint8_t*)WFDBG_REPDCY, strlen(WFDBG_REPDCY));
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc2kCmn9.s 			page 11
+
+
+ 170:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 				}
+ 171:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 			}
+ 172:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 			if(time_5ms_count>200)//wait esp get ip
+ 173:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 			{
+ 174:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 				normal_LightingEffects();
+ 175:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 			}
+ 176:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 			break;
+ 177:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 		}
+ 178:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 		case ConnectedNoData:
+ 179:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 		{
+ 180:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 			//check dataStart frame
+ 181:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 			if(Find_IFR_Head(&USART1_Software_FIFO)==true)
+ 182:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 			{
+ 183:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 				//if(Compare_QueryQueue(&USART1_Software_FIFO,WFDBG_END)==false) return;//No full frame,wait ne
+ 184:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 				if(RemoveAQueue(&USART1_Software_FIFO)==FrameID_StartData)
+ 185:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 				{
+ 186:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 					IFRScopeRunState=ConnectedDataSend;
+ 187:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 				}
+ 188:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 				last_revtime=time_5ms_count;
+ 189:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 			}
+ 190:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 			else
+ 191:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 			{
+ 192:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 				DeleteAllQueue(&USART1_Software_FIFO);
+ 193:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 			}
+ 194:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 			connecting_LightingEffects();
+ 195:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 			
+ 196:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 			if(time_5ms_count-last_revtime>200*4)
+ 197:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 			{
+ 198:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 				IFRScopeRunState=Unconnected;
+ 199:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 			}
+ 200:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 			break;
+ 201:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 		}
+ 202:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 		case ConnectedDataSend:
+ 203:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 		{//todo: add quit connect when host stop
+ 204:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 			if(Find_IFR_Head(&USART1_Software_FIFO)==true)
+ 205:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 			{
+ 206:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 				uint8_t frameid = RemoveAQueue(&USART1_Software_FIFO);
+ 207:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 				if(frameid==FrameID_Data)
+ 208:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 				{
+ 209:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 					uint32_t maski = Get_Str_IndexOfQueue(&USART1_Software_FIFO,WFDBG_DATA_MASK);
+ 210:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 					DeleteQueue(&USART1_Software_FIFO,maski+strlen(WFDBG_DATA_MASK));//maski+5
+ 211:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 					//The end of the queue now points to the mask value
+ 212:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 					uint8_t maskvalue[10]={0};
+ 213:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 					RemoveQueue(maskvalue,&USART1_Software_FIFO,10);
+ 214:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 					if(RemoveAQueue(&USART1_Software_FIFO)==';')//MASK 10bytes -end
+ 215:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 					{
+ 216:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 						DeleteQueue(&USART1_Software_FIFO,2);//delete seq=
+ 217:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 						for(int i =0; i<10; i++)
+ 218:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 						{
+ 219:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 							if(maskvalue[i]==1)
+ 220:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 							{
+ 221:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 								RemoveQueue((uint8_t *)&(DataLink_RevData[i]),&USART1_Software_FIFO,4);
+ 222:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 							}
+ 223:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 							else //disable this chdata
+ 224:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 							{
+ 225:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 								DeleteQueue(&USART1_Software_FIFO,4);
+ 226:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 							}
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc2kCmn9.s 			page 12
+
+
+ 227:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 						}
+ 228:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 					}
+ 229:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 				}
+ 230:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 				else if(frameid==FrameID_Heartbeat)
+ 231:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 				{
+ 232:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 					
+ 233:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 				}
+ 234:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 				last_revtime=time_5ms_count;
+ 235:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 			}
+ 236:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 			
+ 237:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 			if(time_5ms_count%4==0)//10MS FrameData
+ 238:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 			{
+ 239:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 				#ifndef DATALINK_IDENTIFIER
+ 240:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 				DataLink_UpFrameData.data[0].point=DataLink_RevData[0].point;
+ 241:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 				DataLink_UpFrameData.data[1].point=DataLink_RevData[1].point;
+ 242:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 				DataLink_UpFrameData.data[2].point=DataLink_RevData[2].point;
+ 243:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 				DataLink_UpFrameData.data[3].point=DataLink_RevData[3].point;
+ 244:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 				DataLink_UpFrameData.data[4].point=DataLink_RevData[4].point;
+ 245:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 				DataLink_UpFrameData.data[5].point=time_5ms_count%100;
+ 246:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 				#endif
+ 247:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 				if(HAL_UART_GetState(&huart1) != HAL_UART_STATE_BUSY_TX)
+ 248:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 				{
+ 249:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 					HAL_UART_Transmit_DMA(&huart1, (uint8_t*)&DataLink_UpFrameData, sizeof(DataLink_UpFrameData));
+ 250:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 				}
+ 251:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 				else
+ 252:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 				{
+ 253:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 					error_uart1tx++;
+ 254:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 				}
+ 255:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 			}
+ 256:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 			connected_LightingEffects();
+ 257:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 			
+ 258:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 			if(time_5ms_count-last_revtime>200*4-2)
+ 259:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 			{
+ 260:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 				IFRScopeRunState=Unconnected;
+ 261:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 			}
+ 262:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 			break;
+ 263:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 		}
+ 264:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 	}
+ 265:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** }
+ 392              		.loc 1 265 1 is_stmt 0 view .LVU85
+ 393 0014 06B0     		add	sp, sp, #24
+ 394              	.LCFI6:
+ 395              		.cfi_remember_state
+ 396              		.cfi_def_cfa_offset 8
+ 397              		@ sp needed
+ 398 0016 10BD     		pop	{r4, pc}
+ 399              	.L55:
+ 400              	.LCFI7:
+ 401              		.cfi_restore_state
+ 138:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 			{
+ 402              		.loc 1 138 4 is_stmt 1 view .LVU86
+ 138:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 			{
+ 403              		.loc 1 138 7 is_stmt 0 view .LVU87
+ 404 0018 7548     		ldr	r0, .L63+4
+ 405 001a FFF7FEFF 		bl	Find_IFR_Head
+ 406              	.LVL38:
+ 138:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 			{
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc2kCmn9.s 			page 13
+
+
+ 407              		.loc 1 138 6 view .LVU88
+ 408 001e 0028     		cmp	r0, #0
+ 409 0020 38D0     		beq	.L37
+ 141:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 				{
+ 410              		.loc 1 141 5 is_stmt 1 view .LVU89
+ 141:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 				{
+ 411              		.loc 1 141 8 is_stmt 0 view .LVU90
+ 412 0022 7348     		ldr	r0, .L63+4
+ 413 0024 FFF7FEFF 		bl	RemoveAQueue
+ 414              	.LVL39:
+ 141:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 				{
+ 415              		.loc 1 141 7 view .LVU91
+ 416 0028 5F28     		cmp	r0, #95
+ 417 002a 0AD0     		beq	.L56
+ 418              	.L38:
+ 161:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 			}
+ 419              		.loc 1 161 5 is_stmt 1 view .LVU92
+ 161:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 			}
+ 420              		.loc 1 161 17 is_stmt 0 view .LVU93
+ 421 002c 714B     		ldr	r3, .L63+8
+ 422 002e 1A68     		ldr	r2, [r3]
+ 423 0030 714B     		ldr	r3, .L63+12
+ 424 0032 1A60     		str	r2, [r3]
+ 425              	.L41:
+ 172:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 			{
+ 426              		.loc 1 172 4 is_stmt 1 view .LVU94
+ 172:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 			{
+ 427              		.loc 1 172 21 is_stmt 0 view .LVU95
+ 428 0034 6F4B     		ldr	r3, .L63+8
+ 429 0036 1B68     		ldr	r3, [r3]
+ 172:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 			{
+ 430              		.loc 1 172 6 view .LVU96
+ 431 0038 C82B     		cmp	r3, #200
+ 432 003a EBD9     		bls	.L33
+ 174:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 			}
+ 433              		.loc 1 174 5 is_stmt 1 view .LVU97
+ 434 003c FFF7FEFF 		bl	normal_LightingEffects
+ 435              	.LVL40:
+ 436 0040 E8E7     		b	.L33
+ 437              	.L56:
+ 143:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 					{
+ 438              		.loc 1 143 6 view .LVU98
+ 143:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 					{
+ 439              		.loc 1 143 9 is_stmt 0 view .LVU99
+ 440 0042 6E49     		ldr	r1, .L63+16
+ 441 0044 6A48     		ldr	r0, .L63+4
+ 442 0046 FFF7FEFF 		bl	Get_Str_IndexOfQueue
+ 443              	.LVL41:
+ 143:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 					{
+ 444              		.loc 1 143 8 view .LVU100
+ 445 004a B0F1FF3F 		cmp	r0, #-1
+ 446 004e EDD0     		beq	.L38
+ 447              	.LBB7:
+ 145:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 						DeleteQueue(&USART1_Software_FIFO,strlen(WFDBG_HANDSHAKE_KEY)+1);
+ 448              		.loc 1 145 7 is_stmt 1 view .LVU101
+ 145:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 						DeleteQueue(&USART1_Software_FIFO,strlen(WFDBG_HANDSHAKE_KEY)+1);
+ 449              		.loc 1 145 12 is_stmt 0 view .LVU102
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc2kCmn9.s 			page 14
+
+
+ 450 0050 0023     		movs	r3, #0
+ 451 0052 0393     		str	r3, [sp, #12]
+ 452 0054 ADF81030 		strh	r3, [sp, #16]	@ movhi
+ 146:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 						
+ 453              		.loc 1 146 7 is_stmt 1 view .LVU103
+ 454 0058 654C     		ldr	r4, .L63+4
+ 455 005a 0521     		movs	r1, #5
+ 456 005c 2046     		mov	r0, r4
+ 457 005e FFF7FEFF 		bl	DeleteQueue
+ 458              	.LVL42:
+ 148:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 						if(strcmp(keydata,WFDBG_HANDSHAKE)==0)
+ 459              		.loc 1 148 7 view .LVU104
+ 460 0062 0522     		movs	r2, #5
+ 461 0064 2146     		mov	r1, r4
+ 462 0066 03A8     		add	r0, sp, #12
+ 463 0068 FFF7FEFF 		bl	RemoveQueue
+ 464              	.LVL43:
+ 149:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 						{
+ 465              		.loc 1 149 7 view .LVU105
+ 149:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 						{
+ 466              		.loc 1 149 10 is_stmt 0 view .LVU106
+ 467 006c 6449     		ldr	r1, .L63+20
+ 468 006e 03A8     		add	r0, sp, #12
+ 469 0070 FFF7FEFF 		bl	strcmp
+ 470              	.LVL44:
+ 149:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 						{
+ 471              		.loc 1 149 9 view .LVU107
+ 472 0074 40B9     		cbnz	r0, .L39
+ 151:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 							HAL_UART_Transmit_DMA(&huart1, (uint8_t*)WFDBG_HANDSHAKE_OK, strlen(WFDBG_HANDSHAKE_OK));
+ 473              		.loc 1 151 8 is_stmt 1 view .LVU108
+ 151:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 							HAL_UART_Transmit_DMA(&huart1, (uint8_t*)WFDBG_HANDSHAKE_OK, strlen(WFDBG_HANDSHAKE_OK));
+ 474              		.loc 1 151 24 is_stmt 0 view .LVU109
+ 475 0076 5D4B     		ldr	r3, .L63
+ 476 0078 0122     		movs	r2, #1
+ 477 007a 1A70     		strb	r2, [r3]
+ 152:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 						}
+ 478              		.loc 1 152 8 is_stmt 1 view .LVU110
+ 479 007c 0B22     		movs	r2, #11
+ 480 007e 6149     		ldr	r1, .L63+24
+ 481 0080 6148     		ldr	r0, .L63+28
+ 482 0082 FFF7FEFF 		bl	HAL_UART_Transmit_DMA
+ 483              	.LVL45:
+ 484 0086 D1E7     		b	.L38
+ 485              	.L39:
+ 157:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 						}
+ 486              		.loc 1 157 8 view .LVU111
+ 487 0088 0B22     		movs	r2, #11
+ 488 008a 6049     		ldr	r1, .L63+32
+ 489 008c 5E48     		ldr	r0, .L63+28
+ 490 008e FFF7FEFF 		bl	HAL_UART_Transmit_DMA
+ 491              	.LVL46:
+ 492 0092 CBE7     		b	.L38
+ 493              	.L37:
+ 494              	.LBE7:
+ 165:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 				if(time_5ms_count%400==100)
+ 495              		.loc 1 165 5 view .LVU112
+ 496 0094 5648     		ldr	r0, .L63+4
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc2kCmn9.s 			page 15
+
+
+ 497 0096 FFF7FEFF 		bl	DeleteAllQueue
+ 498              	.LVL47:
+ 166:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 				{
+ 499              		.loc 1 166 5 view .LVU113
+ 166:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 				{
+ 500              		.loc 1 166 22 is_stmt 0 view .LVU114
+ 501 009a 564B     		ldr	r3, .L63+8
+ 502 009c 1A68     		ldr	r2, [r3]
+ 503 009e 5C4B     		ldr	r3, .L63+36
+ 504 00a0 A3FB0213 		umull	r1, r3, r3, r2
+ 505 00a4 DB09     		lsrs	r3, r3, #7
+ 506 00a6 4FF4C871 		mov	r1, #400
+ 507 00aa 01FB1323 		mls	r3, r1, r3, r2
+ 166:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 				{
+ 508              		.loc 1 166 7 view .LVU115
+ 509 00ae 642B     		cmp	r3, #100
+ 510 00b0 C0D1     		bne	.L41
+ 168:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 					HAL_UART_Transmit_DMA(&huart1, (uint8_t*)WFDBG_REPDCY, strlen(WFDBG_REPDCY));
+ 511              		.loc 1 168 6 is_stmt 1 view .LVU116
+ 512 00b2 584C     		ldr	r4, .L63+40
+ 513 00b4 584B     		ldr	r3, .L63+44
+ 514 00b6 0093     		str	r3, [sp]
+ 515 00b8 584B     		ldr	r3, .L63+48
+ 516 00ba 594A     		ldr	r2, .L63+52
+ 517 00bc 5949     		ldr	r1, .L63+56
+ 518 00be 2046     		mov	r0, r4
+ 519 00c0 FFF7FEFF 		bl	sprintf
+ 520              	.LVL48:
+ 169:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 				}
+ 521              		.loc 1 169 6 view .LVU117
+ 169:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 				}
+ 522              		.loc 1 169 61 is_stmt 0 view .LVU118
+ 523 00c4 2046     		mov	r0, r4
+ 524 00c6 FFF7FEFF 		bl	strlen
+ 525              	.LVL49:
+ 169:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 				}
+ 526              		.loc 1 169 6 view .LVU119
+ 527 00ca 82B2     		uxth	r2, r0
+ 528 00cc 2146     		mov	r1, r4
+ 529 00ce 4E48     		ldr	r0, .L63+28
+ 530 00d0 FFF7FEFF 		bl	HAL_UART_Transmit_DMA
+ 531              	.LVL50:
+ 532 00d4 AEE7     		b	.L41
+ 533              	.L34:
+ 181:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 			{
+ 534              		.loc 1 181 4 is_stmt 1 view .LVU120
+ 181:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 			{
+ 535              		.loc 1 181 7 is_stmt 0 view .LVU121
+ 536 00d6 4648     		ldr	r0, .L63+4
+ 537 00d8 FFF7FEFF 		bl	Find_IFR_Head
+ 538              	.LVL51:
+ 181:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 			{
+ 539              		.loc 1 181 6 view .LVU122
+ 540 00dc D0B1     		cbz	r0, .L42
+ 184:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 				{
+ 541              		.loc 1 184 5 is_stmt 1 view .LVU123
+ 184:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 				{
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc2kCmn9.s 			page 16
+
+
+ 542              		.loc 1 184 8 is_stmt 0 view .LVU124
+ 543 00de 4448     		ldr	r0, .L63+4
+ 544 00e0 FFF7FEFF 		bl	RemoveAQueue
+ 545              	.LVL52:
+ 184:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 				{
+ 546              		.loc 1 184 7 view .LVU125
+ 547 00e4 3628     		cmp	r0, #54
+ 548 00e6 11D0     		beq	.L57
+ 549              	.L43:
+ 188:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 			}
+ 550              		.loc 1 188 5 is_stmt 1 view .LVU126
+ 188:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 			}
+ 551              		.loc 1 188 17 is_stmt 0 view .LVU127
+ 552 00e8 424B     		ldr	r3, .L63+8
+ 553 00ea 1A68     		ldr	r2, [r3]
+ 554 00ec 424B     		ldr	r3, .L63+12
+ 555 00ee 1A60     		str	r2, [r3]
+ 556              	.L44:
+ 194:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 			
+ 557              		.loc 1 194 4 is_stmt 1 view .LVU128
+ 558 00f0 FFF7FEFF 		bl	connecting_LightingEffects
+ 559              	.LVL53:
+ 196:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 			{
+ 560              		.loc 1 196 4 view .LVU129
+ 196:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 			{
+ 561              		.loc 1 196 21 is_stmt 0 view .LVU130
+ 562 00f4 3F4B     		ldr	r3, .L63+8
+ 563 00f6 1B68     		ldr	r3, [r3]
+ 564 00f8 3F4A     		ldr	r2, .L63+12
+ 565 00fa 1268     		ldr	r2, [r2]
+ 566 00fc 9B1A     		subs	r3, r3, r2
+ 196:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 			{
+ 567              		.loc 1 196 6 view .LVU131
+ 568 00fe B3F5487F 		cmp	r3, #800
+ 569 0102 87D9     		bls	.L33
+ 198:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 			}
+ 570              		.loc 1 198 5 is_stmt 1 view .LVU132
+ 198:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 			}
+ 571              		.loc 1 198 21 is_stmt 0 view .LVU133
+ 572 0104 394B     		ldr	r3, .L63
+ 573 0106 0022     		movs	r2, #0
+ 574 0108 1A70     		strb	r2, [r3]
+ 575 010a 83E7     		b	.L33
+ 576              	.L57:
+ 186:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 				}
+ 577              		.loc 1 186 6 is_stmt 1 view .LVU134
+ 186:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 				}
+ 578              		.loc 1 186 22 is_stmt 0 view .LVU135
+ 579 010c 374B     		ldr	r3, .L63
+ 580 010e 0222     		movs	r2, #2
+ 581 0110 1A70     		strb	r2, [r3]
+ 582 0112 E9E7     		b	.L43
+ 583              	.L42:
+ 192:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 			}
+ 584              		.loc 1 192 5 is_stmt 1 view .LVU136
+ 585 0114 3648     		ldr	r0, .L63+4
+ 586 0116 FFF7FEFF 		bl	DeleteAllQueue
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc2kCmn9.s 			page 17
+
+
+ 587              	.LVL54:
+ 588 011a E9E7     		b	.L44
+ 589              	.L35:
+ 204:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 			{
+ 590              		.loc 1 204 4 view .LVU137
+ 204:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 			{
+ 591              		.loc 1 204 7 is_stmt 0 view .LVU138
+ 592 011c 3448     		ldr	r0, .L63+4
+ 593 011e FFF7FEFF 		bl	Find_IFR_Head
+ 594              	.LVL55:
+ 204:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 			{
+ 595              		.loc 1 204 6 view .LVU139
+ 596 0122 A0B9     		cbnz	r0, .L58
+ 597              	.L45:
+ 237:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 			{
+ 598              		.loc 1 237 4 is_stmt 1 view .LVU140
+ 237:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 			{
+ 599              		.loc 1 237 21 is_stmt 0 view .LVU141
+ 600 0124 334B     		ldr	r3, .L63+8
+ 601 0126 1B68     		ldr	r3, [r3]
+ 237:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 			{
+ 602              		.loc 1 237 6 view .LVU142
+ 603 0128 13F0030F 		tst	r3, #3
+ 604 012c 4ED0     		beq	.L59
+ 605              	.L52:
+ 256:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 			
+ 606              		.loc 1 256 4 is_stmt 1 view .LVU143
+ 607 012e FFF7FEFF 		bl	connected_LightingEffects
+ 608              	.LVL56:
+ 258:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 			{
+ 609              		.loc 1 258 4 view .LVU144
+ 258:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 			{
+ 610              		.loc 1 258 21 is_stmt 0 view .LVU145
+ 611 0132 304B     		ldr	r3, .L63+8
+ 612 0134 1B68     		ldr	r3, [r3]
+ 613 0136 304A     		ldr	r2, .L63+12
+ 614 0138 1268     		ldr	r2, [r2]
+ 615 013a 9B1A     		subs	r3, r3, r2
+ 258:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 			{
+ 616              		.loc 1 258 6 view .LVU146
+ 617 013c 40F21E32 		movw	r2, #798
+ 618 0140 9342     		cmp	r3, r2
+ 619 0142 7FF667AF 		bls	.L33
+ 260:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 			}
+ 620              		.loc 1 260 5 is_stmt 1 view .LVU147
+ 260:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 			}
+ 621              		.loc 1 260 21 is_stmt 0 view .LVU148
+ 622 0146 294B     		ldr	r3, .L63
+ 623 0148 0022     		movs	r2, #0
+ 624 014a 1A70     		strb	r2, [r3]
+ 625              		.loc 1 265 1 view .LVU149
+ 626 014c 62E7     		b	.L33
+ 627              	.L58:
+ 628              	.LBB8:
+ 206:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 				if(frameid==FrameID_Data)
+ 629              		.loc 1 206 5 is_stmt 1 view .LVU150
+ 206:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 				if(frameid==FrameID_Data)
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc2kCmn9.s 			page 18
+
+
+ 630              		.loc 1 206 23 is_stmt 0 view .LVU151
+ 631 014e 2848     		ldr	r0, .L63+4
+ 632 0150 FFF7FEFF 		bl	RemoveAQueue
+ 633              	.LVL57:
+ 207:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 				{
+ 634              		.loc 1 207 5 is_stmt 1 view .LVU152
+ 207:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 				{
+ 635              		.loc 1 207 7 is_stmt 0 view .LVU153
+ 636 0154 3728     		cmp	r0, #55
+ 637 0156 04D0     		beq	.L60
+ 638              	.LVL58:
+ 639              	.L46:
+ 233:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 				last_revtime=time_5ms_count;
+ 640              		.loc 1 233 5 is_stmt 1 view .LVU154
+ 234:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 			}
+ 641              		.loc 1 234 5 view .LVU155
+ 234:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 			}
+ 642              		.loc 1 234 17 is_stmt 0 view .LVU156
+ 643 0158 264B     		ldr	r3, .L63+8
+ 644 015a 1A68     		ldr	r2, [r3]
+ 645 015c 264B     		ldr	r3, .L63+12
+ 646 015e 1A60     		str	r2, [r3]
+ 647 0160 E0E7     		b	.L45
+ 648              	.LVL59:
+ 649              	.L60:
+ 650              	.LBB9:
+ 209:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 					DeleteQueue(&USART1_Software_FIFO,maski+strlen(WFDBG_DATA_MASK));//maski+5
+ 651              		.loc 1 209 6 is_stmt 1 view .LVU157
+ 209:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 					DeleteQueue(&USART1_Software_FIFO,maski+strlen(WFDBG_DATA_MASK));//maski+5
+ 652              		.loc 1 209 23 is_stmt 0 view .LVU158
+ 653 0162 234C     		ldr	r4, .L63+4
+ 654 0164 3049     		ldr	r1, .L63+60
+ 655 0166 2046     		mov	r0, r4
+ 656              	.LVL60:
+ 209:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 					DeleteQueue(&USART1_Software_FIFO,maski+strlen(WFDBG_DATA_MASK));//maski+5
+ 657              		.loc 1 209 23 view .LVU159
+ 658 0168 FFF7FEFF 		bl	Get_Str_IndexOfQueue
+ 659              	.LVL61:
+ 210:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 					//The end of the queue now points to the mask value
+ 660              		.loc 1 210 6 is_stmt 1 view .LVU160
+ 661 016c 411D     		adds	r1, r0, #5
+ 662 016e 89B2     		uxth	r1, r1
+ 663 0170 2046     		mov	r0, r4
+ 664              	.LVL62:
+ 210:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 					//The end of the queue now points to the mask value
+ 665              		.loc 1 210 6 is_stmt 0 view .LVU161
+ 666 0172 FFF7FEFF 		bl	DeleteQueue
+ 667              	.LVL63:
+ 212:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 					RemoveQueue(maskvalue,&USART1_Software_FIFO,10);
+ 668              		.loc 1 212 6 is_stmt 1 view .LVU162
+ 212:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 					RemoveQueue(maskvalue,&USART1_Software_FIFO,10);
+ 669              		.loc 1 212 14 is_stmt 0 view .LVU163
+ 670 0176 0023     		movs	r3, #0
+ 671 0178 0393     		str	r3, [sp, #12]
+ 672 017a 0493     		str	r3, [sp, #16]
+ 673 017c ADF81430 		strh	r3, [sp, #20]	@ movhi
+ 213:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 					if(RemoveAQueue(&USART1_Software_FIFO)==';')//MASK 10bytes -end
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc2kCmn9.s 			page 19
+
+
+ 674              		.loc 1 213 6 is_stmt 1 view .LVU164
+ 675 0180 0A22     		movs	r2, #10
+ 676 0182 2146     		mov	r1, r4
+ 677 0184 03A8     		add	r0, sp, #12
+ 678 0186 FFF7FEFF 		bl	RemoveQueue
+ 679              	.LVL64:
+ 214:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 					{
+ 680              		.loc 1 214 6 view .LVU165
+ 214:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 					{
+ 681              		.loc 1 214 9 is_stmt 0 view .LVU166
+ 682 018a 2046     		mov	r0, r4
+ 683 018c FFF7FEFF 		bl	RemoveAQueue
+ 684              	.LVL65:
+ 214:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 					{
+ 685              		.loc 1 214 8 view .LVU167
+ 686 0190 3B28     		cmp	r0, #59
+ 687 0192 E1D1     		bne	.L46
+ 216:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 						for(int i =0; i<10; i++)
+ 688              		.loc 1 216 7 is_stmt 1 view .LVU168
+ 689 0194 0221     		movs	r1, #2
+ 690 0196 2046     		mov	r0, r4
+ 691 0198 FFF7FEFF 		bl	DeleteQueue
+ 692              	.LVL66:
+ 217:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 						{
+ 693              		.loc 1 217 7 view .LVU169
+ 694              	.LBB10:
+ 217:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 						{
+ 695              		.loc 1 217 11 view .LVU170
+ 217:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 						{
+ 696              		.loc 1 217 15 is_stmt 0 view .LVU171
+ 697 019c 0024     		movs	r4, #0
+ 217:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 						{
+ 698              		.loc 1 217 7 view .LVU172
+ 699 019e 07E0     		b	.L48
+ 700              	.LVL67:
+ 701              	.L61:
+ 221:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 							}
+ 702              		.loc 1 221 9 is_stmt 1 view .LVU173
+ 703 01a0 0422     		movs	r2, #4
+ 704 01a2 1349     		ldr	r1, .L63+4
+ 705 01a4 2148     		ldr	r0, .L63+64
+ 706 01a6 00EB8400 		add	r0, r0, r4, lsl #2
+ 707 01aa FFF7FEFF 		bl	RemoveQueue
+ 708              	.LVL68:
+ 709              	.L50:
+ 217:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 						{
+ 710              		.loc 1 217 28 discriminator 2 view .LVU174
+ 711 01ae 0134     		adds	r4, r4, #1
+ 712              	.LVL69:
+ 713              	.L48:
+ 217:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 						{
+ 714              		.loc 1 217 22 discriminator 1 view .LVU175
+ 715 01b0 092C     		cmp	r4, #9
+ 716 01b2 D1DC     		bgt	.L46
+ 219:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 							{
+ 717              		.loc 1 219 8 view .LVU176
+ 219:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 							{
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc2kCmn9.s 			page 20
+
+
+ 718              		.loc 1 219 20 is_stmt 0 view .LVU177
+ 719 01b4 04F11803 		add	r3, r4, #24
+ 720 01b8 6B44     		add	r3, sp, r3
+ 721 01ba 13F80C3C 		ldrb	r3, [r3, #-12]	@ zero_extendqisi2
+ 219:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 							{
+ 722              		.loc 1 219 10 view .LVU178
+ 723 01be 012B     		cmp	r3, #1
+ 724 01c0 EED0     		beq	.L61
+ 225:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 							}
+ 725              		.loc 1 225 9 is_stmt 1 view .LVU179
+ 726 01c2 0421     		movs	r1, #4
+ 727 01c4 0A48     		ldr	r0, .L63+4
+ 728 01c6 FFF7FEFF 		bl	DeleteQueue
+ 729              	.LVL70:
+ 730 01ca F0E7     		b	.L50
+ 731              	.LVL71:
+ 732              	.L59:
+ 225:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 							}
+ 733              		.loc 1 225 9 is_stmt 0 view .LVU180
+ 734              	.LBE10:
+ 735              	.LBE9:
+ 736              	.LBE8:
+ 247:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 				{
+ 737              		.loc 1 247 5 is_stmt 1 view .LVU181
+ 247:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 				{
+ 738              		.loc 1 247 8 is_stmt 0 view .LVU182
+ 739 01cc 0E48     		ldr	r0, .L63+28
+ 740 01ce FFF7FEFF 		bl	HAL_UART_GetState
+ 741              	.LVL72:
+ 247:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 				{
+ 742              		.loc 1 247 7 view .LVU183
+ 743 01d2 2128     		cmp	r0, #33
+ 744 01d4 04D1     		bne	.L62
+ 253:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 				}
+ 745              		.loc 1 253 6 is_stmt 1 view .LVU184
+ 253:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 				}
+ 746              		.loc 1 253 19 is_stmt 0 view .LVU185
+ 747 01d6 164A     		ldr	r2, .L63+68
+ 748 01d8 1368     		ldr	r3, [r2]
+ 749 01da 0133     		adds	r3, r3, #1
+ 750 01dc 1360     		str	r3, [r2]
+ 751 01de A6E7     		b	.L52
+ 752              	.L62:
+ 249:../STM32CUBEMX/Core/Src/ifr-scope_device.c **** 				}
+ 753              		.loc 1 249 6 is_stmt 1 view .LVU186
+ 754 01e0 5E22     		movs	r2, #94
+ 755 01e2 1449     		ldr	r1, .L63+72
+ 756 01e4 0848     		ldr	r0, .L63+28
+ 757 01e6 FFF7FEFF 		bl	HAL_UART_Transmit_DMA
+ 758              	.LVL73:
+ 759 01ea A0E7     		b	.L52
+ 760              	.L64:
+ 761              		.align	2
+ 762              	.L63:
+ 763 01ec 00000000 		.word	.LANCHOR1
+ 764 01f0 00000000 		.word	USART1_Software_FIFO
+ 765 01f4 00000000 		.word	time_5ms_count
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc2kCmn9.s 			page 21
+
+
+ 766 01f8 00000000 		.word	.LANCHOR6
+ 767 01fc 00000000 		.word	.LANCHOR2
+ 768 0200 00000000 		.word	.LANCHOR3
+ 769 0204 00000000 		.word	.LANCHOR4
+ 770 0208 00000000 		.word	huart1
+ 771 020c 00000000 		.word	.LANCHOR5
+ 772 0210 1F85EB51 		.word	1374389535
+ 773 0214 00000000 		.word	.LANCHOR9
+ 774 0218 00000000 		.word	.LANCHOR10
+ 775 021c 00000000 		.word	.LANCHOR7
+ 776 0220 00000000 		.word	.LANCHOR8
+ 777 0224 00000000 		.word	.LC0
+ 778 0228 00000000 		.word	.LANCHOR11
+ 779 022c 00000000 		.word	.LANCHOR12
+ 780 0230 00000000 		.word	.LANCHOR14
+ 781 0234 00000000 		.word	.LANCHOR13
+ 782              		.cfi_endproc
+ 783              	.LFE242:
+ 785              		.global	error_uart1tx
+ 786              		.global	last_revtime
+ 787              		.global	DataLink_RevData
+ 788              		.global	DataLink_UpFrameData
+ 789              		.global	WFDBG_DATA_MASK
+ 790              		.global	WFDBG_HANDSHAKE_Fail
+ 791              		.global	WFDBG_HANDSHAKE_OK
+ 792              		.global	WFDBG_HANDSHAKE_KEY
+ 793              		.global	WFDBG_HANDSHAKE_HEAD
+ 794              		.global	WFDBG_STA
+ 795              		.global	WFDBG_IM
+ 796              		.global	WFDBG_REP_DCY2
+ 797              		.global	WFDBG_REP_DCY1
+ 798              		.global	WFDBG_END
+ 799              		.global	WFDBG_HEAD
+ 800              		.global	WFDBG_HANDSHAKE
+ 801              		.global	WFDBG_REP_DESCRI
+ 802              		.global	WFDBG_REPDCY
+ 803              		.global	IFRScopeRunState
+ 804              		.section	.bss.DataLink_RevData,"aw",%nobits
+ 805              		.align	2
+ 806              		.set	.LANCHOR12,. + 0
+ 809              	DataLink_RevData:
+ 810 0000 00000000 		.space	40
+ 810      00000000 
+ 810      00000000 
+ 810      00000000 
+ 810      00000000 
+ 811              		.section	.bss.IFRScopeRunState,"aw",%nobits
+ 812              		.set	.LANCHOR1,. + 0
+ 815              	IFRScopeRunState:
+ 816 0000 00       		.space	1
+ 817              		.section	.bss.WFDBG_REPDCY,"aw",%nobits
+ 818              		.align	2
+ 819              		.set	.LANCHOR9,. + 0
+ 822              	WFDBG_REPDCY:
+ 823 0000 00000000 		.space	40
+ 823      00000000 
+ 823      00000000 
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc2kCmn9.s 			page 22
+
+
+ 823      00000000 
+ 823      00000000 
+ 824              		.section	.bss.error_uart1tx,"aw",%nobits
+ 825              		.align	2
+ 826              		.set	.LANCHOR14,. + 0
+ 829              	error_uart1tx:
+ 830 0000 00000000 		.space	4
+ 831              		.section	.bss.last_revtime,"aw",%nobits
+ 832              		.align	2
+ 833              		.set	.LANCHOR6,. + 0
+ 836              	last_revtime:
+ 837 0000 00000000 		.space	4
+ 838              		.section	.data.DataLink_UpFrameData,"aw"
+ 839              		.align	2
+ 840              		.set	.LANCHOR13,. + 0
+ 843              	DataLink_UpFrameData:
+ 844 0000 23494652 		.ascii	"#IFR=7:"
+ 844      3D373A
+ 845 0007 00       		.space	1
+ 846 0008 3D       		.byte	61
+ 847 0009 00000000 		.space	80
+ 847      00000000 
+ 847      00000000 
+ 847      00000000 
+ 847      00000000 
+ 848 0059 3B23454E 		.ascii	";#END"
+ 848      44
+ 849              		.section	.data.WFDBG_HANDSHAKE,"aw"
+ 850              		.align	2
+ 851              		.set	.LANCHOR3,. + 0
+ 854              	WFDBG_HANDSHAKE:
+ 855 0000 49465230 		.ascii	"IFR00\000"
+ 855      3000
+ 856              		.section	.data.WFDBG_REP_DESCRI,"aw"
+ 857              		.align	2
+ 858              		.set	.LANCHOR7,. + 0
+ 861              	WFDBG_REP_DESCRI:
+ 862 0000 42616C61 		.ascii	"BalanceUnname\000"
+ 862      6E636555 
+ 862      6E6E616D 
+ 862      6500
+ 863 000e 00       		.space	1
+ 864              		.section	.rodata.WFDBG_DATA_MASK,"a"
+ 865              		.align	2
+ 866              		.set	.LANCHOR11,. + 0
+ 869              	WFDBG_DATA_MASK:
+ 870 0000 4D41534B 		.ascii	"MASK=\000"
+ 870      3D00
+ 871              		.section	.rodata.WFDBG_END,"a"
+ 872              		.align	2
+ 875              	WFDBG_END:
+ 876 0000 23454E44 		.ascii	"#END\000"
+ 876      00
+ 877              		.section	.rodata.WFDBG_HANDSHAKE_Fail,"a"
+ 878              		.align	2
+ 879              		.set	.LANCHOR5,. + 0
+ 882              	WFDBG_HANDSHAKE_Fail:
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc2kCmn9.s 			page 23
+
+
+ 883 0000 23494652 		.ascii	"#IFR=a:#END\000"
+ 883      3D613A23 
+ 883      454E4400 
+ 884              		.section	.rodata.WFDBG_HANDSHAKE_HEAD,"a"
+ 885              		.align	2
+ 888              	WFDBG_HANDSHAKE_HEAD:
+ 889 0000 23494652 		.ascii	"#IFR=_:\000"
+ 889      3D5F3A00 
+ 890              		.section	.rodata.WFDBG_HANDSHAKE_KEY,"a"
+ 891              		.align	2
+ 892              		.set	.LANCHOR2,. + 0
+ 895              	WFDBG_HANDSHAKE_KEY:
+ 896 0000 4B45593D 		.ascii	"KEY=\000"
+ 896      00
+ 897              		.section	.rodata.WFDBG_HANDSHAKE_OK,"a"
+ 898              		.align	2
+ 899              		.set	.LANCHOR4,. + 0
+ 902              	WFDBG_HANDSHAKE_OK:
+ 903 0000 23494652 		.ascii	"#IFR=`:#END\000"
+ 903      3D603A23 
+ 903      454E4400 
+ 904              		.section	.rodata.WFDBG_HEAD,"a"
+ 905              		.align	2
+ 906              		.set	.LANCHOR0,. + 0
+ 909              	WFDBG_HEAD:
+ 910 0000 23494652 		.ascii	"#IFR=\000"
+ 910      3D00
+ 911              		.section	.rodata.WFDBG_IM,"a"
+ 912              		.align	2
+ 915              	WFDBG_IM:
+ 916 0000 494D3D00 		.ascii	"IM=\000"
+ 917              		.section	.rodata.WFDBG_REP_DCY1,"a"
+ 918              		.align	2
+ 919              		.set	.LANCHOR8,. + 0
+ 922              	WFDBG_REP_DCY1:
+ 923 0000 23494652 		.ascii	"#IFR=1:IM=\000"
+ 923      3D313A49 
+ 923      4D3D00
+ 924              		.section	.rodata.WFDBG_REP_DCY2,"a"
+ 925              		.align	2
+ 926              		.set	.LANCHOR10,. + 0
+ 929              	WFDBG_REP_DCY2:
+ 930 0000 3B535441 		.ascii	";STA=1;#END\000"
+ 930      3D313B23 
+ 930      454E4400 
+ 931              		.section	.rodata.WFDBG_STA,"a"
+ 932              		.align	2
+ 935              	WFDBG_STA:
+ 936 0000 5354413D 		.ascii	"STA=\000"
+ 936      00
+ 937              		.text
+ 938              	.Letext0:
+ 939              		.file 2 "c:\\program files (x86)\\arm gnu toolchain arm-none-eabi\\11.2 2022.02\\arm-none-eabi\\in
+ 940              		.file 3 "c:\\program files (x86)\\arm gnu toolchain arm-none-eabi\\11.2 2022.02\\arm-none-eabi\\in
+ 941              		.file 4 "../STM32CUBEMX/Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f405xx.h"
+ 942              		.file 5 "c:\\program files (x86)\\arm gnu toolchain arm-none-eabi\\11.2 2022.02\\lib\\gcc\\arm-non
+ 943              		.file 6 "../STM32CUBEMX/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h"
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc2kCmn9.s 			page 24
+
+
+ 944              		.file 7 "../STM32CUBEMX/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h"
+ 945              		.file 8 "../STM32CUBEMX/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h"
+ 946              		.file 9 "../STM32CUBEMX/Core/Inc/ifr-scope_device.h"
+ 947              		.file 10 "../STM32CUBEMX/Core/Src/uart_fifo.h"
+ 948              		.file 11 "../STM32CUBEMX/Core/Inc/usart.h"
+ 949              		.file 12 "../STM32CUBEMX/Core/Inc/ws2812.h"
+ 950              		.file 13 "c:\\program files (x86)\\arm gnu toolchain arm-none-eabi\\11.2 2022.02\\arm-none-eabi\\i
+ 951              		.file 14 "c:\\program files (x86)\\arm gnu toolchain arm-none-eabi\\11.2 2022.02\\arm-none-eabi\\i
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc2kCmn9.s 			page 25
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 ifr-scope_device.c
+C:\Users\ysl\AppData\Local\Temp\cc2kCmn9.s:20     .text.Compare_QueryQueue:00000000 $t
+C:\Users\ysl\AppData\Local\Temp\cc2kCmn9.s:26     .text.Compare_QueryQueue:00000000 Compare_QueryQueue
+C:\Users\ysl\AppData\Local\Temp\cc2kCmn9.s:119    .text.Get_Str_IndexOf:00000000 $t
+C:\Users\ysl\AppData\Local\Temp\cc2kCmn9.s:125    .text.Get_Str_IndexOf:00000000 Get_Str_IndexOf
+C:\Users\ysl\AppData\Local\Temp\cc2kCmn9.s:164    .text.Get_Str_IndexOfQueue:00000000 $t
+C:\Users\ysl\AppData\Local\Temp\cc2kCmn9.s:170    .text.Get_Str_IndexOfQueue:00000000 Get_Str_IndexOfQueue
+C:\Users\ysl\AppData\Local\Temp\cc2kCmn9.s:292    .text.Find_IFR_Head:00000000 $t
+C:\Users\ysl\AppData\Local\Temp\cc2kCmn9.s:298    .text.Find_IFR_Head:00000000 Find_IFR_Head
+C:\Users\ysl\AppData\Local\Temp\cc2kCmn9.s:353    .text.Find_IFR_Head:0000002c $d
+C:\Users\ysl\AppData\Local\Temp\cc2kCmn9.s:359    .rodata.IFR_Scope_Main.str1.4:00000000 $d
+C:\Users\ysl\AppData\Local\Temp\cc2kCmn9.s:363    .text.IFR_Scope_Main:00000000 $t
+C:\Users\ysl\AppData\Local\Temp\cc2kCmn9.s:369    .text.IFR_Scope_Main:00000000 IFR_Scope_Main
+C:\Users\ysl\AppData\Local\Temp\cc2kCmn9.s:763    .text.IFR_Scope_Main:000001ec $d
+C:\Users\ysl\AppData\Local\Temp\cc2kCmn9.s:829    .bss.error_uart1tx:00000000 error_uart1tx
+C:\Users\ysl\AppData\Local\Temp\cc2kCmn9.s:836    .bss.last_revtime:00000000 last_revtime
+C:\Users\ysl\AppData\Local\Temp\cc2kCmn9.s:809    .bss.DataLink_RevData:00000000 DataLink_RevData
+C:\Users\ysl\AppData\Local\Temp\cc2kCmn9.s:843    .data.DataLink_UpFrameData:00000000 DataLink_UpFrameData
+C:\Users\ysl\AppData\Local\Temp\cc2kCmn9.s:869    .rodata.WFDBG_DATA_MASK:00000000 WFDBG_DATA_MASK
+C:\Users\ysl\AppData\Local\Temp\cc2kCmn9.s:882    .rodata.WFDBG_HANDSHAKE_Fail:00000000 WFDBG_HANDSHAKE_Fail
+C:\Users\ysl\AppData\Local\Temp\cc2kCmn9.s:902    .rodata.WFDBG_HANDSHAKE_OK:00000000 WFDBG_HANDSHAKE_OK
+C:\Users\ysl\AppData\Local\Temp\cc2kCmn9.s:895    .rodata.WFDBG_HANDSHAKE_KEY:00000000 WFDBG_HANDSHAKE_KEY
+C:\Users\ysl\AppData\Local\Temp\cc2kCmn9.s:888    .rodata.WFDBG_HANDSHAKE_HEAD:00000000 WFDBG_HANDSHAKE_HEAD
+C:\Users\ysl\AppData\Local\Temp\cc2kCmn9.s:935    .rodata.WFDBG_STA:00000000 WFDBG_STA
+C:\Users\ysl\AppData\Local\Temp\cc2kCmn9.s:915    .rodata.WFDBG_IM:00000000 WFDBG_IM
+C:\Users\ysl\AppData\Local\Temp\cc2kCmn9.s:929    .rodata.WFDBG_REP_DCY2:00000000 WFDBG_REP_DCY2
+C:\Users\ysl\AppData\Local\Temp\cc2kCmn9.s:922    .rodata.WFDBG_REP_DCY1:00000000 WFDBG_REP_DCY1
+C:\Users\ysl\AppData\Local\Temp\cc2kCmn9.s:875    .rodata.WFDBG_END:00000000 WFDBG_END
+C:\Users\ysl\AppData\Local\Temp\cc2kCmn9.s:909    .rodata.WFDBG_HEAD:00000000 WFDBG_HEAD
+C:\Users\ysl\AppData\Local\Temp\cc2kCmn9.s:854    .data.WFDBG_HANDSHAKE:00000000 WFDBG_HANDSHAKE
+C:\Users\ysl\AppData\Local\Temp\cc2kCmn9.s:861    .data.WFDBG_REP_DESCRI:00000000 WFDBG_REP_DESCRI
+C:\Users\ysl\AppData\Local\Temp\cc2kCmn9.s:822    .bss.WFDBG_REPDCY:00000000 WFDBG_REPDCY
+C:\Users\ysl\AppData\Local\Temp\cc2kCmn9.s:815    .bss.IFRScopeRunState:00000000 IFRScopeRunState
+C:\Users\ysl\AppData\Local\Temp\cc2kCmn9.s:805    .bss.DataLink_RevData:00000000 $d
+C:\Users\ysl\AppData\Local\Temp\cc2kCmn9.s:816    .bss.IFRScopeRunState:00000000 $d
+C:\Users\ysl\AppData\Local\Temp\cc2kCmn9.s:818    .bss.WFDBG_REPDCY:00000000 $d
+C:\Users\ysl\AppData\Local\Temp\cc2kCmn9.s:825    .bss.error_uart1tx:00000000 $d
+C:\Users\ysl\AppData\Local\Temp\cc2kCmn9.s:832    .bss.last_revtime:00000000 $d
+C:\Users\ysl\AppData\Local\Temp\cc2kCmn9.s:839    .data.DataLink_UpFrameData:00000000 $d
+C:\Users\ysl\AppData\Local\Temp\cc2kCmn9.s:850    .data.WFDBG_HANDSHAKE:00000000 $d
+C:\Users\ysl\AppData\Local\Temp\cc2kCmn9.s:857    .data.WFDBG_REP_DESCRI:00000000 $d
+C:\Users\ysl\AppData\Local\Temp\cc2kCmn9.s:865    .rodata.WFDBG_DATA_MASK:00000000 $d
+C:\Users\ysl\AppData\Local\Temp\cc2kCmn9.s:872    .rodata.WFDBG_END:00000000 $d
+C:\Users\ysl\AppData\Local\Temp\cc2kCmn9.s:878    .rodata.WFDBG_HANDSHAKE_Fail:00000000 $d
+C:\Users\ysl\AppData\Local\Temp\cc2kCmn9.s:885    .rodata.WFDBG_HANDSHAKE_HEAD:00000000 $d
+C:\Users\ysl\AppData\Local\Temp\cc2kCmn9.s:891    .rodata.WFDBG_HANDSHAKE_KEY:00000000 $d
+C:\Users\ysl\AppData\Local\Temp\cc2kCmn9.s:898    .rodata.WFDBG_HANDSHAKE_OK:00000000 $d
+C:\Users\ysl\AppData\Local\Temp\cc2kCmn9.s:905    .rodata.WFDBG_HEAD:00000000 $d
+C:\Users\ysl\AppData\Local\Temp\cc2kCmn9.s:912    .rodata.WFDBG_IM:00000000 $d
+C:\Users\ysl\AppData\Local\Temp\cc2kCmn9.s:918    .rodata.WFDBG_REP_DCY1:00000000 $d
+C:\Users\ysl\AppData\Local\Temp\cc2kCmn9.s:925    .rodata.WFDBG_REP_DCY2:00000000 $d
+C:\Users\ysl\AppData\Local\Temp\cc2kCmn9.s:932    .rodata.WFDBG_STA:00000000 $d
+
+UNDEFINED SYMBOLS
+strlen
+GetQueueReadCount
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc2kCmn9.s 			page 26
+
+
+QueryAQueue
+strstr
+RemoveAQueue
+DeleteQueue
+USART1_Software_FIFO
+normal_LightingEffects
+RemoveQueue
+strcmp
+HAL_UART_Transmit_DMA
+DeleteAllQueue
+sprintf
+connecting_LightingEffects
+connected_LightingEffects
+HAL_UART_GetState
+time_5ms_count
+huart1

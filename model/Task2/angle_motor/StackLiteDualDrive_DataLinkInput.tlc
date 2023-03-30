@@ -1,0 +1,39 @@
+%implements  StackLiteDualDrive_DataLinkInput "C"
+
+%function BlockTypeSetup(block, system) void
+%assign SrcBaseName = LibGetMdlSrcBaseName()
+%assign modelCFile = LibCreateSourceFile("Source","Simulink",SrcBaseName)
+%openfile datalinkdeclarationbuf
+extern union _floatchar DataLink_RevData[10];//data config from host
+%closefile datalinkdeclarationbuf
+%<LibSetSourceFileSection(modelCFile,"Declarations",datalinkdeclarationbuf)>
+
+%openfile DataLinkInput = "StackLiteDualDrive_DataLinkInput.c" %%兼容simulink不怎么智能的MODULES tocken
+/* dummy by simulink */
+%closefile DataLinkInput
+%endfunction
+
+%function Outputs(block, system) Output
+%assign data0 = LibBlockOutputSignal(0, "", "",0)
+%assign data1 = LibBlockOutputSignal(1, "", "",0)
+%assign data2 = LibBlockOutputSignal(2, "", "",0)
+%assign data3 = LibBlockOutputSignal(3, "", "",0)
+%assign data4 = LibBlockOutputSignal(4, "", "",0)
+%assign data5 = LibBlockOutputSignal(5, "", "",0)
+%assign data6 = LibBlockOutputSignal(6, "", "",0)
+%assign data7 = LibBlockOutputSignal(7, "", "",0)
+%assign data8 = LibBlockOutputSignal(8, "", "",0)
+%assign data9 = LibBlockOutputSignal(9, "", "",0)
+
+/*Input Data*/
+%<data0>=DataLink_RevData[0].point;
+%<data1>=DataLink_RevData[1].point;
+%<data2>=DataLink_RevData[2].point;
+%<data3>=DataLink_RevData[3].point;
+%<data4>=DataLink_RevData[4].point;
+%<data5>=DataLink_RevData[5].point;
+%<data6>=DataLink_RevData[6].point;
+%<data7>=DataLink_RevData[7].point;
+%<data8>=DataLink_RevData[8].point;
+%<data9>=DataLink_RevData[9].point;
+%endfunction

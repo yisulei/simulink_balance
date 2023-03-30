@@ -1,0 +1,1819 @@
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccg9I5nN.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"adc.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.text.MX_ADC1_Init,"ax",%progbits
+  20              		.align	1
+  21              		.global	MX_ADC1_Init
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	MX_ADC1_Init:
+  27              	.LFB235:
+  28              		.file 1 "../STM32CUBEMX/Core/Src/adc.c"
+   1:../STM32CUBEMX/Core/Src/adc.c **** /* USER CODE BEGIN Header */
+   2:../STM32CUBEMX/Core/Src/adc.c **** /**
+   3:../STM32CUBEMX/Core/Src/adc.c ****   ******************************************************************************
+   4:../STM32CUBEMX/Core/Src/adc.c ****   * @file    adc.c
+   5:../STM32CUBEMX/Core/Src/adc.c ****   * @brief   This file provides code for the configuration
+   6:../STM32CUBEMX/Core/Src/adc.c ****   *          of the ADC instances.
+   7:../STM32CUBEMX/Core/Src/adc.c ****   ******************************************************************************
+   8:../STM32CUBEMX/Core/Src/adc.c ****   * @attention
+   9:../STM32CUBEMX/Core/Src/adc.c ****   *
+  10:../STM32CUBEMX/Core/Src/adc.c ****   * Copyright (c) 2022 STMicroelectronics.
+  11:../STM32CUBEMX/Core/Src/adc.c ****   * All rights reserved.
+  12:../STM32CUBEMX/Core/Src/adc.c ****   *
+  13:../STM32CUBEMX/Core/Src/adc.c ****   * This software is licensed under terms that can be found in the LICENSE file
+  14:../STM32CUBEMX/Core/Src/adc.c ****   * in the root directory of this software component.
+  15:../STM32CUBEMX/Core/Src/adc.c ****   * If no LICENSE file comes with this software, it is provided AS-IS.
+  16:../STM32CUBEMX/Core/Src/adc.c ****   *
+  17:../STM32CUBEMX/Core/Src/adc.c ****   ******************************************************************************
+  18:../STM32CUBEMX/Core/Src/adc.c ****   */
+  19:../STM32CUBEMX/Core/Src/adc.c **** /* USER CODE END Header */
+  20:../STM32CUBEMX/Core/Src/adc.c **** /* Includes ------------------------------------------------------------------*/
+  21:../STM32CUBEMX/Core/Src/adc.c **** #include "adc.h"
+  22:../STM32CUBEMX/Core/Src/adc.c **** 
+  23:../STM32CUBEMX/Core/Src/adc.c **** /* USER CODE BEGIN 0 */
+  24:../STM32CUBEMX/Core/Src/adc.c **** 
+  25:../STM32CUBEMX/Core/Src/adc.c **** /* USER CODE END 0 */
+  26:../STM32CUBEMX/Core/Src/adc.c **** 
+  27:../STM32CUBEMX/Core/Src/adc.c **** ADC_HandleTypeDef hadc1;
+  28:../STM32CUBEMX/Core/Src/adc.c **** ADC_HandleTypeDef hadc2;
+  29:../STM32CUBEMX/Core/Src/adc.c **** DMA_HandleTypeDef hdma_adc1;
+  30:../STM32CUBEMX/Core/Src/adc.c **** DMA_HandleTypeDef hdma_adc2;
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccg9I5nN.s 			page 2
+
+
+  31:../STM32CUBEMX/Core/Src/adc.c **** 
+  32:../STM32CUBEMX/Core/Src/adc.c **** /* ADC1 init function */
+  33:../STM32CUBEMX/Core/Src/adc.c **** void MX_ADC1_Init(void)
+  34:../STM32CUBEMX/Core/Src/adc.c **** {
+  29              		.loc 1 34 1 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 16
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33 0000 00B5     		push	{lr}
+  34              	.LCFI0:
+  35              		.cfi_def_cfa_offset 4
+  36              		.cfi_offset 14, -4
+  37 0002 85B0     		sub	sp, sp, #20
+  38              	.LCFI1:
+  39              		.cfi_def_cfa_offset 24
+  35:../STM32CUBEMX/Core/Src/adc.c **** 
+  36:../STM32CUBEMX/Core/Src/adc.c ****   /* USER CODE BEGIN ADC1_Init 0 */
+  37:../STM32CUBEMX/Core/Src/adc.c **** 
+  38:../STM32CUBEMX/Core/Src/adc.c ****   /* USER CODE END ADC1_Init 0 */
+  39:../STM32CUBEMX/Core/Src/adc.c **** 
+  40:../STM32CUBEMX/Core/Src/adc.c ****   ADC_ChannelConfTypeDef sConfig = {0};
+  40              		.loc 1 40 3 view .LVU1
+  41              		.loc 1 40 26 is_stmt 0 view .LVU2
+  42 0004 0023     		movs	r3, #0
+  43 0006 0093     		str	r3, [sp]
+  44 0008 0193     		str	r3, [sp, #4]
+  45 000a 0293     		str	r3, [sp, #8]
+  46 000c 0393     		str	r3, [sp, #12]
+  41:../STM32CUBEMX/Core/Src/adc.c **** 
+  42:../STM32CUBEMX/Core/Src/adc.c ****   /* USER CODE BEGIN ADC1_Init 1 */
+  43:../STM32CUBEMX/Core/Src/adc.c **** 
+  44:../STM32CUBEMX/Core/Src/adc.c ****   /* USER CODE END ADC1_Init 1 */
+  45:../STM32CUBEMX/Core/Src/adc.c **** 
+  46:../STM32CUBEMX/Core/Src/adc.c ****   /** Configure the global features of the ADC (Clock, Resolution, Data Alignment and number of con
+  47:../STM32CUBEMX/Core/Src/adc.c ****   */
+  48:../STM32CUBEMX/Core/Src/adc.c ****   hadc1.Instance = ADC1;
+  47              		.loc 1 48 3 is_stmt 1 view .LVU3
+  48              		.loc 1 48 18 is_stmt 0 view .LVU4
+  49 000e 1748     		ldr	r0, .L7
+  50 0010 174A     		ldr	r2, .L7+4
+  51 0012 0260     		str	r2, [r0]
+  49:../STM32CUBEMX/Core/Src/adc.c ****   hadc1.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV4;
+  52              		.loc 1 49 3 is_stmt 1 view .LVU5
+  53              		.loc 1 49 29 is_stmt 0 view .LVU6
+  54 0014 4FF48032 		mov	r2, #65536
+  55 0018 4260     		str	r2, [r0, #4]
+  50:../STM32CUBEMX/Core/Src/adc.c ****   hadc1.Init.Resolution = ADC_RESOLUTION_12B;
+  56              		.loc 1 50 3 is_stmt 1 view .LVU7
+  57              		.loc 1 50 25 is_stmt 0 view .LVU8
+  58 001a 8360     		str	r3, [r0, #8]
+  51:../STM32CUBEMX/Core/Src/adc.c ****   hadc1.Init.ScanConvMode = DISABLE;
+  59              		.loc 1 51 3 is_stmt 1 view .LVU9
+  60              		.loc 1 51 27 is_stmt 0 view .LVU10
+  61 001c 0361     		str	r3, [r0, #16]
+  52:../STM32CUBEMX/Core/Src/adc.c ****   hadc1.Init.ContinuousConvMode = DISABLE;
+  62              		.loc 1 52 3 is_stmt 1 view .LVU11
+  63              		.loc 1 52 33 is_stmt 0 view .LVU12
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccg9I5nN.s 			page 3
+
+
+  64 001e 0376     		strb	r3, [r0, #24]
+  53:../STM32CUBEMX/Core/Src/adc.c ****   hadc1.Init.DiscontinuousConvMode = DISABLE;
+  65              		.loc 1 53 3 is_stmt 1 view .LVU13
+  66              		.loc 1 53 36 is_stmt 0 view .LVU14
+  67 0020 80F82030 		strb	r3, [r0, #32]
+  54:../STM32CUBEMX/Core/Src/adc.c ****   hadc1.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_RISING;
+  68              		.loc 1 54 3 is_stmt 1 view .LVU15
+  69              		.loc 1 54 35 is_stmt 0 view .LVU16
+  70 0024 4FF08052 		mov	r2, #268435456
+  71 0028 C262     		str	r2, [r0, #44]
+  55:../STM32CUBEMX/Core/Src/adc.c ****   hadc1.Init.ExternalTrigConv = ADC_EXTERNALTRIGCONV_T3_TRGO;
+  72              		.loc 1 55 3 is_stmt 1 view .LVU17
+  73              		.loc 1 55 31 is_stmt 0 view .LVU18
+  74 002a 4FF00062 		mov	r2, #134217728
+  75 002e 8262     		str	r2, [r0, #40]
+  56:../STM32CUBEMX/Core/Src/adc.c ****   hadc1.Init.DataAlign = ADC_DATAALIGN_RIGHT;
+  76              		.loc 1 56 3 is_stmt 1 view .LVU19
+  77              		.loc 1 56 24 is_stmt 0 view .LVU20
+  78 0030 C360     		str	r3, [r0, #12]
+  57:../STM32CUBEMX/Core/Src/adc.c ****   hadc1.Init.NbrOfConversion = 1;
+  79              		.loc 1 57 3 is_stmt 1 view .LVU21
+  80              		.loc 1 57 30 is_stmt 0 view .LVU22
+  81 0032 0123     		movs	r3, #1
+  82 0034 C361     		str	r3, [r0, #28]
+  58:../STM32CUBEMX/Core/Src/adc.c ****   hadc1.Init.DMAContinuousRequests = ENABLE;
+  83              		.loc 1 58 3 is_stmt 1 view .LVU23
+  84              		.loc 1 58 36 is_stmt 0 view .LVU24
+  85 0036 80F83030 		strb	r3, [r0, #48]
+  59:../STM32CUBEMX/Core/Src/adc.c ****   hadc1.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
+  86              		.loc 1 59 3 is_stmt 1 view .LVU25
+  87              		.loc 1 59 27 is_stmt 0 view .LVU26
+  88 003a 4361     		str	r3, [r0, #20]
+  60:../STM32CUBEMX/Core/Src/adc.c ****   if (HAL_ADC_Init(&hadc1) != HAL_OK)
+  89              		.loc 1 60 3 is_stmt 1 view .LVU27
+  90              		.loc 1 60 7 is_stmt 0 view .LVU28
+  91 003c FFF7FEFF 		bl	HAL_ADC_Init
+  92              	.LVL0:
+  93              		.loc 1 60 6 view .LVU29
+  94 0040 68B9     		cbnz	r0, .L5
+  95              	.L2:
+  61:../STM32CUBEMX/Core/Src/adc.c ****   {
+  62:../STM32CUBEMX/Core/Src/adc.c ****     Error_Handler();
+  63:../STM32CUBEMX/Core/Src/adc.c ****   }
+  64:../STM32CUBEMX/Core/Src/adc.c **** 
+  65:../STM32CUBEMX/Core/Src/adc.c ****   /** Configure for the selected ADC regular channel its corresponding rank in the sequencer and it
+  66:../STM32CUBEMX/Core/Src/adc.c ****   */
+  67:../STM32CUBEMX/Core/Src/adc.c ****   sConfig.Channel = ADC_CHANNEL_10;
+  96              		.loc 1 67 3 is_stmt 1 view .LVU30
+  97              		.loc 1 67 19 is_stmt 0 view .LVU31
+  98 0042 0A23     		movs	r3, #10
+  99 0044 0093     		str	r3, [sp]
+  68:../STM32CUBEMX/Core/Src/adc.c ****   sConfig.Rank = 1;
+ 100              		.loc 1 68 3 is_stmt 1 view .LVU32
+ 101              		.loc 1 68 16 is_stmt 0 view .LVU33
+ 102 0046 0123     		movs	r3, #1
+ 103 0048 0193     		str	r3, [sp, #4]
+  69:../STM32CUBEMX/Core/Src/adc.c ****   sConfig.SamplingTime = ADC_SAMPLETIME_56CYCLES;
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccg9I5nN.s 			page 4
+
+
+ 104              		.loc 1 69 3 is_stmt 1 view .LVU34
+ 105              		.loc 1 69 24 is_stmt 0 view .LVU35
+ 106 004a 0323     		movs	r3, #3
+ 107 004c 0293     		str	r3, [sp, #8]
+  70:../STM32CUBEMX/Core/Src/adc.c ****   if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
+ 108              		.loc 1 70 3 is_stmt 1 view .LVU36
+ 109              		.loc 1 70 7 is_stmt 0 view .LVU37
+ 110 004e 6946     		mov	r1, sp
+ 111 0050 0648     		ldr	r0, .L7
+ 112 0052 FFF7FEFF 		bl	HAL_ADC_ConfigChannel
+ 113              	.LVL1:
+ 114              		.loc 1 70 6 view .LVU38
+ 115 0056 28B9     		cbnz	r0, .L6
+ 116              	.L1:
+  71:../STM32CUBEMX/Core/Src/adc.c ****   {
+  72:../STM32CUBEMX/Core/Src/adc.c ****     Error_Handler();
+  73:../STM32CUBEMX/Core/Src/adc.c ****   }
+  74:../STM32CUBEMX/Core/Src/adc.c ****   /* USER CODE BEGIN ADC1_Init 2 */
+  75:../STM32CUBEMX/Core/Src/adc.c **** 
+  76:../STM32CUBEMX/Core/Src/adc.c ****   /* USER CODE END ADC1_Init 2 */
+  77:../STM32CUBEMX/Core/Src/adc.c **** 
+  78:../STM32CUBEMX/Core/Src/adc.c **** }
+ 117              		.loc 1 78 1 view .LVU39
+ 118 0058 05B0     		add	sp, sp, #20
+ 119              	.LCFI2:
+ 120              		.cfi_remember_state
+ 121              		.cfi_def_cfa_offset 4
+ 122              		@ sp needed
+ 123 005a 5DF804FB 		ldr	pc, [sp], #4
+ 124              	.L5:
+ 125              	.LCFI3:
+ 126              		.cfi_restore_state
+  62:../STM32CUBEMX/Core/Src/adc.c ****   }
+ 127              		.loc 1 62 5 is_stmt 1 view .LVU40
+ 128 005e FFF7FEFF 		bl	Error_Handler
+ 129              	.LVL2:
+ 130 0062 EEE7     		b	.L2
+ 131              	.L6:
+  72:../STM32CUBEMX/Core/Src/adc.c ****   }
+ 132              		.loc 1 72 5 view .LVU41
+ 133 0064 FFF7FEFF 		bl	Error_Handler
+ 134              	.LVL3:
+ 135              		.loc 1 78 1 is_stmt 0 view .LVU42
+ 136 0068 F6E7     		b	.L1
+ 137              	.L8:
+ 138 006a 00BF     		.align	2
+ 139              	.L7:
+ 140 006c 00000000 		.word	.LANCHOR0
+ 141 0070 00200140 		.word	1073815552
+ 142              		.cfi_endproc
+ 143              	.LFE235:
+ 145              		.section	.text.MX_ADC2_Init,"ax",%progbits
+ 146              		.align	1
+ 147              		.global	MX_ADC2_Init
+ 148              		.syntax unified
+ 149              		.thumb
+ 150              		.thumb_func
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccg9I5nN.s 			page 5
+
+
+ 152              	MX_ADC2_Init:
+ 153              	.LFB236:
+  79:../STM32CUBEMX/Core/Src/adc.c **** /* ADC2 init function */
+  80:../STM32CUBEMX/Core/Src/adc.c **** void MX_ADC2_Init(void)
+  81:../STM32CUBEMX/Core/Src/adc.c **** {
+ 154              		.loc 1 81 1 is_stmt 1 view -0
+ 155              		.cfi_startproc
+ 156              		@ args = 0, pretend = 0, frame = 16
+ 157              		@ frame_needed = 0, uses_anonymous_args = 0
+ 158 0000 00B5     		push	{lr}
+ 159              	.LCFI4:
+ 160              		.cfi_def_cfa_offset 4
+ 161              		.cfi_offset 14, -4
+ 162 0002 85B0     		sub	sp, sp, #20
+ 163              	.LCFI5:
+ 164              		.cfi_def_cfa_offset 24
+  82:../STM32CUBEMX/Core/Src/adc.c **** 
+  83:../STM32CUBEMX/Core/Src/adc.c ****   /* USER CODE BEGIN ADC2_Init 0 */
+  84:../STM32CUBEMX/Core/Src/adc.c **** 
+  85:../STM32CUBEMX/Core/Src/adc.c ****   /* USER CODE END ADC2_Init 0 */
+  86:../STM32CUBEMX/Core/Src/adc.c **** 
+  87:../STM32CUBEMX/Core/Src/adc.c ****   ADC_ChannelConfTypeDef sConfig = {0};
+ 165              		.loc 1 87 3 view .LVU44
+ 166              		.loc 1 87 26 is_stmt 0 view .LVU45
+ 167 0004 0023     		movs	r3, #0
+ 168 0006 0093     		str	r3, [sp]
+ 169 0008 0193     		str	r3, [sp, #4]
+ 170 000a 0293     		str	r3, [sp, #8]
+ 171 000c 0393     		str	r3, [sp, #12]
+  88:../STM32CUBEMX/Core/Src/adc.c **** 
+  89:../STM32CUBEMX/Core/Src/adc.c ****   /* USER CODE BEGIN ADC2_Init 1 */
+  90:../STM32CUBEMX/Core/Src/adc.c **** 
+  91:../STM32CUBEMX/Core/Src/adc.c ****   /* USER CODE END ADC2_Init 1 */
+  92:../STM32CUBEMX/Core/Src/adc.c **** 
+  93:../STM32CUBEMX/Core/Src/adc.c ****   /** Configure the global features of the ADC (Clock, Resolution, Data Alignment and number of con
+  94:../STM32CUBEMX/Core/Src/adc.c ****   */
+  95:../STM32CUBEMX/Core/Src/adc.c ****   hadc2.Instance = ADC2;
+ 172              		.loc 1 95 3 is_stmt 1 view .LVU46
+ 173              		.loc 1 95 18 is_stmt 0 view .LVU47
+ 174 000e 1748     		ldr	r0, .L15
+ 175 0010 174A     		ldr	r2, .L15+4
+ 176 0012 0260     		str	r2, [r0]
+  96:../STM32CUBEMX/Core/Src/adc.c ****   hadc2.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV4;
+ 177              		.loc 1 96 3 is_stmt 1 view .LVU48
+ 178              		.loc 1 96 29 is_stmt 0 view .LVU49
+ 179 0014 4FF48032 		mov	r2, #65536
+ 180 0018 4260     		str	r2, [r0, #4]
+  97:../STM32CUBEMX/Core/Src/adc.c ****   hadc2.Init.Resolution = ADC_RESOLUTION_12B;
+ 181              		.loc 1 97 3 is_stmt 1 view .LVU50
+ 182              		.loc 1 97 25 is_stmt 0 view .LVU51
+ 183 001a 8360     		str	r3, [r0, #8]
+  98:../STM32CUBEMX/Core/Src/adc.c ****   hadc2.Init.ScanConvMode = DISABLE;
+ 184              		.loc 1 98 3 is_stmt 1 view .LVU52
+ 185              		.loc 1 98 27 is_stmt 0 view .LVU53
+ 186 001c 0361     		str	r3, [r0, #16]
+  99:../STM32CUBEMX/Core/Src/adc.c ****   hadc2.Init.ContinuousConvMode = DISABLE;
+ 187              		.loc 1 99 3 is_stmt 1 view .LVU54
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccg9I5nN.s 			page 6
+
+
+ 188              		.loc 1 99 33 is_stmt 0 view .LVU55
+ 189 001e 0376     		strb	r3, [r0, #24]
+ 100:../STM32CUBEMX/Core/Src/adc.c ****   hadc2.Init.DiscontinuousConvMode = DISABLE;
+ 190              		.loc 1 100 3 is_stmt 1 view .LVU56
+ 191              		.loc 1 100 36 is_stmt 0 view .LVU57
+ 192 0020 80F82030 		strb	r3, [r0, #32]
+ 101:../STM32CUBEMX/Core/Src/adc.c ****   hadc2.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_RISING;
+ 193              		.loc 1 101 3 is_stmt 1 view .LVU58
+ 194              		.loc 1 101 35 is_stmt 0 view .LVU59
+ 195 0024 4FF08052 		mov	r2, #268435456
+ 196 0028 C262     		str	r2, [r0, #44]
+ 102:../STM32CUBEMX/Core/Src/adc.c ****   hadc2.Init.ExternalTrigConv = ADC_EXTERNALTRIGCONV_T8_TRGO;
+ 197              		.loc 1 102 3 is_stmt 1 view .LVU60
+ 198              		.loc 1 102 31 is_stmt 0 view .LVU61
+ 199 002a 4FF06062 		mov	r2, #234881024
+ 200 002e 8262     		str	r2, [r0, #40]
+ 103:../STM32CUBEMX/Core/Src/adc.c ****   hadc2.Init.DataAlign = ADC_DATAALIGN_RIGHT;
+ 201              		.loc 1 103 3 is_stmt 1 view .LVU62
+ 202              		.loc 1 103 24 is_stmt 0 view .LVU63
+ 203 0030 C360     		str	r3, [r0, #12]
+ 104:../STM32CUBEMX/Core/Src/adc.c ****   hadc2.Init.NbrOfConversion = 1;
+ 204              		.loc 1 104 3 is_stmt 1 view .LVU64
+ 205              		.loc 1 104 30 is_stmt 0 view .LVU65
+ 206 0032 0123     		movs	r3, #1
+ 207 0034 C361     		str	r3, [r0, #28]
+ 105:../STM32CUBEMX/Core/Src/adc.c ****   hadc2.Init.DMAContinuousRequests = ENABLE;
+ 208              		.loc 1 105 3 is_stmt 1 view .LVU66
+ 209              		.loc 1 105 36 is_stmt 0 view .LVU67
+ 210 0036 80F83030 		strb	r3, [r0, #48]
+ 106:../STM32CUBEMX/Core/Src/adc.c ****   hadc2.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
+ 211              		.loc 1 106 3 is_stmt 1 view .LVU68
+ 212              		.loc 1 106 27 is_stmt 0 view .LVU69
+ 213 003a 4361     		str	r3, [r0, #20]
+ 107:../STM32CUBEMX/Core/Src/adc.c ****   if (HAL_ADC_Init(&hadc2) != HAL_OK)
+ 214              		.loc 1 107 3 is_stmt 1 view .LVU70
+ 215              		.loc 1 107 7 is_stmt 0 view .LVU71
+ 216 003c FFF7FEFF 		bl	HAL_ADC_Init
+ 217              	.LVL4:
+ 218              		.loc 1 107 6 view .LVU72
+ 219 0040 68B9     		cbnz	r0, .L13
+ 220              	.L10:
+ 108:../STM32CUBEMX/Core/Src/adc.c ****   {
+ 109:../STM32CUBEMX/Core/Src/adc.c ****     Error_Handler();
+ 110:../STM32CUBEMX/Core/Src/adc.c ****   }
+ 111:../STM32CUBEMX/Core/Src/adc.c **** 
+ 112:../STM32CUBEMX/Core/Src/adc.c ****   /** Configure for the selected ADC regular channel its corresponding rank in the sequencer and it
+ 113:../STM32CUBEMX/Core/Src/adc.c ****   */
+ 114:../STM32CUBEMX/Core/Src/adc.c ****   sConfig.Channel = ADC_CHANNEL_11;
+ 221              		.loc 1 114 3 is_stmt 1 view .LVU73
+ 222              		.loc 1 114 19 is_stmt 0 view .LVU74
+ 223 0042 0B23     		movs	r3, #11
+ 224 0044 0093     		str	r3, [sp]
+ 115:../STM32CUBEMX/Core/Src/adc.c ****   sConfig.Rank = 1;
+ 225              		.loc 1 115 3 is_stmt 1 view .LVU75
+ 226              		.loc 1 115 16 is_stmt 0 view .LVU76
+ 227 0046 0123     		movs	r3, #1
+ 228 0048 0193     		str	r3, [sp, #4]
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccg9I5nN.s 			page 7
+
+
+ 116:../STM32CUBEMX/Core/Src/adc.c ****   sConfig.SamplingTime = ADC_SAMPLETIME_56CYCLES;
+ 229              		.loc 1 116 3 is_stmt 1 view .LVU77
+ 230              		.loc 1 116 24 is_stmt 0 view .LVU78
+ 231 004a 0323     		movs	r3, #3
+ 232 004c 0293     		str	r3, [sp, #8]
+ 117:../STM32CUBEMX/Core/Src/adc.c ****   if (HAL_ADC_ConfigChannel(&hadc2, &sConfig) != HAL_OK)
+ 233              		.loc 1 117 3 is_stmt 1 view .LVU79
+ 234              		.loc 1 117 7 is_stmt 0 view .LVU80
+ 235 004e 6946     		mov	r1, sp
+ 236 0050 0648     		ldr	r0, .L15
+ 237 0052 FFF7FEFF 		bl	HAL_ADC_ConfigChannel
+ 238              	.LVL5:
+ 239              		.loc 1 117 6 view .LVU81
+ 240 0056 28B9     		cbnz	r0, .L14
+ 241              	.L9:
+ 118:../STM32CUBEMX/Core/Src/adc.c ****   {
+ 119:../STM32CUBEMX/Core/Src/adc.c ****     Error_Handler();
+ 120:../STM32CUBEMX/Core/Src/adc.c ****   }
+ 121:../STM32CUBEMX/Core/Src/adc.c ****   /* USER CODE BEGIN ADC2_Init 2 */
+ 122:../STM32CUBEMX/Core/Src/adc.c **** 
+ 123:../STM32CUBEMX/Core/Src/adc.c ****   /* USER CODE END ADC2_Init 2 */
+ 124:../STM32CUBEMX/Core/Src/adc.c **** 
+ 125:../STM32CUBEMX/Core/Src/adc.c **** }
+ 242              		.loc 1 125 1 view .LVU82
+ 243 0058 05B0     		add	sp, sp, #20
+ 244              	.LCFI6:
+ 245              		.cfi_remember_state
+ 246              		.cfi_def_cfa_offset 4
+ 247              		@ sp needed
+ 248 005a 5DF804FB 		ldr	pc, [sp], #4
+ 249              	.L13:
+ 250              	.LCFI7:
+ 251              		.cfi_restore_state
+ 109:../STM32CUBEMX/Core/Src/adc.c ****   }
+ 252              		.loc 1 109 5 is_stmt 1 view .LVU83
+ 253 005e FFF7FEFF 		bl	Error_Handler
+ 254              	.LVL6:
+ 255 0062 EEE7     		b	.L10
+ 256              	.L14:
+ 119:../STM32CUBEMX/Core/Src/adc.c ****   }
+ 257              		.loc 1 119 5 view .LVU84
+ 258 0064 FFF7FEFF 		bl	Error_Handler
+ 259              	.LVL7:
+ 260              		.loc 1 125 1 is_stmt 0 view .LVU85
+ 261 0068 F6E7     		b	.L9
+ 262              	.L16:
+ 263 006a 00BF     		.align	2
+ 264              	.L15:
+ 265 006c 00000000 		.word	.LANCHOR1
+ 266 0070 00210140 		.word	1073815808
+ 267              		.cfi_endproc
+ 268              	.LFE236:
+ 270              		.section	.text.HAL_ADC_MspInit,"ax",%progbits
+ 271              		.align	1
+ 272              		.global	HAL_ADC_MspInit
+ 273              		.syntax unified
+ 274              		.thumb
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccg9I5nN.s 			page 8
+
+
+ 275              		.thumb_func
+ 277              	HAL_ADC_MspInit:
+ 278              	.LVL8:
+ 279              	.LFB237:
+ 126:../STM32CUBEMX/Core/Src/adc.c **** 
+ 127:../STM32CUBEMX/Core/Src/adc.c **** void HAL_ADC_MspInit(ADC_HandleTypeDef* adcHandle)
+ 128:../STM32CUBEMX/Core/Src/adc.c **** {
+ 280              		.loc 1 128 1 is_stmt 1 view -0
+ 281              		.cfi_startproc
+ 282              		@ args = 0, pretend = 0, frame = 40
+ 283              		@ frame_needed = 0, uses_anonymous_args = 0
+ 284              		.loc 1 128 1 is_stmt 0 view .LVU87
+ 285 0000 30B5     		push	{r4, r5, lr}
+ 286              	.LCFI8:
+ 287              		.cfi_def_cfa_offset 12
+ 288              		.cfi_offset 4, -12
+ 289              		.cfi_offset 5, -8
+ 290              		.cfi_offset 14, -4
+ 291 0002 8BB0     		sub	sp, sp, #44
+ 292              	.LCFI9:
+ 293              		.cfi_def_cfa_offset 56
+ 294 0004 0446     		mov	r4, r0
+ 129:../STM32CUBEMX/Core/Src/adc.c **** 
+ 130:../STM32CUBEMX/Core/Src/adc.c ****   GPIO_InitTypeDef GPIO_InitStruct = {0};
+ 295              		.loc 1 130 3 is_stmt 1 view .LVU88
+ 296              		.loc 1 130 20 is_stmt 0 view .LVU89
+ 297 0006 0023     		movs	r3, #0
+ 298 0008 0593     		str	r3, [sp, #20]
+ 299 000a 0693     		str	r3, [sp, #24]
+ 300 000c 0793     		str	r3, [sp, #28]
+ 301 000e 0893     		str	r3, [sp, #32]
+ 302 0010 0993     		str	r3, [sp, #36]
+ 131:../STM32CUBEMX/Core/Src/adc.c ****   if(adcHandle->Instance==ADC1)
+ 303              		.loc 1 131 3 is_stmt 1 view .LVU90
+ 304              		.loc 1 131 15 is_stmt 0 view .LVU91
+ 305 0012 0368     		ldr	r3, [r0]
+ 306              		.loc 1 131 5 view .LVU92
+ 307 0014 404A     		ldr	r2, .L27
+ 308 0016 9342     		cmp	r3, r2
+ 309 0018 04D0     		beq	.L23
+ 132:../STM32CUBEMX/Core/Src/adc.c ****   {
+ 133:../STM32CUBEMX/Core/Src/adc.c ****   /* USER CODE BEGIN ADC1_MspInit 0 */
+ 134:../STM32CUBEMX/Core/Src/adc.c **** 
+ 135:../STM32CUBEMX/Core/Src/adc.c ****   /* USER CODE END ADC1_MspInit 0 */
+ 136:../STM32CUBEMX/Core/Src/adc.c ****     /* ADC1 clock enable */
+ 137:../STM32CUBEMX/Core/Src/adc.c ****     __HAL_RCC_ADC1_CLK_ENABLE();
+ 138:../STM32CUBEMX/Core/Src/adc.c **** 
+ 139:../STM32CUBEMX/Core/Src/adc.c ****     __HAL_RCC_GPIOC_CLK_ENABLE();
+ 140:../STM32CUBEMX/Core/Src/adc.c ****     /**ADC1 GPIO Configuration
+ 141:../STM32CUBEMX/Core/Src/adc.c ****     PC0     ------> ADC1_IN10
+ 142:../STM32CUBEMX/Core/Src/adc.c ****     PC2     ------> ADC1_IN12
+ 143:../STM32CUBEMX/Core/Src/adc.c ****     */
+ 144:../STM32CUBEMX/Core/Src/adc.c ****     GPIO_InitStruct.Pin = GPIO_PIN_0|GPIO_PIN_2;
+ 145:../STM32CUBEMX/Core/Src/adc.c ****     GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
+ 146:../STM32CUBEMX/Core/Src/adc.c ****     GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 147:../STM32CUBEMX/Core/Src/adc.c ****     HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+ 148:../STM32CUBEMX/Core/Src/adc.c **** 
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccg9I5nN.s 			page 9
+
+
+ 149:../STM32CUBEMX/Core/Src/adc.c ****     /* ADC1 DMA Init */
+ 150:../STM32CUBEMX/Core/Src/adc.c ****     /* ADC1 Init */
+ 151:../STM32CUBEMX/Core/Src/adc.c ****     hdma_adc1.Instance = DMA2_Stream0;
+ 152:../STM32CUBEMX/Core/Src/adc.c ****     hdma_adc1.Init.Channel = DMA_CHANNEL_0;
+ 153:../STM32CUBEMX/Core/Src/adc.c ****     hdma_adc1.Init.Direction = DMA_PERIPH_TO_MEMORY;
+ 154:../STM32CUBEMX/Core/Src/adc.c ****     hdma_adc1.Init.PeriphInc = DMA_PINC_DISABLE;
+ 155:../STM32CUBEMX/Core/Src/adc.c ****     hdma_adc1.Init.MemInc = DMA_MINC_ENABLE;
+ 156:../STM32CUBEMX/Core/Src/adc.c ****     hdma_adc1.Init.PeriphDataAlignment = DMA_PDATAALIGN_HALFWORD;
+ 157:../STM32CUBEMX/Core/Src/adc.c ****     hdma_adc1.Init.MemDataAlignment = DMA_MDATAALIGN_HALFWORD;
+ 158:../STM32CUBEMX/Core/Src/adc.c ****     hdma_adc1.Init.Mode = DMA_CIRCULAR;
+ 159:../STM32CUBEMX/Core/Src/adc.c ****     hdma_adc1.Init.Priority = DMA_PRIORITY_LOW;
+ 160:../STM32CUBEMX/Core/Src/adc.c ****     hdma_adc1.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
+ 161:../STM32CUBEMX/Core/Src/adc.c ****     if (HAL_DMA_Init(&hdma_adc1) != HAL_OK)
+ 162:../STM32CUBEMX/Core/Src/adc.c ****     {
+ 163:../STM32CUBEMX/Core/Src/adc.c ****       Error_Handler();
+ 164:../STM32CUBEMX/Core/Src/adc.c ****     }
+ 165:../STM32CUBEMX/Core/Src/adc.c **** 
+ 166:../STM32CUBEMX/Core/Src/adc.c ****     __HAL_LINKDMA(adcHandle,DMA_Handle,hdma_adc1);
+ 167:../STM32CUBEMX/Core/Src/adc.c **** 
+ 168:../STM32CUBEMX/Core/Src/adc.c ****   /* USER CODE BEGIN ADC1_MspInit 1 */
+ 169:../STM32CUBEMX/Core/Src/adc.c **** 
+ 170:../STM32CUBEMX/Core/Src/adc.c ****   /* USER CODE END ADC1_MspInit 1 */
+ 171:../STM32CUBEMX/Core/Src/adc.c ****   }
+ 172:../STM32CUBEMX/Core/Src/adc.c ****   else if(adcHandle->Instance==ADC2)
+ 310              		.loc 1 172 8 is_stmt 1 view .LVU93
+ 311              		.loc 1 172 10 is_stmt 0 view .LVU94
+ 312 001a 404A     		ldr	r2, .L27+4
+ 313 001c 9342     		cmp	r3, r2
+ 314 001e 3DD0     		beq	.L24
+ 315              	.LVL9:
+ 316              	.L17:
+ 173:../STM32CUBEMX/Core/Src/adc.c ****   {
+ 174:../STM32CUBEMX/Core/Src/adc.c ****   /* USER CODE BEGIN ADC2_MspInit 0 */
+ 175:../STM32CUBEMX/Core/Src/adc.c **** 
+ 176:../STM32CUBEMX/Core/Src/adc.c ****   /* USER CODE END ADC2_MspInit 0 */
+ 177:../STM32CUBEMX/Core/Src/adc.c ****     /* ADC2 clock enable */
+ 178:../STM32CUBEMX/Core/Src/adc.c ****     __HAL_RCC_ADC2_CLK_ENABLE();
+ 179:../STM32CUBEMX/Core/Src/adc.c **** 
+ 180:../STM32CUBEMX/Core/Src/adc.c ****     __HAL_RCC_GPIOC_CLK_ENABLE();
+ 181:../STM32CUBEMX/Core/Src/adc.c ****     /**ADC2 GPIO Configuration
+ 182:../STM32CUBEMX/Core/Src/adc.c ****     PC1     ------> ADC2_IN11
+ 183:../STM32CUBEMX/Core/Src/adc.c ****     */
+ 184:../STM32CUBEMX/Core/Src/adc.c ****     GPIO_InitStruct.Pin = GPIO_PIN_1;
+ 185:../STM32CUBEMX/Core/Src/adc.c ****     GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
+ 186:../STM32CUBEMX/Core/Src/adc.c ****     GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 187:../STM32CUBEMX/Core/Src/adc.c ****     HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+ 188:../STM32CUBEMX/Core/Src/adc.c **** 
+ 189:../STM32CUBEMX/Core/Src/adc.c ****     /* ADC2 DMA Init */
+ 190:../STM32CUBEMX/Core/Src/adc.c ****     /* ADC2 Init */
+ 191:../STM32CUBEMX/Core/Src/adc.c ****     hdma_adc2.Instance = DMA2_Stream2;
+ 192:../STM32CUBEMX/Core/Src/adc.c ****     hdma_adc2.Init.Channel = DMA_CHANNEL_1;
+ 193:../STM32CUBEMX/Core/Src/adc.c ****     hdma_adc2.Init.Direction = DMA_PERIPH_TO_MEMORY;
+ 194:../STM32CUBEMX/Core/Src/adc.c ****     hdma_adc2.Init.PeriphInc = DMA_PINC_DISABLE;
+ 195:../STM32CUBEMX/Core/Src/adc.c ****     hdma_adc2.Init.MemInc = DMA_MINC_ENABLE;
+ 196:../STM32CUBEMX/Core/Src/adc.c ****     hdma_adc2.Init.PeriphDataAlignment = DMA_PDATAALIGN_HALFWORD;
+ 197:../STM32CUBEMX/Core/Src/adc.c ****     hdma_adc2.Init.MemDataAlignment = DMA_MDATAALIGN_HALFWORD;
+ 198:../STM32CUBEMX/Core/Src/adc.c ****     hdma_adc2.Init.Mode = DMA_CIRCULAR;
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccg9I5nN.s 			page 10
+
+
+ 199:../STM32CUBEMX/Core/Src/adc.c ****     hdma_adc2.Init.Priority = DMA_PRIORITY_LOW;
+ 200:../STM32CUBEMX/Core/Src/adc.c ****     hdma_adc2.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
+ 201:../STM32CUBEMX/Core/Src/adc.c ****     if (HAL_DMA_Init(&hdma_adc2) != HAL_OK)
+ 202:../STM32CUBEMX/Core/Src/adc.c ****     {
+ 203:../STM32CUBEMX/Core/Src/adc.c ****       Error_Handler();
+ 204:../STM32CUBEMX/Core/Src/adc.c ****     }
+ 205:../STM32CUBEMX/Core/Src/adc.c **** 
+ 206:../STM32CUBEMX/Core/Src/adc.c ****     __HAL_LINKDMA(adcHandle,DMA_Handle,hdma_adc2);
+ 207:../STM32CUBEMX/Core/Src/adc.c **** 
+ 208:../STM32CUBEMX/Core/Src/adc.c ****   /* USER CODE BEGIN ADC2_MspInit 1 */
+ 209:../STM32CUBEMX/Core/Src/adc.c **** 
+ 210:../STM32CUBEMX/Core/Src/adc.c ****   /* USER CODE END ADC2_MspInit 1 */
+ 211:../STM32CUBEMX/Core/Src/adc.c ****   }
+ 212:../STM32CUBEMX/Core/Src/adc.c **** }
+ 317              		.loc 1 212 1 view .LVU95
+ 318 0020 0BB0     		add	sp, sp, #44
+ 319              	.LCFI10:
+ 320              		.cfi_remember_state
+ 321              		.cfi_def_cfa_offset 12
+ 322              		@ sp needed
+ 323 0022 30BD     		pop	{r4, r5, pc}
+ 324              	.LVL10:
+ 325              	.L23:
+ 326              	.LCFI11:
+ 327              		.cfi_restore_state
+ 137:../STM32CUBEMX/Core/Src/adc.c **** 
+ 328              		.loc 1 137 5 is_stmt 1 view .LVU96
+ 329              	.LBB2:
+ 137:../STM32CUBEMX/Core/Src/adc.c **** 
+ 330              		.loc 1 137 5 view .LVU97
+ 331 0024 0025     		movs	r5, #0
+ 332 0026 0195     		str	r5, [sp, #4]
+ 137:../STM32CUBEMX/Core/Src/adc.c **** 
+ 333              		.loc 1 137 5 view .LVU98
+ 334 0028 3D4B     		ldr	r3, .L27+8
+ 335 002a 5A6C     		ldr	r2, [r3, #68]
+ 336 002c 42F48072 		orr	r2, r2, #256
+ 337 0030 5A64     		str	r2, [r3, #68]
+ 137:../STM32CUBEMX/Core/Src/adc.c **** 
+ 338              		.loc 1 137 5 view .LVU99
+ 339 0032 5A6C     		ldr	r2, [r3, #68]
+ 340 0034 02F48072 		and	r2, r2, #256
+ 341 0038 0192     		str	r2, [sp, #4]
+ 137:../STM32CUBEMX/Core/Src/adc.c **** 
+ 342              		.loc 1 137 5 view .LVU100
+ 343 003a 019A     		ldr	r2, [sp, #4]
+ 344              	.LBE2:
+ 137:../STM32CUBEMX/Core/Src/adc.c **** 
+ 345              		.loc 1 137 5 view .LVU101
+ 139:../STM32CUBEMX/Core/Src/adc.c ****     /**ADC1 GPIO Configuration
+ 346              		.loc 1 139 5 view .LVU102
+ 347              	.LBB3:
+ 139:../STM32CUBEMX/Core/Src/adc.c ****     /**ADC1 GPIO Configuration
+ 348              		.loc 1 139 5 view .LVU103
+ 349 003c 0295     		str	r5, [sp, #8]
+ 139:../STM32CUBEMX/Core/Src/adc.c ****     /**ADC1 GPIO Configuration
+ 350              		.loc 1 139 5 view .LVU104
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccg9I5nN.s 			page 11
+
+
+ 351 003e 1A6B     		ldr	r2, [r3, #48]
+ 352 0040 42F00402 		orr	r2, r2, #4
+ 353 0044 1A63     		str	r2, [r3, #48]
+ 139:../STM32CUBEMX/Core/Src/adc.c ****     /**ADC1 GPIO Configuration
+ 354              		.loc 1 139 5 view .LVU105
+ 355 0046 1B6B     		ldr	r3, [r3, #48]
+ 356 0048 03F00403 		and	r3, r3, #4
+ 357 004c 0293     		str	r3, [sp, #8]
+ 139:../STM32CUBEMX/Core/Src/adc.c ****     /**ADC1 GPIO Configuration
+ 358              		.loc 1 139 5 view .LVU106
+ 359 004e 029B     		ldr	r3, [sp, #8]
+ 360              	.LBE3:
+ 139:../STM32CUBEMX/Core/Src/adc.c ****     /**ADC1 GPIO Configuration
+ 361              		.loc 1 139 5 view .LVU107
+ 144:../STM32CUBEMX/Core/Src/adc.c ****     GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
+ 362              		.loc 1 144 5 view .LVU108
+ 144:../STM32CUBEMX/Core/Src/adc.c ****     GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
+ 363              		.loc 1 144 25 is_stmt 0 view .LVU109
+ 364 0050 0523     		movs	r3, #5
+ 365 0052 0593     		str	r3, [sp, #20]
+ 145:../STM32CUBEMX/Core/Src/adc.c ****     GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 366              		.loc 1 145 5 is_stmt 1 view .LVU110
+ 145:../STM32CUBEMX/Core/Src/adc.c ****     GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 367              		.loc 1 145 26 is_stmt 0 view .LVU111
+ 368 0054 0323     		movs	r3, #3
+ 369 0056 0693     		str	r3, [sp, #24]
+ 146:../STM32CUBEMX/Core/Src/adc.c ****     HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+ 370              		.loc 1 146 5 is_stmt 1 view .LVU112
+ 147:../STM32CUBEMX/Core/Src/adc.c **** 
+ 371              		.loc 1 147 5 view .LVU113
+ 372 0058 05A9     		add	r1, sp, #20
+ 373 005a 3248     		ldr	r0, .L27+12
+ 374              	.LVL11:
+ 147:../STM32CUBEMX/Core/Src/adc.c **** 
+ 375              		.loc 1 147 5 is_stmt 0 view .LVU114
+ 376 005c FFF7FEFF 		bl	HAL_GPIO_Init
+ 377              	.LVL12:
+ 151:../STM32CUBEMX/Core/Src/adc.c ****     hdma_adc1.Init.Channel = DMA_CHANNEL_0;
+ 378              		.loc 1 151 5 is_stmt 1 view .LVU115
+ 151:../STM32CUBEMX/Core/Src/adc.c ****     hdma_adc1.Init.Channel = DMA_CHANNEL_0;
+ 379              		.loc 1 151 24 is_stmt 0 view .LVU116
+ 380 0060 3148     		ldr	r0, .L27+16
+ 381 0062 324B     		ldr	r3, .L27+20
+ 382 0064 0360     		str	r3, [r0]
+ 152:../STM32CUBEMX/Core/Src/adc.c ****     hdma_adc1.Init.Direction = DMA_PERIPH_TO_MEMORY;
+ 383              		.loc 1 152 5 is_stmt 1 view .LVU117
+ 152:../STM32CUBEMX/Core/Src/adc.c ****     hdma_adc1.Init.Direction = DMA_PERIPH_TO_MEMORY;
+ 384              		.loc 1 152 28 is_stmt 0 view .LVU118
+ 385 0066 4560     		str	r5, [r0, #4]
+ 153:../STM32CUBEMX/Core/Src/adc.c ****     hdma_adc1.Init.PeriphInc = DMA_PINC_DISABLE;
+ 386              		.loc 1 153 5 is_stmt 1 view .LVU119
+ 153:../STM32CUBEMX/Core/Src/adc.c ****     hdma_adc1.Init.PeriphInc = DMA_PINC_DISABLE;
+ 387              		.loc 1 153 30 is_stmt 0 view .LVU120
+ 388 0068 8560     		str	r5, [r0, #8]
+ 154:../STM32CUBEMX/Core/Src/adc.c ****     hdma_adc1.Init.MemInc = DMA_MINC_ENABLE;
+ 389              		.loc 1 154 5 is_stmt 1 view .LVU121
+ 154:../STM32CUBEMX/Core/Src/adc.c ****     hdma_adc1.Init.MemInc = DMA_MINC_ENABLE;
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccg9I5nN.s 			page 12
+
+
+ 390              		.loc 1 154 30 is_stmt 0 view .LVU122
+ 391 006a C560     		str	r5, [r0, #12]
+ 155:../STM32CUBEMX/Core/Src/adc.c ****     hdma_adc1.Init.PeriphDataAlignment = DMA_PDATAALIGN_HALFWORD;
+ 392              		.loc 1 155 5 is_stmt 1 view .LVU123
+ 155:../STM32CUBEMX/Core/Src/adc.c ****     hdma_adc1.Init.PeriphDataAlignment = DMA_PDATAALIGN_HALFWORD;
+ 393              		.loc 1 155 27 is_stmt 0 view .LVU124
+ 394 006c 4FF48063 		mov	r3, #1024
+ 395 0070 0361     		str	r3, [r0, #16]
+ 156:../STM32CUBEMX/Core/Src/adc.c ****     hdma_adc1.Init.MemDataAlignment = DMA_MDATAALIGN_HALFWORD;
+ 396              		.loc 1 156 5 is_stmt 1 view .LVU125
+ 156:../STM32CUBEMX/Core/Src/adc.c ****     hdma_adc1.Init.MemDataAlignment = DMA_MDATAALIGN_HALFWORD;
+ 397              		.loc 1 156 40 is_stmt 0 view .LVU126
+ 398 0072 4FF40063 		mov	r3, #2048
+ 399 0076 4361     		str	r3, [r0, #20]
+ 157:../STM32CUBEMX/Core/Src/adc.c ****     hdma_adc1.Init.Mode = DMA_CIRCULAR;
+ 400              		.loc 1 157 5 is_stmt 1 view .LVU127
+ 157:../STM32CUBEMX/Core/Src/adc.c ****     hdma_adc1.Init.Mode = DMA_CIRCULAR;
+ 401              		.loc 1 157 37 is_stmt 0 view .LVU128
+ 402 0078 4FF40053 		mov	r3, #8192
+ 403 007c 8361     		str	r3, [r0, #24]
+ 158:../STM32CUBEMX/Core/Src/adc.c ****     hdma_adc1.Init.Priority = DMA_PRIORITY_LOW;
+ 404              		.loc 1 158 5 is_stmt 1 view .LVU129
+ 158:../STM32CUBEMX/Core/Src/adc.c ****     hdma_adc1.Init.Priority = DMA_PRIORITY_LOW;
+ 405              		.loc 1 158 25 is_stmt 0 view .LVU130
+ 406 007e 4FF48073 		mov	r3, #256
+ 407 0082 C361     		str	r3, [r0, #28]
+ 159:../STM32CUBEMX/Core/Src/adc.c ****     hdma_adc1.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
+ 408              		.loc 1 159 5 is_stmt 1 view .LVU131
+ 159:../STM32CUBEMX/Core/Src/adc.c ****     hdma_adc1.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
+ 409              		.loc 1 159 29 is_stmt 0 view .LVU132
+ 410 0084 0562     		str	r5, [r0, #32]
+ 160:../STM32CUBEMX/Core/Src/adc.c ****     if (HAL_DMA_Init(&hdma_adc1) != HAL_OK)
+ 411              		.loc 1 160 5 is_stmt 1 view .LVU133
+ 160:../STM32CUBEMX/Core/Src/adc.c ****     if (HAL_DMA_Init(&hdma_adc1) != HAL_OK)
+ 412              		.loc 1 160 29 is_stmt 0 view .LVU134
+ 413 0086 4562     		str	r5, [r0, #36]
+ 161:../STM32CUBEMX/Core/Src/adc.c ****     {
+ 414              		.loc 1 161 5 is_stmt 1 view .LVU135
+ 161:../STM32CUBEMX/Core/Src/adc.c ****     {
+ 415              		.loc 1 161 9 is_stmt 0 view .LVU136
+ 416 0088 FFF7FEFF 		bl	HAL_DMA_Init
+ 417              	.LVL13:
+ 161:../STM32CUBEMX/Core/Src/adc.c ****     {
+ 418              		.loc 1 161 8 view .LVU137
+ 419 008c 18B9     		cbnz	r0, .L25
+ 420              	.L19:
+ 166:../STM32CUBEMX/Core/Src/adc.c **** 
+ 421              		.loc 1 166 5 is_stmt 1 view .LVU138
+ 166:../STM32CUBEMX/Core/Src/adc.c **** 
+ 422              		.loc 1 166 5 view .LVU139
+ 423 008e 264B     		ldr	r3, .L27+16
+ 424 0090 A363     		str	r3, [r4, #56]
+ 166:../STM32CUBEMX/Core/Src/adc.c **** 
+ 425              		.loc 1 166 5 view .LVU140
+ 426 0092 9C63     		str	r4, [r3, #56]
+ 166:../STM32CUBEMX/Core/Src/adc.c **** 
+ 427              		.loc 1 166 5 view .LVU141
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccg9I5nN.s 			page 13
+
+
+ 428 0094 C4E7     		b	.L17
+ 429              	.L25:
+ 163:../STM32CUBEMX/Core/Src/adc.c ****     }
+ 430              		.loc 1 163 7 view .LVU142
+ 431 0096 FFF7FEFF 		bl	Error_Handler
+ 432              	.LVL14:
+ 433 009a F8E7     		b	.L19
+ 434              	.LVL15:
+ 435              	.L24:
+ 178:../STM32CUBEMX/Core/Src/adc.c **** 
+ 436              		.loc 1 178 5 view .LVU143
+ 437              	.LBB4:
+ 178:../STM32CUBEMX/Core/Src/adc.c **** 
+ 438              		.loc 1 178 5 view .LVU144
+ 439 009c 0025     		movs	r5, #0
+ 440 009e 0395     		str	r5, [sp, #12]
+ 178:../STM32CUBEMX/Core/Src/adc.c **** 
+ 441              		.loc 1 178 5 view .LVU145
+ 442 00a0 1F4B     		ldr	r3, .L27+8
+ 443 00a2 5A6C     		ldr	r2, [r3, #68]
+ 444 00a4 42F40072 		orr	r2, r2, #512
+ 445 00a8 5A64     		str	r2, [r3, #68]
+ 178:../STM32CUBEMX/Core/Src/adc.c **** 
+ 446              		.loc 1 178 5 view .LVU146
+ 447 00aa 5A6C     		ldr	r2, [r3, #68]
+ 448 00ac 02F40072 		and	r2, r2, #512
+ 449 00b0 0392     		str	r2, [sp, #12]
+ 178:../STM32CUBEMX/Core/Src/adc.c **** 
+ 450              		.loc 1 178 5 view .LVU147
+ 451 00b2 039A     		ldr	r2, [sp, #12]
+ 452              	.LBE4:
+ 178:../STM32CUBEMX/Core/Src/adc.c **** 
+ 453              		.loc 1 178 5 view .LVU148
+ 180:../STM32CUBEMX/Core/Src/adc.c ****     /**ADC2 GPIO Configuration
+ 454              		.loc 1 180 5 view .LVU149
+ 455              	.LBB5:
+ 180:../STM32CUBEMX/Core/Src/adc.c ****     /**ADC2 GPIO Configuration
+ 456              		.loc 1 180 5 view .LVU150
+ 457 00b4 0495     		str	r5, [sp, #16]
+ 180:../STM32CUBEMX/Core/Src/adc.c ****     /**ADC2 GPIO Configuration
+ 458              		.loc 1 180 5 view .LVU151
+ 459 00b6 1A6B     		ldr	r2, [r3, #48]
+ 460 00b8 42F00402 		orr	r2, r2, #4
+ 461 00bc 1A63     		str	r2, [r3, #48]
+ 180:../STM32CUBEMX/Core/Src/adc.c ****     /**ADC2 GPIO Configuration
+ 462              		.loc 1 180 5 view .LVU152
+ 463 00be 1B6B     		ldr	r3, [r3, #48]
+ 464 00c0 03F00403 		and	r3, r3, #4
+ 465 00c4 0493     		str	r3, [sp, #16]
+ 180:../STM32CUBEMX/Core/Src/adc.c ****     /**ADC2 GPIO Configuration
+ 466              		.loc 1 180 5 view .LVU153
+ 467 00c6 049B     		ldr	r3, [sp, #16]
+ 468              	.LBE5:
+ 180:../STM32CUBEMX/Core/Src/adc.c ****     /**ADC2 GPIO Configuration
+ 469              		.loc 1 180 5 view .LVU154
+ 184:../STM32CUBEMX/Core/Src/adc.c ****     GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
+ 470              		.loc 1 184 5 view .LVU155
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccg9I5nN.s 			page 14
+
+
+ 184:../STM32CUBEMX/Core/Src/adc.c ****     GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
+ 471              		.loc 1 184 25 is_stmt 0 view .LVU156
+ 472 00c8 0223     		movs	r3, #2
+ 473 00ca 0593     		str	r3, [sp, #20]
+ 185:../STM32CUBEMX/Core/Src/adc.c ****     GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 474              		.loc 1 185 5 is_stmt 1 view .LVU157
+ 185:../STM32CUBEMX/Core/Src/adc.c ****     GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 475              		.loc 1 185 26 is_stmt 0 view .LVU158
+ 476 00cc 0323     		movs	r3, #3
+ 477 00ce 0693     		str	r3, [sp, #24]
+ 186:../STM32CUBEMX/Core/Src/adc.c ****     HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+ 478              		.loc 1 186 5 is_stmt 1 view .LVU159
+ 187:../STM32CUBEMX/Core/Src/adc.c **** 
+ 479              		.loc 1 187 5 view .LVU160
+ 480 00d0 05A9     		add	r1, sp, #20
+ 481 00d2 1448     		ldr	r0, .L27+12
+ 482              	.LVL16:
+ 187:../STM32CUBEMX/Core/Src/adc.c **** 
+ 483              		.loc 1 187 5 is_stmt 0 view .LVU161
+ 484 00d4 FFF7FEFF 		bl	HAL_GPIO_Init
+ 485              	.LVL17:
+ 191:../STM32CUBEMX/Core/Src/adc.c ****     hdma_adc2.Init.Channel = DMA_CHANNEL_1;
+ 486              		.loc 1 191 5 is_stmt 1 view .LVU162
+ 191:../STM32CUBEMX/Core/Src/adc.c ****     hdma_adc2.Init.Channel = DMA_CHANNEL_1;
+ 487              		.loc 1 191 24 is_stmt 0 view .LVU163
+ 488 00d8 1548     		ldr	r0, .L27+24
+ 489 00da 164B     		ldr	r3, .L27+28
+ 490 00dc 0360     		str	r3, [r0]
+ 192:../STM32CUBEMX/Core/Src/adc.c ****     hdma_adc2.Init.Direction = DMA_PERIPH_TO_MEMORY;
+ 491              		.loc 1 192 5 is_stmt 1 view .LVU164
+ 192:../STM32CUBEMX/Core/Src/adc.c ****     hdma_adc2.Init.Direction = DMA_PERIPH_TO_MEMORY;
+ 492              		.loc 1 192 28 is_stmt 0 view .LVU165
+ 493 00de 4FF00073 		mov	r3, #33554432
+ 494 00e2 4360     		str	r3, [r0, #4]
+ 193:../STM32CUBEMX/Core/Src/adc.c ****     hdma_adc2.Init.PeriphInc = DMA_PINC_DISABLE;
+ 495              		.loc 1 193 5 is_stmt 1 view .LVU166
+ 193:../STM32CUBEMX/Core/Src/adc.c ****     hdma_adc2.Init.PeriphInc = DMA_PINC_DISABLE;
+ 496              		.loc 1 193 30 is_stmt 0 view .LVU167
+ 497 00e4 8560     		str	r5, [r0, #8]
+ 194:../STM32CUBEMX/Core/Src/adc.c ****     hdma_adc2.Init.MemInc = DMA_MINC_ENABLE;
+ 498              		.loc 1 194 5 is_stmt 1 view .LVU168
+ 194:../STM32CUBEMX/Core/Src/adc.c ****     hdma_adc2.Init.MemInc = DMA_MINC_ENABLE;
+ 499              		.loc 1 194 30 is_stmt 0 view .LVU169
+ 500 00e6 C560     		str	r5, [r0, #12]
+ 195:../STM32CUBEMX/Core/Src/adc.c ****     hdma_adc2.Init.PeriphDataAlignment = DMA_PDATAALIGN_HALFWORD;
+ 501              		.loc 1 195 5 is_stmt 1 view .LVU170
+ 195:../STM32CUBEMX/Core/Src/adc.c ****     hdma_adc2.Init.PeriphDataAlignment = DMA_PDATAALIGN_HALFWORD;
+ 502              		.loc 1 195 27 is_stmt 0 view .LVU171
+ 503 00e8 4FF48063 		mov	r3, #1024
+ 504 00ec 0361     		str	r3, [r0, #16]
+ 196:../STM32CUBEMX/Core/Src/adc.c ****     hdma_adc2.Init.MemDataAlignment = DMA_MDATAALIGN_HALFWORD;
+ 505              		.loc 1 196 5 is_stmt 1 view .LVU172
+ 196:../STM32CUBEMX/Core/Src/adc.c ****     hdma_adc2.Init.MemDataAlignment = DMA_MDATAALIGN_HALFWORD;
+ 506              		.loc 1 196 40 is_stmt 0 view .LVU173
+ 507 00ee 4FF40063 		mov	r3, #2048
+ 508 00f2 4361     		str	r3, [r0, #20]
+ 197:../STM32CUBEMX/Core/Src/adc.c ****     hdma_adc2.Init.Mode = DMA_CIRCULAR;
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccg9I5nN.s 			page 15
+
+
+ 509              		.loc 1 197 5 is_stmt 1 view .LVU174
+ 197:../STM32CUBEMX/Core/Src/adc.c ****     hdma_adc2.Init.Mode = DMA_CIRCULAR;
+ 510              		.loc 1 197 37 is_stmt 0 view .LVU175
+ 511 00f4 4FF40053 		mov	r3, #8192
+ 512 00f8 8361     		str	r3, [r0, #24]
+ 198:../STM32CUBEMX/Core/Src/adc.c ****     hdma_adc2.Init.Priority = DMA_PRIORITY_LOW;
+ 513              		.loc 1 198 5 is_stmt 1 view .LVU176
+ 198:../STM32CUBEMX/Core/Src/adc.c ****     hdma_adc2.Init.Priority = DMA_PRIORITY_LOW;
+ 514              		.loc 1 198 25 is_stmt 0 view .LVU177
+ 515 00fa 4FF48073 		mov	r3, #256
+ 516 00fe C361     		str	r3, [r0, #28]
+ 199:../STM32CUBEMX/Core/Src/adc.c ****     hdma_adc2.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
+ 517              		.loc 1 199 5 is_stmt 1 view .LVU178
+ 199:../STM32CUBEMX/Core/Src/adc.c ****     hdma_adc2.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
+ 518              		.loc 1 199 29 is_stmt 0 view .LVU179
+ 519 0100 0562     		str	r5, [r0, #32]
+ 200:../STM32CUBEMX/Core/Src/adc.c ****     if (HAL_DMA_Init(&hdma_adc2) != HAL_OK)
+ 520              		.loc 1 200 5 is_stmt 1 view .LVU180
+ 200:../STM32CUBEMX/Core/Src/adc.c ****     if (HAL_DMA_Init(&hdma_adc2) != HAL_OK)
+ 521              		.loc 1 200 29 is_stmt 0 view .LVU181
+ 522 0102 4562     		str	r5, [r0, #36]
+ 201:../STM32CUBEMX/Core/Src/adc.c ****     {
+ 523              		.loc 1 201 5 is_stmt 1 view .LVU182
+ 201:../STM32CUBEMX/Core/Src/adc.c ****     {
+ 524              		.loc 1 201 9 is_stmt 0 view .LVU183
+ 525 0104 FFF7FEFF 		bl	HAL_DMA_Init
+ 526              	.LVL18:
+ 201:../STM32CUBEMX/Core/Src/adc.c ****     {
+ 527              		.loc 1 201 8 view .LVU184
+ 528 0108 18B9     		cbnz	r0, .L26
+ 529              	.L21:
+ 206:../STM32CUBEMX/Core/Src/adc.c **** 
+ 530              		.loc 1 206 5 is_stmt 1 view .LVU185
+ 206:../STM32CUBEMX/Core/Src/adc.c **** 
+ 531              		.loc 1 206 5 view .LVU186
+ 532 010a 094B     		ldr	r3, .L27+24
+ 533 010c A363     		str	r3, [r4, #56]
+ 206:../STM32CUBEMX/Core/Src/adc.c **** 
+ 534              		.loc 1 206 5 view .LVU187
+ 535 010e 9C63     		str	r4, [r3, #56]
+ 206:../STM32CUBEMX/Core/Src/adc.c **** 
+ 536              		.loc 1 206 5 view .LVU188
+ 537              		.loc 1 212 1 is_stmt 0 view .LVU189
+ 538 0110 86E7     		b	.L17
+ 539              	.L26:
+ 203:../STM32CUBEMX/Core/Src/adc.c ****     }
+ 540              		.loc 1 203 7 is_stmt 1 view .LVU190
+ 541 0112 FFF7FEFF 		bl	Error_Handler
+ 542              	.LVL19:
+ 543 0116 F8E7     		b	.L21
+ 544              	.L28:
+ 545              		.align	2
+ 546              	.L27:
+ 547 0118 00200140 		.word	1073815552
+ 548 011c 00210140 		.word	1073815808
+ 549 0120 00380240 		.word	1073887232
+ 550 0124 00080240 		.word	1073874944
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccg9I5nN.s 			page 16
+
+
+ 551 0128 00000000 		.word	.LANCHOR2
+ 552 012c 10640240 		.word	1073898512
+ 553 0130 00000000 		.word	.LANCHOR3
+ 554 0134 40640240 		.word	1073898560
+ 555              		.cfi_endproc
+ 556              	.LFE237:
+ 558              		.section	.text.HAL_ADC_MspDeInit,"ax",%progbits
+ 559              		.align	1
+ 560              		.global	HAL_ADC_MspDeInit
+ 561              		.syntax unified
+ 562              		.thumb
+ 563              		.thumb_func
+ 565              	HAL_ADC_MspDeInit:
+ 566              	.LVL20:
+ 567              	.LFB238:
+ 213:../STM32CUBEMX/Core/Src/adc.c **** 
+ 214:../STM32CUBEMX/Core/Src/adc.c **** void HAL_ADC_MspDeInit(ADC_HandleTypeDef* adcHandle)
+ 215:../STM32CUBEMX/Core/Src/adc.c **** {
+ 568              		.loc 1 215 1 view -0
+ 569              		.cfi_startproc
+ 570              		@ args = 0, pretend = 0, frame = 0
+ 571              		@ frame_needed = 0, uses_anonymous_args = 0
+ 572              		.loc 1 215 1 is_stmt 0 view .LVU192
+ 573 0000 10B5     		push	{r4, lr}
+ 574              	.LCFI12:
+ 575              		.cfi_def_cfa_offset 8
+ 576              		.cfi_offset 4, -8
+ 577              		.cfi_offset 14, -4
+ 578 0002 0446     		mov	r4, r0
+ 216:../STM32CUBEMX/Core/Src/adc.c **** 
+ 217:../STM32CUBEMX/Core/Src/adc.c ****   if(adcHandle->Instance==ADC1)
+ 579              		.loc 1 217 3 is_stmt 1 view .LVU193
+ 580              		.loc 1 217 15 is_stmt 0 view .LVU194
+ 581 0004 0368     		ldr	r3, [r0]
+ 582              		.loc 1 217 5 view .LVU195
+ 583 0006 114A     		ldr	r2, .L35
+ 584 0008 9342     		cmp	r3, r2
+ 585 000a 03D0     		beq	.L33
+ 218:../STM32CUBEMX/Core/Src/adc.c ****   {
+ 219:../STM32CUBEMX/Core/Src/adc.c ****   /* USER CODE BEGIN ADC1_MspDeInit 0 */
+ 220:../STM32CUBEMX/Core/Src/adc.c **** 
+ 221:../STM32CUBEMX/Core/Src/adc.c ****   /* USER CODE END ADC1_MspDeInit 0 */
+ 222:../STM32CUBEMX/Core/Src/adc.c ****     /* Peripheral clock disable */
+ 223:../STM32CUBEMX/Core/Src/adc.c ****     __HAL_RCC_ADC1_CLK_DISABLE();
+ 224:../STM32CUBEMX/Core/Src/adc.c **** 
+ 225:../STM32CUBEMX/Core/Src/adc.c ****     /**ADC1 GPIO Configuration
+ 226:../STM32CUBEMX/Core/Src/adc.c ****     PC0     ------> ADC1_IN10
+ 227:../STM32CUBEMX/Core/Src/adc.c ****     PC2     ------> ADC1_IN12
+ 228:../STM32CUBEMX/Core/Src/adc.c ****     */
+ 229:../STM32CUBEMX/Core/Src/adc.c ****     HAL_GPIO_DeInit(GPIOC, GPIO_PIN_0|GPIO_PIN_2);
+ 230:../STM32CUBEMX/Core/Src/adc.c **** 
+ 231:../STM32CUBEMX/Core/Src/adc.c ****     /* ADC1 DMA DeInit */
+ 232:../STM32CUBEMX/Core/Src/adc.c ****     HAL_DMA_DeInit(adcHandle->DMA_Handle);
+ 233:../STM32CUBEMX/Core/Src/adc.c ****   /* USER CODE BEGIN ADC1_MspDeInit 1 */
+ 234:../STM32CUBEMX/Core/Src/adc.c **** 
+ 235:../STM32CUBEMX/Core/Src/adc.c ****   /* USER CODE END ADC1_MspDeInit 1 */
+ 236:../STM32CUBEMX/Core/Src/adc.c ****   }
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccg9I5nN.s 			page 17
+
+
+ 237:../STM32CUBEMX/Core/Src/adc.c ****   else if(adcHandle->Instance==ADC2)
+ 586              		.loc 1 237 8 is_stmt 1 view .LVU196
+ 587              		.loc 1 237 10 is_stmt 0 view .LVU197
+ 588 000c 104A     		ldr	r2, .L35+4
+ 589 000e 9342     		cmp	r3, r2
+ 590 0010 0ED0     		beq	.L34
+ 591              	.LVL21:
+ 592              	.L29:
+ 238:../STM32CUBEMX/Core/Src/adc.c ****   {
+ 239:../STM32CUBEMX/Core/Src/adc.c ****   /* USER CODE BEGIN ADC2_MspDeInit 0 */
+ 240:../STM32CUBEMX/Core/Src/adc.c **** 
+ 241:../STM32CUBEMX/Core/Src/adc.c ****   /* USER CODE END ADC2_MspDeInit 0 */
+ 242:../STM32CUBEMX/Core/Src/adc.c ****     /* Peripheral clock disable */
+ 243:../STM32CUBEMX/Core/Src/adc.c ****     __HAL_RCC_ADC2_CLK_DISABLE();
+ 244:../STM32CUBEMX/Core/Src/adc.c **** 
+ 245:../STM32CUBEMX/Core/Src/adc.c ****     /**ADC2 GPIO Configuration
+ 246:../STM32CUBEMX/Core/Src/adc.c ****     PC1     ------> ADC2_IN11
+ 247:../STM32CUBEMX/Core/Src/adc.c ****     */
+ 248:../STM32CUBEMX/Core/Src/adc.c ****     HAL_GPIO_DeInit(GPIOC, GPIO_PIN_1);
+ 249:../STM32CUBEMX/Core/Src/adc.c **** 
+ 250:../STM32CUBEMX/Core/Src/adc.c ****     /* ADC2 DMA DeInit */
+ 251:../STM32CUBEMX/Core/Src/adc.c ****     HAL_DMA_DeInit(adcHandle->DMA_Handle);
+ 252:../STM32CUBEMX/Core/Src/adc.c ****   /* USER CODE BEGIN ADC2_MspDeInit 1 */
+ 253:../STM32CUBEMX/Core/Src/adc.c **** 
+ 254:../STM32CUBEMX/Core/Src/adc.c ****   /* USER CODE END ADC2_MspDeInit 1 */
+ 255:../STM32CUBEMX/Core/Src/adc.c ****   }
+ 256:../STM32CUBEMX/Core/Src/adc.c **** }
+ 593              		.loc 1 256 1 view .LVU198
+ 594 0012 10BD     		pop	{r4, pc}
+ 595              	.LVL22:
+ 596              	.L33:
+ 223:../STM32CUBEMX/Core/Src/adc.c **** 
+ 597              		.loc 1 223 5 is_stmt 1 view .LVU199
+ 598 0014 02F58C32 		add	r2, r2, #71680
+ 599 0018 536C     		ldr	r3, [r2, #68]
+ 600 001a 23F48073 		bic	r3, r3, #256
+ 601 001e 5364     		str	r3, [r2, #68]
+ 229:../STM32CUBEMX/Core/Src/adc.c **** 
+ 602              		.loc 1 229 5 view .LVU200
+ 603 0020 0521     		movs	r1, #5
+ 604 0022 0C48     		ldr	r0, .L35+8
+ 605              	.LVL23:
+ 229:../STM32CUBEMX/Core/Src/adc.c **** 
+ 606              		.loc 1 229 5 is_stmt 0 view .LVU201
+ 607 0024 FFF7FEFF 		bl	HAL_GPIO_DeInit
+ 608              	.LVL24:
+ 232:../STM32CUBEMX/Core/Src/adc.c ****   /* USER CODE BEGIN ADC1_MspDeInit 1 */
+ 609              		.loc 1 232 5 is_stmt 1 view .LVU202
+ 610 0028 A06B     		ldr	r0, [r4, #56]
+ 611 002a FFF7FEFF 		bl	HAL_DMA_DeInit
+ 612              	.LVL25:
+ 613 002e F0E7     		b	.L29
+ 614              	.LVL26:
+ 615              	.L34:
+ 243:../STM32CUBEMX/Core/Src/adc.c **** 
+ 616              		.loc 1 243 5 view .LVU203
+ 617 0030 094A     		ldr	r2, .L35+12
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccg9I5nN.s 			page 18
+
+
+ 618 0032 536C     		ldr	r3, [r2, #68]
+ 619 0034 23F40073 		bic	r3, r3, #512
+ 620 0038 5364     		str	r3, [r2, #68]
+ 248:../STM32CUBEMX/Core/Src/adc.c **** 
+ 621              		.loc 1 248 5 view .LVU204
+ 622 003a 0221     		movs	r1, #2
+ 623 003c 0548     		ldr	r0, .L35+8
+ 624              	.LVL27:
+ 248:../STM32CUBEMX/Core/Src/adc.c **** 
+ 625              		.loc 1 248 5 is_stmt 0 view .LVU205
+ 626 003e FFF7FEFF 		bl	HAL_GPIO_DeInit
+ 627              	.LVL28:
+ 251:../STM32CUBEMX/Core/Src/adc.c ****   /* USER CODE BEGIN ADC2_MspDeInit 1 */
+ 628              		.loc 1 251 5 is_stmt 1 view .LVU206
+ 629 0042 A06B     		ldr	r0, [r4, #56]
+ 630 0044 FFF7FEFF 		bl	HAL_DMA_DeInit
+ 631              	.LVL29:
+ 632              		.loc 1 256 1 is_stmt 0 view .LVU207
+ 633 0048 E3E7     		b	.L29
+ 634              	.L36:
+ 635 004a 00BF     		.align	2
+ 636              	.L35:
+ 637 004c 00200140 		.word	1073815552
+ 638 0050 00210140 		.word	1073815808
+ 639 0054 00080240 		.word	1073874944
+ 640 0058 00380240 		.word	1073887232
+ 641              		.cfi_endproc
+ 642              	.LFE238:
+ 644              		.section	.text.HAL_ADC_ConvCpltCallback,"ax",%progbits
+ 645              		.align	1
+ 646              		.global	HAL_ADC_ConvCpltCallback
+ 647              		.syntax unified
+ 648              		.thumb
+ 649              		.thumb_func
+ 651              	HAL_ADC_ConvCpltCallback:
+ 652              	.LVL30:
+ 653              	.LFB239:
+ 257:../STM32CUBEMX/Core/Src/adc.c **** 
+ 258:../STM32CUBEMX/Core/Src/adc.c **** /* USER CODE BEGIN 1 */
+ 259:../STM32CUBEMX/Core/Src/adc.c **** #include "tim.h"
+ 260:../STM32CUBEMX/Core/Src/adc.c **** #include "math.h"
+ 261:../STM32CUBEMX/Core/Src/adc.c **** extern volatile uint16_t adc1_DMAData[10];	//ADC1 DMA Buffer
+ 262:../STM32CUBEMX/Core/Src/adc.c **** extern volatile uint16_t adc2_DMAData[10];	//ADC2 DMA Buffer
+ 263:../STM32CUBEMX/Core/Src/adc.c **** extern int16_t motor1_PwmData;	//As the name implies
+ 264:../STM32CUBEMX/Core/Src/adc.c **** extern int16_t motor2_PwmData;	//As the name implies
+ 265:../STM32CUBEMX/Core/Src/adc.c **** 
+ 266:../STM32CUBEMX/Core/Src/adc.c **** volatile uint16_t tim3cnt=0;
+ 267:../STM32CUBEMX/Core/Src/adc.c **** volatile uint16_t tim8cnt=0;
+ 268:../STM32CUBEMX/Core/Src/adc.c **** 
+ 269:../STM32CUBEMX/Core/Src/adc.c **** volatile uint32_t simulinkRunFlag[2]={0};// first bit reset by adc1; second bit reset by adc2; only
+ 270:../STM32CUBEMX/Core/Src/adc.c **** int16_t adc_rawvalue[2][5]={{0},{0}};	//Removal of raw data from underflow sampling points
+ 271:../STM32CUBEMX/Core/Src/adc.c **** int16_t adc_zerooffset[2]={0};
+ 272:../STM32CUBEMX/Core/Src/adc.c **** 
+ 273:../STM32CUBEMX/Core/Src/adc.c **** int16_t adc_avervalue[2]={0,0};
+ 274:../STM32CUBEMX/Core/Src/adc.c **** float adc_filtervalue[2]={0,0};
+ 275:../STM32CUBEMX/Core/Src/adc.c **** float adc_convVolt[2]={0};
+ 276:../STM32CUBEMX/Core/Src/adc.c **** void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc)	//once PWM trigger adc twice,10KHz PWM,20KHz
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccg9I5nN.s 			page 19
+
+
+ 277:../STM32CUBEMX/Core/Src/adc.c **** {
+ 654              		.loc 1 277 1 is_stmt 1 view -0
+ 655              		.cfi_startproc
+ 656              		@ args = 0, pretend = 0, frame = 0
+ 657              		@ frame_needed = 0, uses_anonymous_args = 0
+ 278:../STM32CUBEMX/Core/Src/adc.c **** 	
+ 279:../STM32CUBEMX/Core/Src/adc.c **** 	if(hadc->Instance == hadc1.Instance)
+ 658              		.loc 1 279 2 view .LVU209
+ 659              		.loc 1 279 9 is_stmt 0 view .LVU210
+ 660 0000 0368     		ldr	r3, [r0]
+ 661              		.loc 1 279 28 view .LVU211
+ 662 0002 384A     		ldr	r2, .L60
+ 663 0004 1268     		ldr	r2, [r2]
+ 664              		.loc 1 279 4 view .LVU212
+ 665 0006 9342     		cmp	r3, r2
+ 666 0008 04D0     		beq	.L56
+ 280:../STM32CUBEMX/Core/Src/adc.c **** 	{
+ 281:../STM32CUBEMX/Core/Src/adc.c **** 		//uint16_t sum1=0;
+ 282:../STM32CUBEMX/Core/Src/adc.c **** 		uint16_t ioffset=1;
+ 283:../STM32CUBEMX/Core/Src/adc.c **** 		uint16_t signI=motor1_PwmData<0?-1:1;
+ 284:../STM32CUBEMX/Core/Src/adc.c **** 		tim3cnt=__HAL_TIM_GetCounter(&htim3);
+ 285:../STM32CUBEMX/Core/Src/adc.c **** 		if(tim3cnt<600) ioffset=0;
+ 286:../STM32CUBEMX/Core/Src/adc.c **** 		for(int i=0;i<5;i++)
+ 287:../STM32CUBEMX/Core/Src/adc.c **** 		{
+ 288:../STM32CUBEMX/Core/Src/adc.c **** 			//sum1+=adc1_DMAData[i*2+ioffset];
+ 289:../STM32CUBEMX/Core/Src/adc.c **** 			adc_rawvalue[0][i]=signI*(adc1_DMAData[i*2+ioffset]-adc_zerooffset[0]);
+ 290:../STM32CUBEMX/Core/Src/adc.c **** 		}
+ 291:../STM32CUBEMX/Core/Src/adc.c **** //		if(motor1_PwmData<0)
+ 292:../STM32CUBEMX/Core/Src/adc.c **** //		{
+ 293:../STM32CUBEMX/Core/Src/adc.c **** //			adc_avervalue[0]=(2048-(int16_t)(sum1/5));
+ 294:../STM32CUBEMX/Core/Src/adc.c **** //		}
+ 295:../STM32CUBEMX/Core/Src/adc.c **** //		else
+ 296:../STM32CUBEMX/Core/Src/adc.c **** //		{
+ 297:../STM32CUBEMX/Core/Src/adc.c **** //			adc_avervalue[0]=(int16_t)(sum1/5)-2048;
+ 298:../STM32CUBEMX/Core/Src/adc.c **** //		}
+ 299:../STM32CUBEMX/Core/Src/adc.c **** //		adc_convVolt[0]=adc_avervalue[0]*33/2048.0f;
+ 300:../STM32CUBEMX/Core/Src/adc.c **** //		adc_filtervalue[0]=0.9f*adc_filtervalue[0]+0.1f*adc_convVolt[0];
+ 301:../STM32CUBEMX/Core/Src/adc.c **** 		simulinkRunFlag[0]++;
+ 302:../STM32CUBEMX/Core/Src/adc.c **** 	}
+ 303:../STM32CUBEMX/Core/Src/adc.c **** 	else if(hadc->Instance == hadc2.Instance)
+ 667              		.loc 1 303 7 is_stmt 1 view .LVU213
+ 668              		.loc 1 303 33 is_stmt 0 view .LVU214
+ 669 000a 374A     		ldr	r2, .L60+4
+ 670 000c 1268     		ldr	r2, [r2]
+ 671              		.loc 1 303 9 view .LVU215
+ 672 000e 9342     		cmp	r3, r2
+ 673 0010 31D0     		beq	.L57
+ 674 0012 7047     		bx	lr
+ 675              	.L56:
+ 676              	.LBB6:
+ 282:../STM32CUBEMX/Core/Src/adc.c **** 		uint16_t signI=motor1_PwmData<0?-1:1;
+ 677              		.loc 1 282 3 is_stmt 1 view .LVU216
+ 678              	.LVL31:
+ 283:../STM32CUBEMX/Core/Src/adc.c **** 		tim3cnt=__HAL_TIM_GetCounter(&htim3);
+ 679              		.loc 1 283 3 view .LVU217
+ 283:../STM32CUBEMX/Core/Src/adc.c **** 		tim3cnt=__HAL_TIM_GetCounter(&htim3);
+ 680              		.loc 1 283 32 is_stmt 0 view .LVU218
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccg9I5nN.s 			page 20
+
+
+ 681 0014 354B     		ldr	r3, .L60+8
+ 682 0016 B3F90030 		ldrsh	r3, [r3]
+ 283:../STM32CUBEMX/Core/Src/adc.c **** 		tim3cnt=__HAL_TIM_GetCounter(&htim3);
+ 683              		.loc 1 283 12 view .LVU219
+ 684 001a 002B     		cmp	r3, #0
+ 685 001c 0FDB     		blt	.L58
+ 686 001e 4FF0010C 		mov	ip, #1
+ 687              	.L39:
+ 688              	.LVL32:
+ 284:../STM32CUBEMX/Core/Src/adc.c **** 		if(tim3cnt<600) ioffset=0;
+ 689              		.loc 1 284 3 is_stmt 1 discriminator 4 view .LVU220
+ 284:../STM32CUBEMX/Core/Src/adc.c **** 		if(tim3cnt<600) ioffset=0;
+ 690              		.loc 1 284 11 is_stmt 0 discriminator 4 view .LVU221
+ 691 0022 334B     		ldr	r3, .L60+12
+ 692 0024 1B68     		ldr	r3, [r3]
+ 693 0026 5B6A     		ldr	r3, [r3, #36]
+ 284:../STM32CUBEMX/Core/Src/adc.c **** 		if(tim3cnt<600) ioffset=0;
+ 694              		.loc 1 284 10 discriminator 4 view .LVU222
+ 695 0028 9BB2     		uxth	r3, r3
+ 696 002a 324A     		ldr	r2, .L60+16
+ 697 002c 1380     		strh	r3, [r2]	@ movhi
+ 285:../STM32CUBEMX/Core/Src/adc.c **** 		for(int i=0;i<5;i++)
+ 698              		.loc 1 285 3 is_stmt 1 discriminator 4 view .LVU223
+ 285:../STM32CUBEMX/Core/Src/adc.c **** 		for(int i=0;i<5;i++)
+ 699              		.loc 1 285 13 is_stmt 0 discriminator 4 view .LVU224
+ 700 002e 1388     		ldrh	r3, [r2]
+ 701 0030 9BB2     		uxth	r3, r3
+ 285:../STM32CUBEMX/Core/Src/adc.c **** 		for(int i=0;i<5;i++)
+ 702              		.loc 1 285 5 discriminator 4 view .LVU225
+ 703 0032 B3F5167F 		cmp	r3, #600
+ 704 0036 05D3     		bcc	.L49
+ 282:../STM32CUBEMX/Core/Src/adc.c **** 		uint16_t signI=motor1_PwmData<0?-1:1;
+ 705              		.loc 1 282 12 view .LVU226
+ 706 0038 0120     		movs	r0, #1
+ 707              	.LVL33:
+ 708              	.L40:
+ 286:../STM32CUBEMX/Core/Src/adc.c **** 		{
+ 709              		.loc 1 286 3 is_stmt 1 view .LVU227
+ 710              	.LBB7:
+ 286:../STM32CUBEMX/Core/Src/adc.c **** 		{
+ 711              		.loc 1 286 7 view .LVU228
+ 286:../STM32CUBEMX/Core/Src/adc.c **** 		{
+ 712              		.loc 1 286 11 is_stmt 0 view .LVU229
+ 713 003a 0022     		movs	r2, #0
+ 286:../STM32CUBEMX/Core/Src/adc.c **** 		{
+ 714              		.loc 1 286 3 view .LVU230
+ 715 003c 14E0     		b	.L41
+ 716              	.LVL34:
+ 717              	.L58:
+ 286:../STM32CUBEMX/Core/Src/adc.c **** 		{
+ 718              		.loc 1 286 3 view .LVU231
+ 719              	.LBE7:
+ 283:../STM32CUBEMX/Core/Src/adc.c **** 		tim3cnt=__HAL_TIM_GetCounter(&htim3);
+ 720              		.loc 1 283 12 view .LVU232
+ 721 003e 4FF6FF7C 		movw	ip, #65535
+ 722 0042 EEE7     		b	.L39
+ 723              	.LVL35:
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccg9I5nN.s 			page 21
+
+
+ 724              	.L49:
+ 285:../STM32CUBEMX/Core/Src/adc.c **** 		for(int i=0;i<5;i++)
+ 725              		.loc 1 285 26 view .LVU233
+ 726 0044 0020     		movs	r0, #0
+ 727              	.LVL36:
+ 285:../STM32CUBEMX/Core/Src/adc.c **** 		for(int i=0;i<5;i++)
+ 728              		.loc 1 285 26 view .LVU234
+ 729 0046 F8E7     		b	.L40
+ 730              	.LVL37:
+ 731              	.L42:
+ 732              	.LBB8:
+ 289:../STM32CUBEMX/Core/Src/adc.c **** 		}
+ 733              		.loc 1 289 4 is_stmt 1 discriminator 3 view .LVU235
+ 289:../STM32CUBEMX/Core/Src/adc.c **** 		}
+ 734              		.loc 1 289 46 is_stmt 0 discriminator 3 view .LVU236
+ 735 0048 00EB4201 		add	r1, r0, r2, lsl #1
+ 289:../STM32CUBEMX/Core/Src/adc.c **** 		}
+ 736              		.loc 1 289 42 discriminator 3 view .LVU237
+ 737 004c 2A4B     		ldr	r3, .L60+20
+ 738 004e 33F81130 		ldrh	r3, [r3, r1, lsl #1]
+ 739 0052 9BB2     		uxth	r3, r3
+ 289:../STM32CUBEMX/Core/Src/adc.c **** 		}
+ 740              		.loc 1 289 70 discriminator 3 view .LVU238
+ 741 0054 2949     		ldr	r1, .L60+24
+ 742 0056 B1F90010 		ldrsh	r1, [r1]
+ 289:../STM32CUBEMX/Core/Src/adc.c **** 		}
+ 743              		.loc 1 289 55 discriminator 3 view .LVU239
+ 744 005a 5B1A     		subs	r3, r3, r1
+ 289:../STM32CUBEMX/Core/Src/adc.c **** 		}
+ 745              		.loc 1 289 22 discriminator 3 view .LVU240
+ 746 005c 13FB0CF3 		smulbb	r3, r3, ip
+ 747 0060 2749     		ldr	r1, .L60+28
+ 748 0062 21F81230 		strh	r3, [r1, r2, lsl #1]	@ movhi
+ 286:../STM32CUBEMX/Core/Src/adc.c **** 		{
+ 749              		.loc 1 286 20 is_stmt 1 discriminator 3 view .LVU241
+ 750 0066 0132     		adds	r2, r2, #1
+ 751              	.LVL38:
+ 752              	.L41:
+ 286:../STM32CUBEMX/Core/Src/adc.c **** 		{
+ 753              		.loc 1 286 16 discriminator 1 view .LVU242
+ 754 0068 042A     		cmp	r2, #4
+ 755 006a EDDD     		ble	.L42
+ 756              	.LBE8:
+ 301:../STM32CUBEMX/Core/Src/adc.c **** 	}
+ 757              		.loc 1 301 3 view .LVU243
+ 301:../STM32CUBEMX/Core/Src/adc.c **** 	}
+ 758              		.loc 1 301 18 is_stmt 0 view .LVU244
+ 759 006c 254A     		ldr	r2, .L60+32
+ 760              	.LVL39:
+ 301:../STM32CUBEMX/Core/Src/adc.c **** 	}
+ 761              		.loc 1 301 18 view .LVU245
+ 762 006e 1368     		ldr	r3, [r2]
+ 301:../STM32CUBEMX/Core/Src/adc.c **** 	}
+ 763              		.loc 1 301 21 view .LVU246
+ 764 0070 0133     		adds	r3, r3, #1
+ 765 0072 1360     		str	r3, [r2]
+ 766              	.LBE6:
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccg9I5nN.s 			page 22
+
+
+ 767 0074 7047     		bx	lr
+ 768              	.LVL40:
+ 769              	.L57:
+ 277:../STM32CUBEMX/Core/Src/adc.c **** 	
+ 770              		.loc 1 277 1 view .LVU247
+ 771 0076 00B5     		push	{lr}
+ 772              	.LCFI13:
+ 773              		.cfi_def_cfa_offset 4
+ 774              		.cfi_offset 14, -4
+ 775              	.LBB9:
+ 304:../STM32CUBEMX/Core/Src/adc.c **** 	{
+ 305:../STM32CUBEMX/Core/Src/adc.c **** 		//uint16_t sum2=0;
+ 306:../STM32CUBEMX/Core/Src/adc.c **** 		uint16_t signI=motor2_PwmData<0?-1:1;
+ 776              		.loc 1 306 3 is_stmt 1 view .LVU248
+ 777              		.loc 1 306 32 is_stmt 0 view .LVU249
+ 778 0078 234B     		ldr	r3, .L60+36
+ 779 007a B3F90030 		ldrsh	r3, [r3]
+ 780              		.loc 1 306 12 view .LVU250
+ 781 007e 002B     		cmp	r3, #0
+ 782 0080 10DB     		blt	.L59
+ 783 0082 4FF0010E 		mov	lr, #1
+ 784              	.L44:
+ 785              	.LVL41:
+ 307:../STM32CUBEMX/Core/Src/adc.c **** 		uint16_t ioffset=1;
+ 786              		.loc 1 307 3 is_stmt 1 discriminator 4 view .LVU251
+ 308:../STM32CUBEMX/Core/Src/adc.c **** 		tim8cnt=__HAL_TIM_GetCounter(&htim8);
+ 787              		.loc 1 308 3 discriminator 4 view .LVU252
+ 788              		.loc 1 308 11 is_stmt 0 discriminator 4 view .LVU253
+ 789 0086 214B     		ldr	r3, .L60+40
+ 790 0088 1B68     		ldr	r3, [r3]
+ 791 008a 5B6A     		ldr	r3, [r3, #36]
+ 792              		.loc 1 308 10 discriminator 4 view .LVU254
+ 793 008c 9BB2     		uxth	r3, r3
+ 794 008e 204A     		ldr	r2, .L60+44
+ 795 0090 1380     		strh	r3, [r2]	@ movhi
+ 309:../STM32CUBEMX/Core/Src/adc.c **** 		if(tim8cnt<600) ioffset=0;
+ 796              		.loc 1 309 3 is_stmt 1 discriminator 4 view .LVU255
+ 797              		.loc 1 309 13 is_stmt 0 discriminator 4 view .LVU256
+ 798 0092 1388     		ldrh	r3, [r2]
+ 799 0094 9BB2     		uxth	r3, r3
+ 800              		.loc 1 309 5 discriminator 4 view .LVU257
+ 801 0096 B3F5167F 		cmp	r3, #600
+ 802 009a 06D3     		bcc	.L51
+ 307:../STM32CUBEMX/Core/Src/adc.c **** 		uint16_t ioffset=1;
+ 803              		.loc 1 307 12 view .LVU258
+ 804 009c 4FF0010C 		mov	ip, #1
+ 805              	.L45:
+ 806              	.LVL42:
+ 310:../STM32CUBEMX/Core/Src/adc.c **** 		for(int i=0;i<5;i++)
+ 807              		.loc 1 310 3 is_stmt 1 view .LVU259
+ 808              	.LBB10:
+ 809              		.loc 1 310 7 view .LVU260
+ 810              		.loc 1 310 11 is_stmt 0 view .LVU261
+ 811 00a0 0022     		movs	r2, #0
+ 812              		.loc 1 310 3 view .LVU262
+ 813 00a2 16E0     		b	.L46
+ 814              	.LVL43:
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccg9I5nN.s 			page 23
+
+
+ 815              	.L59:
+ 816              		.loc 1 310 3 view .LVU263
+ 817              	.LBE10:
+ 306:../STM32CUBEMX/Core/Src/adc.c **** 		uint16_t ioffset=1;
+ 818              		.loc 1 306 12 view .LVU264
+ 819 00a4 4FF6FF7E 		movw	lr, #65535
+ 820 00a8 EDE7     		b	.L44
+ 821              	.LVL44:
+ 822              	.L51:
+ 309:../STM32CUBEMX/Core/Src/adc.c **** 		if(tim8cnt<600) ioffset=0;
+ 823              		.loc 1 309 26 view .LVU265
+ 824 00aa 4FF0000C 		mov	ip, #0
+ 825 00ae F7E7     		b	.L45
+ 826              	.LVL45:
+ 827              	.L47:
+ 828              	.LBB11:
+ 311:../STM32CUBEMX/Core/Src/adc.c **** 		{
+ 312:../STM32CUBEMX/Core/Src/adc.c **** 			//sum2+=adc2_DMAData[i*2+ioffset];
+ 313:../STM32CUBEMX/Core/Src/adc.c **** 			adc_rawvalue[1][i]=signI*(adc2_DMAData[i*2+ioffset]-adc_zerooffset[1]);
+ 829              		.loc 1 313 4 is_stmt 1 discriminator 3 view .LVU266
+ 830              		.loc 1 313 46 is_stmt 0 discriminator 3 view .LVU267
+ 831 00b0 0CEB4201 		add	r1, ip, r2, lsl #1
+ 832              		.loc 1 313 42 discriminator 3 view .LVU268
+ 833 00b4 174B     		ldr	r3, .L60+48
+ 834 00b6 33F81130 		ldrh	r3, [r3, r1, lsl #1]
+ 835 00ba 9BB2     		uxth	r3, r3
+ 836              		.loc 1 313 70 discriminator 3 view .LVU269
+ 837 00bc 0F49     		ldr	r1, .L60+24
+ 838 00be B1F90210 		ldrsh	r1, [r1, #2]
+ 839              		.loc 1 313 55 discriminator 3 view .LVU270
+ 840 00c2 5B1A     		subs	r3, r3, r1
+ 841              		.loc 1 313 22 discriminator 3 view .LVU271
+ 842 00c4 501D     		adds	r0, r2, #5
+ 843 00c6 13FB0EF3 		smulbb	r3, r3, lr
+ 844 00ca 0D49     		ldr	r1, .L60+28
+ 845 00cc 21F81030 		strh	r3, [r1, r0, lsl #1]	@ movhi
+ 310:../STM32CUBEMX/Core/Src/adc.c **** 		{
+ 846              		.loc 1 310 20 is_stmt 1 discriminator 3 view .LVU272
+ 847 00d0 0132     		adds	r2, r2, #1
+ 848              	.LVL46:
+ 849              	.L46:
+ 310:../STM32CUBEMX/Core/Src/adc.c **** 		{
+ 850              		.loc 1 310 16 discriminator 1 view .LVU273
+ 851 00d2 042A     		cmp	r2, #4
+ 852 00d4 ECDD     		ble	.L47
+ 853              	.LBE11:
+ 314:../STM32CUBEMX/Core/Src/adc.c **** 		}
+ 315:../STM32CUBEMX/Core/Src/adc.c **** //		if(motor2_PwmData<0)
+ 316:../STM32CUBEMX/Core/Src/adc.c **** //		{
+ 317:../STM32CUBEMX/Core/Src/adc.c **** //			adc_avervalue[1]=2048-(uint16_t)(sum2/5);
+ 318:../STM32CUBEMX/Core/Src/adc.c **** //		}
+ 319:../STM32CUBEMX/Core/Src/adc.c **** //		else
+ 320:../STM32CUBEMX/Core/Src/adc.c **** //		{
+ 321:../STM32CUBEMX/Core/Src/adc.c **** //			adc_avervalue[1]=(uint16_t)(sum2/5)-2048;
+ 322:../STM32CUBEMX/Core/Src/adc.c **** //		}
+ 323:../STM32CUBEMX/Core/Src/adc.c **** //		adc_convVolt[1]=adc_avervalue[1]*33/2048.0f;
+ 324:../STM32CUBEMX/Core/Src/adc.c **** //		adc_filtervalue[1]=0.9f*adc_filtervalue[1]+0.1f*adc_convVolt[1];
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccg9I5nN.s 			page 24
+
+
+ 325:../STM32CUBEMX/Core/Src/adc.c **** 		simulinkRunFlag[1]++;
+ 854              		.loc 1 325 3 view .LVU274
+ 855              		.loc 1 325 18 is_stmt 0 view .LVU275
+ 856 00d6 0B4A     		ldr	r2, .L60+32
+ 857              	.LVL47:
+ 858              		.loc 1 325 18 view .LVU276
+ 859 00d8 5368     		ldr	r3, [r2, #4]
+ 860              		.loc 1 325 21 view .LVU277
+ 861 00da 0133     		adds	r3, r3, #1
+ 862 00dc 5360     		str	r3, [r2, #4]
+ 863              	.LBE9:
+ 326:../STM32CUBEMX/Core/Src/adc.c **** 	}
+ 327:../STM32CUBEMX/Core/Src/adc.c **** 	
+ 328:../STM32CUBEMX/Core/Src/adc.c **** //static uint16_t adc1_count,adc2_count=0;
+ 329:../STM32CUBEMX/Core/Src/adc.c **** //	if(hadc->Instance == hadc1.Instance)	//no dma
+ 330:../STM32CUBEMX/Core/Src/adc.c **** //	{
+ 331:../STM32CUBEMX/Core/Src/adc.c **** //		tim3cnt=__HAL_TIM_GetCounter(&htim3);
+ 332:../STM32CUBEMX/Core/Src/adc.c **** //		//timupdataflag=!timupdataflag;
+ 333:../STM32CUBEMX/Core/Src/adc.c **** //		if(tim3cnt<10)
+ 334:../STM32CUBEMX/Core/Src/adc.c **** //		{
+ 335:../STM32CUBEMX/Core/Src/adc.c **** //			adc_rawvalue[0][adc1_count]=HAL_ADC_GetValue(&hadc1);
+ 336:../STM32CUBEMX/Core/Src/adc.c **** //			simulinkRunFlag++;
+ 337:../STM32CUBEMX/Core/Src/adc.c **** //			adc1_count++;
+ 338:../STM32CUBEMX/Core/Src/adc.c **** //			if(adc1_count>9)
+ 339:../STM32CUBEMX/Core/Src/adc.c **** //			{
+ 340:../STM32CUBEMX/Core/Src/adc.c **** //				adc1_count=0;
+ 341:../STM32CUBEMX/Core/Src/adc.c **** //				uint16_t sum=0;
+ 342:../STM32CUBEMX/Core/Src/adc.c **** //				for(int i =0;i<10;i++)
+ 343:../STM32CUBEMX/Core/Src/adc.c **** //				{
+ 344:../STM32CUBEMX/Core/Src/adc.c **** //					sum += adc_rawvalue[0][i];
+ 345:../STM32CUBEMX/Core/Src/adc.c **** //				}
+ 346:../STM32CUBEMX/Core/Src/adc.c **** //				adc_filtervalue[0]=(uint16_t)(sum/10);
+ 347:../STM32CUBEMX/Core/Src/adc.c **** //			}
+ 348:../STM32CUBEMX/Core/Src/adc.c **** //		}
+ 349:../STM32CUBEMX/Core/Src/adc.c **** //	}
+ 350:../STM32CUBEMX/Core/Src/adc.c **** //	else if(hadc->Instance == hadc2.Instance)
+ 351:../STM32CUBEMX/Core/Src/adc.c **** //	{
+ 352:../STM32CUBEMX/Core/Src/adc.c **** //		tim8cnt=__HAL_TIM_GetCounter(&htim8);
+ 353:../STM32CUBEMX/Core/Src/adc.c **** //		if(tim8cnt<10)
+ 354:../STM32CUBEMX/Core/Src/adc.c **** //		{
+ 355:../STM32CUBEMX/Core/Src/adc.c **** //			adc_rawvalue[1][adc2_count]=HAL_ADC_GetValue(&hadc2);
+ 356:../STM32CUBEMX/Core/Src/adc.c **** //			
+ 357:../STM32CUBEMX/Core/Src/adc.c **** //			adc2_count++;
+ 358:../STM32CUBEMX/Core/Src/adc.c **** //			if(adc2_count>9)
+ 359:../STM32CUBEMX/Core/Src/adc.c **** //			{
+ 360:../STM32CUBEMX/Core/Src/adc.c **** //				adc2_count=0;
+ 361:../STM32CUBEMX/Core/Src/adc.c **** //				uint16_t sum=0;
+ 362:../STM32CUBEMX/Core/Src/adc.c **** //				for(int i =0;i<10;i++)
+ 363:../STM32CUBEMX/Core/Src/adc.c **** //				{
+ 364:../STM32CUBEMX/Core/Src/adc.c **** //					sum += adc_rawvalue[1][i];
+ 365:../STM32CUBEMX/Core/Src/adc.c **** //				}
+ 366:../STM32CUBEMX/Core/Src/adc.c **** //				adc_filtervalue[1]=(uint16_t)(sum/10);
+ 367:../STM32CUBEMX/Core/Src/adc.c **** //			}
+ 368:../STM32CUBEMX/Core/Src/adc.c **** //		}
+ 369:../STM32CUBEMX/Core/Src/adc.c **** //	}
+ 370:../STM32CUBEMX/Core/Src/adc.c **** 	
+ 371:../STM32CUBEMX/Core/Src/adc.c **** }
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccg9I5nN.s 			page 25
+
+
+ 864              		.loc 1 371 1 view .LVU278
+ 865 00de 5DF804FB 		ldr	pc, [sp], #4
+ 866              	.L61:
+ 867 00e2 00BF     		.align	2
+ 868              	.L60:
+ 869 00e4 00000000 		.word	.LANCHOR0
+ 870 00e8 00000000 		.word	.LANCHOR1
+ 871 00ec 00000000 		.word	motor1_PwmData
+ 872 00f0 00000000 		.word	htim3
+ 873 00f4 00000000 		.word	.LANCHOR4
+ 874 00f8 00000000 		.word	adc1_DMAData
+ 875 00fc 00000000 		.word	.LANCHOR5
+ 876 0100 00000000 		.word	.LANCHOR6
+ 877 0104 00000000 		.word	.LANCHOR7
+ 878 0108 00000000 		.word	motor2_PwmData
+ 879 010c 00000000 		.word	htim8
+ 880 0110 00000000 		.word	.LANCHOR8
+ 881 0114 00000000 		.word	adc2_DMAData
+ 882              		.cfi_endproc
+ 883              	.LFE239:
+ 885              		.section	.text.USER_ADC_Zero_calibration,"ax",%progbits
+ 886              		.align	1
+ 887              		.global	USER_ADC_Zero_calibration
+ 888              		.syntax unified
+ 889              		.thumb
+ 890              		.thumb_func
+ 892              	USER_ADC_Zero_calibration:
+ 893              	.LFB240:
+ 372:../STM32CUBEMX/Core/Src/adc.c **** 
+ 373:../STM32CUBEMX/Core/Src/adc.c **** void USER_ADC_Zero_calibration(void)
+ 374:../STM32CUBEMX/Core/Src/adc.c **** {
+ 894              		.loc 1 374 1 is_stmt 1 view -0
+ 895              		.cfi_startproc
+ 896              		@ args = 0, pretend = 0, frame = 0
+ 897              		@ frame_needed = 0, uses_anonymous_args = 0
+ 898 0000 00B5     		push	{lr}
+ 899              	.LCFI14:
+ 900              		.cfi_def_cfa_offset 4
+ 901              		.cfi_offset 14, -4
+ 375:../STM32CUBEMX/Core/Src/adc.c **** 	uint16_t count=0;
+ 902              		.loc 1 375 2 view .LVU280
+ 903              	.LVL48:
+ 376:../STM32CUBEMX/Core/Src/adc.c **** 	uint32_t sum1=0;
+ 904              		.loc 1 376 2 view .LVU281
+ 377:../STM32CUBEMX/Core/Src/adc.c **** 	uint32_t sum2=0;
+ 905              		.loc 1 377 2 view .LVU282
+ 378:../STM32CUBEMX/Core/Src/adc.c **** 	while(count<2000)
+ 906              		.loc 1 378 2 view .LVU283
+ 377:../STM32CUBEMX/Core/Src/adc.c **** 	uint32_t sum2=0;
+ 907              		.loc 1 377 11 is_stmt 0 view .LVU284
+ 908 0002 0021     		movs	r1, #0
+ 376:../STM32CUBEMX/Core/Src/adc.c **** 	uint32_t sum1=0;
+ 909              		.loc 1 376 11 view .LVU285
+ 910 0004 0846     		mov	r0, r1
+ 375:../STM32CUBEMX/Core/Src/adc.c **** 	uint32_t sum1=0;
+ 911              		.loc 1 375 11 view .LVU286
+ 912 0006 8E46     		mov	lr, r1
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccg9I5nN.s 			page 26
+
+
+ 913              		.loc 1 378 7 view .LVU287
+ 914 0008 0FE0     		b	.L63
+ 915              	.LVL49:
+ 916              	.L67:
+ 917              	.LBB12:
+ 379:../STM32CUBEMX/Core/Src/adc.c **** 	{
+ 380:../STM32CUBEMX/Core/Src/adc.c **** 		while(simulinkRunFlag[0]==0||simulinkRunFlag[1]==0){}	//wait data conv complete
+ 381:../STM32CUBEMX/Core/Src/adc.c **** 		simulinkRunFlag[0]=0;
+ 382:../STM32CUBEMX/Core/Src/adc.c **** 		simulinkRunFlag[1]=0;
+ 383:../STM32CUBEMX/Core/Src/adc.c **** 		for(int i=0;i<5;i++)
+ 384:../STM32CUBEMX/Core/Src/adc.c **** 		{
+ 385:../STM32CUBEMX/Core/Src/adc.c **** 			sum1+=adc_rawvalue[0][i];
+ 918              		.loc 1 385 4 is_stmt 1 discriminator 3 view .LVU288
+ 919              		.loc 1 385 25 is_stmt 0 discriminator 3 view .LVU289
+ 920 000a 174A     		ldr	r2, .L70
+ 921 000c 32F913C0 		ldrsh	ip, [r2, r3, lsl #1]
+ 922              		.loc 1 385 8 discriminator 3 view .LVU290
+ 923 0010 6044     		add	r0, r0, ip
+ 924              	.LVL50:
+ 386:../STM32CUBEMX/Core/Src/adc.c **** 			sum2+=adc_rawvalue[1][i];
+ 925              		.loc 1 386 4 is_stmt 1 discriminator 3 view .LVU291
+ 926              		.loc 1 386 25 is_stmt 0 discriminator 3 view .LVU292
+ 927 0012 03F1050C 		add	ip, r3, #5
+ 928 0016 32F91C20 		ldrsh	r2, [r2, ip, lsl #1]
+ 929              		.loc 1 386 8 discriminator 3 view .LVU293
+ 930 001a 1144     		add	r1, r1, r2
+ 931              	.LVL51:
+ 383:../STM32CUBEMX/Core/Src/adc.c **** 		{
+ 932              		.loc 1 383 20 is_stmt 1 discriminator 3 view .LVU294
+ 933 001c 0133     		adds	r3, r3, #1
+ 934              	.LVL52:
+ 935              	.L66:
+ 383:../STM32CUBEMX/Core/Src/adc.c **** 		{
+ 936              		.loc 1 383 16 discriminator 1 view .LVU295
+ 937 001e 042B     		cmp	r3, #4
+ 938 0020 F3DD     		ble	.L67
+ 383:../STM32CUBEMX/Core/Src/adc.c **** 		{
+ 939              		.loc 1 383 16 is_stmt 0 discriminator 1 view .LVU296
+ 940              	.LBE12:
+ 387:../STM32CUBEMX/Core/Src/adc.c **** 		}
+ 388:../STM32CUBEMX/Core/Src/adc.c **** 		
+ 389:../STM32CUBEMX/Core/Src/adc.c **** 		count++;
+ 941              		.loc 1 389 3 is_stmt 1 view .LVU297
+ 942              		.loc 1 389 8 is_stmt 0 view .LVU298
+ 943 0022 0EF1010E 		add	lr, lr, #1
+ 944              	.LVL53:
+ 945              		.loc 1 389 8 view .LVU299
+ 946 0026 1FFA8EFE 		uxth	lr, lr
+ 947              	.LVL54:
+ 948              	.L63:
+ 378:../STM32CUBEMX/Core/Src/adc.c **** 	{
+ 949              		.loc 1 378 13 is_stmt 1 view .LVU300
+ 950 002a BEF5FA6F 		cmp	lr, #2000
+ 951 002e 0CD2     		bcs	.L69
+ 952              	.L64:
+ 380:../STM32CUBEMX/Core/Src/adc.c **** 		simulinkRunFlag[0]=0;
+ 953              		.loc 1 380 55 discriminator 3 view .LVU301
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccg9I5nN.s 			page 27
+
+
+ 380:../STM32CUBEMX/Core/Src/adc.c **** 		simulinkRunFlag[0]=0;
+ 954              		.loc 1 380 30 discriminator 3 view .LVU302
+ 380:../STM32CUBEMX/Core/Src/adc.c **** 		simulinkRunFlag[0]=0;
+ 955              		.loc 1 380 24 is_stmt 0 discriminator 3 view .LVU303
+ 956 0030 0E4B     		ldr	r3, .L70+4
+ 957 0032 1B68     		ldr	r3, [r3]
+ 380:../STM32CUBEMX/Core/Src/adc.c **** 		simulinkRunFlag[0]=0;
+ 958              		.loc 1 380 30 discriminator 3 view .LVU304
+ 959 0034 002B     		cmp	r3, #0
+ 960 0036 FBD0     		beq	.L64
+ 380:../STM32CUBEMX/Core/Src/adc.c **** 		simulinkRunFlag[0]=0;
+ 961              		.loc 1 380 47 discriminator 2 view .LVU305
+ 962 0038 0C4B     		ldr	r3, .L70+4
+ 963 003a 5B68     		ldr	r3, [r3, #4]
+ 380:../STM32CUBEMX/Core/Src/adc.c **** 		simulinkRunFlag[0]=0;
+ 964              		.loc 1 380 30 discriminator 2 view .LVU306
+ 965 003c 002B     		cmp	r3, #0
+ 966 003e F7D0     		beq	.L64
+ 381:../STM32CUBEMX/Core/Src/adc.c **** 		simulinkRunFlag[1]=0;
+ 967              		.loc 1 381 3 is_stmt 1 view .LVU307
+ 381:../STM32CUBEMX/Core/Src/adc.c **** 		simulinkRunFlag[1]=0;
+ 968              		.loc 1 381 21 is_stmt 0 view .LVU308
+ 969 0040 0A4A     		ldr	r2, .L70+4
+ 970 0042 0023     		movs	r3, #0
+ 971 0044 1360     		str	r3, [r2]
+ 382:../STM32CUBEMX/Core/Src/adc.c **** 		for(int i=0;i<5;i++)
+ 972              		.loc 1 382 3 is_stmt 1 view .LVU309
+ 382:../STM32CUBEMX/Core/Src/adc.c **** 		for(int i=0;i<5;i++)
+ 973              		.loc 1 382 21 is_stmt 0 view .LVU310
+ 974 0046 5360     		str	r3, [r2, #4]
+ 383:../STM32CUBEMX/Core/Src/adc.c **** 		{
+ 975              		.loc 1 383 3 is_stmt 1 view .LVU311
+ 976              	.LBB13:
+ 383:../STM32CUBEMX/Core/Src/adc.c **** 		{
+ 977              		.loc 1 383 7 view .LVU312
+ 978              	.LVL55:
+ 383:../STM32CUBEMX/Core/Src/adc.c **** 		{
+ 979              		.loc 1 383 3 is_stmt 0 view .LVU313
+ 980 0048 E9E7     		b	.L66
+ 981              	.LVL56:
+ 982              	.L69:
+ 383:../STM32CUBEMX/Core/Src/adc.c **** 		{
+ 983              		.loc 1 383 3 view .LVU314
+ 984              	.LBE13:
+ 390:../STM32CUBEMX/Core/Src/adc.c **** 	}
+ 391:../STM32CUBEMX/Core/Src/adc.c **** 	adc_zerooffset[0]=(int16_t)(sum1/10000);
+ 985              		.loc 1 391 2 is_stmt 1 view .LVU315
+ 986              		.loc 1 391 34 is_stmt 0 view .LVU316
+ 987 004a 094A     		ldr	r2, .L70+8
+ 988 004c A2FB0003 		umull	r0, r3, r2, r0
+ 989              	.LVL57:
+ 990              		.loc 1 391 20 view .LVU317
+ 991 0050 43F34F33 		sbfx	r3, r3, #13, #16
+ 992              		.loc 1 391 19 view .LVU318
+ 993 0054 0748     		ldr	r0, .L70+12
+ 994 0056 0380     		strh	r3, [r0]	@ movhi
+ 392:../STM32CUBEMX/Core/Src/adc.c **** 	adc_zerooffset[1]=(int16_t)(sum2/10000);
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccg9I5nN.s 			page 28
+
+
+ 995              		.loc 1 392 2 is_stmt 1 view .LVU319
+ 996              		.loc 1 392 34 is_stmt 0 view .LVU320
+ 997 0058 A2FB0123 		umull	r2, r3, r2, r1
+ 998              		.loc 1 392 20 view .LVU321
+ 999 005c 43F34F33 		sbfx	r3, r3, #13, #16
+ 1000              		.loc 1 392 19 view .LVU322
+ 1001 0060 4380     		strh	r3, [r0, #2]	@ movhi
+ 393:../STM32CUBEMX/Core/Src/adc.c **** }
+ 1002              		.loc 1 393 1 view .LVU323
+ 1003 0062 5DF804FB 		ldr	pc, [sp], #4
+ 1004              	.L71:
+ 1005 0066 00BF     		.align	2
+ 1006              	.L70:
+ 1007 0068 00000000 		.word	.LANCHOR6
+ 1008 006c 00000000 		.word	.LANCHOR7
+ 1009 0070 5917B7D1 		.word	-776530087
+ 1010 0074 00000000 		.word	.LANCHOR5
+ 1011              		.cfi_endproc
+ 1012              	.LFE240:
+ 1014              		.global	adc_convVolt
+ 1015              		.global	adc_filtervalue
+ 1016              		.global	adc_avervalue
+ 1017              		.global	adc_zerooffset
+ 1018              		.global	adc_rawvalue
+ 1019              		.global	simulinkRunFlag
+ 1020              		.global	tim8cnt
+ 1021              		.global	tim3cnt
+ 1022              		.global	hdma_adc2
+ 1023              		.global	hdma_adc1
+ 1024              		.global	hadc2
+ 1025              		.global	hadc1
+ 1026              		.section	.bss.adc_avervalue,"aw",%nobits
+ 1027              		.align	2
+ 1030              	adc_avervalue:
+ 1031 0000 00000000 		.space	4
+ 1032              		.section	.bss.adc_convVolt,"aw",%nobits
+ 1033              		.align	2
+ 1036              	adc_convVolt:
+ 1037 0000 00000000 		.space	8
+ 1037      00000000 
+ 1038              		.section	.bss.adc_filtervalue,"aw",%nobits
+ 1039              		.align	2
+ 1042              	adc_filtervalue:
+ 1043 0000 00000000 		.space	8
+ 1043      00000000 
+ 1044              		.section	.bss.adc_rawvalue,"aw",%nobits
+ 1045              		.align	2
+ 1046              		.set	.LANCHOR6,. + 0
+ 1049              	adc_rawvalue:
+ 1050 0000 00000000 		.space	20
+ 1050      00000000 
+ 1050      00000000 
+ 1050      00000000 
+ 1050      00000000 
+ 1051              		.section	.bss.adc_zerooffset,"aw",%nobits
+ 1052              		.align	2
+ 1053              		.set	.LANCHOR5,. + 0
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccg9I5nN.s 			page 29
+
+
+ 1056              	adc_zerooffset:
+ 1057 0000 00000000 		.space	4
+ 1058              		.section	.bss.hadc1,"aw",%nobits
+ 1059              		.align	2
+ 1060              		.set	.LANCHOR0,. + 0
+ 1063              	hadc1:
+ 1064 0000 00000000 		.space	72
+ 1064      00000000 
+ 1064      00000000 
+ 1064      00000000 
+ 1064      00000000 
+ 1065              		.section	.bss.hadc2,"aw",%nobits
+ 1066              		.align	2
+ 1067              		.set	.LANCHOR1,. + 0
+ 1070              	hadc2:
+ 1071 0000 00000000 		.space	72
+ 1071      00000000 
+ 1071      00000000 
+ 1071      00000000 
+ 1071      00000000 
+ 1072              		.section	.bss.hdma_adc1,"aw",%nobits
+ 1073              		.align	2
+ 1074              		.set	.LANCHOR2,. + 0
+ 1077              	hdma_adc1:
+ 1078 0000 00000000 		.space	96
+ 1078      00000000 
+ 1078      00000000 
+ 1078      00000000 
+ 1078      00000000 
+ 1079              		.section	.bss.hdma_adc2,"aw",%nobits
+ 1080              		.align	2
+ 1081              		.set	.LANCHOR3,. + 0
+ 1084              	hdma_adc2:
+ 1085 0000 00000000 		.space	96
+ 1085      00000000 
+ 1085      00000000 
+ 1085      00000000 
+ 1085      00000000 
+ 1086              		.section	.bss.simulinkRunFlag,"aw",%nobits
+ 1087              		.align	2
+ 1088              		.set	.LANCHOR7,. + 0
+ 1091              	simulinkRunFlag:
+ 1092 0000 00000000 		.space	8
+ 1092      00000000 
+ 1093              		.section	.bss.tim3cnt,"aw",%nobits
+ 1094              		.align	1
+ 1095              		.set	.LANCHOR4,. + 0
+ 1098              	tim3cnt:
+ 1099 0000 0000     		.space	2
+ 1100              		.section	.bss.tim8cnt,"aw",%nobits
+ 1101              		.align	1
+ 1102              		.set	.LANCHOR8,. + 0
+ 1105              	tim8cnt:
+ 1106 0000 0000     		.space	2
+ 1107              		.text
+ 1108              	.Letext0:
+ 1109              		.file 2 "c:\\program files (x86)\\arm gnu toolchain arm-none-eabi\\11.2 2022.02\\arm-none-eabi\\in
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccg9I5nN.s 			page 30
+
+
+ 1110              		.file 3 "c:\\program files (x86)\\arm gnu toolchain arm-none-eabi\\11.2 2022.02\\arm-none-eabi\\in
+ 1111              		.file 4 "../STM32CUBEMX/Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f405xx.h"
+ 1112              		.file 5 "../STM32CUBEMX/Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h"
+ 1113              		.file 6 "../STM32CUBEMX/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h"
+ 1114              		.file 7 "../STM32CUBEMX/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h"
+ 1115              		.file 8 "../STM32CUBEMX/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h"
+ 1116              		.file 9 "../STM32CUBEMX/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h"
+ 1117              		.file 10 "../STM32CUBEMX/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h"
+ 1118              		.file 11 "../STM32CUBEMX/Core/Inc/adc.h"
+ 1119              		.file 12 "../STM32CUBEMX/Core/Inc/tim.h"
+ 1120              		.file 13 "../STM32CUBEMX/Core/Inc/main.h"
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccg9I5nN.s 			page 31
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 adc.c
+C:\Users\ysl\AppData\Local\Temp\ccg9I5nN.s:20     .text.MX_ADC1_Init:00000000 $t
+C:\Users\ysl\AppData\Local\Temp\ccg9I5nN.s:26     .text.MX_ADC1_Init:00000000 MX_ADC1_Init
+C:\Users\ysl\AppData\Local\Temp\ccg9I5nN.s:140    .text.MX_ADC1_Init:0000006c $d
+C:\Users\ysl\AppData\Local\Temp\ccg9I5nN.s:146    .text.MX_ADC2_Init:00000000 $t
+C:\Users\ysl\AppData\Local\Temp\ccg9I5nN.s:152    .text.MX_ADC2_Init:00000000 MX_ADC2_Init
+C:\Users\ysl\AppData\Local\Temp\ccg9I5nN.s:265    .text.MX_ADC2_Init:0000006c $d
+C:\Users\ysl\AppData\Local\Temp\ccg9I5nN.s:271    .text.HAL_ADC_MspInit:00000000 $t
+C:\Users\ysl\AppData\Local\Temp\ccg9I5nN.s:277    .text.HAL_ADC_MspInit:00000000 HAL_ADC_MspInit
+C:\Users\ysl\AppData\Local\Temp\ccg9I5nN.s:547    .text.HAL_ADC_MspInit:00000118 $d
+C:\Users\ysl\AppData\Local\Temp\ccg9I5nN.s:559    .text.HAL_ADC_MspDeInit:00000000 $t
+C:\Users\ysl\AppData\Local\Temp\ccg9I5nN.s:565    .text.HAL_ADC_MspDeInit:00000000 HAL_ADC_MspDeInit
+C:\Users\ysl\AppData\Local\Temp\ccg9I5nN.s:637    .text.HAL_ADC_MspDeInit:0000004c $d
+C:\Users\ysl\AppData\Local\Temp\ccg9I5nN.s:645    .text.HAL_ADC_ConvCpltCallback:00000000 $t
+C:\Users\ysl\AppData\Local\Temp\ccg9I5nN.s:651    .text.HAL_ADC_ConvCpltCallback:00000000 HAL_ADC_ConvCpltCallback
+C:\Users\ysl\AppData\Local\Temp\ccg9I5nN.s:869    .text.HAL_ADC_ConvCpltCallback:000000e4 $d
+C:\Users\ysl\AppData\Local\Temp\ccg9I5nN.s:886    .text.USER_ADC_Zero_calibration:00000000 $t
+C:\Users\ysl\AppData\Local\Temp\ccg9I5nN.s:892    .text.USER_ADC_Zero_calibration:00000000 USER_ADC_Zero_calibration
+C:\Users\ysl\AppData\Local\Temp\ccg9I5nN.s:1007   .text.USER_ADC_Zero_calibration:00000068 $d
+C:\Users\ysl\AppData\Local\Temp\ccg9I5nN.s:1036   .bss.adc_convVolt:00000000 adc_convVolt
+C:\Users\ysl\AppData\Local\Temp\ccg9I5nN.s:1042   .bss.adc_filtervalue:00000000 adc_filtervalue
+C:\Users\ysl\AppData\Local\Temp\ccg9I5nN.s:1030   .bss.adc_avervalue:00000000 adc_avervalue
+C:\Users\ysl\AppData\Local\Temp\ccg9I5nN.s:1056   .bss.adc_zerooffset:00000000 adc_zerooffset
+C:\Users\ysl\AppData\Local\Temp\ccg9I5nN.s:1049   .bss.adc_rawvalue:00000000 adc_rawvalue
+C:\Users\ysl\AppData\Local\Temp\ccg9I5nN.s:1091   .bss.simulinkRunFlag:00000000 simulinkRunFlag
+C:\Users\ysl\AppData\Local\Temp\ccg9I5nN.s:1105   .bss.tim8cnt:00000000 tim8cnt
+C:\Users\ysl\AppData\Local\Temp\ccg9I5nN.s:1098   .bss.tim3cnt:00000000 tim3cnt
+C:\Users\ysl\AppData\Local\Temp\ccg9I5nN.s:1084   .bss.hdma_adc2:00000000 hdma_adc2
+C:\Users\ysl\AppData\Local\Temp\ccg9I5nN.s:1077   .bss.hdma_adc1:00000000 hdma_adc1
+C:\Users\ysl\AppData\Local\Temp\ccg9I5nN.s:1070   .bss.hadc2:00000000 hadc2
+C:\Users\ysl\AppData\Local\Temp\ccg9I5nN.s:1063   .bss.hadc1:00000000 hadc1
+C:\Users\ysl\AppData\Local\Temp\ccg9I5nN.s:1027   .bss.adc_avervalue:00000000 $d
+C:\Users\ysl\AppData\Local\Temp\ccg9I5nN.s:1033   .bss.adc_convVolt:00000000 $d
+C:\Users\ysl\AppData\Local\Temp\ccg9I5nN.s:1039   .bss.adc_filtervalue:00000000 $d
+C:\Users\ysl\AppData\Local\Temp\ccg9I5nN.s:1045   .bss.adc_rawvalue:00000000 $d
+C:\Users\ysl\AppData\Local\Temp\ccg9I5nN.s:1052   .bss.adc_zerooffset:00000000 $d
+C:\Users\ysl\AppData\Local\Temp\ccg9I5nN.s:1059   .bss.hadc1:00000000 $d
+C:\Users\ysl\AppData\Local\Temp\ccg9I5nN.s:1066   .bss.hadc2:00000000 $d
+C:\Users\ysl\AppData\Local\Temp\ccg9I5nN.s:1073   .bss.hdma_adc1:00000000 $d
+C:\Users\ysl\AppData\Local\Temp\ccg9I5nN.s:1080   .bss.hdma_adc2:00000000 $d
+C:\Users\ysl\AppData\Local\Temp\ccg9I5nN.s:1087   .bss.simulinkRunFlag:00000000 $d
+C:\Users\ysl\AppData\Local\Temp\ccg9I5nN.s:1094   .bss.tim3cnt:00000000 $d
+C:\Users\ysl\AppData\Local\Temp\ccg9I5nN.s:1101   .bss.tim8cnt:00000000 $d
+
+UNDEFINED SYMBOLS
+HAL_ADC_Init
+HAL_ADC_ConfigChannel
+Error_Handler
+HAL_GPIO_Init
+HAL_DMA_Init
+HAL_GPIO_DeInit
+HAL_DMA_DeInit
+motor1_PwmData
+htim3
+adc1_DMAData
+motor2_PwmData
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccg9I5nN.s 			page 32
+
+
+htim8
+adc2_DMAData

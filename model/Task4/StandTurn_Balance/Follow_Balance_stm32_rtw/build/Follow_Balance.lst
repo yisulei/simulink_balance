@@ -1,0 +1,3684 @@
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cceK7Nzf.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"Follow_Balance.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.global	__aeabi_dmul
+  20              		.global	__aeabi_f2d
+  21              		.global	__aeabi_d2f
+  22              		.global	__aeabi_dadd
+  23              		.global	__aeabi_dcmpgt
+  24              		.global	__aeabi_dcmplt
+  25              		.global	__aeabi_i2d
+  26              		.global	__aeabi_dsub
+  27              		.global	__aeabi_d2uiz
+  28              		.global	__aeabi_d2iz
+  29              		.global	__aeabi_dcmpeq
+  30              		.section	.text.Follow_Balance_step,"ax",%progbits
+  31              		.align	1
+  32              		.global	Follow_Balance_step
+  33              		.syntax unified
+  34              		.thumb
+  35              		.thumb_func
+  37              	Follow_Balance_step:
+  38              	.LFB238:
+  39              		.file 1 "Follow_Balance.c"
+   1:Follow_Balance.c **** /*
+   2:Follow_Balance.c ****  * File: Follow_Balance.c
+   3:Follow_Balance.c ****  *
+   4:Follow_Balance.c ****  * Code generated for Simulink model 'Follow_Balance'.
+   5:Follow_Balance.c ****  *
+   6:Follow_Balance.c ****  * Model version                  : 1.3
+   7:Follow_Balance.c ****  * Simulink Coder version         : 9.6 (R2021b) 14-May-2021
+   8:Follow_Balance.c ****  * C/C++ source code generated on : Sat Mar 25 12:19:30 2023
+   9:Follow_Balance.c ****  *
+  10:Follow_Balance.c ****  * Target selection: stacklite_dualdrive.tlc
+  11:Follow_Balance.c ****  * Embedded hardware selection: Intel->x86-64 (Windows64)
+  12:Follow_Balance.c ****  * Code generation objectives: Unspecified
+  13:Follow_Balance.c ****  * Validation result: Not run
+  14:Follow_Balance.c ****  */
+  15:Follow_Balance.c **** 
+  16:Follow_Balance.c **** #include "ifr-scope_device.h"
+  17:Follow_Balance.c **** #include "main.h"
+  18:Follow_Balance.c **** #include "tim.h"
+  19:Follow_Balance.c **** #include "gpio.h"
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cceK7Nzf.s 			page 2
+
+
+  20:Follow_Balance.c **** #include "stdio.h"
+  21:Follow_Balance.c **** #include <string.h>
+  22:Follow_Balance.c **** #include "Follow_Balance.h"
+  23:Follow_Balance.c **** #include "Follow_Balance_private.h"
+  24:Follow_Balance.c **** 
+  25:Follow_Balance.c **** const uint8_T Follow_Balance_U8GND = 0U;/* uint8_T ground */
+  26:Follow_Balance.c **** 
+  27:Follow_Balance.c **** /* Block signals (default storage) */
+  28:Follow_Balance.c **** B_Follow_Balance_T Follow_Balance_B;
+  29:Follow_Balance.c **** 
+  30:Follow_Balance.c **** /* Block states (default storage) */
+  31:Follow_Balance.c **** DW_Follow_Balance_T Follow_Balance_DW;
+  32:Follow_Balance.c **** 
+  33:Follow_Balance.c **** /* Real-time model */
+  34:Follow_Balance.c **** static RT_MODEL_Follow_Balance_T Follow_Balance_M_;
+  35:Follow_Balance.c **** RT_MODEL_Follow_Balance_T *const Follow_Balance_M = &Follow_Balance_M_;
+  36:Follow_Balance.c **** extern struct _datalink_upframedata DataLink_UpFrameData;//data Up to Host
+  37:Follow_Balance.c **** extern int16_t HI226_Angle[3];
+  38:Follow_Balance.c **** extern int16_t HI226_AngleV[3];
+  39:Follow_Balance.c **** extern int16_t adc_rawvalue[2][5];
+  40:Follow_Balance.c **** extern int16_t motor1_PwmData;
+  41:Follow_Balance.c **** extern int16_t motor2_PwmData;
+  42:Follow_Balance.c **** extern uint8_t led_data;
+  43:Follow_Balance.c **** extern uint8_t ws2812_data[3];
+  44:Follow_Balance.c **** extern union _floatchar DataLink_RevData[10];//data config from host
+  45:Follow_Balance.c **** 
+  46:Follow_Balance.c **** /* Model step function */
+  47:Follow_Balance.c **** void Follow_Balance_step(void)
+  48:Follow_Balance.c **** {
+  40              		.loc 1 48 1 view -0
+  41              		.cfi_startproc
+  42              		@ args = 0, pretend = 0, frame = 16
+  43              		@ frame_needed = 0, uses_anonymous_args = 0
+  44 0000 2DE9F04F 		push	{r4, r5, r6, r7, r8, r9, r10, fp, lr}
+  45              	.LCFI0:
+  46              		.cfi_def_cfa_offset 36
+  47              		.cfi_offset 4, -36
+  48              		.cfi_offset 5, -32
+  49              		.cfi_offset 6, -28
+  50              		.cfi_offset 7, -24
+  51              		.cfi_offset 8, -20
+  52              		.cfi_offset 9, -16
+  53              		.cfi_offset 10, -12
+  54              		.cfi_offset 11, -8
+  55              		.cfi_offset 14, -4
+  56 0004 2DED048B 		vpush.64	{d8, d9}
+  57              	.LCFI1:
+  58              		.cfi_def_cfa_offset 52
+  59              		.cfi_offset 80, -52
+  60              		.cfi_offset 81, -48
+  61              		.cfi_offset 82, -44
+  62              		.cfi_offset 83, -40
+  63 0008 85B0     		sub	sp, sp, #20
+  64              	.LCFI2:
+  65              		.cfi_def_cfa_offset 72
+  49:Follow_Balance.c ****   real_T rtb_Add_op;
+  66              		.loc 1 49 3 view .LVU1
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cceK7Nzf.s 			page 3
+
+
+  50:Follow_Balance.c ****   int32_T angle_yaw;
+  67              		.loc 1 50 3 view .LVU2
+  51:Follow_Balance.c ****   int32_T rtb_Add1_c;
+  68              		.loc 1 51 3 view .LVU3
+  52:Follow_Balance.c ****   real32_T rtb_Add1_a;
+  69              		.loc 1 52 3 view .LVU4
+  53:Follow_Balance.c ****   real32_T rtb_Add1_f;
+  70              		.loc 1 53 3 view .LVU5
+  54:Follow_Balance.c **** 
+  55:Follow_Balance.c ****   /* S-Function (StackLiteDualDrive_Input): '<Root>/Input' */
+  56:Follow_Balance.c ****   /*Input Data*/
+  57:Follow_Balance.c ****   memcpy(&Follow_Balance_B.angle[0],HI226_Angle,3*2);
+  71              		.loc 1 57 3 view .LVU6
+  72 000a D74B     		ldr	r3, .L171+8
+  73 000c D74A     		ldr	r2, .L171+12
+  74 000e 1068     		ldr	r0, [r2]	@ unaligned
+  75 0010 9865     		str	r0, [r3, #88]
+  76 0012 9288     		ldrh	r2, [r2, #4]	@ unaligned
+  77 0014 A3F85C20 		strh	r2, [r3, #92]	@ unaligned
+  58:Follow_Balance.c ****   memcpy(&Follow_Balance_B.anglev[0],HI226_AngleV,3*2);
+  78              		.loc 1 58 3 view .LVU7
+  79 0018 D54A     		ldr	r2, .L171+16
+  80 001a 1168     		ldr	r1, [r2]	@ unaligned
+  81 001c C3F85E10 		str	r1, [r3, #94]	@ unaligned
+  82 0020 9288     		ldrh	r2, [r2, #4]	@ unaligned
+  83 0022 A3F86220 		strh	r2, [r3, #98]	@ unaligned
+  59:Follow_Balance.c ****   Follow_Balance_B.encoder1= (int32_t)(__HAL_TIM_GetCounter(&htim5));
+  84              		.loc 1 59 3 view .LVU8
+  85              		.loc 1 59 40 is_stmt 0 view .LVU9
+  86 0026 D34A     		ldr	r2, .L171+20
+  87 0028 1268     		ldr	r2, [r2]
+  88 002a 526A     		ldr	r2, [r2, #36]
+  89              		.loc 1 59 28 view .LVU10
+  90 002c 1A65     		str	r2, [r3, #80]
+  60:Follow_Balance.c ****   Follow_Balance_B.encoder2= -(int32_t)(__HAL_TIM_GetCounter(&htim2));
+  91              		.loc 1 60 3 is_stmt 1 view .LVU11
+  92              		.loc 1 60 41 is_stmt 0 view .LVU12
+  93 002e D24A     		ldr	r2, .L171+24
+  94 0030 1268     		ldr	r2, [r2]
+  95 0032 526A     		ldr	r2, [r2, #36]
+  96              		.loc 1 60 30 view .LVU13
+  97 0034 5242     		rsbs	r2, r2, #0
+  98              		.loc 1 60 28 view .LVU14
+  99 0036 5A65     		str	r2, [r3, #84]
+  61:Follow_Balance.c ****   memcpy(&Follow_Balance_B.current1[0],adc_rawvalue[0],5*2);
+ 100              		.loc 1 61 3 is_stmt 1 view .LVU15
+ 101 0038 D04A     		ldr	r2, .L171+28
+ 102 003a 03F16404 		add	r4, r3, #100
+ 103 003e 1068     		ldr	r0, [r2]	@ unaligned
+ 104 0040 5168     		ldr	r1, [r2, #4]	@ unaligned
+ 105 0042 03C4     		stmia	r4!, {r0, r1}
+ 106 0044 1189     		ldrh	r1, [r2, #8]	@ unaligned
+ 107 0046 2180     		strh	r1, [r4]	@ unaligned
+  62:Follow_Balance.c ****   memcpy(&Follow_Balance_B.current2[0],adc_rawvalue[1],5*2);
+ 108              		.loc 1 62 3 view .LVU16
+ 109 0048 D2F80A00 		ldr	r0, [r2, #10]	@ unaligned
+ 110 004c D2F80E10 		ldr	r1, [r2, #14]	@ unaligned
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cceK7Nzf.s 			page 4
+
+
+ 111 0050 C3F86E00 		str	r0, [r3, #110]	@ unaligned
+ 112 0054 C3F87210 		str	r1, [r3, #114]	@ unaligned
+ 113 0058 528A     		ldrh	r2, [r2, #18]	@ unaligned
+ 114 005a A3F87620 		strh	r2, [r3, #118]	@ unaligned
+  63:Follow_Balance.c **** 
+  64:Follow_Balance.c ****   /* Sum: '<S12>/Add4' incorporates:
+  65:Follow_Balance.c ****    *  Delay: '<S12>/Delay One Step'
+  66:Follow_Balance.c ****    *  Gain: '<S12>/Gain'
+  67:Follow_Balance.c ****    *  Gain: '<S12>/Gain1'
+  68:Follow_Balance.c ****    *  Gain: '<S12>/Gain2'
+  69:Follow_Balance.c ****    *  Gain: '<S12>/Gain3'
+  70:Follow_Balance.c ****    *  Gain: '<S12>/Gain4'
+  71:Follow_Balance.c ****    *  Gain: '<S12>/Gain5'
+  72:Follow_Balance.c ****    *  Gain: '<S12>/Gain6'
+  73:Follow_Balance.c ****    *  Gain: '<S12>/Gain7'
+  74:Follow_Balance.c ****    *  Gain: '<S12>/Gain8'
+  75:Follow_Balance.c ****    *  Gain: '<S12>/Gain9'
+  76:Follow_Balance.c ****    *  Sum: '<S12>/Add'
+  77:Follow_Balance.c ****    *  Sum: '<S12>/Add1'
+  78:Follow_Balance.c ****    *  Sum: '<S12>/Add2'
+  79:Follow_Balance.c ****    *  Sum: '<S12>/Add3'
+  80:Follow_Balance.c ****    */
+  81:Follow_Balance.c ****   Follow_Balance_DW.DelayOneStep_DSTATE = ((((0.95F *
+ 115              		.loc 1 81 3 view .LVU17
+  82:Follow_Balance.c ****     Follow_Balance_DW.DelayOneStep_DSTATE + 0.0499992371F * (real32_T)
+ 116              		.loc 1 82 22 is_stmt 0 view .LVU18
+ 117 005e C84C     		ldr	r4, .L171+32
+ 118 0060 D4ED0E7A 		vldr.32	s15, [r4, #56]
+  81:Follow_Balance.c ****     Follow_Balance_DW.DelayOneStep_DSTATE + 0.0499992371F * (real32_T)
+ 119              		.loc 1 81 53 view .LVU19
+ 120 0064 DFEDC76A 		vldr.32	s13, .L171+36
+ 121 0068 67EEA67A 		vmul.f32	s15, s15, s13
+  83:Follow_Balance.c ****     Follow_Balance_B.current1[0]) * 0.95F + 0.0499992371F * (real32_T)
+ 122              		.loc 1 83 30 view .LVU20
+ 123 006c B3F96420 		ldrsh	r2, [r3, #100]
+ 124 0070 06EE102A 		vmov	s12, r2	@ int
+  82:Follow_Balance.c ****     Follow_Balance_DW.DelayOneStep_DSTATE + 0.0499992371F * (real32_T)
+ 125              		.loc 1 82 61 view .LVU21
+ 126 0074 B8EEC66A 		vcvt.f32.s32	s12, s12
+  82:Follow_Balance.c ****     Follow_Balance_DW.DelayOneStep_DSTATE + 0.0499992371F * (real32_T)
+ 127              		.loc 1 82 59 view .LVU22
+ 128 0078 9FEDC37A 		vldr.32	s14, .L171+40
+ 129 007c 26EE076A 		vmul.f32	s12, s12, s14
+  82:Follow_Balance.c ****     Follow_Balance_DW.DelayOneStep_DSTATE + 0.0499992371F * (real32_T)
+ 130              		.loc 1 82 43 view .LVU23
+ 131 0080 77EE867A 		vadd.f32	s15, s15, s12
+ 132              		.loc 1 83 35 view .LVU24
+ 133 0084 67EEA67A 		vmul.f32	s15, s15, s13
+  84:Follow_Balance.c ****     Follow_Balance_B.current1[1]) * 0.95F + 0.0499992371F * (real32_T)
+ 134              		.loc 1 84 30 view .LVU25
+ 135 0088 B3F96620 		ldrsh	r2, [r3, #102]
+ 136 008c 06EE102A 		vmov	s12, r2	@ int
+  83:Follow_Balance.c ****     Follow_Balance_B.current1[0]) * 0.95F + 0.0499992371F * (real32_T)
+ 137              		.loc 1 83 61 view .LVU26
+ 138 0090 B8EEC66A 		vcvt.f32.s32	s12, s12
+  83:Follow_Balance.c ****     Follow_Balance_B.current1[0]) * 0.95F + 0.0499992371F * (real32_T)
+ 139              		.loc 1 83 59 view .LVU27
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cceK7Nzf.s 			page 5
+
+
+ 140 0094 26EE076A 		vmul.f32	s12, s12, s14
+  83:Follow_Balance.c ****     Follow_Balance_B.current1[0]) * 0.95F + 0.0499992371F * (real32_T)
+ 141              		.loc 1 83 43 view .LVU28
+ 142 0098 77EE867A 		vadd.f32	s15, s15, s12
+ 143              		.loc 1 84 35 view .LVU29
+ 144 009c 67EEA67A 		vmul.f32	s15, s15, s13
+  85:Follow_Balance.c ****     Follow_Balance_B.current1[2]) * 0.95F + 0.0499992371F * (real32_T)
+ 145              		.loc 1 85 30 view .LVU30
+ 146 00a0 B3F96820 		ldrsh	r2, [r3, #104]
+ 147 00a4 06EE102A 		vmov	s12, r2	@ int
+  84:Follow_Balance.c ****     Follow_Balance_B.current1[1]) * 0.95F + 0.0499992371F * (real32_T)
+ 148              		.loc 1 84 61 view .LVU31
+ 149 00a8 B8EEC66A 		vcvt.f32.s32	s12, s12
+  84:Follow_Balance.c ****     Follow_Balance_B.current1[1]) * 0.95F + 0.0499992371F * (real32_T)
+ 150              		.loc 1 84 59 view .LVU32
+ 151 00ac 26EE076A 		vmul.f32	s12, s12, s14
+  84:Follow_Balance.c ****     Follow_Balance_B.current1[1]) * 0.95F + 0.0499992371F * (real32_T)
+ 152              		.loc 1 84 43 view .LVU33
+ 153 00b0 77EE867A 		vadd.f32	s15, s15, s12
+ 154              		.loc 1 85 35 view .LVU34
+ 155 00b4 67EEA67A 		vmul.f32	s15, s15, s13
+  86:Follow_Balance.c ****     Follow_Balance_B.current1[3]) * 0.95F + 0.0499992371F * (real32_T)
+ 156              		.loc 1 86 30 view .LVU35
+ 157 00b8 B3F96A20 		ldrsh	r2, [r3, #106]
+ 158 00bc 06EE102A 		vmov	s12, r2	@ int
+  85:Follow_Balance.c ****     Follow_Balance_B.current1[2]) * 0.95F + 0.0499992371F * (real32_T)
+ 159              		.loc 1 85 61 view .LVU36
+ 160 00c0 B8EEC66A 		vcvt.f32.s32	s12, s12
+  85:Follow_Balance.c ****     Follow_Balance_B.current1[2]) * 0.95F + 0.0499992371F * (real32_T)
+ 161              		.loc 1 85 59 view .LVU37
+ 162 00c4 26EE076A 		vmul.f32	s12, s12, s14
+  85:Follow_Balance.c ****     Follow_Balance_B.current1[2]) * 0.95F + 0.0499992371F * (real32_T)
+ 163              		.loc 1 85 43 view .LVU38
+ 164 00c8 77EE867A 		vadd.f32	s15, s15, s12
+ 165              		.loc 1 86 35 view .LVU39
+ 166 00cc 67EEA67A 		vmul.f32	s15, s15, s13
+  87:Follow_Balance.c ****     Follow_Balance_B.current1[4];
+ 167              		.loc 1 87 30 view .LVU40
+ 168 00d0 B3F96C20 		ldrsh	r2, [r3, #108]
+ 169 00d4 06EE102A 		vmov	s12, r2	@ int
+  86:Follow_Balance.c ****     Follow_Balance_B.current1[3]) * 0.95F + 0.0499992371F * (real32_T)
+ 170              		.loc 1 86 61 view .LVU41
+ 171 00d8 B8EEC66A 		vcvt.f32.s32	s12, s12
+  86:Follow_Balance.c ****     Follow_Balance_B.current1[3]) * 0.95F + 0.0499992371F * (real32_T)
+ 172              		.loc 1 86 59 view .LVU42
+ 173 00dc 26EE076A 		vmul.f32	s12, s12, s14
+  86:Follow_Balance.c ****     Follow_Balance_B.current1[3]) * 0.95F + 0.0499992371F * (real32_T)
+ 174              		.loc 1 86 43 view .LVU43
+ 175 00e0 77EE867A 		vadd.f32	s15, s15, s12
+  81:Follow_Balance.c ****     Follow_Balance_DW.DelayOneStep_DSTATE + 0.0499992371F * (real32_T)
+ 176              		.loc 1 81 41 view .LVU44
+ 177 00e4 C4ED0E7A 		vstr.32	s15, [r4, #56]
+  88:Follow_Balance.c **** 
+  89:Follow_Balance.c ****   /* Sum: '<S13>/Add4' incorporates:
+  90:Follow_Balance.c ****    *  Delay: '<S13>/Delay One Step'
+  91:Follow_Balance.c ****    *  Gain: '<S13>/Gain'
+  92:Follow_Balance.c ****    *  Gain: '<S13>/Gain1'
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cceK7Nzf.s 			page 6
+
+
+  93:Follow_Balance.c ****    *  Gain: '<S13>/Gain2'
+  94:Follow_Balance.c ****    *  Gain: '<S13>/Gain3'
+  95:Follow_Balance.c ****    *  Gain: '<S13>/Gain4'
+  96:Follow_Balance.c ****    *  Gain: '<S13>/Gain5'
+  97:Follow_Balance.c ****    *  Gain: '<S13>/Gain6'
+  98:Follow_Balance.c ****    *  Gain: '<S13>/Gain7'
+  99:Follow_Balance.c ****    *  Gain: '<S13>/Gain8'
+ 100:Follow_Balance.c ****    *  Gain: '<S13>/Gain9'
+ 101:Follow_Balance.c ****    *  Sum: '<S13>/Add'
+ 102:Follow_Balance.c ****    *  Sum: '<S13>/Add1'
+ 103:Follow_Balance.c ****    *  Sum: '<S13>/Add2'
+ 104:Follow_Balance.c ****    *  Sum: '<S13>/Add3'
+ 105:Follow_Balance.c ****    */
+ 106:Follow_Balance.c ****   Follow_Balance_DW.DelayOneStep_DSTATE_l = ((((0.95F *
+ 178              		.loc 1 106 3 is_stmt 1 view .LVU45
+ 107:Follow_Balance.c ****     Follow_Balance_DW.DelayOneStep_DSTATE_l + 0.0499992371F * (real32_T)
+ 179              		.loc 1 107 22 is_stmt 0 view .LVU46
+ 180 00e8 D4ED0F7A 		vldr.32	s15, [r4, #60]
+ 106:Follow_Balance.c ****     Follow_Balance_DW.DelayOneStep_DSTATE_l + 0.0499992371F * (real32_T)
+ 181              		.loc 1 106 55 view .LVU47
+ 182 00ec 67EEA67A 		vmul.f32	s15, s15, s13
+ 108:Follow_Balance.c ****     Follow_Balance_B.current2[0]) * 0.95F + 0.0499992371F * (real32_T)
+ 183              		.loc 1 108 30 view .LVU48
+ 184 00f0 B3F96E20 		ldrsh	r2, [r3, #110]
+ 185 00f4 06EE102A 		vmov	s12, r2	@ int
+ 107:Follow_Balance.c ****     Follow_Balance_DW.DelayOneStep_DSTATE_l + 0.0499992371F * (real32_T)
+ 186              		.loc 1 107 63 view .LVU49
+ 187 00f8 B8EEC66A 		vcvt.f32.s32	s12, s12
+ 107:Follow_Balance.c ****     Follow_Balance_DW.DelayOneStep_DSTATE_l + 0.0499992371F * (real32_T)
+ 188              		.loc 1 107 61 view .LVU50
+ 189 00fc 26EE076A 		vmul.f32	s12, s12, s14
+ 107:Follow_Balance.c ****     Follow_Balance_DW.DelayOneStep_DSTATE_l + 0.0499992371F * (real32_T)
+ 190              		.loc 1 107 45 view .LVU51
+ 191 0100 77EE867A 		vadd.f32	s15, s15, s12
+ 192              		.loc 1 108 35 view .LVU52
+ 193 0104 67EEA67A 		vmul.f32	s15, s15, s13
+ 109:Follow_Balance.c ****     Follow_Balance_B.current2[1]) * 0.95F + 0.0499992371F * (real32_T)
+ 194              		.loc 1 109 30 view .LVU53
+ 195 0108 B3F97020 		ldrsh	r2, [r3, #112]
+ 196 010c 06EE102A 		vmov	s12, r2	@ int
+ 108:Follow_Balance.c ****     Follow_Balance_B.current2[0]) * 0.95F + 0.0499992371F * (real32_T)
+ 197              		.loc 1 108 61 view .LVU54
+ 198 0110 B8EEC66A 		vcvt.f32.s32	s12, s12
+ 108:Follow_Balance.c ****     Follow_Balance_B.current2[0]) * 0.95F + 0.0499992371F * (real32_T)
+ 199              		.loc 1 108 59 view .LVU55
+ 200 0114 26EE076A 		vmul.f32	s12, s12, s14
+ 108:Follow_Balance.c ****     Follow_Balance_B.current2[0]) * 0.95F + 0.0499992371F * (real32_T)
+ 201              		.loc 1 108 43 view .LVU56
+ 202 0118 77EE867A 		vadd.f32	s15, s15, s12
+ 203              		.loc 1 109 35 view .LVU57
+ 204 011c 67EEA67A 		vmul.f32	s15, s15, s13
+ 110:Follow_Balance.c ****     Follow_Balance_B.current2[2]) * 0.95F + 0.0499992371F * (real32_T)
+ 205              		.loc 1 110 30 view .LVU58
+ 206 0120 B3F97220 		ldrsh	r2, [r3, #114]
+ 207 0124 06EE102A 		vmov	s12, r2	@ int
+ 109:Follow_Balance.c ****     Follow_Balance_B.current2[1]) * 0.95F + 0.0499992371F * (real32_T)
+ 208              		.loc 1 109 61 view .LVU59
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cceK7Nzf.s 			page 7
+
+
+ 209 0128 B8EEC66A 		vcvt.f32.s32	s12, s12
+ 109:Follow_Balance.c ****     Follow_Balance_B.current2[1]) * 0.95F + 0.0499992371F * (real32_T)
+ 210              		.loc 1 109 59 view .LVU60
+ 211 012c 26EE076A 		vmul.f32	s12, s12, s14
+ 109:Follow_Balance.c ****     Follow_Balance_B.current2[1]) * 0.95F + 0.0499992371F * (real32_T)
+ 212              		.loc 1 109 43 view .LVU61
+ 213 0130 77EE867A 		vadd.f32	s15, s15, s12
+ 214              		.loc 1 110 35 view .LVU62
+ 215 0134 67EEA67A 		vmul.f32	s15, s15, s13
+ 111:Follow_Balance.c ****     Follow_Balance_B.current2[3]) * 0.95F + 0.0499992371F * (real32_T)
+ 216              		.loc 1 111 30 view .LVU63
+ 217 0138 B3F97420 		ldrsh	r2, [r3, #116]
+ 218 013c 06EE102A 		vmov	s12, r2	@ int
+ 110:Follow_Balance.c ****     Follow_Balance_B.current2[2]) * 0.95F + 0.0499992371F * (real32_T)
+ 219              		.loc 1 110 61 view .LVU64
+ 220 0140 B8EEC66A 		vcvt.f32.s32	s12, s12
+ 110:Follow_Balance.c ****     Follow_Balance_B.current2[2]) * 0.95F + 0.0499992371F * (real32_T)
+ 221              		.loc 1 110 59 view .LVU65
+ 222 0144 26EE076A 		vmul.f32	s12, s12, s14
+ 110:Follow_Balance.c ****     Follow_Balance_B.current2[2]) * 0.95F + 0.0499992371F * (real32_T)
+ 223              		.loc 1 110 43 view .LVU66
+ 224 0148 77EE867A 		vadd.f32	s15, s15, s12
+ 225              		.loc 1 111 35 view .LVU67
+ 226 014c 67EEA67A 		vmul.f32	s15, s15, s13
+ 112:Follow_Balance.c ****     Follow_Balance_B.current2[4];
+ 227              		.loc 1 112 30 view .LVU68
+ 228 0150 B3F97620 		ldrsh	r2, [r3, #118]
+ 229 0154 06EE902A 		vmov	s13, r2	@ int
+ 111:Follow_Balance.c ****     Follow_Balance_B.current2[3]) * 0.95F + 0.0499992371F * (real32_T)
+ 230              		.loc 1 111 61 view .LVU69
+ 231 0158 F8EEE66A 		vcvt.f32.s32	s13, s13
+ 111:Follow_Balance.c ****     Follow_Balance_B.current2[3]) * 0.95F + 0.0499992371F * (real32_T)
+ 232              		.loc 1 111 59 view .LVU70
+ 233 015c 26EE877A 		vmul.f32	s14, s13, s14
+ 111:Follow_Balance.c ****     Follow_Balance_B.current2[3]) * 0.95F + 0.0499992371F * (real32_T)
+ 234              		.loc 1 111 43 view .LVU71
+ 235 0160 77EE877A 		vadd.f32	s15, s15, s14
+ 106:Follow_Balance.c ****     Follow_Balance_DW.DelayOneStep_DSTATE_l + 0.0499992371F * (real32_T)
+ 236              		.loc 1 106 43 view .LVU72
+ 237 0164 C4ED0F7A 		vstr.32	s15, [r4, #60]
+ 113:Follow_Balance.c **** 
+ 114:Follow_Balance.c ****   /* Gain: '<Root>/Gain3' incorporates:
+ 115:Follow_Balance.c ****    *  DataStoreWrite: '<Root>/Data Store Write8'
+ 116:Follow_Balance.c ****    */
+ 117:Follow_Balance.c ****   angle_yaw = 26214 * Follow_Balance_B.angle[2];
+ 238              		.loc 1 117 3 is_stmt 1 view .LVU73
+ 239              		.loc 1 117 45 is_stmt 0 view .LVU74
+ 240 0168 B3F95CB0 		ldrsh	fp, [r3, #92]
+ 241              		.loc 1 117 13 view .LVU75
+ 242 016c 46F26662 		movw	r2, #26214
+ 243 0170 02FB0BF2 		mul	r2, r2, fp
+ 244 0174 0192     		str	r2, [sp, #4]
+ 245              	.LVL0:
+ 118:Follow_Balance.c **** 
+ 119:Follow_Balance.c ****   /* S-Function (StackLiteDualDrive_DataLinkOutput): '<Root>/DataLinkOutput' */
+ 120:Follow_Balance.c ****   /*Output Data*/
+ 121:Follow_Balance.c ****   DataLink_UpFrameData.data[0].point= Follow_Balance_B.DataStoreRead9;
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cceK7Nzf.s 			page 8
+
+
+ 246              		.loc 1 121 3 is_stmt 1 view .LVU76
+ 247              		.loc 1 121 37 is_stmt 0 view .LVU77
+ 248 0176 8549     		ldr	r1, .L171+44
+ 249 0178 9A69     		ldr	r2, [r3, #24]	@ float
+ 250              	.LVL1:
+ 251              		.loc 1 121 37 view .LVU78
+ 252 017a C1F80920 		str	r2, [r1, #9]	@ unaligned
+ 122:Follow_Balance.c ****   DataLink_UpFrameData.data[1].point= Follow_Balance_B.DataTypeConversion1;
+ 253              		.loc 1 122 3 is_stmt 1 view .LVU79
+ 254              		.loc 1 122 37 is_stmt 0 view .LVU80
+ 255 017e DA69     		ldr	r2, [r3, #28]	@ float
+ 256 0180 C1F80D20 		str	r2, [r1, #13]	@ unaligned
+ 123:Follow_Balance.c ****   DataLink_UpFrameData.data[2].point= 0.0F;
+ 257              		.loc 1 123 3 is_stmt 1 view .LVU81
+ 258              		.loc 1 123 37 is_stmt 0 view .LVU82
+ 259 0184 0022     		movs	r2, #0
+ 260 0186 C1F81120 		str	r2, [r1, #17]	@ unaligned
+ 124:Follow_Balance.c ****   DataLink_UpFrameData.data[3].point= 0.0F;
+ 261              		.loc 1 124 3 is_stmt 1 view .LVU83
+ 262              		.loc 1 124 37 is_stmt 0 view .LVU84
+ 263 018a C1F81520 		str	r2, [r1, #21]	@ unaligned
+ 125:Follow_Balance.c ****   DataLink_UpFrameData.data[4].point= 0.0F;
+ 264              		.loc 1 125 3 is_stmt 1 view .LVU85
+ 265              		.loc 1 125 37 is_stmt 0 view .LVU86
+ 266 018e C1F81920 		str	r2, [r1, #25]	@ unaligned
+ 126:Follow_Balance.c ****   DataLink_UpFrameData.data[5].point= 0.0F;
+ 267              		.loc 1 126 3 is_stmt 1 view .LVU87
+ 268              		.loc 1 126 37 is_stmt 0 view .LVU88
+ 269 0192 C1F81D20 		str	r2, [r1, #29]	@ unaligned
+ 127:Follow_Balance.c ****   DataLink_UpFrameData.data[6].point= 0.0F;
+ 270              		.loc 1 127 3 is_stmt 1 view .LVU89
+ 271              		.loc 1 127 37 is_stmt 0 view .LVU90
+ 272 0196 C1F82120 		str	r2, [r1, #33]	@ unaligned
+ 128:Follow_Balance.c ****   DataLink_UpFrameData.data[7].point= 0.0F;
+ 273              		.loc 1 128 3 is_stmt 1 view .LVU91
+ 274              		.loc 1 128 37 is_stmt 0 view .LVU92
+ 275 019a C1F82520 		str	r2, [r1, #37]	@ unaligned
+ 129:Follow_Balance.c ****   DataLink_UpFrameData.data[8].point= 0.0F;
+ 276              		.loc 1 129 3 is_stmt 1 view .LVU93
+ 277              		.loc 1 129 37 is_stmt 0 view .LVU94
+ 278 019e C1F82920 		str	r2, [r1, #41]	@ unaligned
+ 130:Follow_Balance.c ****   DataLink_UpFrameData.data[9].point= 0.0F;
+ 279              		.loc 1 130 3 is_stmt 1 view .LVU95
+ 280              		.loc 1 130 37 is_stmt 0 view .LVU96
+ 281 01a2 C1F82D20 		str	r2, [r1, #45]	@ unaligned
+ 131:Follow_Balance.c ****   DataLink_UpFrameData.data[10].point= 0.0F;
+ 282              		.loc 1 131 3 is_stmt 1 view .LVU97
+ 283              		.loc 1 131 38 is_stmt 0 view .LVU98
+ 284 01a6 C1F83120 		str	r2, [r1, #49]	@ unaligned
+ 132:Follow_Balance.c ****   DataLink_UpFrameData.data[11].point= 0.0F;
+ 285              		.loc 1 132 3 is_stmt 1 view .LVU99
+ 286              		.loc 1 132 38 is_stmt 0 view .LVU100
+ 287 01aa C1F83520 		str	r2, [r1, #53]	@ unaligned
+ 133:Follow_Balance.c ****   DataLink_UpFrameData.data[12].point= 0.0F;
+ 288              		.loc 1 133 3 is_stmt 1 view .LVU101
+ 289              		.loc 1 133 38 is_stmt 0 view .LVU102
+ 290 01ae C1F83920 		str	r2, [r1, #57]	@ unaligned
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cceK7Nzf.s 			page 9
+
+
+ 134:Follow_Balance.c ****   DataLink_UpFrameData.data[13].point= 0.0F;
+ 291              		.loc 1 134 3 is_stmt 1 view .LVU103
+ 292              		.loc 1 134 38 is_stmt 0 view .LVU104
+ 293 01b2 C1F83D20 		str	r2, [r1, #61]	@ unaligned
+ 135:Follow_Balance.c ****   DataLink_UpFrameData.data[14].point= 0.0F;
+ 294              		.loc 1 135 3 is_stmt 1 view .LVU105
+ 295              		.loc 1 135 38 is_stmt 0 view .LVU106
+ 296 01b6 C1F84120 		str	r2, [r1, #65]	@ unaligned
+ 136:Follow_Balance.c ****   DataLink_UpFrameData.data[15].point= 0.0F;
+ 297              		.loc 1 136 3 is_stmt 1 view .LVU107
+ 298              		.loc 1 136 38 is_stmt 0 view .LVU108
+ 299 01ba C1F84520 		str	r2, [r1, #69]	@ unaligned
+ 137:Follow_Balance.c ****   DataLink_UpFrameData.data[16].point= 0.0F;
+ 300              		.loc 1 137 3 is_stmt 1 view .LVU109
+ 301              		.loc 1 137 38 is_stmt 0 view .LVU110
+ 302 01be C1F84920 		str	r2, [r1, #73]	@ unaligned
+ 138:Follow_Balance.c ****   DataLink_UpFrameData.data[17].point= 0.0F;
+ 303              		.loc 1 138 3 is_stmt 1 view .LVU111
+ 304              		.loc 1 138 38 is_stmt 0 view .LVU112
+ 305 01c2 C1F84D20 		str	r2, [r1, #77]	@ unaligned
+ 139:Follow_Balance.c ****   DataLink_UpFrameData.data[18].point= 0.0F;
+ 306              		.loc 1 139 3 is_stmt 1 view .LVU113
+ 307              		.loc 1 139 38 is_stmt 0 view .LVU114
+ 308 01c6 C1F85120 		str	r2, [r1, #81]	@ unaligned
+ 140:Follow_Balance.c ****   DataLink_UpFrameData.data[19].point= 0.0F;
+ 309              		.loc 1 140 3 is_stmt 1 view .LVU115
+ 310              		.loc 1 140 38 is_stmt 0 view .LVU116
+ 311 01ca C1F85520 		str	r2, [r1, #85]	@ unaligned
+ 141:Follow_Balance.c **** 
+ 142:Follow_Balance.c ****   /* S-Function (StackLiteDualDrive_Output): '<Root>/Output' */
+ 143:Follow_Balance.c ****   /*Output Data*/
+ 144:Follow_Balance.c ****   motor1_PwmData= Follow_Balance_B.Saturation;
+ 312              		.loc 1 144 3 is_stmt 1 view .LVU117
+ 313              		.loc 1 144 35 is_stmt 0 view .LVU118
+ 314 01ce B3F97800 		ldrsh	r0, [r3, #120]
+ 315              		.loc 1 144 17 view .LVU119
+ 316 01d2 6F49     		ldr	r1, .L171+48
+ 317 01d4 0880     		strh	r0, [r1]	@ movhi
+ 145:Follow_Balance.c ****   motor2_PwmData= Follow_Balance_B.Saturation1;
+ 318              		.loc 1 145 3 is_stmt 1 view .LVU120
+ 319              		.loc 1 145 35 is_stmt 0 view .LVU121
+ 320 01d6 B3F97A10 		ldrsh	r1, [r3, #122]
+ 321              		.loc 1 145 17 view .LVU122
+ 322 01da 6E4B     		ldr	r3, .L171+52
+ 323 01dc 1980     		strh	r1, [r3]	@ movhi
+ 146:Follow_Balance.c ****   HAL_GPIO_WritePin(USER_LED_GPIO_Port,USER_LED_Pin,(GPIO_PinState)((uint8_T)0U));
+ 324              		.loc 1 146 3 is_stmt 1 view .LVU123
+ 325 01de 4FF48041 		mov	r1, #16384
+ 326 01e2 6D48     		ldr	r0, .L171+56
+ 327 01e4 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 328              	.LVL2:
+ 147:Follow_Balance.c ****   memcpy(ws2812_data,((const uint8_T*) &Follow_Balance_U8GND),3);
+ 329              		.loc 1 147 3 view .LVU124
+ 330 01e8 6C4B     		ldr	r3, .L171+60
+ 331 01ea 6D4A     		ldr	r2, .L171+64
+ 332 01ec 1188     		ldrh	r1, [r2]	@ unaligned
+ 333 01ee 9278     		ldrb	r2, [r2, #2]	@ zero_extendqisi2
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cceK7Nzf.s 			page 10
+
+
+ 334 01f0 1980     		strh	r1, [r3]	@ unaligned
+ 335 01f2 9A70     		strb	r2, [r3, #2]
+ 148:Follow_Balance.c **** 
+ 149:Follow_Balance.c ****   /* Outputs for Enabled SubSystem: '<Root>/encoder to rpm' incorporates:
+ 150:Follow_Balance.c ****    *  EnablePort: '<S15>/Enable'
+ 151:Follow_Balance.c ****    */
+ 152:Follow_Balance.c ****   /* RelationalOperator: '<S2>/Compare' incorporates:
+ 153:Follow_Balance.c ****    *  Constant: '<S2>/Constant'
+ 154:Follow_Balance.c ****    *  UnitDelay: '<S8>/Output'
+ 155:Follow_Balance.c ****    */
+ 156:Follow_Balance.c ****   if (Follow_Balance_DW.Output_DSTATE == 1) {
+ 336              		.loc 1 156 3 view .LVU125
+ 337              		.loc 1 156 24 is_stmt 0 view .LVU126
+ 338 01f4 94F80841 		ldrb	r4, [r4, #264]	@ zero_extendqisi2
+ 339              		.loc 1 156 6 view .LVU127
+ 340 01f8 012C     		cmp	r4, #1
+ 341 01fa 69D0     		beq	.L148
+ 342              	.L2:
+ 157:Follow_Balance.c ****     /* Product: '<S15>/Divide' incorporates:
+ 158:Follow_Balance.c ****      *  Constant: '<S15>/Constant'
+ 159:Follow_Balance.c ****      *  Constant: '<S15>/Constant1'
+ 160:Follow_Balance.c ****      *  Constant: '<S15>/Constant2'
+ 161:Follow_Balance.c ****      *  Delay: '<S15>/Delay'
+ 162:Follow_Balance.c ****      *  Product: '<S15>/Product'
+ 163:Follow_Balance.c ****      *  Product: '<S15>/Product1'
+ 164:Follow_Balance.c ****      *  Sum: '<S15>/Add1'
+ 165:Follow_Balance.c ****      */
+ 166:Follow_Balance.c ****     Follow_Balance_B.Divide = (real32_T)(Follow_Balance_B.encoder1 -
+ 167:Follow_Balance.c ****       Follow_Balance_DW.Delay_DSTATE_b[0]) * 100.0F * 60.0F / 40000.0F;
+ 168:Follow_Balance.c **** 
+ 169:Follow_Balance.c ****     /* Product: '<S15>/Divide1' incorporates:
+ 170:Follow_Balance.c ****      *  Constant: '<S15>/Constant3'
+ 171:Follow_Balance.c ****      *  Constant: '<S15>/Constant4'
+ 172:Follow_Balance.c ****      *  Constant: '<S15>/Constant5'
+ 173:Follow_Balance.c ****      *  Delay: '<S15>/Delay1'
+ 174:Follow_Balance.c ****      *  Product: '<S15>/Product2'
+ 175:Follow_Balance.c ****      *  Product: '<S15>/Product3'
+ 176:Follow_Balance.c ****      *  Sum: '<S15>/Add2'
+ 177:Follow_Balance.c ****      */
+ 178:Follow_Balance.c ****     Follow_Balance_B.Divide1 = (real32_T)(Follow_Balance_B.encoder2 -
+ 179:Follow_Balance.c ****       Follow_Balance_DW.Delay1_DSTATE[0]) * 100.0F * 60.0F / 40000.0F;
+ 180:Follow_Balance.c ****     for (rtb_Add1_c = 0; rtb_Add1_c < 18; rtb_Add1_c++) {
+ 181:Follow_Balance.c ****       /* Update for Delay: '<S15>/Delay' */
+ 182:Follow_Balance.c ****       Follow_Balance_DW.Delay_DSTATE_b[rtb_Add1_c] =
+ 183:Follow_Balance.c ****         Follow_Balance_DW.Delay_DSTATE_b[rtb_Add1_c + 1];
+ 184:Follow_Balance.c **** 
+ 185:Follow_Balance.c ****       /* Update for Delay: '<S15>/Delay1' */
+ 186:Follow_Balance.c ****       Follow_Balance_DW.Delay1_DSTATE[rtb_Add1_c] =
+ 187:Follow_Balance.c ****         Follow_Balance_DW.Delay1_DSTATE[rtb_Add1_c + 1];
+ 188:Follow_Balance.c ****     }
+ 189:Follow_Balance.c **** 
+ 190:Follow_Balance.c ****     /* Update for Delay: '<S15>/Delay' */
+ 191:Follow_Balance.c ****     Follow_Balance_DW.Delay_DSTATE_b[18] = Follow_Balance_B.encoder1;
+ 192:Follow_Balance.c **** 
+ 193:Follow_Balance.c ****     /* Update for Delay: '<S15>/Delay1' */
+ 194:Follow_Balance.c ****     Follow_Balance_DW.Delay1_DSTATE[18] = Follow_Balance_B.encoder2;
+ 195:Follow_Balance.c ****   }
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cceK7Nzf.s 			page 11
+
+
+ 196:Follow_Balance.c **** 
+ 197:Follow_Balance.c ****   /* End of RelationalOperator: '<S2>/Compare' */
+ 198:Follow_Balance.c ****   /* End of Outputs for SubSystem: '<Root>/encoder to rpm' */
+ 199:Follow_Balance.c **** 
+ 200:Follow_Balance.c ****   /* Outputs for Enabled SubSystem: '<Root>/speedPID_motor' incorporates:
+ 201:Follow_Balance.c ****    *  EnablePort: '<S16>/Enable'
+ 202:Follow_Balance.c ****    */
+ 203:Follow_Balance.c ****   /* RelationalOperator: '<S3>/Compare' incorporates:
+ 204:Follow_Balance.c ****    *  Constant: '<S3>/Constant'
+ 205:Follow_Balance.c ****    *  UnitDelay: '<S9>/Output'
+ 206:Follow_Balance.c ****    */
+ 207:Follow_Balance.c ****   if (Follow_Balance_DW.Output_DSTATE_k == 1) {
+ 343              		.loc 1 207 3 is_stmt 1 view .LVU128
+ 344              		.loc 1 207 24 is_stmt 0 view .LVU129
+ 345 01fc 604B     		ldr	r3, .L171+32
+ 346 01fe 93F809A1 		ldrb	r10, [r3, #265]	@ zero_extendqisi2
+ 347              		.loc 1 207 6 view .LVU130
+ 348 0202 BAF1010F 		cmp	r10, #1
+ 349 0206 00F0D980 		beq	.L149
+ 350              	.L5:
+ 208:Follow_Balance.c ****     /* Sum: '<S41>/Add1' incorporates:
+ 209:Follow_Balance.c ****      *  DataStoreRead: '<Root>/Data Store Read4'
+ 210:Follow_Balance.c ****      *  Sum: '<S41>/Add2'
+ 211:Follow_Balance.c ****      */
+ 212:Follow_Balance.c ****     rtb_Add1_f = Follow_Balance_DW.tar_speed - (Follow_Balance_B.Divide +
+ 213:Follow_Balance.c ****       Follow_Balance_B.Divide1);
+ 214:Follow_Balance.c **** 
+ 215:Follow_Balance.c ****     /* Gain: '<S43>/Gain1' incorporates:
+ 216:Follow_Balance.c ****      *  DataStoreRead: '<S43>/Data Store Read1'
+ 217:Follow_Balance.c ****      *  Delay: '<S43>/Delay'
+ 218:Follow_Balance.c ****      *  Gain: '<S43>/Gain'
+ 219:Follow_Balance.c ****      *  Product: '<S43>/Product3'
+ 220:Follow_Balance.c ****      *  Sum: '<S43>/Add2'
+ 221:Follow_Balance.c ****      */
+ 222:Follow_Balance.c ****     Follow_Balance_DW.Delay_DSTATE_h = ((real32_T)(0.001 *
+ 223:Follow_Balance.c ****       Follow_Balance_DW.Ki_speed * rtb_Add1_f) +
+ 224:Follow_Balance.c ****       Follow_Balance_DW.Delay_DSTATE_h) * 0.995F;
+ 225:Follow_Balance.c **** 
+ 226:Follow_Balance.c ****     /* Saturate: '<S43>/Saturation2' */
+ 227:Follow_Balance.c ****     if (Follow_Balance_DW.Delay_DSTATE_h > 1500.0F) {
+ 228:Follow_Balance.c ****       /* Gain: '<S43>/Gain1' */
+ 229:Follow_Balance.c ****       Follow_Balance_DW.Delay_DSTATE_h = 1500.0F;
+ 230:Follow_Balance.c ****     } else if (Follow_Balance_DW.Delay_DSTATE_h < -1500.0F) {
+ 231:Follow_Balance.c ****       /* Gain: '<S43>/Gain1' */
+ 232:Follow_Balance.c ****       Follow_Balance_DW.Delay_DSTATE_h = -1500.0F;
+ 233:Follow_Balance.c ****     }
+ 234:Follow_Balance.c **** 
+ 235:Follow_Balance.c ****     /* End of Saturate: '<S43>/Saturation2' */
+ 236:Follow_Balance.c **** 
+ 237:Follow_Balance.c ****     /* Sum: '<S41>/Add' incorporates:
+ 238:Follow_Balance.c ****      *  DataStoreRead: '<S42>/Data Store Read2'
+ 239:Follow_Balance.c ****      *  DataStoreRead: '<S44>/Data Store Read'
+ 240:Follow_Balance.c ****      *  Delay: '<S43>/Delay'
+ 241:Follow_Balance.c ****      *  Gain: '<S42>/Gain'
+ 242:Follow_Balance.c ****      *  Gain: '<S44>/Gain'
+ 243:Follow_Balance.c ****      *  Product: '<S42>/Product2'
+ 244:Follow_Balance.c ****      *  Product: '<S44>/Product'
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cceK7Nzf.s 			page 12
+
+
+ 245:Follow_Balance.c ****      *  Sum: '<S45>/Diff'
+ 246:Follow_Balance.c ****      *  UnitDelay: '<S45>/UD'
+ 247:Follow_Balance.c ****      *
+ 248:Follow_Balance.c ****      * Block description for '<S45>/Diff':
+ 249:Follow_Balance.c ****      *
+ 250:Follow_Balance.c ****      *  Add in CPU
+ 251:Follow_Balance.c ****      *
+ 252:Follow_Balance.c ****      * Block description for '<S45>/UD':
+ 253:Follow_Balance.c ****      *
+ 254:Follow_Balance.c ****      *  Store in Global RAM
+ 255:Follow_Balance.c ****      */
+ 256:Follow_Balance.c ****     Follow_Balance_B.Add_p = (0.001 * Follow_Balance_DW.Kp_speed * rtb_Add1_f +
+ 257:Follow_Balance.c ****       Follow_Balance_DW.Delay_DSTATE_h) + 0.001 * Follow_Balance_DW.Kd_speed *
+ 258:Follow_Balance.c ****       (rtb_Add1_f - Follow_Balance_DW.UD_DSTATE_e);
+ 259:Follow_Balance.c **** 
+ 260:Follow_Balance.c ****     /* Update for UnitDelay: '<S45>/UD'
+ 261:Follow_Balance.c ****      *
+ 262:Follow_Balance.c ****      * Block description for '<S45>/UD':
+ 263:Follow_Balance.c ****      *
+ 264:Follow_Balance.c ****      *  Store in Global RAM
+ 265:Follow_Balance.c ****      */
+ 266:Follow_Balance.c ****     Follow_Balance_DW.UD_DSTATE_e = rtb_Add1_f;
+ 267:Follow_Balance.c ****   }
+ 268:Follow_Balance.c **** 
+ 269:Follow_Balance.c ****   /* End of RelationalOperator: '<S3>/Compare' */
+ 270:Follow_Balance.c ****   /* End of Outputs for SubSystem: '<Root>/speedPID_motor' */
+ 271:Follow_Balance.c **** 
+ 272:Follow_Balance.c ****   /* Sum: '<Root>/Add1' incorporates:
+ 273:Follow_Balance.c ****    *  DataStoreRead: '<Root>/Data Store Read13'
+ 274:Follow_Balance.c ****    *  DataStoreRead: '<Root>/Data Store Read8'
+ 275:Follow_Balance.c ****    */
+ 276:Follow_Balance.c ****   rtb_Add1_c = angle_yaw - Follow_Balance_DW.yaw_begin;
+ 351              		.loc 1 276 3 is_stmt 1 view .LVU131
+ 352              		.loc 1 276 45 is_stmt 0 view .LVU132
+ 353 020a 5D4B     		ldr	r3, .L171+32
+ 354 020c D3F80021 		ldr	r2, [r3, #256]
+ 355              		.loc 1 276 14 view .LVU133
+ 356 0210 0199     		ldr	r1, [sp, #4]
+ 357 0212 8A1A     		subs	r2, r1, r2
+ 358 0214 08EE102A 		vmov	s16, r2	@ int
+ 359              	.LVL3:
+ 277:Follow_Balance.c **** 
+ 278:Follow_Balance.c ****   /* Outputs for Enabled SubSystem: '<Root>/turnPID' incorporates:
+ 279:Follow_Balance.c ****    *  EnablePort: '<S17>/Enable'
+ 280:Follow_Balance.c ****    */
+ 281:Follow_Balance.c ****   /* RelationalOperator: '<S4>/Compare' incorporates:
+ 282:Follow_Balance.c ****    *  Constant: '<S4>/Constant'
+ 283:Follow_Balance.c ****    *  UnitDelay: '<S10>/Output'
+ 284:Follow_Balance.c ****    */
+ 285:Follow_Balance.c ****   if (Follow_Balance_DW.Output_DSTATE_kh == 1) {
+ 360              		.loc 1 285 3 is_stmt 1 view .LVU134
+ 361              		.loc 1 285 24 is_stmt 0 view .LVU135
+ 362 0218 93F80A51 		ldrb	r5, [r3, #266]	@ zero_extendqisi2
+ 363              		.loc 1 285 6 view .LVU136
+ 364 021c 012D     		cmp	r5, #1
+ 365 021e 00F04E81 		beq	.L150
+ 366              	.LVL4:
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cceK7Nzf.s 			page 13
+
+
+ 367              	.L10:
+ 286:Follow_Balance.c ****     /* Sum: '<S17>/Add1' incorporates:
+ 287:Follow_Balance.c ****      *  DataStoreRead: '<Root>/Data Store Read5'
+ 288:Follow_Balance.c ****      *  Sum: '<Root>/Add1'
+ 289:Follow_Balance.c ****      */
+ 290:Follow_Balance.c ****     rtb_Add1_f = Follow_Balance_DW.tar_yaw - (real32_T)rtb_Add1_c *
+ 291:Follow_Balance.c ****       3.81469727E-6F;
+ 292:Follow_Balance.c **** 
+ 293:Follow_Balance.c ****     /* Sum: '<S47>/Add2' incorporates:
+ 294:Follow_Balance.c ****      *  DataStoreRead: '<S47>/Data Store Read1'
+ 295:Follow_Balance.c ****      *  Delay: '<S47>/Delay'
+ 296:Follow_Balance.c ****      *  Gain: '<S47>/Gain'
+ 297:Follow_Balance.c ****      *  ManualSwitch: '<S47>/Manual Switch1'
+ 298:Follow_Balance.c ****      *  Product: '<S47>/Product3'
+ 299:Follow_Balance.c ****      */
+ 300:Follow_Balance.c ****     Follow_Balance_DW.Delay_DSTATE_i += (real32_T)(0.01 *
+ 301:Follow_Balance.c ****       Follow_Balance_DW.Ki_turn * rtb_Add1_f);
+ 302:Follow_Balance.c **** 
+ 303:Follow_Balance.c ****     /* Saturate: '<S47>/Saturation' */
+ 304:Follow_Balance.c ****     if (Follow_Balance_DW.Delay_DSTATE_i > 2000.0) {
+ 305:Follow_Balance.c ****       /* Sum: '<S47>/Add2' */
+ 306:Follow_Balance.c ****       Follow_Balance_DW.Delay_DSTATE_i = 2000.0;
+ 307:Follow_Balance.c ****     } else if (Follow_Balance_DW.Delay_DSTATE_i < -2000.0) {
+ 308:Follow_Balance.c ****       /* Sum: '<S47>/Add2' */
+ 309:Follow_Balance.c ****       Follow_Balance_DW.Delay_DSTATE_i = -2000.0;
+ 310:Follow_Balance.c ****     }
+ 311:Follow_Balance.c **** 
+ 312:Follow_Balance.c ****     /* End of Saturate: '<S47>/Saturation' */
+ 313:Follow_Balance.c **** 
+ 314:Follow_Balance.c ****     /* Sum: '<S17>/Add' incorporates:
+ 315:Follow_Balance.c ****      *  DataStoreRead: '<S46>/Data Store Read2'
+ 316:Follow_Balance.c ****      *  DataStoreRead: '<S48>/Data Store Read'
+ 317:Follow_Balance.c ****      *  Delay: '<S47>/Delay'
+ 318:Follow_Balance.c ****      *  Gain: '<Root>/Gain2'
+ 319:Follow_Balance.c ****      *  ManualSwitch: '<S46>/Manual Switch2'
+ 320:Follow_Balance.c ****      *  ManualSwitch: '<S48>/Manual Switch'
+ 321:Follow_Balance.c ****      *  Product: '<S46>/Product2'
+ 322:Follow_Balance.c ****      *  Product: '<S48>/Product'
+ 323:Follow_Balance.c ****      */
+ 324:Follow_Balance.c ****     Follow_Balance_B.Add = 26214.0 * (real_T)Follow_Balance_B.anglev[2] *
+ 325:Follow_Balance.c ****       3.814697265625E-6 * Follow_Balance_DW.Kd_turn + ((real_T)
+ 326:Follow_Balance.c ****       Follow_Balance_DW.Kp_turn * rtb_Add1_f + Follow_Balance_DW.Delay_DSTATE_i);
+ 327:Follow_Balance.c ****   }
+ 328:Follow_Balance.c **** 
+ 329:Follow_Balance.c ****   /* End of RelationalOperator: '<S4>/Compare' */
+ 330:Follow_Balance.c ****   /* End of Outputs for SubSystem: '<Root>/turnPID' */
+ 331:Follow_Balance.c **** 
+ 332:Follow_Balance.c ****   /* Outputs for Enabled SubSystem: '<Root>/anglePID' incorporates:
+ 333:Follow_Balance.c ****    *  EnablePort: '<S11>/Enable'
+ 334:Follow_Balance.c ****    */
+ 335:Follow_Balance.c ****   /* RelationalOperator: '<S1>/Compare' incorporates:
+ 336:Follow_Balance.c ****    *  Constant: '<S1>/Constant'
+ 337:Follow_Balance.c ****    *  UnitDelay: '<S7>/Output'
+ 338:Follow_Balance.c ****    */
+ 339:Follow_Balance.c ****   if (Follow_Balance_DW.Output_DSTATE_e == 1) {
+ 368              		.loc 1 339 3 is_stmt 1 view .LVU137
+ 369              		.loc 1 339 24 is_stmt 0 view .LVU138
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cceK7Nzf.s 			page 14
+
+
+ 370 0222 574B     		ldr	r3, .L171+32
+ 371 0224 93F80B61 		ldrb	r6, [r3, #267]	@ zero_extendqisi2
+ 372              		.loc 1 339 6 view .LVU139
+ 373 0228 012E     		cmp	r6, #1
+ 374 022a 00F0C481 		beq	.L151
+ 375              	.L15:
+ 340:Follow_Balance.c ****     int16_T tmp;
+ 341:Follow_Balance.c **** 
+ 342:Follow_Balance.c ****     /* Abs: '<Root>/Abs' */
+ 343:Follow_Balance.c ****     if (Follow_Balance_B.angle[1] < 0) {
+ 344:Follow_Balance.c ****       tmp = (int16_T)-Follow_Balance_B.angle[1];
+ 345:Follow_Balance.c ****     } else {
+ 346:Follow_Balance.c ****       tmp = Follow_Balance_B.angle[1];
+ 347:Follow_Balance.c ****     }
+ 348:Follow_Balance.c **** 
+ 349:Follow_Balance.c ****     /* End of Abs: '<Root>/Abs' */
+ 350:Follow_Balance.c **** 
+ 351:Follow_Balance.c ****     /* Switch: '<Root>/Switch' incorporates:
+ 352:Follow_Balance.c ****      *  Constant: '<Root>/Constant'
+ 353:Follow_Balance.c ****      *  Gain: '<Root>/Gain'
+ 354:Follow_Balance.c ****      */
+ 355:Follow_Balance.c ****     if (tmp > 3500) {
+ 356:Follow_Balance.c ****       rtb_Add_op = 0.0;
+ 357:Follow_Balance.c ****     } else {
+ 358:Follow_Balance.c ****       rtb_Add_op = 20972.0 * (real_T)Follow_Balance_B.angle[1] *
+ 359:Follow_Balance.c ****         4.76837158203125E-7;
+ 360:Follow_Balance.c ****     }
+ 361:Follow_Balance.c **** 
+ 362:Follow_Balance.c ****     /* End of Switch: '<Root>/Switch' */
+ 363:Follow_Balance.c **** 
+ 364:Follow_Balance.c ****     /* Sum: '<S11>/Add' incorporates:
+ 365:Follow_Balance.c ****      *  Constant: '<S29>/Constant2'
+ 366:Follow_Balance.c ****      *  Constant: '<S30>/Constant'
+ 367:Follow_Balance.c ****      *  DataStoreRead: '<Root>/Data Store Read1'
+ 368:Follow_Balance.c ****      *  Gain: '<Root>/Gain1'
+ 369:Follow_Balance.c ****      *  Product: '<S29>/Product2'
+ 370:Follow_Balance.c ****      *  Product: '<S30>/Product'
+ 371:Follow_Balance.c ****      *  Sum: '<Root>/Add'
+ 372:Follow_Balance.c ****      *  Sum: '<S11>/Add1'
+ 373:Follow_Balance.c ****      */
+ 374:Follow_Balance.c ****     Follow_Balance_B.Add_h = ((Follow_Balance_B.Add_p +
+ 375:Follow_Balance.c ****       Follow_Balance_DW.machine_mid) - rtb_Add_op) * 70.0 + 26214.0 * (real_T)
+ 376:Follow_Balance.c ****       Follow_Balance_B.anglev[0] * 3.814697265625E-6 * 0.1;
+ 377:Follow_Balance.c ****   }
+ 378:Follow_Balance.c **** 
+ 379:Follow_Balance.c ****   /* End of RelationalOperator: '<S1>/Compare' */
+ 380:Follow_Balance.c ****   /* End of Outputs for SubSystem: '<Root>/anglePID' */
+ 381:Follow_Balance.c **** 
+ 382:Follow_Balance.c ****   /* Switch: '<S22>/FixPt Switch' incorporates:
+ 383:Follow_Balance.c ****    *  Constant: '<S21>/FixPt Constant'
+ 384:Follow_Balance.c ****    *  Constant: '<S22>/Constant'
+ 385:Follow_Balance.c ****    *  Sum: '<S21>/FixPt Sum1'
+ 386:Follow_Balance.c ****    *  UnitDelay: '<S7>/Output'
+ 387:Follow_Balance.c ****    */
+ 388:Follow_Balance.c ****   if ((uint8_T)(Follow_Balance_DW.Output_DSTATE_e + 1) > 1) {
+ 376              		.loc 1 388 3 is_stmt 1 view .LVU140
+ 377              		.loc 1 388 7 is_stmt 0 view .LVU141
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cceK7Nzf.s 			page 15
+
+
+ 378 022e 0136     		adds	r6, r6, #1
+ 379 0230 F6B2     		uxtb	r6, r6
+ 380              		.loc 1 388 6 view .LVU142
+ 381 0232 012E     		cmp	r6, #1
+ 382 0234 40F20C82 		bls	.L18
+ 389:Follow_Balance.c ****     Follow_Balance_DW.Output_DSTATE_e = 0U;
+ 383              		.loc 1 389 5 is_stmt 1 view .LVU143
+ 384              		.loc 1 389 39 is_stmt 0 view .LVU144
+ 385 0238 514B     		ldr	r3, .L171+32
+ 386 023a 0022     		movs	r2, #0
+ 387 023c 83F80B21 		strb	r2, [r3, #267]
+ 388              	.L19:
+ 390:Follow_Balance.c ****   } else {
+ 391:Follow_Balance.c ****     Follow_Balance_DW.Output_DSTATE_e++;
+ 392:Follow_Balance.c ****   }
+ 393:Follow_Balance.c **** 
+ 394:Follow_Balance.c ****   /* End of Switch: '<S22>/FixPt Switch' */
+ 395:Follow_Balance.c **** 
+ 396:Follow_Balance.c ****   /* Switch: '<S24>/FixPt Switch' incorporates:
+ 397:Follow_Balance.c ****    *  Constant: '<S23>/FixPt Constant'
+ 398:Follow_Balance.c ****    *  Constant: '<S24>/Constant'
+ 399:Follow_Balance.c ****    *  Sum: '<S23>/FixPt Sum1'
+ 400:Follow_Balance.c ****    *  UnitDelay: '<S8>/Output'
+ 401:Follow_Balance.c ****    */
+ 402:Follow_Balance.c ****   if ((uint8_T)(Follow_Balance_DW.Output_DSTATE + 1) > 1) {
+ 389              		.loc 1 402 3 is_stmt 1 view .LVU145
+ 390              		.loc 1 402 7 is_stmt 0 view .LVU146
+ 391 0240 0134     		adds	r4, r4, #1
+ 392 0242 E4B2     		uxtb	r4, r4
+ 393              		.loc 1 402 6 view .LVU147
+ 394 0244 012C     		cmp	r4, #1
+ 395 0246 40F20782 		bls	.L20
+ 403:Follow_Balance.c ****     Follow_Balance_DW.Output_DSTATE = 0U;
+ 396              		.loc 1 403 5 is_stmt 1 view .LVU148
+ 397              		.loc 1 403 37 is_stmt 0 view .LVU149
+ 398 024a 4D4B     		ldr	r3, .L171+32
+ 399 024c 0022     		movs	r2, #0
+ 400 024e 83F80821 		strb	r2, [r3, #264]
+ 401              	.L21:
+ 404:Follow_Balance.c ****   } else {
+ 405:Follow_Balance.c ****     Follow_Balance_DW.Output_DSTATE++;
+ 406:Follow_Balance.c ****   }
+ 407:Follow_Balance.c **** 
+ 408:Follow_Balance.c ****   /* End of Switch: '<S24>/FixPt Switch' */
+ 409:Follow_Balance.c **** 
+ 410:Follow_Balance.c ****   /* Switch: '<S26>/FixPt Switch' incorporates:
+ 411:Follow_Balance.c ****    *  Constant: '<S25>/FixPt Constant'
+ 412:Follow_Balance.c ****    *  Constant: '<S26>/Constant'
+ 413:Follow_Balance.c ****    *  Sum: '<S25>/FixPt Sum1'
+ 414:Follow_Balance.c ****    *  UnitDelay: '<S9>/Output'
+ 415:Follow_Balance.c ****    */
+ 416:Follow_Balance.c ****   if ((uint8_T)(Follow_Balance_DW.Output_DSTATE_k + 1) > 1) {
+ 402              		.loc 1 416 3 is_stmt 1 view .LVU150
+ 403              		.loc 1 416 7 is_stmt 0 view .LVU151
+ 404 0252 0AF1010A 		add	r10, r10, #1
+ 405 0256 5FFA8AFA 		uxtb	r10, r10
+ 406              		.loc 1 416 6 view .LVU152
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cceK7Nzf.s 			page 16
+
+
+ 407 025a BAF1010F 		cmp	r10, #1
+ 408 025e 40F2FF81 		bls	.L22
+ 417:Follow_Balance.c ****     Follow_Balance_DW.Output_DSTATE_k = 0U;
+ 409              		.loc 1 417 5 is_stmt 1 view .LVU153
+ 410              		.loc 1 417 39 is_stmt 0 view .LVU154
+ 411 0262 474B     		ldr	r3, .L171+32
+ 412 0264 0022     		movs	r2, #0
+ 413 0266 83F80921 		strb	r2, [r3, #265]
+ 414              	.L23:
+ 418:Follow_Balance.c ****   } else {
+ 419:Follow_Balance.c ****     Follow_Balance_DW.Output_DSTATE_k++;
+ 420:Follow_Balance.c ****   }
+ 421:Follow_Balance.c **** 
+ 422:Follow_Balance.c ****   /* End of Switch: '<S26>/FixPt Switch' */
+ 423:Follow_Balance.c **** 
+ 424:Follow_Balance.c ****   /* Switch: '<S28>/FixPt Switch' incorporates:
+ 425:Follow_Balance.c ****    *  Constant: '<S27>/FixPt Constant'
+ 426:Follow_Balance.c ****    *  Constant: '<S28>/Constant'
+ 427:Follow_Balance.c ****    *  Sum: '<S27>/FixPt Sum1'
+ 428:Follow_Balance.c ****    *  UnitDelay: '<S10>/Output'
+ 429:Follow_Balance.c ****    */
+ 430:Follow_Balance.c ****   if ((uint8_T)(Follow_Balance_DW.Output_DSTATE_kh + 1) > 1) {
+ 415              		.loc 1 430 3 is_stmt 1 view .LVU155
+ 416              		.loc 1 430 7 is_stmt 0 view .LVU156
+ 417 026a 0135     		adds	r5, r5, #1
+ 418 026c EDB2     		uxtb	r5, r5
+ 419              		.loc 1 430 6 view .LVU157
+ 420 026e 012D     		cmp	r5, #1
+ 421 0270 40F2FA81 		bls	.L24
+ 431:Follow_Balance.c ****     Follow_Balance_DW.Output_DSTATE_kh = 0U;
+ 422              		.loc 1 431 5 is_stmt 1 view .LVU158
+ 423              		.loc 1 431 40 is_stmt 0 view .LVU159
+ 424 0274 424B     		ldr	r3, .L171+32
+ 425 0276 0022     		movs	r2, #0
+ 426 0278 83F80A21 		strb	r2, [r3, #266]
+ 427              	.L25:
+ 432:Follow_Balance.c ****   } else {
+ 433:Follow_Balance.c ****     Follow_Balance_DW.Output_DSTATE_kh++;
+ 434:Follow_Balance.c ****   }
+ 435:Follow_Balance.c **** 
+ 436:Follow_Balance.c ****   /* End of Switch: '<S28>/FixPt Switch' */
+ 437:Follow_Balance.c **** 
+ 438:Follow_Balance.c ****   /* DataStoreRead: '<Root>/Data Store Read9' */
+ 439:Follow_Balance.c ****   Follow_Balance_B.DataStoreRead9 = Follow_Balance_DW.tar_yaw;
+ 428              		.loc 1 439 3 is_stmt 1 view .LVU160
+ 429              		.loc 1 439 54 is_stmt 0 view .LVU161
+ 430 027c 404B     		ldr	r3, .L171+32
+ 431 027e D3F8F430 		ldr	r3, [r3, #244]	@ float
+ 432              		.loc 1 439 35 view .LVU162
+ 433 0282 3949     		ldr	r1, .L171+8
+ 434 0284 8B61     		str	r3, [r1, #24]	@ float
+ 440:Follow_Balance.c **** 
+ 441:Follow_Balance.c ****   /* DataTypeConversion: '<Root>/Data Type Conversion1' incorporates:
+ 442:Follow_Balance.c ****    *  Sum: '<Root>/Add1'
+ 443:Follow_Balance.c ****    */
+ 444:Follow_Balance.c ****   Follow_Balance_B.DataTypeConversion1 = (real32_T)rtb_Add1_c * 3.81469727E-6F;
+ 435              		.loc 1 444 3 is_stmt 1 view .LVU163
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cceK7Nzf.s 			page 17
+
+
+ 436              		.loc 1 444 42 is_stmt 0 view .LVU164
+ 437 0286 B8EEC88A 		vcvt.f32.s32	s16, s16
+ 438              	.LVL5:
+ 439              		.loc 1 444 63 view .LVU165
+ 440 028a DFED467A 		vldr.32	s15, .L171+68
+ 441 028e 28EE278A 		vmul.f32	s16, s16, s15
+ 442              		.loc 1 444 40 view .LVU166
+ 443 0292 81ED078A 		vstr.32	s16, [r1, #28]
+ 445:Follow_Balance.c **** 
+ 446:Follow_Balance.c ****   /* Sum: '<Root>/Add2' */
+ 447:Follow_Balance.c ****   rtb_Add_op = Follow_Balance_B.Add + Follow_Balance_B.Add_h;
+ 444              		.loc 1 447 3 is_stmt 1 view .LVU167
+ 445              		.loc 1 447 14 is_stmt 0 view .LVU168
+ 446 0296 D1E90423 		ldrd	r2, [r1, #16]
+ 447 029a D1E90001 		ldrd	r0, [r1]
+ 448 029e FFF7FEFF 		bl	__aeabi_dadd
+ 449              	.LVL6:
+ 450 02a2 0246     		mov	r2, r0
+ 451 02a4 0B46     		mov	r3, r1
+ 452 02a6 43EC182B 		vmov	d8, r2, r3
+ 453              	.LVL7:
+ 448:Follow_Balance.c **** 
+ 449:Follow_Balance.c ****   /* Saturate: '<Root>/Saturation3' */
+ 450:Follow_Balance.c ****   if (rtb_Add_op > 2048.0) {
+ 454              		.loc 1 450 3 is_stmt 1 view .LVU169
+ 455              		.loc 1 450 6 is_stmt 0 view .LVU170
+ 456 02aa 0022     		movs	r2, #0
+ 457              	.LVL8:
+ 458              		.loc 1 450 6 view .LVU171
+ 459 02ac 3E4B     		ldr	r3, .L171+72
+ 460 02ae FFF7FEFF 		bl	__aeabi_dcmpgt
+ 461              	.LVL9:
+ 462 02b2 0028     		cmp	r0, #0
+ 463 02b4 40F00882 		bne	.L92
+ 451:Follow_Balance.c ****     rtb_Add_op = 2048.0;
+ 452:Follow_Balance.c ****   } else if (rtb_Add_op < -2048.0) {
+ 464              		.loc 1 452 10 is_stmt 1 view .LVU172
+ 465              		.loc 1 452 13 is_stmt 0 view .LVU173
+ 466 02b8 0022     		movs	r2, #0
+ 467 02ba 3C4B     		ldr	r3, .L171+76
+ 468 02bc 51EC180B 		vmov	r0, r1, d8
+ 469 02c0 FFF7FEFF 		bl	__aeabi_dcmplt
+ 470              	.LVL10:
+ 471 02c4 0028     		cmp	r0, #0
+ 472 02c6 00F00182 		beq	.L26
+ 453:Follow_Balance.c ****     rtb_Add_op = -2048.0;
+ 473              		.loc 1 453 16 view .LVU174
+ 474 02ca 9FED258B 		vldr.64	d8, .L171
+ 475              	.LVL11:
+ 476              		.loc 1 453 16 view .LVU175
+ 477 02ce FDE1     		b	.L26
+ 478              	.L148:
+ 166:Follow_Balance.c ****       Follow_Balance_DW.Delay_DSTATE_b[0]) * 100.0F * 60.0F / 40000.0F;
+ 479              		.loc 1 166 5 is_stmt 1 view .LVU176
+ 166:Follow_Balance.c ****       Follow_Balance_DW.Delay_DSTATE_b[0]) * 100.0F * 60.0F / 40000.0F;
+ 480              		.loc 1 166 58 is_stmt 0 view .LVU177
+ 481 02d0 254A     		ldr	r2, .L171+8
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cceK7Nzf.s 			page 18
+
+
+ 482 02d2 166D     		ldr	r6, [r2, #80]
+ 167:Follow_Balance.c **** 
+ 483              		.loc 1 167 39 view .LVU178
+ 484 02d4 2A49     		ldr	r1, .L171+32
+ 485 02d6 4B6D     		ldr	r3, [r1, #84]
+ 166:Follow_Balance.c ****       Follow_Balance_DW.Delay_DSTATE_b[0]) * 100.0F * 60.0F / 40000.0F;
+ 486              		.loc 1 166 68 view .LVU179
+ 487 02d8 F31A     		subs	r3, r6, r3
+ 488 02da 07EE903A 		vmov	s15, r3	@ int
+ 166:Follow_Balance.c ****       Follow_Balance_DW.Delay_DSTATE_b[0]) * 100.0F * 60.0F / 40000.0F;
+ 489              		.loc 1 166 31 view .LVU180
+ 490 02de F8EEE77A 		vcvt.f32.s32	s15, s15
+ 167:Follow_Balance.c **** 
+ 491              		.loc 1 167 44 view .LVU181
+ 492 02e2 9FED336A 		vldr.32	s12, .L171+80
+ 493 02e6 67EE867A 		vmul.f32	s15, s15, s12
+ 167:Follow_Balance.c **** 
+ 494              		.loc 1 167 53 view .LVU182
+ 495 02ea DFED326A 		vldr.32	s13, .L171+84
+ 496 02ee 67EEA67A 		vmul.f32	s15, s15, s13
+ 167:Follow_Balance.c **** 
+ 497              		.loc 1 167 61 view .LVU183
+ 498 02f2 9FED317A 		vldr.32	s14, .L171+88
+ 499 02f6 C7EE875A 		vdiv.f32	s11, s15, s14
+ 166:Follow_Balance.c ****       Follow_Balance_DW.Delay_DSTATE_b[0]) * 100.0F * 60.0F / 40000.0F;
+ 500              		.loc 1 166 29 view .LVU184
+ 501 02fa C2ED125A 		vstr.32	s11, [r2, #72]
+ 178:Follow_Balance.c ****       Follow_Balance_DW.Delay1_DSTATE[0]) * 100.0F * 60.0F / 40000.0F;
+ 502              		.loc 1 178 5 is_stmt 1 view .LVU185
+ 178:Follow_Balance.c ****       Follow_Balance_DW.Delay1_DSTATE[0]) * 100.0F * 60.0F / 40000.0F;
+ 503              		.loc 1 178 59 is_stmt 0 view .LVU186
+ 504 02fe 556D     		ldr	r5, [r2, #84]
+ 179:Follow_Balance.c ****     for (rtb_Add1_c = 0; rtb_Add1_c < 18; rtb_Add1_c++) {
+ 505              		.loc 1 179 38 view .LVU187
+ 506 0300 D1F8A030 		ldr	r3, [r1, #160]
+ 178:Follow_Balance.c ****       Follow_Balance_DW.Delay1_DSTATE[0]) * 100.0F * 60.0F / 40000.0F;
+ 507              		.loc 1 178 69 view .LVU188
+ 508 0304 EB1A     		subs	r3, r5, r3
+ 509 0306 07EE903A 		vmov	s15, r3	@ int
+ 178:Follow_Balance.c ****       Follow_Balance_DW.Delay1_DSTATE[0]) * 100.0F * 60.0F / 40000.0F;
+ 510              		.loc 1 178 32 view .LVU189
+ 511 030a F8EEE77A 		vcvt.f32.s32	s15, s15
+ 179:Follow_Balance.c ****     for (rtb_Add1_c = 0; rtb_Add1_c < 18; rtb_Add1_c++) {
+ 512              		.loc 1 179 43 view .LVU190
+ 513 030e 67EE867A 		vmul.f32	s15, s15, s12
+ 179:Follow_Balance.c ****     for (rtb_Add1_c = 0; rtb_Add1_c < 18; rtb_Add1_c++) {
+ 514              		.loc 1 179 52 view .LVU191
+ 515 0312 67EEA67A 		vmul.f32	s15, s15, s13
+ 179:Follow_Balance.c ****     for (rtb_Add1_c = 0; rtb_Add1_c < 18; rtb_Add1_c++) {
+ 516              		.loc 1 179 60 view .LVU192
+ 517 0316 C7EE876A 		vdiv.f32	s13, s15, s14
+ 178:Follow_Balance.c ****       Follow_Balance_DW.Delay1_DSTATE[0]) * 100.0F * 60.0F / 40000.0F;
+ 518              		.loc 1 178 30 view .LVU193
+ 519 031a C2ED136A 		vstr.32	s13, [r2, #76]
+ 180:Follow_Balance.c ****       /* Update for Delay: '<S15>/Delay' */
+ 520              		.loc 1 180 5 is_stmt 1 view .LVU194
+ 521              	.LVL12:
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cceK7Nzf.s 			page 19
+
+
+ 180:Follow_Balance.c ****       /* Update for Delay: '<S15>/Delay' */
+ 522              		.loc 1 180 21 is_stmt 0 view .LVU195
+ 523 031e 0023     		movs	r3, #0
+ 180:Follow_Balance.c ****       /* Update for Delay: '<S15>/Delay' */
+ 524              		.loc 1 180 5 view .LVU196
+ 525 0320 13E0     		b	.L3
+ 526              	.LVL13:
+ 527              	.L4:
+ 182:Follow_Balance.c ****         Follow_Balance_DW.Delay_DSTATE_b[rtb_Add1_c + 1];
+ 528              		.loc 1 182 7 is_stmt 1 discriminator 3 view .LVU197
+ 183:Follow_Balance.c **** 
+ 529              		.loc 1 183 41 is_stmt 0 discriminator 3 view .LVU198
+ 530 0322 174A     		ldr	r2, .L171+32
+ 531 0324 03F11501 		add	r1, r3, #21
+ 532 0328 02EB8101 		add	r1, r2, r1, lsl #2
+ 533 032c 4868     		ldr	r0, [r1, #4]
+ 182:Follow_Balance.c ****         Follow_Balance_DW.Delay_DSTATE_b[rtb_Add1_c + 1];
+ 534              		.loc 1 182 52 discriminator 3 view .LVU199
+ 535 032e 03F11401 		add	r1, r3, #20
+ 536 0332 02EB8101 		add	r1, r2, r1, lsl #2
+ 537 0336 4860     		str	r0, [r1, #4]
+ 186:Follow_Balance.c ****         Follow_Balance_DW.Delay1_DSTATE[rtb_Add1_c + 1];
+ 538              		.loc 1 186 7 is_stmt 1 discriminator 3 view .LVU200
+ 187:Follow_Balance.c ****     }
+ 539              		.loc 1 187 40 is_stmt 0 discriminator 3 view .LVU201
+ 540 0338 03F12901 		add	r1, r3, #41
+ 541 033c 52F82100 		ldr	r0, [r2, r1, lsl #2]
+ 186:Follow_Balance.c ****         Follow_Balance_DW.Delay1_DSTATE[rtb_Add1_c + 1];
+ 542              		.loc 1 186 51 discriminator 3 view .LVU202
+ 543 0340 03F12801 		add	r1, r3, #40
+ 544 0344 42F82100 		str	r0, [r2, r1, lsl #2]
+ 180:Follow_Balance.c ****       /* Update for Delay: '<S15>/Delay' */
+ 545              		.loc 1 180 53 is_stmt 1 discriminator 3 view .LVU203
+ 546              	.LVL14:
+ 180:Follow_Balance.c ****       /* Update for Delay: '<S15>/Delay' */
+ 547              		.loc 1 180 53 is_stmt 0 discriminator 3 view .LVU204
+ 548 0348 0133     		adds	r3, r3, #1
+ 549              	.LVL15:
+ 550              	.L3:
+ 180:Follow_Balance.c ****       /* Update for Delay: '<S15>/Delay' */
+ 551              		.loc 1 180 37 is_stmt 1 discriminator 1 view .LVU205
+ 552 034a 112B     		cmp	r3, #17
+ 553 034c E9DD     		ble	.L4
+ 191:Follow_Balance.c **** 
+ 554              		.loc 1 191 5 view .LVU206
+ 191:Follow_Balance.c **** 
+ 555              		.loc 1 191 42 is_stmt 0 view .LVU207
+ 556 034e 0C4B     		ldr	r3, .L171+32
+ 557              	.LVL16:
+ 191:Follow_Balance.c **** 
+ 558              		.loc 1 191 42 view .LVU208
+ 559 0350 C3F89C60 		str	r6, [r3, #156]
+ 194:Follow_Balance.c ****   }
+ 560              		.loc 1 194 5 is_stmt 1 view .LVU209
+ 194:Follow_Balance.c ****   }
+ 561              		.loc 1 194 41 is_stmt 0 view .LVU210
+ 562 0354 C3F8E850 		str	r5, [r3, #232]
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cceK7Nzf.s 			page 20
+
+
+ 563 0358 50E7     		b	.L2
+ 564              	.L172:
+ 565 035a 00BFAFF3 		.align	3
+ 565      0080
+ 566              	.L171:
+ 567 0360 00000000 		.word	0
+ 568 0364 0000A0C0 		.word	-1063256064
+ 569 0368 00000000 		.word	.LANCHOR0
+ 570 036c 00000000 		.word	HI226_Angle
+ 571 0370 00000000 		.word	HI226_AngleV
+ 572 0374 00000000 		.word	htim5
+ 573 0378 00000000 		.word	htim2
+ 574 037c 00000000 		.word	adc_rawvalue
+ 575 0380 00000000 		.word	.LANCHOR1
+ 576 0384 3333733F 		.word	1064514355
+ 577 0388 00CC4C3D 		.word	1028443136
+ 578 038c 00000000 		.word	DataLink_UpFrameData
+ 579 0390 00000000 		.word	motor1_PwmData
+ 580 0394 00000000 		.word	motor2_PwmData
+ 581 0398 00080240 		.word	1073874944
+ 582 039c 00000000 		.word	ws2812_data
+ 583 03a0 00000000 		.word	.LANCHOR2
+ 584 03a4 00008036 		.word	914358272
+ 585 03a8 0000A040 		.word	1084227584
+ 586 03ac 0000A0C0 		.word	-1063256064
+ 587 03b0 0000C842 		.word	1120403456
+ 588 03b4 00007042 		.word	1114636288
+ 589 03b8 00401C47 		.word	1193033728
+ 590              	.L149:
+ 212:Follow_Balance.c ****       Follow_Balance_B.Divide1);
+ 591              		.loc 1 212 5 is_stmt 1 view .LVU211
+ 212:Follow_Balance.c ****       Follow_Balance_B.Divide1);
+ 592              		.loc 1 212 35 is_stmt 0 view .LVU212
+ 593 03bc 1D46     		mov	r5, r3
+ 594 03be 93ED3B8A 		vldr.32	s16, [r3, #236]
+ 212:Follow_Balance.c ****       Follow_Balance_B.Divide1);
+ 595              		.loc 1 212 65 view .LVU213
+ 596 03c2 B74B     		ldr	r3, .L173+48
+ 597 03c4 D3ED127A 		vldr.32	s15, [r3, #72]
+ 213:Follow_Balance.c **** 
+ 598              		.loc 1 213 23 view .LVU214
+ 599 03c8 93ED137A 		vldr.32	s14, [r3, #76]
+ 212:Follow_Balance.c ****       Follow_Balance_B.Divide1);
+ 600              		.loc 1 212 73 view .LVU215
+ 601 03cc 77EE877A 		vadd.f32	s15, s15, s14
+ 212:Follow_Balance.c ****       Follow_Balance_B.Divide1);
+ 602              		.loc 1 212 16 view .LVU216
+ 603 03d0 38EE678A 		vsub.f32	s16, s16, s15
+ 604              	.LVL17:
+ 222:Follow_Balance.c ****       Follow_Balance_DW.Ki_speed * rtb_Add1_f) +
+ 605              		.loc 1 222 5 is_stmt 1 view .LVU217
+ 222:Follow_Balance.c ****       Follow_Balance_DW.Ki_speed * rtb_Add1_f) +
+ 606              		.loc 1 222 58 is_stmt 0 view .LVU218
+ 607 03d4 A6A3     		adr	r3, .L173
+ 608 03d6 D3E90023 		ldrd	r2, [r3]
+ 609 03da D5E90801 		ldrd	r0, [r5, #32]
+ 610 03de FFF7FEFF 		bl	__aeabi_dmul
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cceK7Nzf.s 			page 21
+
+
+ 611              	.LVL18:
+ 612 03e2 8046     		mov	r8, r0
+ 613 03e4 8946     		mov	r9, r1
+ 223:Follow_Balance.c ****       Follow_Balance_DW.Delay_DSTATE_h) * 0.995F;
+ 614              		.loc 1 223 34 view .LVU219
+ 615 03e6 18EE100A 		vmov	r0, s16
+ 616 03ea FFF7FEFF 		bl	__aeabi_f2d
+ 617              	.LVL19:
+ 618 03ee 0646     		mov	r6, r0
+ 619 03f0 0F46     		mov	r7, r1
+ 620 03f2 0246     		mov	r2, r0
+ 621 03f4 0B46     		mov	r3, r1
+ 622 03f6 4046     		mov	r0, r8
+ 623 03f8 4946     		mov	r1, r9
+ 624 03fa FFF7FEFF 		bl	__aeabi_dmul
+ 625              	.LVL20:
+ 222:Follow_Balance.c ****       Follow_Balance_DW.Ki_speed * rtb_Add1_f) +
+ 626              		.loc 1 222 41 view .LVU220
+ 627 03fe FFF7FEFF 		bl	__aeabi_d2f
+ 628              	.LVL21:
+ 629 0402 07EE900A 		vmov	s15, r0
+ 224:Follow_Balance.c **** 
+ 630              		.loc 1 224 24 view .LVU221
+ 631 0406 95ED137A 		vldr.32	s14, [r5, #76]
+ 223:Follow_Balance.c ****       Follow_Balance_DW.Delay_DSTATE_h) * 0.995F;
+ 632              		.loc 1 223 48 view .LVU222
+ 633 040a 77EE877A 		vadd.f32	s15, s15, s14
+ 224:Follow_Balance.c **** 
+ 634              		.loc 1 224 41 view .LVU223
+ 635 040e 9FEDA57A 		vldr.32	s14, .L173+52
+ 636 0412 67EE877A 		vmul.f32	s15, s15, s14
+ 222:Follow_Balance.c ****       Follow_Balance_DW.Ki_speed * rtb_Add1_f) +
+ 637              		.loc 1 222 38 view .LVU224
+ 638 0416 C5ED137A 		vstr.32	s15, [r5, #76]
+ 227:Follow_Balance.c ****       /* Gain: '<S43>/Gain1' */
+ 639              		.loc 1 227 5 is_stmt 1 view .LVU225
+ 227:Follow_Balance.c ****       /* Gain: '<S43>/Gain1' */
+ 640              		.loc 1 227 8 is_stmt 0 view .LVU226
+ 641 041a 9FEDA37A 		vldr.32	s14, .L173+56
+ 642 041e F4EEC77A 		vcmpe.f32	s15, s14
+ 643 0422 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 644 0426 3FDD     		ble	.L129
+ 229:Follow_Balance.c ****     } else if (Follow_Balance_DW.Delay_DSTATE_h < -1500.0F) {
+ 645              		.loc 1 229 7 is_stmt 1 view .LVU227
+ 229:Follow_Balance.c ****     } else if (Follow_Balance_DW.Delay_DSTATE_h < -1500.0F) {
+ 646              		.loc 1 229 40 is_stmt 0 view .LVU228
+ 647 0428 85ED137A 		vstr.32	s14, [r5, #76]
+ 648              	.L8:
+ 256:Follow_Balance.c ****       Follow_Balance_DW.Delay_DSTATE_h) + 0.001 * Follow_Balance_DW.Kd_speed *
+ 649              		.loc 1 256 5 is_stmt 1 view .LVU229
+ 256:Follow_Balance.c ****       Follow_Balance_DW.Delay_DSTATE_h) + 0.001 * Follow_Balance_DW.Kd_speed *
+ 650              		.loc 1 256 56 is_stmt 0 view .LVU230
+ 651 042c 9F4D     		ldr	r5, .L173+60
+ 256:Follow_Balance.c ****       Follow_Balance_DW.Delay_DSTATE_h) + 0.001 * Follow_Balance_DW.Kd_speed *
+ 652              		.loc 1 256 37 view .LVU231
+ 653 042e 90A3     		adr	r3, .L173
+ 654 0430 D3E90023 		ldrd	r2, [r3]
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cceK7Nzf.s 			page 22
+
+
+ 655 0434 D5E90601 		ldrd	r0, [r5, #24]
+ 656 0438 FFF7FEFF 		bl	__aeabi_dmul
+ 657              	.LVL22:
+ 658 043c 0246     		mov	r2, r0
+ 659 043e 0B46     		mov	r3, r1
+ 256:Follow_Balance.c ****       Follow_Balance_DW.Delay_DSTATE_h) + 0.001 * Follow_Balance_DW.Kd_speed *
+ 660              		.loc 1 256 66 view .LVU232
+ 661 0440 3046     		mov	r0, r6
+ 662 0442 3946     		mov	r1, r7
+ 663 0444 FFF7FEFF 		bl	__aeabi_dmul
+ 664              	.LVL23:
+ 665 0448 0646     		mov	r6, r0
+ 666 044a 0F46     		mov	r7, r1
+ 257:Follow_Balance.c ****       (rtb_Add1_f - Follow_Balance_DW.UD_DSTATE_e);
+ 667              		.loc 1 257 24 view .LVU233
+ 668 044c E86C     		ldr	r0, [r5, #76]	@ float
+ 669 044e FFF7FEFF 		bl	__aeabi_f2d
+ 670              	.LVL24:
+ 671 0452 0246     		mov	r2, r0
+ 672 0454 0B46     		mov	r3, r1
+ 256:Follow_Balance.c ****       Follow_Balance_DW.Delay_DSTATE_h) + 0.001 * Follow_Balance_DW.Kd_speed *
+ 673              		.loc 1 256 79 view .LVU234
+ 674 0456 3046     		mov	r0, r6
+ 675 0458 3946     		mov	r1, r7
+ 676 045a FFF7FEFF 		bl	__aeabi_dadd
+ 677              	.LVL25:
+ 678 045e 0646     		mov	r6, r0
+ 679 0460 0F46     		mov	r7, r1
+ 257:Follow_Balance.c ****       (rtb_Add1_f - Follow_Balance_DW.UD_DSTATE_e);
+ 680              		.loc 1 257 49 view .LVU235
+ 681 0462 83A3     		adr	r3, .L173
+ 682 0464 D3E90023 		ldrd	r2, [r3]
+ 683 0468 D5E90A01 		ldrd	r0, [r5, #40]
+ 684 046c FFF7FEFF 		bl	__aeabi_dmul
+ 685              	.LVL26:
+ 686 0470 8046     		mov	r8, r0
+ 687 0472 8946     		mov	r9, r1
+ 258:Follow_Balance.c **** 
+ 688              		.loc 1 258 38 view .LVU236
+ 689 0474 D5ED147A 		vldr.32	s15, [r5, #80]
+ 258:Follow_Balance.c **** 
+ 690              		.loc 1 258 19 view .LVU237
+ 691 0478 78EE677A 		vsub.f32	s15, s16, s15
+ 692 047c 17EE900A 		vmov	r0, s15
+ 693 0480 FFF7FEFF 		bl	__aeabi_f2d
+ 694              	.LVL27:
+ 695 0484 0246     		mov	r2, r0
+ 696 0486 0B46     		mov	r3, r1
+ 257:Follow_Balance.c ****       (rtb_Add1_f - Follow_Balance_DW.UD_DSTATE_e);
+ 697              		.loc 1 257 78 view .LVU238
+ 698 0488 4046     		mov	r0, r8
+ 699 048a 4946     		mov	r1, r9
+ 700 048c FFF7FEFF 		bl	__aeabi_dmul
+ 701              	.LVL28:
+ 702 0490 0246     		mov	r2, r0
+ 703 0492 0B46     		mov	r3, r1
+ 257:Follow_Balance.c ****       (rtb_Add1_f - Follow_Balance_DW.UD_DSTATE_e);
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cceK7Nzf.s 			page 23
+
+
+ 704              		.loc 1 257 41 view .LVU239
+ 705 0494 3046     		mov	r0, r6
+ 706 0496 3946     		mov	r1, r7
+ 707 0498 FFF7FEFF 		bl	__aeabi_dadd
+ 708              	.LVL29:
+ 256:Follow_Balance.c ****       Follow_Balance_DW.Delay_DSTATE_h) + 0.001 * Follow_Balance_DW.Kd_speed *
+ 709              		.loc 1 256 28 view .LVU240
+ 710 049c 804B     		ldr	r3, .L173+48
+ 711 049e C3E90201 		strd	r0, [r3, #8]
+ 266:Follow_Balance.c ****   }
+ 712              		.loc 1 266 5 is_stmt 1 view .LVU241
+ 266:Follow_Balance.c ****   }
+ 713              		.loc 1 266 35 is_stmt 0 view .LVU242
+ 714 04a2 85ED148A 		vstr.32	s16, [r5, #80]
+ 715 04a6 B0E6     		b	.L5
+ 716              	.L129:
+ 230:Follow_Balance.c ****       /* Gain: '<S43>/Gain1' */
+ 717              		.loc 1 230 12 is_stmt 1 view .LVU243
+ 230:Follow_Balance.c ****       /* Gain: '<S43>/Gain1' */
+ 718              		.loc 1 230 15 is_stmt 0 view .LVU244
+ 719 04a8 9FED817A 		vldr.32	s14, .L173+64
+ 720 04ac F4EEC77A 		vcmpe.f32	s15, s14
+ 721 04b0 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 722 04b4 BAD5     		bpl	.L8
+ 232:Follow_Balance.c ****     }
+ 723              		.loc 1 232 7 is_stmt 1 view .LVU245
+ 232:Follow_Balance.c ****     }
+ 724              		.loc 1 232 40 is_stmt 0 view .LVU246
+ 725 04b6 7D4B     		ldr	r3, .L173+60
+ 726 04b8 83ED137A 		vstr.32	s14, [r3, #76]
+ 727 04bc B6E7     		b	.L8
+ 728              	.LVL30:
+ 729              	.L150:
+ 290:Follow_Balance.c ****       3.81469727E-6F;
+ 730              		.loc 1 290 5 is_stmt 1 view .LVU247
+ 290:Follow_Balance.c ****       3.81469727E-6F;
+ 731              		.loc 1 290 35 is_stmt 0 view .LVU248
+ 732 04be 9846     		mov	r8, r3
+ 733 04c0 D3ED3D8A 		vldr.32	s17, [r3, #244]
+ 290:Follow_Balance.c ****       3.81469727E-6F;
+ 734              		.loc 1 290 46 view .LVU249
+ 735 04c4 F8EEC87A 		vcvt.f32.s32	s15, s16
+ 290:Follow_Balance.c ****       3.81469727E-6F;
+ 736              		.loc 1 290 67 view .LVU250
+ 737 04c8 9FED7A7A 		vldr.32	s14, .L173+68
+ 738 04cc 67EE877A 		vmul.f32	s15, s15, s14
+ 290:Follow_Balance.c ****       3.81469727E-6F;
+ 739              		.loc 1 290 16 view .LVU251
+ 740 04d0 78EEE78A 		vsub.f32	s17, s17, s15
+ 741              	.LVL31:
+ 300:Follow_Balance.c ****       Follow_Balance_DW.Ki_turn * rtb_Add1_f);
+ 742              		.loc 1 300 5 is_stmt 1 view .LVU252
+ 301:Follow_Balance.c **** 
+ 743              		.loc 1 301 24 is_stmt 0 view .LVU253
+ 744 04d4 D3F8F800 		ldr	r0, [r3, #248]	@ float
+ 745 04d8 FFF7FEFF 		bl	__aeabi_f2d
+ 746              	.LVL32:
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cceK7Nzf.s 			page 24
+
+
+ 300:Follow_Balance.c ****       Follow_Balance_DW.Ki_turn * rtb_Add1_f);
+ 747              		.loc 1 300 57 view .LVU254
+ 748 04dc 66A3     		adr	r3, .L173+8
+ 749 04de D3E90023 		ldrd	r2, [r3]
+ 750 04e2 FFF7FEFF 		bl	__aeabi_dmul
+ 751              	.LVL33:
+ 752 04e6 0646     		mov	r6, r0
+ 753 04e8 0F46     		mov	r7, r1
+ 301:Follow_Balance.c **** 
+ 754              		.loc 1 301 33 view .LVU255
+ 755 04ea 18EE900A 		vmov	r0, s17
+ 756 04ee FFF7FEFF 		bl	__aeabi_f2d
+ 757              	.LVL34:
+ 758 04f2 0246     		mov	r2, r0
+ 759 04f4 0B46     		mov	r3, r1
+ 760 04f6 CDE90223 		strd	r2, [sp, #8]
+ 761 04fa 3046     		mov	r0, r6
+ 762 04fc 3946     		mov	r1, r7
+ 763 04fe FFF7FEFF 		bl	__aeabi_dmul
+ 764              	.LVL35:
+ 300:Follow_Balance.c ****       Follow_Balance_DW.Ki_turn * rtb_Add1_f);
+ 765              		.loc 1 300 41 view .LVU256
+ 766 0502 FFF7FEFF 		bl	__aeabi_d2f
+ 767              	.LVL36:
+ 768 0506 FFF7FEFF 		bl	__aeabi_f2d
+ 769              	.LVL37:
+ 300:Follow_Balance.c ****       Follow_Balance_DW.Ki_turn * rtb_Add1_f);
+ 770              		.loc 1 300 38 view .LVU257
+ 771 050a D8E90223 		ldrd	r2, [r8, #8]
+ 772 050e FFF7FEFF 		bl	__aeabi_dadd
+ 773              	.LVL38:
+ 774 0512 0646     		mov	r6, r0
+ 775 0514 0F46     		mov	r7, r1
+ 776 0516 C8E90267 		strd	r6, [r8, #8]
+ 304:Follow_Balance.c ****       /* Sum: '<S47>/Add2' */
+ 777              		.loc 1 304 5 is_stmt 1 view .LVU258
+ 304:Follow_Balance.c ****       /* Sum: '<S47>/Add2' */
+ 778              		.loc 1 304 8 is_stmt 0 view .LVU259
+ 779 051a 0022     		movs	r2, #0
+ 780 051c 664B     		ldr	r3, .L173+72
+ 781 051e FFF7FEFF 		bl	__aeabi_dcmpgt
+ 782              	.LVL39:
+ 783 0522 0028     		cmp	r0, #0
+ 784 0524 37D0     		beq	.L130
+ 306:Follow_Balance.c ****     } else if (Follow_Balance_DW.Delay_DSTATE_i < -2000.0) {
+ 785              		.loc 1 306 7 is_stmt 1 view .LVU260
+ 306:Follow_Balance.c ****     } else if (Follow_Balance_DW.Delay_DSTATE_i < -2000.0) {
+ 786              		.loc 1 306 40 is_stmt 0 view .LVU261
+ 787 0526 0020     		movs	r0, #0
+ 788 0528 6349     		ldr	r1, .L173+72
+ 789 052a C8E90201 		strd	r0, [r8, #8]
+ 790              	.L13:
+ 324:Follow_Balance.c ****       3.814697265625E-6 * Follow_Balance_DW.Kd_turn + ((real_T)
+ 791              		.loc 1 324 5 is_stmt 1 view .LVU262
+ 324:Follow_Balance.c ****       3.814697265625E-6 * Follow_Balance_DW.Kd_turn + ((real_T)
+ 792              		.loc 1 324 69 is_stmt 0 view .LVU263
+ 793 052e 5C4F     		ldr	r7, .L173+48
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cceK7Nzf.s 			page 25
+
+
+ 324:Follow_Balance.c ****       3.814697265625E-6 * Follow_Balance_DW.Kd_turn + ((real_T)
+ 794              		.loc 1 324 38 view .LVU264
+ 795 0530 B7F96200 		ldrsh	r0, [r7, #98]
+ 796 0534 FFF7FEFF 		bl	__aeabi_i2d
+ 797              	.LVL40:
+ 324:Follow_Balance.c ****       3.814697265625E-6 * Follow_Balance_DW.Kd_turn + ((real_T)
+ 798              		.loc 1 324 36 view .LVU265
+ 799 0538 51A3     		adr	r3, .L173+16
+ 800 053a D3E90023 		ldrd	r2, [r3]
+ 801 053e FFF7FEFF 		bl	__aeabi_dmul
+ 802              	.LVL41:
+ 324:Follow_Balance.c ****       3.814697265625E-6 * Follow_Balance_DW.Kd_turn + ((real_T)
+ 803              		.loc 1 324 73 view .LVU266
+ 804 0542 0022     		movs	r2, #0
+ 805 0544 5D4B     		ldr	r3, .L173+76
+ 806 0546 FFF7FEFF 		bl	__aeabi_dmul
+ 807              	.LVL42:
+ 808 054a 8046     		mov	r8, r0
+ 809 054c 8946     		mov	r9, r1
+ 325:Follow_Balance.c ****       Follow_Balance_DW.Kp_turn * rtb_Add1_f + Follow_Balance_DW.Delay_DSTATE_i);
+ 810              		.loc 1 325 44 view .LVU267
+ 811 054e 574E     		ldr	r6, .L173+60
+ 812 0550 D6F8FC00 		ldr	r0, [r6, #252]	@ float
+ 813 0554 FFF7FEFF 		bl	__aeabi_f2d
+ 814              	.LVL43:
+ 815 0558 0246     		mov	r2, r0
+ 816 055a 0B46     		mov	r3, r1
+ 325:Follow_Balance.c ****       Follow_Balance_DW.Kp_turn * rtb_Add1_f + Follow_Balance_DW.Delay_DSTATE_i);
+ 817              		.loc 1 325 25 view .LVU268
+ 818 055c 4046     		mov	r0, r8
+ 819 055e 4946     		mov	r1, r9
+ 820 0560 FFF7FEFF 		bl	__aeabi_dmul
+ 821              	.LVL44:
+ 822 0564 8046     		mov	r8, r0
+ 823 0566 8946     		mov	r9, r1
+ 325:Follow_Balance.c ****       Follow_Balance_DW.Kp_turn * rtb_Add1_f + Follow_Balance_DW.Delay_DSTATE_i);
+ 824              		.loc 1 325 56 view .LVU269
+ 825 0568 D6F8F000 		ldr	r0, [r6, #240]	@ float
+ 826 056c FFF7FEFF 		bl	__aeabi_f2d
+ 827              	.LVL45:
+ 828 0570 0246     		mov	r2, r0
+ 829 0572 0B46     		mov	r3, r1
+ 326:Follow_Balance.c ****   }
+ 830              		.loc 1 326 33 view .LVU270
+ 831 0574 DDE90201 		ldrd	r0, [sp, #8]
+ 832 0578 FFF7FEFF 		bl	__aeabi_dmul
+ 833              	.LVL46:
+ 326:Follow_Balance.c ****   }
+ 834              		.loc 1 326 46 view .LVU271
+ 835 057c D6E90223 		ldrd	r2, [r6, #8]
+ 836 0580 FFF7FEFF 		bl	__aeabi_dadd
+ 837              	.LVL47:
+ 838 0584 0246     		mov	r2, r0
+ 839 0586 0B46     		mov	r3, r1
+ 325:Follow_Balance.c ****       Follow_Balance_DW.Kp_turn * rtb_Add1_f + Follow_Balance_DW.Delay_DSTATE_i);
+ 840              		.loc 1 325 53 view .LVU272
+ 841 0588 4046     		mov	r0, r8
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cceK7Nzf.s 			page 26
+
+
+ 842 058a 4946     		mov	r1, r9
+ 843 058c FFF7FEFF 		bl	__aeabi_dadd
+ 844              	.LVL48:
+ 324:Follow_Balance.c ****       3.814697265625E-6 * Follow_Balance_DW.Kd_turn + ((real_T)
+ 845              		.loc 1 324 26 view .LVU273
+ 846 0590 C7E90001 		strd	r0, [r7]
+ 847 0594 45E6     		b	.L10
+ 848              	.L130:
+ 307:Follow_Balance.c ****       /* Sum: '<S47>/Add2' */
+ 849              		.loc 1 307 12 is_stmt 1 view .LVU274
+ 307:Follow_Balance.c ****       /* Sum: '<S47>/Add2' */
+ 850              		.loc 1 307 15 is_stmt 0 view .LVU275
+ 851 0596 3CA3     		adr	r3, .L173+24
+ 852 0598 D3E90023 		ldrd	r2, [r3]
+ 853 059c 3046     		mov	r0, r6
+ 854 059e 3946     		mov	r1, r7
+ 855 05a0 FFF7FEFF 		bl	__aeabi_dcmplt
+ 856              	.LVL49:
+ 857 05a4 0028     		cmp	r0, #0
+ 858 05a6 C2D0     		beq	.L13
+ 309:Follow_Balance.c ****     }
+ 859              		.loc 1 309 7 is_stmt 1 view .LVU276
+ 309:Follow_Balance.c ****     }
+ 860              		.loc 1 309 40 is_stmt 0 view .LVU277
+ 861 05a8 404B     		ldr	r3, .L173+60
+ 862 05aa 37A1     		adr	r1, .L173+24
+ 863 05ac D1E90001 		ldrd	r0, [r1]
+ 864 05b0 C3E90201 		strd	r0, [r3, #8]
+ 865 05b4 BBE7     		b	.L13
+ 866              	.LVL50:
+ 867              	.L151:
+ 868              	.LBB2:
+ 340:Follow_Balance.c **** 
+ 869              		.loc 1 340 5 is_stmt 1 view .LVU278
+ 343:Follow_Balance.c ****       tmp = (int16_T)-Follow_Balance_B.angle[1];
+ 870              		.loc 1 343 5 view .LVU279
+ 343:Follow_Balance.c ****       tmp = (int16_T)-Follow_Balance_B.angle[1];
+ 871              		.loc 1 343 31 is_stmt 0 view .LVU280
+ 872 05b6 3A4B     		ldr	r3, .L173+48
+ 873 05b8 B3F95A00 		ldrsh	r0, [r3, #90]
+ 343:Follow_Balance.c ****       tmp = (int16_T)-Follow_Balance_B.angle[1];
+ 874              		.loc 1 343 8 view .LVU281
+ 875 05bc 0028     		cmp	r0, #0
+ 876 05be 3EDB     		blt	.L152
+ 346:Follow_Balance.c ****     }
+ 877              		.loc 1 346 11 view .LVU282
+ 878 05c0 0346     		mov	r3, r0
+ 879              	.L16:
+ 880              	.LVL51:
+ 355:Follow_Balance.c ****       rtb_Add_op = 0.0;
+ 881              		.loc 1 355 5 is_stmt 1 view .LVU283
+ 355:Follow_Balance.c ****       rtb_Add_op = 0.0;
+ 882              		.loc 1 355 8 is_stmt 0 view .LVU284
+ 883 05c2 40F6AC52 		movw	r2, #3500
+ 884 05c6 9342     		cmp	r3, r2
+ 885 05c8 3DDC     		bgt	.L91
+ 358:Follow_Balance.c ****         4.76837158203125E-7;
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cceK7Nzf.s 			page 27
+
+
+ 886              		.loc 1 358 7 is_stmt 1 view .LVU285
+ 358:Follow_Balance.c ****         4.76837158203125E-7;
+ 887              		.loc 1 358 30 is_stmt 0 view .LVU286
+ 888 05ca FFF7FEFF 		bl	__aeabi_i2d
+ 889              	.LVL52:
+ 358:Follow_Balance.c ****         4.76837158203125E-7;
+ 890              		.loc 1 358 28 view .LVU287
+ 891 05ce 30A3     		adr	r3, .L173+32
+ 892 05d0 D3E90023 		ldrd	r2, [r3]
+ 893 05d4 FFF7FEFF 		bl	__aeabi_dmul
+ 894              	.LVL53:
+ 358:Follow_Balance.c ****         4.76837158203125E-7;
+ 895              		.loc 1 358 18 view .LVU288
+ 896 05d8 0022     		movs	r2, #0
+ 897 05da 394B     		ldr	r3, .L173+80
+ 898 05dc FFF7FEFF 		bl	__aeabi_dmul
+ 899              	.LVL54:
+ 900 05e0 8046     		mov	r8, r0
+ 901 05e2 8946     		mov	r9, r1
+ 902              	.LVL55:
+ 903              	.L17:
+ 374:Follow_Balance.c ****       Follow_Balance_DW.machine_mid) - rtb_Add_op) * 70.0 + 26214.0 * (real_T)
+ 904              		.loc 1 374 5 is_stmt 1 view .LVU289
+ 374:Follow_Balance.c ****       Follow_Balance_DW.machine_mid) - rtb_Add_op) * 70.0 + 26214.0 * (real_T)
+ 905              		.loc 1 374 48 is_stmt 0 view .LVU290
+ 906 05e4 2E4F     		ldr	r7, .L173+48
+ 374:Follow_Balance.c ****       Follow_Balance_DW.machine_mid) - rtb_Add_op) * 70.0 + 26214.0 * (real_T)
+ 907              		.loc 1 374 55 view .LVU291
+ 908 05e6 314B     		ldr	r3, .L173+60
+ 909 05e8 D3E90C23 		ldrd	r2, [r3, #48]
+ 910 05ec D7E90201 		ldrd	r0, [r7, #8]
+ 911 05f0 FFF7FEFF 		bl	__aeabi_dadd
+ 912              	.LVL56:
+ 375:Follow_Balance.c ****       Follow_Balance_B.anglev[0] * 3.814697265625E-6 * 0.1;
+ 913              		.loc 1 375 38 view .LVU292
+ 914 05f4 4246     		mov	r2, r8
+ 915 05f6 4B46     		mov	r3, r9
+ 916 05f8 FFF7FEFF 		bl	__aeabi_dsub
+ 917              	.LVL57:
+ 375:Follow_Balance.c ****       Follow_Balance_B.anglev[0] * 3.814697265625E-6 * 0.1;
+ 918              		.loc 1 375 52 view .LVU293
+ 919 05fc 0022     		movs	r2, #0
+ 920 05fe 314B     		ldr	r3, .L173+84
+ 921 0600 FFF7FEFF 		bl	__aeabi_dmul
+ 922              	.LVL58:
+ 923 0604 8046     		mov	r8, r0
+ 924              	.LVL59:
+ 375:Follow_Balance.c ****       Follow_Balance_B.anglev[0] * 3.814697265625E-6 * 0.1;
+ 925              		.loc 1 375 52 view .LVU294
+ 926 0606 8946     		mov	r9, r1
+ 375:Follow_Balance.c ****       Follow_Balance_B.anglev[0] * 3.814697265625E-6 * 0.1;
+ 927              		.loc 1 375 71 view .LVU295
+ 928 0608 B7F95E00 		ldrsh	r0, [r7, #94]
+ 929 060c FFF7FEFF 		bl	__aeabi_i2d
+ 930              	.LVL60:
+ 375:Follow_Balance.c ****       Follow_Balance_B.anglev[0] * 3.814697265625E-6 * 0.1;
+ 931              		.loc 1 375 69 view .LVU296
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cceK7Nzf.s 			page 28
+
+
+ 932 0610 1BA3     		adr	r3, .L173+16
+ 933 0612 D3E90023 		ldrd	r2, [r3]
+ 934 0616 FFF7FEFF 		bl	__aeabi_dmul
+ 935              	.LVL61:
+ 376:Follow_Balance.c ****   }
+ 936              		.loc 1 376 34 view .LVU297
+ 937 061a 0022     		movs	r2, #0
+ 938 061c 274B     		ldr	r3, .L173+76
+ 939 061e FFF7FEFF 		bl	__aeabi_dmul
+ 940              	.LVL62:
+ 376:Follow_Balance.c ****   }
+ 941              		.loc 1 376 54 view .LVU298
+ 942 0622 1DA3     		adr	r3, .L173+40
+ 943 0624 D3E90023 		ldrd	r2, [r3]
+ 944 0628 FFF7FEFF 		bl	__aeabi_dmul
+ 945              	.LVL63:
+ 946 062c 0246     		mov	r2, r0
+ 947 062e 0B46     		mov	r3, r1
+ 375:Follow_Balance.c ****       Follow_Balance_B.anglev[0] * 3.814697265625E-6 * 0.1;
+ 948              		.loc 1 375 59 view .LVU299
+ 949 0630 4046     		mov	r0, r8
+ 950 0632 4946     		mov	r1, r9
+ 951 0634 FFF7FEFF 		bl	__aeabi_dadd
+ 952              	.LVL64:
+ 374:Follow_Balance.c ****       Follow_Balance_DW.machine_mid) - rtb_Add_op) * 70.0 + 26214.0 * (real_T)
+ 953              		.loc 1 374 28 view .LVU300
+ 954 0638 C7E90401 		strd	r0, [r7, #16]
+ 955 063c F7E5     		b	.L15
+ 956              	.L152:
+ 344:Follow_Balance.c ****     } else {
+ 957              		.loc 1 344 7 is_stmt 1 view .LVU301
+ 344:Follow_Balance.c ****     } else {
+ 958              		.loc 1 344 45 is_stmt 0 view .LVU302
+ 959 063e 83B2     		uxth	r3, r0
+ 344:Follow_Balance.c ****     } else {
+ 960              		.loc 1 344 13 view .LVU303
+ 961 0640 5B42     		rsbs	r3, r3, #0
+ 344:Follow_Balance.c ****     } else {
+ 962              		.loc 1 344 11 view .LVU304
+ 963 0642 1BB2     		sxth	r3, r3
+ 964              	.LVL65:
+ 344:Follow_Balance.c ****     } else {
+ 965              		.loc 1 344 11 view .LVU305
+ 966 0644 BDE7     		b	.L16
+ 967              	.L91:
+ 356:Follow_Balance.c ****     } else {
+ 968              		.loc 1 356 18 view .LVU306
+ 969 0646 4FF00008 		mov	r8, #0
+ 970 064a 4FF00009 		mov	r9, #0
+ 971 064e C9E7     		b	.L17
+ 972              	.LVL66:
+ 973              	.L18:
+ 356:Follow_Balance.c ****     } else {
+ 974              		.loc 1 356 18 view .LVU307
+ 975              	.LBE2:
+ 391:Follow_Balance.c ****   }
+ 976              		.loc 1 391 5 is_stmt 1 view .LVU308
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cceK7Nzf.s 			page 29
+
+
+ 391:Follow_Balance.c ****   }
+ 977              		.loc 1 391 38 is_stmt 0 view .LVU309
+ 978 0650 164B     		ldr	r3, .L173+60
+ 979 0652 83F80B61 		strb	r6, [r3, #267]
+ 980 0656 F3E5     		b	.L19
+ 981              	.L20:
+ 405:Follow_Balance.c ****   }
+ 982              		.loc 1 405 5 is_stmt 1 view .LVU310
+ 405:Follow_Balance.c ****   }
+ 983              		.loc 1 405 36 is_stmt 0 view .LVU311
+ 984 0658 144B     		ldr	r3, .L173+60
+ 985 065a 83F80841 		strb	r4, [r3, #264]
+ 986 065e F8E5     		b	.L21
+ 987              	.L22:
+ 419:Follow_Balance.c ****   }
+ 988              		.loc 1 419 5 is_stmt 1 view .LVU312
+ 419:Follow_Balance.c ****   }
+ 989              		.loc 1 419 38 is_stmt 0 view .LVU313
+ 990 0660 124B     		ldr	r3, .L173+60
+ 991 0662 83F809A1 		strb	r10, [r3, #265]
+ 992 0666 00E6     		b	.L23
+ 993              	.L24:
+ 433:Follow_Balance.c ****   }
+ 994              		.loc 1 433 5 is_stmt 1 view .LVU314
+ 433:Follow_Balance.c ****   }
+ 995              		.loc 1 433 39 is_stmt 0 view .LVU315
+ 996 0668 104B     		ldr	r3, .L173+60
+ 997 066a 83F80A51 		strb	r5, [r3, #266]
+ 998 066e 05E6     		b	.L25
+ 999              	.L174:
+ 1000              		.align	3
+ 1001              	.L173:
+ 1002 0670 FCA9F1D2 		.word	-755914244
+ 1003 0674 4D62503F 		.word	1062232653
+ 1004 0678 7B14AE47 		.word	1202590843
+ 1005 067c E17A843F 		.word	1065646817
+ 1006 0680 00000000 		.word	0
+ 1007 0684 8099D940 		.word	1088002432
+ 1008 0688 00000000 		.word	0
+ 1009 068c 00409FC0 		.word	-1063305216
+ 1010 0690 00000000 		.word	0
+ 1011 0694 007BD440 		.word	1087666944
+ 1012 0698 9A999999 		.word	-1717986918
+ 1013 069c 9999B93F 		.word	1069128089
+ 1014 06a0 00000000 		.word	.LANCHOR0
+ 1015 06a4 52B87E3F 		.word	1065269330
+ 1016 06a8 0080BB44 		.word	1153138688
+ 1017 06ac 00000000 		.word	.LANCHOR1
+ 1018 06b0 0080BBC4 		.word	-994344960
+ 1019 06b4 00008036 		.word	914358272
+ 1020 06b8 00409F40 		.word	1084178432
+ 1021 06bc 0000D03E 		.word	1053818880
+ 1022 06c0 0000A03E 		.word	1050673152
+ 1023 06c4 00805140 		.word	1079083008
+ 1024              	.LVL67:
+ 1025              	.L92:
+ 451:Follow_Balance.c ****   } else if (rtb_Add_op < -2048.0) {
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cceK7Nzf.s 			page 30
+
+
+ 1026              		.loc 1 451 16 view .LVU316
+ 1027 06c8 9FEDC78B 		vldr.64	d8, .L175
+ 1028              	.LVL68:
+ 1029              	.L26:
+ 454:Follow_Balance.c ****   }
+ 455:Follow_Balance.c **** 
+ 456:Follow_Balance.c ****   rtb_Add_op = floor(rtb_Add_op);
+ 1030              		.loc 1 456 3 is_stmt 1 view .LVU317
+ 1031              		.loc 1 456 16 is_stmt 0 view .LVU318
+ 1032 06cc B0EE480A 		vmov.f32	s0, s16
+ 1033 06d0 F0EE680A 		vmov.f32	s1, s17
+ 1034 06d4 FFF7FEFF 		bl	floor
+ 1035              	.LVL69:
+ 1036 06d8 B0EE408A 		vmov.f32	s16, s0
+ 1037 06dc F0EE608A 		vmov.f32	s17, s1
+ 1038              	.LVL70:
+ 457:Follow_Balance.c ****   if (rtIsNaN(rtb_Add_op)) {
+ 1039              		.loc 1 457 3 is_stmt 1 view .LVU319
+ 1040              		.loc 1 457 7 is_stmt 0 view .LVU320
+ 1041 06e0 FFF7FEFF 		bl	rtIsNaN
+ 1042              	.LVL71:
+ 1043              		.loc 1 457 6 view .LVU321
+ 1044 06e4 0028     		cmp	r0, #0
+ 1045 06e6 3BD0     		beq	.L153
+ 458:Follow_Balance.c ****     rtb_Add_op = 0.0;
+ 1046              		.loc 1 458 16 view .LVU322
+ 1047 06e8 0024     		movs	r4, #0
+ 1048 06ea 0025     		movs	r5, #0
+ 1049              	.LVL72:
+ 1050              	.L27:
+ 459:Follow_Balance.c ****   } else {
+ 460:Follow_Balance.c ****     rtb_Add_op = fmod(rtb_Add_op, 65536.0);
+ 461:Follow_Balance.c ****   }
+ 462:Follow_Balance.c **** 
+ 463:Follow_Balance.c ****   /* Switch: '<S19>/Switch1' incorporates:
+ 464:Follow_Balance.c ****    *  Saturate: '<Root>/Saturation3'
+ 465:Follow_Balance.c ****    */
+ 466:Follow_Balance.c ****   Follow_Balance_B.Saturation = (int16_T)(rtb_Add_op < 0.0 ? (int32_T)(int16_T)
+ 1051              		.loc 1 466 3 is_stmt 1 view .LVU323
+ 1052              		.loc 1 466 33 is_stmt 0 view .LVU324
+ 1053 06ec 0022     		movs	r2, #0
+ 1054 06ee 0023     		movs	r3, #0
+ 1055 06f0 2046     		mov	r0, r4
+ 1056 06f2 2946     		mov	r1, r5
+ 1057 06f4 FFF7FEFF 		bl	__aeabi_dcmplt
+ 1058              	.LVL73:
+ 1059 06f8 0028     		cmp	r0, #0
+ 1060 06fa 3CD1     		bne	.L154
+ 467:Follow_Balance.c ****     -(int16_T)(uint16_T)-rtb_Add_op : (int32_T)(int16_T)(uint16_T)rtb_Add_op);
+ 1061              		.loc 1 467 57 discriminator 2 view .LVU325
+ 1062 06fc 2046     		mov	r0, r4
+ 1063 06fe 2946     		mov	r1, r5
+ 1064 0700 FFF7FEFF 		bl	__aeabi_d2uiz
+ 1065              	.LVL74:
+ 466:Follow_Balance.c ****     -(int16_T)(uint16_T)-rtb_Add_op : (int32_T)(int16_T)(uint16_T)rtb_Add_op);
+ 1066              		.loc 1 466 33 discriminator 2 view .LVU326
+ 1067 0704 00B2     		sxth	r0, r0
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cceK7Nzf.s 			page 31
+
+
+ 1068              	.L30:
+ 466:Follow_Balance.c ****     -(int16_T)(uint16_T)-rtb_Add_op : (int32_T)(int16_T)(uint16_T)rtb_Add_op);
+ 1069              		.loc 1 466 31 discriminator 4 view .LVU327
+ 1070 0706 C24B     		ldr	r3, .L175+40
+ 1071 0708 A3F87800 		strh	r0, [r3, #120]	@ movhi
+ 468:Follow_Balance.c **** 
+ 469:Follow_Balance.c ****   /* RateLimiter: '<Root>/Rate Limiter1' */
+ 470:Follow_Balance.c ****   if (Follow_Balance_B.Saturation - Follow_Balance_DW.PrevY > 5) {
+ 1072              		.loc 1 470 3 is_stmt 1 discriminator 4 view .LVU328
+ 1073              		.loc 1 470 54 is_stmt 0 discriminator 4 view .LVU329
+ 1074 070c C14B     		ldr	r3, .L175+44
+ 1075 070e B3F90431 		ldrsh	r3, [r3, #260]
+ 1076              		.loc 1 470 35 discriminator 4 view .LVU330
+ 1077 0712 C01A     		subs	r0, r0, r3
+ 1078              		.loc 1 470 6 discriminator 4 view .LVU331
+ 1079 0714 0528     		cmp	r0, #5
+ 1080 0716 37DD     		ble	.L31
+ 471:Follow_Balance.c ****     /* Switch: '<S19>/Switch1' */
+ 472:Follow_Balance.c ****     Follow_Balance_B.Saturation = (int16_T)(Follow_Balance_DW.PrevY + 5);
+ 1081              		.loc 1 472 5 is_stmt 1 view .LVU332
+ 1082              		.loc 1 472 62 is_stmt 0 view .LVU333
+ 1083 0718 9BB2     		uxth	r3, r3
+ 1084              		.loc 1 472 69 view .LVU334
+ 1085 071a 0533     		adds	r3, r3, #5
+ 1086              		.loc 1 472 33 view .LVU335
+ 1087 071c BC4A     		ldr	r2, .L175+40
+ 1088 071e A2F87830 		strh	r3, [r2, #120]	@ movhi
+ 1089              	.L32:
+ 473:Follow_Balance.c ****   } else if (Follow_Balance_B.Saturation - Follow_Balance_DW.PrevY < -5) {
+ 474:Follow_Balance.c ****     /* Switch: '<S19>/Switch1' */
+ 475:Follow_Balance.c ****     Follow_Balance_B.Saturation = (int16_T)(Follow_Balance_DW.PrevY + -5);
+ 476:Follow_Balance.c ****   }
+ 477:Follow_Balance.c **** 
+ 478:Follow_Balance.c ****   Follow_Balance_DW.PrevY = Follow_Balance_B.Saturation;
+ 1090              		.loc 1 478 3 is_stmt 1 view .LVU336
+ 1091              		.loc 1 478 45 is_stmt 0 view .LVU337
+ 1092 0722 BB49     		ldr	r1, .L175+40
+ 1093 0724 B1F97820 		ldrsh	r2, [r1, #120]
+ 1094              		.loc 1 478 27 view .LVU338
+ 1095 0728 BA4B     		ldr	r3, .L175+44
+ 1096 072a A3F80421 		strh	r2, [r3, #260]	@ movhi
+ 479:Follow_Balance.c **** 
+ 480:Follow_Balance.c ****   /* End of RateLimiter: '<Root>/Rate Limiter1' */
+ 481:Follow_Balance.c **** 
+ 482:Follow_Balance.c ****   /* Sum: '<Root>/Add3' */
+ 483:Follow_Balance.c ****   rtb_Add_op = Follow_Balance_B.Add_h - Follow_Balance_B.Add;
+ 1097              		.loc 1 483 3 is_stmt 1 view .LVU339
+ 1098              		.loc 1 483 14 is_stmt 0 view .LVU340
+ 1099 072e D1E90023 		ldrd	r2, [r1]
+ 1100 0732 D1E90401 		ldrd	r0, [r1, #16]
+ 1101 0736 FFF7FEFF 		bl	__aeabi_dsub
+ 1102              	.LVL75:
+ 1103 073a 0246     		mov	r2, r0
+ 1104 073c 0B46     		mov	r3, r1
+ 1105 073e 43EC182B 		vmov	d8, r2, r3
+ 1106              	.LVL76:
+ 484:Follow_Balance.c **** 
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cceK7Nzf.s 			page 32
+
+
+ 485:Follow_Balance.c ****   /* Saturate: '<Root>/Saturation2' */
+ 486:Follow_Balance.c ****   if (rtb_Add_op > 2048.0) {
+ 1107              		.loc 1 486 3 is_stmt 1 view .LVU341
+ 1108              		.loc 1 486 6 is_stmt 0 view .LVU342
+ 1109 0742 0022     		movs	r2, #0
+ 1110              	.LVL77:
+ 1111              		.loc 1 486 6 view .LVU343
+ 1112 0744 B44B     		ldr	r3, .L175+48
+ 1113 0746 FFF7FEFF 		bl	__aeabi_dcmpgt
+ 1114              	.LVL78:
+ 1115 074a 30BB     		cbnz	r0, .L95
+ 487:Follow_Balance.c ****     rtb_Add_op = 2048.0;
+ 488:Follow_Balance.c ****   } else if (rtb_Add_op < -2048.0) {
+ 1116              		.loc 1 488 10 is_stmt 1 view .LVU344
+ 1117              		.loc 1 488 13 is_stmt 0 view .LVU345
+ 1118 074c 0022     		movs	r2, #0
+ 1119 074e B34B     		ldr	r3, .L175+52
+ 1120 0750 51EC180B 		vmov	r0, r1, d8
+ 1121 0754 FFF7FEFF 		bl	__aeabi_dcmplt
+ 1122              	.LVL79:
+ 1123 0758 08B3     		cbz	r0, .L33
+ 489:Follow_Balance.c ****     rtb_Add_op = -2048.0;
+ 1124              		.loc 1 489 16 view .LVU346
+ 1125 075a 9FEDA58B 		vldr.64	d8, .L175+8
+ 1126              	.LVL80:
+ 1127              		.loc 1 489 16 view .LVU347
+ 1128 075e 1EE0     		b	.L33
+ 1129              	.LVL81:
+ 1130              	.L153:
+ 460:Follow_Balance.c ****   }
+ 1131              		.loc 1 460 5 is_stmt 1 view .LVU348
+ 460:Follow_Balance.c ****   }
+ 1132              		.loc 1 460 18 is_stmt 0 view .LVU349
+ 1133 0760 9FEDA51B 		vldr.64	d1, .L175+16
+ 1134 0764 B0EE480A 		vmov.f32	s0, s16
+ 1135 0768 F0EE680A 		vmov.f32	s1, s17
+ 1136 076c FFF7FEFF 		bl	fmod
+ 1137              	.LVL82:
+ 1138 0770 55EC104B 		vmov	r4, r5, d0
+ 1139              	.LVL83:
+ 460:Follow_Balance.c ****   }
+ 1140              		.loc 1 460 18 view .LVU350
+ 1141 0774 BAE7     		b	.L27
+ 1142              	.L154:
+ 467:Follow_Balance.c **** 
+ 1143              		.loc 1 467 25 discriminator 1 view .LVU351
+ 1144 0776 2046     		mov	r0, r4
+ 1145 0778 05F10041 		add	r1, r5, #-2147483648
+ 467:Follow_Balance.c **** 
+ 1146              		.loc 1 467 15 discriminator 1 view .LVU352
+ 1147 077c FFF7FEFF 		bl	__aeabi_d2uiz
+ 1148              	.LVL84:
+ 1149 0780 80B2     		uxth	r0, r0
+ 466:Follow_Balance.c ****     -(int16_T)(uint16_T)-rtb_Add_op : (int32_T)(int16_T)(uint16_T)rtb_Add_op);
+ 1150              		.loc 1 466 71 discriminator 1 view .LVU353
+ 1151 0782 4042     		rsbs	r0, r0, #0
+ 466:Follow_Balance.c ****     -(int16_T)(uint16_T)-rtb_Add_op : (int32_T)(int16_T)(uint16_T)rtb_Add_op);
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cceK7Nzf.s 			page 33
+
+
+ 1152              		.loc 1 466 33 discriminator 1 view .LVU354
+ 1153 0784 00B2     		sxth	r0, r0
+ 1154 0786 BEE7     		b	.L30
+ 1155              	.L31:
+ 473:Follow_Balance.c ****     /* Switch: '<S19>/Switch1' */
+ 1156              		.loc 1 473 10 is_stmt 1 view .LVU355
+ 473:Follow_Balance.c ****     /* Switch: '<S19>/Switch1' */
+ 1157              		.loc 1 473 13 is_stmt 0 view .LVU356
+ 1158 0788 10F1050F 		cmn	r0, #5
+ 1159 078c C9DA     		bge	.L32
+ 475:Follow_Balance.c ****   }
+ 1160              		.loc 1 475 5 is_stmt 1 view .LVU357
+ 475:Follow_Balance.c ****   }
+ 1161              		.loc 1 475 62 is_stmt 0 view .LVU358
+ 1162 078e 9BB2     		uxth	r3, r3
+ 475:Follow_Balance.c ****   }
+ 1163              		.loc 1 475 69 view .LVU359
+ 1164 0790 053B     		subs	r3, r3, #5
+ 475:Follow_Balance.c ****   }
+ 1165              		.loc 1 475 33 view .LVU360
+ 1166 0792 9F4A     		ldr	r2, .L175+40
+ 1167 0794 A2F87830 		strh	r3, [r2, #120]	@ movhi
+ 1168 0798 C3E7     		b	.L32
+ 1169              	.LVL85:
+ 1170              	.L95:
+ 487:Follow_Balance.c ****   } else if (rtb_Add_op < -2048.0) {
+ 1171              		.loc 1 487 16 view .LVU361
+ 1172 079a 9FED938B 		vldr.64	d8, .L175
+ 1173              	.LVL86:
+ 1174              	.L33:
+ 490:Follow_Balance.c ****   }
+ 491:Follow_Balance.c **** 
+ 492:Follow_Balance.c ****   rtb_Add_op = floor(rtb_Add_op);
+ 1175              		.loc 1 492 3 is_stmt 1 view .LVU362
+ 1176              		.loc 1 492 16 is_stmt 0 view .LVU363
+ 1177 079e B0EE480A 		vmov.f32	s0, s16
+ 1178 07a2 F0EE680A 		vmov.f32	s1, s17
+ 1179 07a6 FFF7FEFF 		bl	floor
+ 1180              	.LVL87:
+ 1181 07aa B0EE408A 		vmov.f32	s16, s0
+ 1182 07ae F0EE608A 		vmov.f32	s17, s1
+ 1183              	.LVL88:
+ 493:Follow_Balance.c ****   if (rtIsNaN(rtb_Add_op)) {
+ 1184              		.loc 1 493 3 is_stmt 1 view .LVU364
+ 1185              		.loc 1 493 7 is_stmt 0 view .LVU365
+ 1186 07b2 FFF7FEFF 		bl	rtIsNaN
+ 1187              	.LVL89:
+ 1188              		.loc 1 493 6 view .LVU366
+ 1189 07b6 0028     		cmp	r0, #0
+ 1190 07b8 00F08A80 		beq	.L155
+ 494:Follow_Balance.c ****     rtb_Add_op = 0.0;
+ 1191              		.loc 1 494 16 view .LVU367
+ 1192 07bc 0024     		movs	r4, #0
+ 1193 07be 0025     		movs	r5, #0
+ 1194              	.LVL90:
+ 1195              	.L34:
+ 495:Follow_Balance.c ****   } else {
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cceK7Nzf.s 			page 34
+
+
+ 496:Follow_Balance.c ****     rtb_Add_op = fmod(rtb_Add_op, 65536.0);
+ 497:Follow_Balance.c ****   }
+ 498:Follow_Balance.c **** 
+ 499:Follow_Balance.c ****   /* Switch: '<S20>/Switch1' incorporates:
+ 500:Follow_Balance.c ****    *  Saturate: '<Root>/Saturation2'
+ 501:Follow_Balance.c ****    */
+ 502:Follow_Balance.c ****   Follow_Balance_B.Saturation1 = (int16_T)(rtb_Add_op < 0.0 ? (int32_T)(int16_T)
+ 1196              		.loc 1 502 3 is_stmt 1 view .LVU368
+ 1197              		.loc 1 502 34 is_stmt 0 view .LVU369
+ 1198 07c0 0022     		movs	r2, #0
+ 1199 07c2 0023     		movs	r3, #0
+ 1200 07c4 2046     		mov	r0, r4
+ 1201 07c6 2946     		mov	r1, r5
+ 1202 07c8 FFF7FEFF 		bl	__aeabi_dcmplt
+ 1203              	.LVL91:
+ 1204 07cc 0028     		cmp	r0, #0
+ 1205 07ce 40F08A80 		bne	.L156
+ 503:Follow_Balance.c ****     -(int16_T)(uint16_T)-rtb_Add_op : (int32_T)(int16_T)(uint16_T)rtb_Add_op);
+ 1206              		.loc 1 503 57 discriminator 2 view .LVU370
+ 1207 07d2 2046     		mov	r0, r4
+ 1208 07d4 2946     		mov	r1, r5
+ 1209 07d6 FFF7FEFF 		bl	__aeabi_d2uiz
+ 1210              	.LVL92:
+ 502:Follow_Balance.c ****     -(int16_T)(uint16_T)-rtb_Add_op : (int32_T)(int16_T)(uint16_T)rtb_Add_op);
+ 1211              		.loc 1 502 34 discriminator 2 view .LVU371
+ 1212 07da 00B2     		sxth	r0, r0
+ 1213              	.L37:
+ 502:Follow_Balance.c ****     -(int16_T)(uint16_T)-rtb_Add_op : (int32_T)(int16_T)(uint16_T)rtb_Add_op);
+ 1214              		.loc 1 502 32 discriminator 4 view .LVU372
+ 1215 07dc 8C4B     		ldr	r3, .L175+40
+ 1216 07de A3F87A00 		strh	r0, [r3, #122]	@ movhi
+ 504:Follow_Balance.c **** 
+ 505:Follow_Balance.c ****   /* RateLimiter: '<Root>/Rate Limiter2' */
+ 506:Follow_Balance.c ****   rtb_Add1_c = Follow_Balance_B.Saturation1 - Follow_Balance_DW.PrevY_c;
+ 1217              		.loc 1 506 3 is_stmt 1 discriminator 4 view .LVU373
+ 1218              		.loc 1 506 64 is_stmt 0 discriminator 4 view .LVU374
+ 1219 07e2 8C4B     		ldr	r3, .L175+44
+ 1220 07e4 B3F90631 		ldrsh	r3, [r3, #262]
+ 1221              		.loc 1 506 14 discriminator 4 view .LVU375
+ 1222 07e8 C01A     		subs	r0, r0, r3
+ 1223              	.LVL93:
+ 507:Follow_Balance.c ****   if (rtb_Add1_c > 5) {
+ 1224              		.loc 1 507 3 is_stmt 1 discriminator 4 view .LVU376
+ 1225              		.loc 1 507 6 is_stmt 0 discriminator 4 view .LVU377
+ 1226 07ea 0528     		cmp	r0, #5
+ 1227 07ec 40F38480 		ble	.L38
+ 508:Follow_Balance.c ****     /* Switch: '<S20>/Switch1' */
+ 509:Follow_Balance.c ****     Follow_Balance_B.Saturation1 = (int16_T)(Follow_Balance_DW.PrevY_c + 5);
+ 1228              		.loc 1 509 5 is_stmt 1 view .LVU378
+ 1229              		.loc 1 509 63 is_stmt 0 view .LVU379
+ 1230 07f0 9BB2     		uxth	r3, r3
+ 1231              		.loc 1 509 72 view .LVU380
+ 1232 07f2 0533     		adds	r3, r3, #5
+ 1233              		.loc 1 509 34 view .LVU381
+ 1234 07f4 864A     		ldr	r2, .L175+40
+ 1235 07f6 A2F87A30 		strh	r3, [r2, #122]	@ movhi
+ 1236              	.L39:
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cceK7Nzf.s 			page 35
+
+
+ 510:Follow_Balance.c ****   } else if (rtb_Add1_c < -5) {
+ 511:Follow_Balance.c ****     /* Switch: '<S20>/Switch1' */
+ 512:Follow_Balance.c ****     Follow_Balance_B.Saturation1 = (int16_T)(Follow_Balance_DW.PrevY_c + -5);
+ 513:Follow_Balance.c ****   }
+ 514:Follow_Balance.c **** 
+ 515:Follow_Balance.c ****   Follow_Balance_DW.PrevY_c = Follow_Balance_B.Saturation1;
+ 1237              		.loc 1 515 3 is_stmt 1 view .LVU382
+ 1238              		.loc 1 515 47 is_stmt 0 view .LVU383
+ 1239 07fa 854B     		ldr	r3, .L175+40
+ 1240 07fc B3F97A20 		ldrsh	r2, [r3, #122]
+ 1241              		.loc 1 515 29 view .LVU384
+ 1242 0800 844C     		ldr	r4, .L175+44
+ 1243              	.LVL94:
+ 1244              		.loc 1 515 29 view .LVU385
+ 1245 0802 A4F80621 		strh	r2, [r4, #262]	@ movhi
+ 516:Follow_Balance.c **** 
+ 517:Follow_Balance.c ****   /* End of RateLimiter: '<Root>/Rate Limiter2' */
+ 518:Follow_Balance.c **** 
+ 519:Follow_Balance.c ****   /* Sum: '<S31>/Add1' incorporates:
+ 520:Follow_Balance.c ****    *  DataStoreWrite: '<Root>/Data Store Write6'
+ 521:Follow_Balance.c ****    *  Delay: '<S12>/Delay One Step'
+ 522:Follow_Balance.c ****    */
+ 523:Follow_Balance.c ****   rtb_Add1_f = (real32_T)Follow_Balance_B.Saturation -
+ 1246              		.loc 1 523 3 is_stmt 1 view .LVU386
+ 1247              		.loc 1 523 42 is_stmt 0 view .LVU387
+ 1248 0806 B3F97830 		ldrsh	r3, [r3, #120]
+ 1249 080a 08EE903A 		vmov	s17, r3	@ int
+ 1250              		.loc 1 523 16 view .LVU388
+ 1251 080e F8EEE88A 		vcvt.f32.s32	s17, s17
+ 524:Follow_Balance.c ****     Follow_Balance_DW.DelayOneStep_DSTATE;
+ 1252              		.loc 1 524 22 view .LVU389
+ 1253 0812 94ED0E8A 		vldr.32	s16, [r4, #56]
+ 523:Follow_Balance.c ****     Follow_Balance_DW.DelayOneStep_DSTATE;
+ 1254              		.loc 1 523 14 view .LVU390
+ 1255 0816 78EEC88A 		vsub.f32	s17, s17, s16
+ 1256              	.LVL95:
+ 525:Follow_Balance.c **** 
+ 526:Follow_Balance.c ****   /* Sum: '<S34>/Add2' incorporates:
+ 527:Follow_Balance.c ****    *  Constant: '<S34>/Constant1'
+ 528:Follow_Balance.c ****    *  Delay: '<S34>/Delay'
+ 529:Follow_Balance.c ****    *  Gain: '<S34>/Gain'
+ 530:Follow_Balance.c ****    *  Product: '<S34>/Product3'
+ 531:Follow_Balance.c ****    */
+ 532:Follow_Balance.c ****   Follow_Balance_DW.Delay_DSTATE += (real32_T)(0.03 * rtb_Add1_f);
+ 1257              		.loc 1 532 3 is_stmt 1 view .LVU391
+ 1258              		.loc 1 532 53 is_stmt 0 view .LVU392
+ 1259 081a 18EE900A 		vmov	r0, s17
+ 1260              	.LVL96:
+ 1261              		.loc 1 532 53 view .LVU393
+ 1262 081e FFF7FEFF 		bl	__aeabi_f2d
+ 1263              	.LVL97:
+ 1264 0822 0646     		mov	r6, r0
+ 1265 0824 0F46     		mov	r7, r1
+ 1266 0826 76A3     		adr	r3, .L175+24
+ 1267 0828 D3E90023 		ldrd	r2, [r3]
+ 1268 082c FFF7FEFF 		bl	__aeabi_dmul
+ 1269              	.LVL98:
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cceK7Nzf.s 			page 36
+
+
+ 1270              		.loc 1 532 37 view .LVU394
+ 1271 0830 FFF7FEFF 		bl	__aeabi_d2f
+ 1272              	.LVL99:
+ 1273 0834 FFF7FEFF 		bl	__aeabi_f2d
+ 1274              	.LVL100:
+ 1275              		.loc 1 532 34 view .LVU395
+ 1276 0838 D4E90023 		ldrd	r2, [r4]
+ 1277 083c FFF7FEFF 		bl	__aeabi_dadd
+ 1278              	.LVL101:
+ 1279 0840 8046     		mov	r8, r0
+ 1280 0842 8946     		mov	r9, r1
+ 1281 0844 C4E90089 		strd	r8, [r4]
+ 533:Follow_Balance.c **** 
+ 534:Follow_Balance.c ****   /* Saturate: '<S34>/Saturation' */
+ 535:Follow_Balance.c ****   if (Follow_Balance_DW.Delay_DSTATE > 2000.0) {
+ 1282              		.loc 1 535 3 is_stmt 1 view .LVU396
+ 1283              		.loc 1 535 6 is_stmt 0 view .LVU397
+ 1284 0848 0022     		movs	r2, #0
+ 1285 084a 754B     		ldr	r3, .L175+56
+ 1286 084c FFF7FEFF 		bl	__aeabi_dcmpgt
+ 1287              	.LVL102:
+ 1288 0850 0028     		cmp	r0, #0
+ 1289 0852 5BD0     		beq	.L133
+ 536:Follow_Balance.c ****     /* Sum: '<S34>/Add2' */
+ 537:Follow_Balance.c ****     Follow_Balance_DW.Delay_DSTATE = 2000.0;
+ 1290              		.loc 1 537 5 is_stmt 1 view .LVU398
+ 1291              		.loc 1 537 36 is_stmt 0 view .LVU399
+ 1292 0854 0020     		movs	r0, #0
+ 1293 0856 7249     		ldr	r1, .L175+56
+ 1294 0858 C4E90001 		strd	r0, [r4]
+ 1295              	.L42:
+ 538:Follow_Balance.c ****   } else if (Follow_Balance_DW.Delay_DSTATE < -2000.0) {
+ 539:Follow_Balance.c ****     /* Sum: '<S34>/Add2' */
+ 540:Follow_Balance.c ****     Follow_Balance_DW.Delay_DSTATE = -2000.0;
+ 541:Follow_Balance.c ****   }
+ 542:Follow_Balance.c **** 
+ 543:Follow_Balance.c ****   /* End of Saturate: '<S34>/Saturation' */
+ 544:Follow_Balance.c **** 
+ 545:Follow_Balance.c ****   /* Sum: '<S31>/Add' incorporates:
+ 546:Follow_Balance.c ****    *  Constant: '<S33>/Constant2'
+ 547:Follow_Balance.c ****    *  Constant: '<S35>/Constant'
+ 548:Follow_Balance.c ****    *  Delay: '<S34>/Delay'
+ 549:Follow_Balance.c ****    *  Product: '<S33>/Product2'
+ 550:Follow_Balance.c ****    *  Product: '<S35>/Product'
+ 551:Follow_Balance.c ****    *  Sum: '<S36>/Diff'
+ 552:Follow_Balance.c ****    *  UnitDelay: '<S36>/UD'
+ 553:Follow_Balance.c ****    *
+ 554:Follow_Balance.c ****    * Block description for '<S36>/Diff':
+ 555:Follow_Balance.c ****    *
+ 556:Follow_Balance.c ****    *  Add in CPU
+ 557:Follow_Balance.c ****    *
+ 558:Follow_Balance.c ****    * Block description for '<S36>/UD':
+ 559:Follow_Balance.c ****    *
+ 560:Follow_Balance.c ****    *  Store in Global RAM
+ 561:Follow_Balance.c ****    */
+ 562:Follow_Balance.c ****   rtb_Add_op = (7.0 * rtb_Add1_f + Follow_Balance_DW.Delay_DSTATE) + (rtb_Add1_f
+ 1296              		.loc 1 562 3 is_stmt 1 view .LVU400
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cceK7Nzf.s 			page 37
+
+
+ 1297              		.loc 1 562 21 is_stmt 0 view .LVU401
+ 1298 085c 0022     		movs	r2, #0
+ 1299 085e 714B     		ldr	r3, .L175+60
+ 1300 0860 3046     		mov	r0, r6
+ 1301 0862 3946     		mov	r1, r7
+ 1302 0864 FFF7FEFF 		bl	__aeabi_dmul
+ 1303              	.LVL103:
+ 1304              		.loc 1 562 53 view .LVU402
+ 1305 0868 6A4C     		ldr	r4, .L175+44
+ 1306              		.loc 1 562 34 view .LVU403
+ 1307 086a D4E90023 		ldrd	r2, [r4]
+ 1308 086e FFF7FEFF 		bl	__aeabi_dadd
+ 1309              	.LVL104:
+ 1310 0872 0646     		mov	r6, r0
+ 1311 0874 0F46     		mov	r7, r1
+ 563:Follow_Balance.c ****     - Follow_Balance_DW.UD_DSTATE) * 5.0;
+ 1312              		.loc 1 563 24 view .LVU404
+ 1313 0876 D4ED107A 		vldr.32	s15, [r4, #64]
+ 1314              		.loc 1 563 5 view .LVU405
+ 1315 087a 78EEE77A 		vsub.f32	s15, s17, s15
+ 1316 087e 17EE900A 		vmov	r0, s15
+ 1317 0882 FFF7FEFF 		bl	__aeabi_f2d
+ 1318              	.LVL105:
+ 1319              		.loc 1 563 36 view .LVU406
+ 1320 0886 0022     		movs	r2, #0
+ 1321 0888 674B     		ldr	r3, .L175+64
+ 1322 088a FFF7FEFF 		bl	__aeabi_dmul
+ 1323              	.LVL106:
+ 1324 088e 0246     		mov	r2, r0
+ 1325 0890 0B46     		mov	r3, r1
+ 562:Follow_Balance.c ****     - Follow_Balance_DW.UD_DSTATE) * 5.0;
+ 1326              		.loc 1 562 14 view .LVU407
+ 1327 0892 3046     		mov	r0, r6
+ 1328 0894 3946     		mov	r1, r7
+ 1329 0896 FFF7FEFF 		bl	__aeabi_dadd
+ 1330              	.LVL107:
+ 1331 089a 0446     		mov	r4, r0
+ 1332 089c 0D46     		mov	r5, r1
+ 1333              	.LVL108:
+ 564:Follow_Balance.c **** 
+ 565:Follow_Balance.c ****   /* Switch: '<S19>/Switch1' incorporates:
+ 566:Follow_Balance.c ****    *  DataStoreWrite: '<Root>/Data Store Write6'
+ 567:Follow_Balance.c ****    *  Delay: '<S12>/Delay One Step'
+ 568:Follow_Balance.c ****    *  Switch: '<S19>/Switch3'
+ 569:Follow_Balance.c ****    */
+ 570:Follow_Balance.c ****   if (Follow_Balance_DW.DelayOneStep_DSTATE > -30.0F) {
+ 1334              		.loc 1 570 3 is_stmt 1 view .LVU408
+ 1335              		.loc 1 570 6 is_stmt 0 view .LVU409
+ 1336 089e FBEE0E7A 		vmov.f32	s15, #-3.0e+1
+ 1337 08a2 B4EEE78A 		vcmpe.f32	s16, s15
+ 1338 08a6 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 1339 08aa 40F3BF80 		ble	.L134
+ 571:Follow_Balance.c ****     /* Switch: '<S19>/Switch' */
+ 572:Follow_Balance.c ****     if (Follow_Balance_DW.DelayOneStep_DSTATE > 30.0F) {
+ 1340              		.loc 1 572 5 is_stmt 1 view .LVU410
+ 1341              		.loc 1 572 8 is_stmt 0 view .LVU411
+ 1342 08ae F3EE0E7A 		vmov.f32	s15, #3.0e+1
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cceK7Nzf.s 			page 38
+
+
+ 1343 08b2 B4EEE78A 		vcmpe.f32	s16, s15
+ 1344 08b6 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 1345 08ba 57DD     		ble	.L135
+ 573:Follow_Balance.c ****       /* Switch: '<S19>/Switch2' */
+ 574:Follow_Balance.c ****       if (rtb_Add_op > 0.0) {
+ 1346              		.loc 1 574 7 is_stmt 1 view .LVU412
+ 1347              		.loc 1 574 10 is_stmt 0 view .LVU413
+ 1348 08bc 0022     		movs	r2, #0
+ 1349 08be 0023     		movs	r3, #0
+ 1350 08c0 FFF7FEFF 		bl	__aeabi_dcmpgt
+ 1351              	.LVL109:
+ 1352 08c4 90BB     		cbnz	r0, .L157
+ 575:Follow_Balance.c ****         rtb_Add_op = floor(rtb_Add_op);
+ 576:Follow_Balance.c ****         if (rtIsInf(rtb_Add_op)) {
+ 577:Follow_Balance.c ****           /* Switch: '<S19>/Switch1' */
+ 578:Follow_Balance.c ****           Follow_Balance_B.Saturation = 0;
+ 579:Follow_Balance.c ****         } else {
+ 580:Follow_Balance.c ****           /* Switch: '<S19>/Switch1' */
+ 581:Follow_Balance.c ****           Follow_Balance_B.Saturation = (int16_T)(int32_T)fmod(rtb_Add_op,
+ 582:Follow_Balance.c ****             65536.0);
+ 583:Follow_Balance.c ****         }
+ 584:Follow_Balance.c ****       } else {
+ 585:Follow_Balance.c ****         /* Switch: '<S19>/Switch1' incorporates:
+ 586:Follow_Balance.c ****          *  Constant: '<S19>/Constant'
+ 587:Follow_Balance.c ****          */
+ 588:Follow_Balance.c ****         Follow_Balance_B.Saturation = 10;
+ 1353              		.loc 1 588 9 is_stmt 1 view .LVU414
+ 1354              		.loc 1 588 37 is_stmt 0 view .LVU415
+ 1355 08c6 524B     		ldr	r3, .L175+40
+ 1356 08c8 0A22     		movs	r2, #10
+ 1357 08ca A3F87820 		strh	r2, [r3, #120]	@ movhi
+ 1358 08ce B8E0     		b	.L51
+ 1359              	.LVL110:
+ 1360              	.L155:
+ 496:Follow_Balance.c ****   }
+ 1361              		.loc 1 496 5 is_stmt 1 view .LVU416
+ 496:Follow_Balance.c ****   }
+ 1362              		.loc 1 496 18 is_stmt 0 view .LVU417
+ 1363 08d0 9FED491B 		vldr.64	d1, .L175+16
+ 1364 08d4 B0EE480A 		vmov.f32	s0, s16
+ 1365 08d8 F0EE680A 		vmov.f32	s1, s17
+ 1366 08dc FFF7FEFF 		bl	fmod
+ 1367              	.LVL111:
+ 1368 08e0 55EC104B 		vmov	r4, r5, d0
+ 1369              	.LVL112:
+ 496:Follow_Balance.c ****   }
+ 1370              		.loc 1 496 18 view .LVU418
+ 1371 08e4 6CE7     		b	.L34
+ 1372              	.L156:
+ 503:Follow_Balance.c **** 
+ 1373              		.loc 1 503 25 discriminator 1 view .LVU419
+ 1374 08e6 2046     		mov	r0, r4
+ 1375 08e8 05F10041 		add	r1, r5, #-2147483648
+ 503:Follow_Balance.c **** 
+ 1376              		.loc 1 503 15 discriminator 1 view .LVU420
+ 1377 08ec FFF7FEFF 		bl	__aeabi_d2uiz
+ 1378              	.LVL113:
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cceK7Nzf.s 			page 39
+
+
+ 1379 08f0 80B2     		uxth	r0, r0
+ 502:Follow_Balance.c ****     -(int16_T)(uint16_T)-rtb_Add_op : (int32_T)(int16_T)(uint16_T)rtb_Add_op);
+ 1380              		.loc 1 502 72 discriminator 1 view .LVU421
+ 1381 08f2 4042     		rsbs	r0, r0, #0
+ 502:Follow_Balance.c ****     -(int16_T)(uint16_T)-rtb_Add_op : (int32_T)(int16_T)(uint16_T)rtb_Add_op);
+ 1382              		.loc 1 502 34 discriminator 1 view .LVU422
+ 1383 08f4 00B2     		sxth	r0, r0
+ 1384 08f6 71E7     		b	.L37
+ 1385              	.LVL114:
+ 1386              	.L38:
+ 510:Follow_Balance.c ****     /* Switch: '<S20>/Switch1' */
+ 1387              		.loc 1 510 10 is_stmt 1 view .LVU423
+ 510:Follow_Balance.c ****     /* Switch: '<S20>/Switch1' */
+ 1388              		.loc 1 510 13 is_stmt 0 view .LVU424
+ 1389 08f8 10F1050F 		cmn	r0, #5
+ 1390 08fc BFF67DAF 		bge	.L39
+ 512:Follow_Balance.c ****   }
+ 1391              		.loc 1 512 5 is_stmt 1 view .LVU425
+ 512:Follow_Balance.c ****   }
+ 1392              		.loc 1 512 63 is_stmt 0 view .LVU426
+ 1393 0900 9BB2     		uxth	r3, r3
+ 512:Follow_Balance.c ****   }
+ 1394              		.loc 1 512 72 view .LVU427
+ 1395 0902 053B     		subs	r3, r3, #5
+ 512:Follow_Balance.c ****   }
+ 1396              		.loc 1 512 34 view .LVU428
+ 1397 0904 424A     		ldr	r2, .L175+40
+ 1398 0906 A2F87A30 		strh	r3, [r2, #122]	@ movhi
+ 1399 090a 76E7     		b	.L39
+ 1400              	.LVL115:
+ 1401              	.L133:
+ 538:Follow_Balance.c ****     /* Sum: '<S34>/Add2' */
+ 1402              		.loc 1 538 10 is_stmt 1 view .LVU429
+ 538:Follow_Balance.c ****     /* Sum: '<S34>/Add2' */
+ 1403              		.loc 1 538 13 is_stmt 0 view .LVU430
+ 1404 090c 3EA3     		adr	r3, .L175+32
+ 1405 090e D3E90023 		ldrd	r2, [r3]
+ 1406 0912 4046     		mov	r0, r8
+ 1407 0914 4946     		mov	r1, r9
+ 1408 0916 FFF7FEFF 		bl	__aeabi_dcmplt
+ 1409              	.LVL116:
+ 1410 091a 0028     		cmp	r0, #0
+ 1411 091c 9ED0     		beq	.L42
+ 540:Follow_Balance.c ****   }
+ 1412              		.loc 1 540 5 is_stmt 1 view .LVU431
+ 540:Follow_Balance.c ****   }
+ 1413              		.loc 1 540 36 is_stmt 0 view .LVU432
+ 1414 091e 3D4B     		ldr	r3, .L175+44
+ 1415 0920 39A1     		adr	r1, .L175+32
+ 1416 0922 D1E90001 		ldrd	r0, [r1]
+ 1417 0926 C3E90001 		strd	r0, [r3]
+ 1418 092a 97E7     		b	.L42
+ 1419              	.LVL117:
+ 1420              	.L157:
+ 575:Follow_Balance.c ****         if (rtIsInf(rtb_Add_op)) {
+ 1421              		.loc 1 575 9 is_stmt 1 view .LVU433
+ 575:Follow_Balance.c ****         if (rtIsInf(rtb_Add_op)) {
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cceK7Nzf.s 			page 40
+
+
+ 1422              		.loc 1 575 22 is_stmt 0 view .LVU434
+ 1423 092c 45EC104B 		vmov	d0, r4, r5
+ 1424 0930 FFF7FEFF 		bl	floor
+ 1425              	.LVL118:
+ 1426 0934 B0EE409A 		vmov.f32	s18, s0
+ 1427 0938 F0EE609A 		vmov.f32	s19, s1
+ 1428              	.LVL119:
+ 576:Follow_Balance.c ****           /* Switch: '<S19>/Switch1' */
+ 1429              		.loc 1 576 9 is_stmt 1 view .LVU435
+ 576:Follow_Balance.c ****           /* Switch: '<S19>/Switch1' */
+ 1430              		.loc 1 576 13 is_stmt 0 view .LVU436
+ 1431 093c FFF7FEFF 		bl	rtIsInf
+ 1432              	.LVL120:
+ 576:Follow_Balance.c ****           /* Switch: '<S19>/Switch1' */
+ 1433              		.loc 1 576 12 view .LVU437
+ 1434 0940 20B1     		cbz	r0, .L50
+ 578:Follow_Balance.c ****         } else {
+ 1435              		.loc 1 578 11 is_stmt 1 view .LVU438
+ 578:Follow_Balance.c ****         } else {
+ 1436              		.loc 1 578 39 is_stmt 0 view .LVU439
+ 1437 0942 334B     		ldr	r3, .L175+40
+ 1438 0944 0022     		movs	r2, #0
+ 1439 0946 A3F87820 		strh	r2, [r3, #120]	@ movhi
+ 1440 094a 7AE0     		b	.L51
+ 1441              	.L50:
+ 581:Follow_Balance.c ****             65536.0);
+ 1442              		.loc 1 581 11 is_stmt 1 view .LVU440
+ 581:Follow_Balance.c ****             65536.0);
+ 1443              		.loc 1 581 59 is_stmt 0 view .LVU441
+ 1444 094c 9FED2A1B 		vldr.64	d1, .L175+16
+ 1445 0950 B0EE490A 		vmov.f32	s0, s18
+ 1446 0954 F0EE690A 		vmov.f32	s1, s19
+ 1447 0958 FFF7FEFF 		bl	fmod
+ 1448              	.LVL121:
+ 1449 095c 51EC100B 		vmov	r0, r1, d0
+ 581:Follow_Balance.c ****             65536.0);
+ 1450              		.loc 1 581 50 view .LVU442
+ 1451 0960 FFF7FEFF 		bl	__aeabi_d2iz
+ 1452              	.LVL122:
+ 581:Follow_Balance.c ****             65536.0);
+ 1453              		.loc 1 581 39 view .LVU443
+ 1454 0964 2A4B     		ldr	r3, .L175+40
+ 1455 0966 A3F87800 		strh	r0, [r3, #120]	@ movhi
+ 1456 096a 6AE0     		b	.L51
+ 1457              	.LVL123:
+ 1458              	.L135:
+ 589:Follow_Balance.c ****       }
+ 590:Follow_Balance.c **** 
+ 591:Follow_Balance.c ****       /* End of Switch: '<S19>/Switch2' */
+ 592:Follow_Balance.c ****     } else {
+ 593:Follow_Balance.c ****       rtb_Add_op = floor(rtb_Add_op);
+ 1459              		.loc 1 593 7 is_stmt 1 view .LVU444
+ 1460              		.loc 1 593 20 is_stmt 0 view .LVU445
+ 1461 096c 45EC104B 		vmov	d0, r4, r5
+ 1462 0970 FFF7FEFF 		bl	floor
+ 1463              	.LVL124:
+ 1464 0974 B0EE409A 		vmov.f32	s18, s0
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cceK7Nzf.s 			page 41
+
+
+ 1465 0978 F0EE609A 		vmov.f32	s19, s1
+ 1466              	.LVL125:
+ 594:Follow_Balance.c ****       if (rtIsNaN(rtb_Add_op) || rtIsInf(rtb_Add_op)) {
+ 1467              		.loc 1 594 7 is_stmt 1 view .LVU446
+ 1468              		.loc 1 594 11 is_stmt 0 view .LVU447
+ 1469 097c FFF7FEFF 		bl	rtIsNaN
+ 1470              	.LVL126:
+ 1471              		.loc 1 594 10 view .LVU448
+ 1472 0980 88B1     		cbz	r0, .L158
+ 595:Follow_Balance.c ****         rtb_Add_op = 0.0;
+ 1473              		.loc 1 595 20 view .LVU449
+ 1474 0982 0024     		movs	r4, #0
+ 1475 0984 0025     		movs	r5, #0
+ 1476              	.LVL127:
+ 1477              	.L52:
+ 596:Follow_Balance.c ****       } else {
+ 597:Follow_Balance.c ****         rtb_Add_op = fmod(rtb_Add_op, 65536.0);
+ 598:Follow_Balance.c ****       }
+ 599:Follow_Balance.c **** 
+ 600:Follow_Balance.c ****       /* Switch: '<S19>/Switch1' */
+ 601:Follow_Balance.c ****       Follow_Balance_B.Saturation = (int16_T)(rtb_Add_op < 0.0 ? (int32_T)
+ 1478              		.loc 1 601 7 is_stmt 1 view .LVU450
+ 1479              		.loc 1 601 37 is_stmt 0 view .LVU451
+ 1480 0986 0022     		movs	r2, #0
+ 1481 0988 0023     		movs	r3, #0
+ 1482 098a 2046     		mov	r0, r4
+ 1483 098c 2946     		mov	r1, r5
+ 1484 098e FFF7FEFF 		bl	__aeabi_dcmplt
+ 1485              	.LVL128:
+ 1486 0992 E8B9     		cbnz	r0, .L159
+ 602:Follow_Balance.c ****         (int16_T)-(int16_T)(uint16_T)-rtb_Add_op : (int32_T)(int16_T)(uint16_T)
+ 1487              		.loc 1 602 70 discriminator 2 view .LVU452
+ 1488 0994 2046     		mov	r0, r4
+ 1489 0996 2946     		mov	r1, r5
+ 1490 0998 FFF7FEFF 		bl	__aeabi_d2uiz
+ 1491              	.LVL129:
+ 601:Follow_Balance.c ****         (int16_T)-(int16_T)(uint16_T)-rtb_Add_op : (int32_T)(int16_T)(uint16_T)
+ 1492              		.loc 1 601 37 discriminator 2 view .LVU453
+ 1493 099c 03B2     		sxth	r3, r0
+ 1494              	.L55:
+ 601:Follow_Balance.c ****         (int16_T)-(int16_T)(uint16_T)-rtb_Add_op : (int32_T)(int16_T)(uint16_T)
+ 1495              		.loc 1 601 35 discriminator 4 view .LVU454
+ 1496 099e 1C4A     		ldr	r2, .L175+40
+ 1497 09a0 A2F87830 		strh	r3, [r2, #120]	@ movhi
+ 1498 09a4 4DE0     		b	.L51
+ 1499              	.LVL130:
+ 1500              	.L158:
+ 594:Follow_Balance.c ****         rtb_Add_op = 0.0;
+ 1501              		.loc 1 594 34 discriminator 1 view .LVU455
+ 1502 09a6 B0EE490A 		vmov.f32	s0, s18
+ 1503 09aa F0EE690A 		vmov.f32	s1, s19
+ 1504 09ae FFF7FEFF 		bl	rtIsInf
+ 1505              	.LVL131:
+ 594:Follow_Balance.c ****         rtb_Add_op = 0.0;
+ 1506              		.loc 1 594 31 discriminator 1 view .LVU456
+ 1507 09b2 10B1     		cbz	r0, .L160
+ 595:Follow_Balance.c ****       } else {
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cceK7Nzf.s 			page 42
+
+
+ 1508              		.loc 1 595 20 view .LVU457
+ 1509 09b4 0024     		movs	r4, #0
+ 1510 09b6 0025     		movs	r5, #0
+ 1511 09b8 E5E7     		b	.L52
+ 1512              	.L160:
+ 597:Follow_Balance.c ****       }
+ 1513              		.loc 1 597 9 is_stmt 1 view .LVU458
+ 597:Follow_Balance.c ****       }
+ 1514              		.loc 1 597 22 is_stmt 0 view .LVU459
+ 1515 09ba 9FED0F1B 		vldr.64	d1, .L175+16
+ 1516 09be B0EE490A 		vmov.f32	s0, s18
+ 1517 09c2 F0EE690A 		vmov.f32	s1, s19
+ 1518 09c6 FFF7FEFF 		bl	fmod
+ 1519              	.LVL132:
+ 1520 09ca 55EC104B 		vmov	r4, r5, d0
+ 1521              	.LVL133:
+ 597:Follow_Balance.c ****       }
+ 1522              		.loc 1 597 22 view .LVU460
+ 1523 09ce DAE7     		b	.L52
+ 1524              	.L159:
+ 1525              		.loc 1 602 38 discriminator 1 view .LVU461
+ 1526 09d0 2046     		mov	r0, r4
+ 1527 09d2 05F10041 		add	r1, r5, #-2147483648
+ 1528              		.loc 1 602 28 discriminator 1 view .LVU462
+ 1529 09d6 FFF7FEFF 		bl	__aeabi_d2uiz
+ 1530              	.LVL134:
+ 1531 09da 83B2     		uxth	r3, r0
+ 1532              		.loc 1 602 9 discriminator 1 view .LVU463
+ 1533 09dc 5B42     		rsbs	r3, r3, #0
+ 601:Follow_Balance.c ****         (int16_T)-(int16_T)(uint16_T)-rtb_Add_op : (int32_T)(int16_T)(uint16_T)
+ 1534              		.loc 1 601 37 discriminator 1 view .LVU464
+ 1535 09de 1BB2     		sxth	r3, r3
+ 1536 09e0 DDE7     		b	.L55
+ 1537              	.L176:
+ 1538 09e2 00BFAFF3 		.align	3
+ 1538      0080
+ 1539              	.L175:
+ 1540 09e8 00000000 		.word	0
+ 1541 09ec 0000A040 		.word	1084227584
+ 1542 09f0 00000000 		.word	0
+ 1543 09f4 0000A0C0 		.word	-1063256064
+ 1544 09f8 00000000 		.word	0
+ 1545 09fc 0000F040 		.word	1089470464
+ 1546 0a00 B81E85EB 		.word	-343597384
+ 1547 0a04 51B89E3F 		.word	1067366481
+ 1548 0a08 00000000 		.word	0
+ 1549 0a0c 00409FC0 		.word	-1063305216
+ 1550 0a10 00000000 		.word	.LANCHOR0
+ 1551 0a14 00000000 		.word	.LANCHOR1
+ 1552 0a18 0000A040 		.word	1084227584
+ 1553 0a1c 0000A0C0 		.word	-1063256064
+ 1554 0a20 00409F40 		.word	1084178432
+ 1555 0a24 00001C40 		.word	1075576832
+ 1556 0a28 00001440 		.word	1075052544
+ 1557              	.L134:
+ 603:Follow_Balance.c ****         rtb_Add_op);
+ 604:Follow_Balance.c ****     }
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cceK7Nzf.s 			page 43
+
+
+ 605:Follow_Balance.c **** 
+ 606:Follow_Balance.c ****     /* End of Switch: '<S19>/Switch' */
+ 607:Follow_Balance.c ****   } else if (rtb_Add_op > 0.0) {
+ 1558              		.loc 1 607 10 is_stmt 1 view .LVU465
+ 1559              		.loc 1 607 13 is_stmt 0 view .LVU466
+ 1560 0a2c 0022     		movs	r2, #0
+ 1561 0a2e 0023     		movs	r3, #0
+ 1562 0a30 FFF7FEFF 		bl	__aeabi_dcmpgt
+ 1563              	.LVL135:
+ 1564 0a34 0028     		cmp	r0, #0
+ 1565 0a36 7CD0     		beq	.L138
+ 608:Follow_Balance.c ****     /* Switch: '<S19>/Switch1' incorporates:
+ 609:Follow_Balance.c ****      *  Constant: '<S19>/Constant1'
+ 610:Follow_Balance.c ****      *  Switch: '<S19>/Switch3'
+ 611:Follow_Balance.c ****      */
+ 612:Follow_Balance.c ****     Follow_Balance_B.Saturation = -10;
+ 1566              		.loc 1 612 5 is_stmt 1 view .LVU467
+ 1567              		.loc 1 612 33 is_stmt 0 view .LVU468
+ 1568 0a38 C14B     		ldr	r3, .L177+16
+ 1569 0a3a 4FF6F672 		movw	r2, #65526
+ 1570 0a3e A3F87820 		strh	r2, [r3, #120]	@ movhi
+ 1571              	.LVL136:
+ 1572              	.L51:
+ 613:Follow_Balance.c ****   } else {
+ 614:Follow_Balance.c ****     /* Switch: '<S19>/Switch3' */
+ 615:Follow_Balance.c ****     rtb_Add_op = floor(rtb_Add_op);
+ 616:Follow_Balance.c ****     if (rtIsNaN(rtb_Add_op) || rtIsInf(rtb_Add_op)) {
+ 617:Follow_Balance.c ****       rtb_Add_op = 0.0;
+ 618:Follow_Balance.c ****     } else {
+ 619:Follow_Balance.c ****       rtb_Add_op = fmod(rtb_Add_op, 65536.0);
+ 620:Follow_Balance.c ****     }
+ 621:Follow_Balance.c **** 
+ 622:Follow_Balance.c ****     /* Switch: '<S19>/Switch1' incorporates:
+ 623:Follow_Balance.c ****      *  Switch: '<S19>/Switch3'
+ 624:Follow_Balance.c ****      */
+ 625:Follow_Balance.c ****     Follow_Balance_B.Saturation = (int16_T)(rtb_Add_op < 0.0 ? (int32_T)(int16_T)
+ 626:Follow_Balance.c ****       -(int16_T)(uint16_T)-rtb_Add_op : (int32_T)(int16_T)(uint16_T)rtb_Add_op);
+ 627:Follow_Balance.c ****   }
+ 628:Follow_Balance.c **** 
+ 629:Follow_Balance.c ****   /* End of Switch: '<S19>/Switch1' */
+ 630:Follow_Balance.c **** 
+ 631:Follow_Balance.c ****   /* Saturate: '<Root>/Saturation' */
+ 632:Follow_Balance.c ****   if (Follow_Balance_B.Saturation > 4200) {
+ 1573              		.loc 1 632 3 is_stmt 1 view .LVU469
+ 1574              		.loc 1 632 23 is_stmt 0 view .LVU470
+ 1575 0a42 BF4B     		ldr	r3, .L177+16
+ 1576 0a44 B3F97830 		ldrsh	r3, [r3, #120]
+ 1577              		.loc 1 632 6 view .LVU471
+ 1578 0a48 41F26802 		movw	r2, #4200
+ 1579 0a4c 9342     		cmp	r3, r2
+ 1580 0a4e 40F3AB80 		ble	.L62
+ 633:Follow_Balance.c ****     /* Switch: '<S19>/Switch1' incorporates:
+ 634:Follow_Balance.c ****      *  Saturate: '<Root>/Saturation'
+ 635:Follow_Balance.c ****      */
+ 636:Follow_Balance.c ****     Follow_Balance_B.Saturation = 4200;
+ 1581              		.loc 1 636 5 is_stmt 1 view .LVU472
+ 1582              		.loc 1 636 33 is_stmt 0 view .LVU473
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cceK7Nzf.s 			page 44
+
+
+ 1583 0a52 BB4B     		ldr	r3, .L177+16
+ 1584 0a54 A3F87820 		strh	r2, [r3, #120]	@ movhi
+ 1585              	.L63:
+ 637:Follow_Balance.c ****   } else if (Follow_Balance_B.Saturation < -4200) {
+ 638:Follow_Balance.c ****     /* Switch: '<S19>/Switch1' incorporates:
+ 639:Follow_Balance.c ****      *  Saturate: '<Root>/Saturation'
+ 640:Follow_Balance.c ****      */
+ 641:Follow_Balance.c ****     Follow_Balance_B.Saturation = -4200;
+ 642:Follow_Balance.c ****   }
+ 643:Follow_Balance.c **** 
+ 644:Follow_Balance.c ****   /* End of Saturate: '<Root>/Saturation' */
+ 645:Follow_Balance.c **** 
+ 646:Follow_Balance.c ****   /* Sum: '<S32>/Add1' incorporates:
+ 647:Follow_Balance.c ****    *  DataStoreWrite: '<Root>/Data Store Write7'
+ 648:Follow_Balance.c ****    *  Delay: '<S13>/Delay One Step'
+ 649:Follow_Balance.c ****    */
+ 650:Follow_Balance.c ****   rtb_Add1_a = (real32_T)Follow_Balance_B.Saturation1 -
+ 1586              		.loc 1 650 3 is_stmt 1 view .LVU474
+ 1587              		.loc 1 650 42 is_stmt 0 view .LVU475
+ 1588 0a58 B94B     		ldr	r3, .L177+16
+ 1589 0a5a B3F97A30 		ldrsh	r3, [r3, #122]
+ 1590 0a5e 08EE103A 		vmov	s16, r3	@ int
+ 1591              		.loc 1 650 16 view .LVU476
+ 1592 0a62 B8EEC88A 		vcvt.f32.s32	s16, s16
+ 651:Follow_Balance.c ****     Follow_Balance_DW.DelayOneStep_DSTATE_l;
+ 1593              		.loc 1 651 22 view .LVU477
+ 1594 0a66 B74C     		ldr	r4, .L177+20
+ 1595 0a68 94ED0F9A 		vldr.32	s18, [r4, #60]
+ 650:Follow_Balance.c ****     Follow_Balance_DW.DelayOneStep_DSTATE_l;
+ 1596              		.loc 1 650 14 view .LVU478
+ 1597 0a6c 38EE498A 		vsub.f32	s16, s16, s18
+ 1598              	.LVL137:
+ 652:Follow_Balance.c **** 
+ 653:Follow_Balance.c ****   /* Sum: '<S38>/Add2' incorporates:
+ 654:Follow_Balance.c ****    *  Constant: '<S38>/Constant1'
+ 655:Follow_Balance.c ****    *  Delay: '<S38>/Delay'
+ 656:Follow_Balance.c ****    *  Gain: '<S38>/Gain'
+ 657:Follow_Balance.c ****    *  Product: '<S38>/Product3'
+ 658:Follow_Balance.c ****    */
+ 659:Follow_Balance.c ****   Follow_Balance_DW.Delay_DSTATE_j += (real32_T)(0.03 * rtb_Add1_a);
+ 1599              		.loc 1 659 3 is_stmt 1 view .LVU479
+ 1600              		.loc 1 659 55 is_stmt 0 view .LVU480
+ 1601 0a70 18EE100A 		vmov	r0, s16
+ 1602 0a74 FFF7FEFF 		bl	__aeabi_f2d
+ 1603              	.LVL138:
+ 1604 0a78 0646     		mov	r6, r0
+ 1605 0a7a 0F46     		mov	r7, r1
+ 1606 0a7c ACA3     		adr	r3, .L177
+ 1607 0a7e D3E90023 		ldrd	r2, [r3]
+ 1608 0a82 FFF7FEFF 		bl	__aeabi_dmul
+ 1609              	.LVL139:
+ 1610              		.loc 1 659 39 view .LVU481
+ 1611 0a86 FFF7FEFF 		bl	__aeabi_d2f
+ 1612              	.LVL140:
+ 1613 0a8a 07EE900A 		vmov	s15, r0
+ 1614              		.loc 1 659 36 view .LVU482
+ 1615 0a8e 94ED117A 		vldr.32	s14, [r4, #68]
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cceK7Nzf.s 			page 45
+
+
+ 1616 0a92 77EE877A 		vadd.f32	s15, s15, s14
+ 1617 0a96 C4ED117A 		vstr.32	s15, [r4, #68]
+ 660:Follow_Balance.c **** 
+ 661:Follow_Balance.c ****   /* Saturate: '<S38>/Saturation' */
+ 662:Follow_Balance.c ****   if (Follow_Balance_DW.Delay_DSTATE_j > 2000.0F) {
+ 1618              		.loc 1 662 3 is_stmt 1 view .LVU483
+ 1619              		.loc 1 662 6 is_stmt 0 view .LVU484
+ 1620 0a9a 9FEDAB7A 		vldr.32	s14, .L177+24
+ 1621 0a9e F4EEC77A 		vcmpe.f32	s15, s14
+ 1622 0aa2 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 1623 0aa6 40F38980 		ble	.L140
+ 663:Follow_Balance.c ****     /* Sum: '<S38>/Add2' */
+ 664:Follow_Balance.c ****     Follow_Balance_DW.Delay_DSTATE_j = 2000.0F;
+ 1624              		.loc 1 664 5 is_stmt 1 view .LVU485
+ 1625              		.loc 1 664 38 is_stmt 0 view .LVU486
+ 1626 0aaa 84ED117A 		vstr.32	s14, [r4, #68]
+ 1627              	.L66:
+ 665:Follow_Balance.c ****   } else if (Follow_Balance_DW.Delay_DSTATE_j < -2000.0F) {
+ 666:Follow_Balance.c ****     /* Sum: '<S38>/Add2' */
+ 667:Follow_Balance.c ****     Follow_Balance_DW.Delay_DSTATE_j = -2000.0F;
+ 668:Follow_Balance.c ****   }
+ 669:Follow_Balance.c **** 
+ 670:Follow_Balance.c ****   /* End of Saturate: '<S38>/Saturation' */
+ 671:Follow_Balance.c **** 
+ 672:Follow_Balance.c ****   /* Sum: '<S32>/Add' incorporates:
+ 673:Follow_Balance.c ****    *  Constant: '<S37>/Constant2'
+ 674:Follow_Balance.c ****    *  Constant: '<S39>/Constant'
+ 675:Follow_Balance.c ****    *  Delay: '<S38>/Delay'
+ 676:Follow_Balance.c ****    *  Product: '<S37>/Product2'
+ 677:Follow_Balance.c ****    *  Product: '<S39>/Product'
+ 678:Follow_Balance.c ****    *  Sum: '<S40>/Diff'
+ 679:Follow_Balance.c ****    *  UnitDelay: '<S40>/UD'
+ 680:Follow_Balance.c ****    *
+ 681:Follow_Balance.c ****    * Block description for '<S40>/Diff':
+ 682:Follow_Balance.c ****    *
+ 683:Follow_Balance.c ****    *  Add in CPU
+ 684:Follow_Balance.c ****    *
+ 685:Follow_Balance.c ****    * Block description for '<S40>/UD':
+ 686:Follow_Balance.c ****    *
+ 687:Follow_Balance.c ****    *  Store in Global RAM
+ 688:Follow_Balance.c ****    */
+ 689:Follow_Balance.c ****   rtb_Add_op = (7.0 * rtb_Add1_a + Follow_Balance_DW.Delay_DSTATE_j) +
+ 1628              		.loc 1 689 3 is_stmt 1 view .LVU487
+ 1629              		.loc 1 689 21 is_stmt 0 view .LVU488
+ 1630 0aae 0022     		movs	r2, #0
+ 1631 0ab0 A64B     		ldr	r3, .L177+28
+ 1632 0ab2 3046     		mov	r0, r6
+ 1633 0ab4 3946     		mov	r1, r7
+ 1634 0ab6 FFF7FEFF 		bl	__aeabi_dmul
+ 1635              	.LVL141:
+ 1636 0aba 0446     		mov	r4, r0
+ 1637 0abc 0D46     		mov	r5, r1
+ 1638              		.loc 1 689 53 view .LVU489
+ 1639 0abe A14E     		ldr	r6, .L177+20
+ 1640 0ac0 706C     		ldr	r0, [r6, #68]	@ float
+ 1641 0ac2 FFF7FEFF 		bl	__aeabi_f2d
+ 1642              	.LVL142:
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cceK7Nzf.s 			page 46
+
+
+ 1643 0ac6 0246     		mov	r2, r0
+ 1644 0ac8 0B46     		mov	r3, r1
+ 1645              		.loc 1 689 34 view .LVU490
+ 1646 0aca 2046     		mov	r0, r4
+ 1647 0acc 2946     		mov	r1, r5
+ 1648 0ace FFF7FEFF 		bl	__aeabi_dadd
+ 1649              	.LVL143:
+ 1650 0ad2 0446     		mov	r4, r0
+ 1651 0ad4 0D46     		mov	r5, r1
+ 690:Follow_Balance.c ****     (rtb_Add1_a - Follow_Balance_DW.UD_DSTATE_a) * 4.0;
+ 1652              		.loc 1 690 36 view .LVU491
+ 1653 0ad6 D6ED127A 		vldr.32	s15, [r6, #72]
+ 1654              		.loc 1 690 17 view .LVU492
+ 1655 0ada 78EE677A 		vsub.f32	s15, s16, s15
+ 1656 0ade 17EE900A 		vmov	r0, s15
+ 1657 0ae2 FFF7FEFF 		bl	__aeabi_f2d
+ 1658              	.LVL144:
+ 1659              		.loc 1 690 50 view .LVU493
+ 1660 0ae6 0022     		movs	r2, #0
+ 1661 0ae8 994B     		ldr	r3, .L177+32
+ 1662 0aea FFF7FEFF 		bl	__aeabi_dmul
+ 1663              	.LVL145:
+ 1664 0aee 0246     		mov	r2, r0
+ 1665 0af0 0B46     		mov	r3, r1
+ 689:Follow_Balance.c ****     (rtb_Add1_a - Follow_Balance_DW.UD_DSTATE_a) * 4.0;
+ 1666              		.loc 1 689 14 view .LVU494
+ 1667 0af2 2046     		mov	r0, r4
+ 1668 0af4 2946     		mov	r1, r5
+ 1669 0af6 FFF7FEFF 		bl	__aeabi_dadd
+ 1670              	.LVL146:
+ 1671 0afa 0446     		mov	r4, r0
+ 1672 0afc 0D46     		mov	r5, r1
+ 1673              	.LVL147:
+ 691:Follow_Balance.c **** 
+ 692:Follow_Balance.c ****   /* Switch: '<S20>/Switch1' incorporates:
+ 693:Follow_Balance.c ****    *  DataStoreWrite: '<Root>/Data Store Write7'
+ 694:Follow_Balance.c ****    *  Delay: '<S13>/Delay One Step'
+ 695:Follow_Balance.c ****    *  Switch: '<S20>/Switch3'
+ 696:Follow_Balance.c ****    */
+ 697:Follow_Balance.c ****   if (Follow_Balance_DW.DelayOneStep_DSTATE_l > -30.0F) {
+ 1674              		.loc 1 697 3 is_stmt 1 view .LVU495
+ 1675              		.loc 1 697 6 is_stmt 0 view .LVU496
+ 1676 0afe FBEE0E7A 		vmov.f32	s15, #-3.0e+1
+ 1677 0b02 B4EEE79A 		vcmpe.f32	s18, s15
+ 1678 0b06 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 1679 0b0a 40F3BE80 		ble	.L141
+ 698:Follow_Balance.c ****     /* Switch: '<S20>/Switch' */
+ 699:Follow_Balance.c ****     if (Follow_Balance_DW.DelayOneStep_DSTATE_l > 30.0F) {
+ 1680              		.loc 1 699 5 is_stmt 1 view .LVU497
+ 1681              		.loc 1 699 8 is_stmt 0 view .LVU498
+ 1682 0b0e F3EE0E7A 		vmov.f32	s15, #3.0e+1
+ 1683 0b12 B4EEE79A 		vcmpe.f32	s18, s15
+ 1684 0b16 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 1685 0b1a 7BDD     		ble	.L142
+ 700:Follow_Balance.c ****       /* Switch: '<S20>/Switch2' */
+ 701:Follow_Balance.c ****       if (rtb_Add_op > 0.0) {
+ 1686              		.loc 1 701 7 is_stmt 1 view .LVU499
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cceK7Nzf.s 			page 47
+
+
+ 1687              		.loc 1 701 10 is_stmt 0 view .LVU500
+ 1688 0b1c 0022     		movs	r2, #0
+ 1689 0b1e 0023     		movs	r3, #0
+ 1690 0b20 FFF7FEFF 		bl	__aeabi_dcmpgt
+ 1691              	.LVL148:
+ 1692 0b24 0028     		cmp	r0, #0
+ 1693 0b26 55D1     		bne	.L161
+ 702:Follow_Balance.c ****         rtb_Add_op = floor(rtb_Add_op);
+ 703:Follow_Balance.c ****         if (rtIsInf(rtb_Add_op)) {
+ 704:Follow_Balance.c ****           /* Switch: '<S20>/Switch1' */
+ 705:Follow_Balance.c ****           Follow_Balance_B.Saturation1 = 0;
+ 706:Follow_Balance.c ****         } else {
+ 707:Follow_Balance.c ****           /* Switch: '<S20>/Switch1' */
+ 708:Follow_Balance.c ****           Follow_Balance_B.Saturation1 = (int16_T)(int32_T)fmod(rtb_Add_op,
+ 709:Follow_Balance.c ****             65536.0);
+ 710:Follow_Balance.c ****         }
+ 711:Follow_Balance.c ****       } else {
+ 712:Follow_Balance.c ****         /* Switch: '<S20>/Switch1' incorporates:
+ 713:Follow_Balance.c ****          *  Constant: '<S20>/Constant'
+ 714:Follow_Balance.c ****          */
+ 715:Follow_Balance.c ****         Follow_Balance_B.Saturation1 = 10;
+ 1694              		.loc 1 715 9 is_stmt 1 view .LVU501
+ 1695              		.loc 1 715 38 is_stmt 0 view .LVU502
+ 1696 0b28 854B     		ldr	r3, .L177+16
+ 1697 0b2a 0A22     		movs	r2, #10
+ 1698 0b2c A3F87A20 		strh	r2, [r3, #122]	@ movhi
+ 1699 0b30 B6E0     		b	.L75
+ 1700              	.LVL149:
+ 1701              	.L138:
+ 615:Follow_Balance.c ****     if (rtIsNaN(rtb_Add_op) || rtIsInf(rtb_Add_op)) {
+ 1702              		.loc 1 615 5 is_stmt 1 view .LVU503
+ 615:Follow_Balance.c ****     if (rtIsNaN(rtb_Add_op) || rtIsInf(rtb_Add_op)) {
+ 1703              		.loc 1 615 18 is_stmt 0 view .LVU504
+ 1704 0b32 45EC104B 		vmov	d0, r4, r5
+ 1705 0b36 FFF7FEFF 		bl	floor
+ 1706              	.LVL150:
+ 1707 0b3a B0EE409A 		vmov.f32	s18, s0
+ 1708 0b3e F0EE609A 		vmov.f32	s19, s1
+ 1709              	.LVL151:
+ 616:Follow_Balance.c ****       rtb_Add_op = 0.0;
+ 1710              		.loc 1 616 5 is_stmt 1 view .LVU505
+ 616:Follow_Balance.c ****       rtb_Add_op = 0.0;
+ 1711              		.loc 1 616 9 is_stmt 0 view .LVU506
+ 1712 0b42 FFF7FEFF 		bl	rtIsNaN
+ 1713              	.LVL152:
+ 616:Follow_Balance.c ****       rtb_Add_op = 0.0;
+ 1714              		.loc 1 616 8 view .LVU507
+ 1715 0b46 88B1     		cbz	r0, .L162
+ 617:Follow_Balance.c ****     } else {
+ 1716              		.loc 1 617 18 view .LVU508
+ 1717 0b48 0024     		movs	r4, #0
+ 1718 0b4a 0025     		movs	r5, #0
+ 1719              	.LVL153:
+ 1720              	.L58:
+ 625:Follow_Balance.c ****       -(int16_T)(uint16_T)-rtb_Add_op : (int32_T)(int16_T)(uint16_T)rtb_Add_op);
+ 1721              		.loc 1 625 5 is_stmt 1 view .LVU509
+ 625:Follow_Balance.c ****       -(int16_T)(uint16_T)-rtb_Add_op : (int32_T)(int16_T)(uint16_T)rtb_Add_op);
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cceK7Nzf.s 			page 48
+
+
+ 1722              		.loc 1 625 35 is_stmt 0 view .LVU510
+ 1723 0b4c 0022     		movs	r2, #0
+ 1724 0b4e 0023     		movs	r3, #0
+ 1725 0b50 2046     		mov	r0, r4
+ 1726 0b52 2946     		mov	r1, r5
+ 1727 0b54 FFF7FEFF 		bl	__aeabi_dcmplt
+ 1728              	.LVL154:
+ 1729 0b58 E8B9     		cbnz	r0, .L163
+ 626:Follow_Balance.c ****   }
+ 1730              		.loc 1 626 59 discriminator 2 view .LVU511
+ 1731 0b5a 2046     		mov	r0, r4
+ 1732 0b5c 2946     		mov	r1, r5
+ 1733 0b5e FFF7FEFF 		bl	__aeabi_d2uiz
+ 1734              	.LVL155:
+ 625:Follow_Balance.c ****       -(int16_T)(uint16_T)-rtb_Add_op : (int32_T)(int16_T)(uint16_T)rtb_Add_op);
+ 1735              		.loc 1 625 35 discriminator 2 view .LVU512
+ 1736 0b62 03B2     		sxth	r3, r0
+ 1737              	.L61:
+ 625:Follow_Balance.c ****       -(int16_T)(uint16_T)-rtb_Add_op : (int32_T)(int16_T)(uint16_T)rtb_Add_op);
+ 1738              		.loc 1 625 33 discriminator 4 view .LVU513
+ 1739 0b64 764A     		ldr	r2, .L177+16
+ 1740 0b66 A2F87830 		strh	r3, [r2, #120]	@ movhi
+ 1741 0b6a 6AE7     		b	.L51
+ 1742              	.LVL156:
+ 1743              	.L162:
+ 616:Follow_Balance.c ****       rtb_Add_op = 0.0;
+ 1744              		.loc 1 616 32 discriminator 1 view .LVU514
+ 1745 0b6c B0EE490A 		vmov.f32	s0, s18
+ 1746 0b70 F0EE690A 		vmov.f32	s1, s19
+ 1747 0b74 FFF7FEFF 		bl	rtIsInf
+ 1748              	.LVL157:
+ 616:Follow_Balance.c ****       rtb_Add_op = 0.0;
+ 1749              		.loc 1 616 29 discriminator 1 view .LVU515
+ 1750 0b78 10B1     		cbz	r0, .L164
+ 617:Follow_Balance.c ****     } else {
+ 1751              		.loc 1 617 18 view .LVU516
+ 1752 0b7a 0024     		movs	r4, #0
+ 1753 0b7c 0025     		movs	r5, #0
+ 1754 0b7e E5E7     		b	.L58
+ 1755              	.L164:
+ 619:Follow_Balance.c ****     }
+ 1756              		.loc 1 619 7 is_stmt 1 view .LVU517
+ 619:Follow_Balance.c ****     }
+ 1757              		.loc 1 619 20 is_stmt 0 view .LVU518
+ 1758 0b80 9FED6D1B 		vldr.64	d1, .L177+8
+ 1759 0b84 B0EE490A 		vmov.f32	s0, s18
+ 1760 0b88 F0EE690A 		vmov.f32	s1, s19
+ 1761 0b8c FFF7FEFF 		bl	fmod
+ 1762              	.LVL158:
+ 1763 0b90 55EC104B 		vmov	r4, r5, d0
+ 1764              	.LVL159:
+ 619:Follow_Balance.c ****     }
+ 1765              		.loc 1 619 20 view .LVU519
+ 1766 0b94 DAE7     		b	.L58
+ 1767              	.L163:
+ 626:Follow_Balance.c ****   }
+ 1768              		.loc 1 626 27 discriminator 1 view .LVU520
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cceK7Nzf.s 			page 49
+
+
+ 1769 0b96 2046     		mov	r0, r4
+ 1770 0b98 05F10041 		add	r1, r5, #-2147483648
+ 626:Follow_Balance.c ****   }
+ 1771              		.loc 1 626 17 discriminator 1 view .LVU521
+ 1772 0b9c FFF7FEFF 		bl	__aeabi_d2uiz
+ 1773              	.LVL160:
+ 1774 0ba0 83B2     		uxth	r3, r0
+ 625:Follow_Balance.c ****       -(int16_T)(uint16_T)-rtb_Add_op : (int32_T)(int16_T)(uint16_T)rtb_Add_op);
+ 1775              		.loc 1 625 73 discriminator 1 view .LVU522
+ 1776 0ba2 5B42     		rsbs	r3, r3, #0
+ 625:Follow_Balance.c ****       -(int16_T)(uint16_T)-rtb_Add_op : (int32_T)(int16_T)(uint16_T)rtb_Add_op);
+ 1777              		.loc 1 625 35 discriminator 1 view .LVU523
+ 1778 0ba4 1BB2     		sxth	r3, r3
+ 1779 0ba6 DDE7     		b	.L61
+ 1780              	.LVL161:
+ 1781              	.L62:
+ 637:Follow_Balance.c ****     /* Switch: '<S19>/Switch1' incorporates:
+ 1782              		.loc 1 637 10 is_stmt 1 view .LVU524
+ 637:Follow_Balance.c ****     /* Switch: '<S19>/Switch1' incorporates:
+ 1783              		.loc 1 637 13 is_stmt 0 view .LVU525
+ 1784 0ba8 6A4A     		ldr	r2, .L177+36
+ 1785 0baa 9342     		cmp	r3, r2
+ 1786 0bac BFF654AF 		bge	.L63
+ 641:Follow_Balance.c ****   }
+ 1787              		.loc 1 641 5 is_stmt 1 view .LVU526
+ 641:Follow_Balance.c ****   }
+ 1788              		.loc 1 641 33 is_stmt 0 view .LVU527
+ 1789 0bb0 634B     		ldr	r3, .L177+16
+ 1790 0bb2 4EF69872 		movw	r2, #61336
+ 1791 0bb6 A3F87820 		strh	r2, [r3, #120]	@ movhi
+ 1792 0bba 4DE7     		b	.L63
+ 1793              	.LVL162:
+ 1794              	.L140:
+ 665:Follow_Balance.c ****     /* Sum: '<S38>/Add2' */
+ 1795              		.loc 1 665 10 is_stmt 1 view .LVU528
+ 665:Follow_Balance.c ****     /* Sum: '<S38>/Add2' */
+ 1796              		.loc 1 665 13 is_stmt 0 view .LVU529
+ 1797 0bbc 9FED667A 		vldr.32	s14, .L177+40
+ 1798 0bc0 F4EEC77A 		vcmpe.f32	s15, s14
+ 1799 0bc4 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 1800 0bc8 7FF571AF 		bpl	.L66
+ 667:Follow_Balance.c ****   }
+ 1801              		.loc 1 667 5 is_stmt 1 view .LVU530
+ 667:Follow_Balance.c ****   }
+ 1802              		.loc 1 667 38 is_stmt 0 view .LVU531
+ 1803 0bcc 5D4B     		ldr	r3, .L177+20
+ 1804 0bce 83ED117A 		vstr.32	s14, [r3, #68]
+ 1805 0bd2 6CE7     		b	.L66
+ 1806              	.LVL163:
+ 1807              	.L161:
+ 702:Follow_Balance.c ****         if (rtIsInf(rtb_Add_op)) {
+ 1808              		.loc 1 702 9 is_stmt 1 view .LVU532
+ 702:Follow_Balance.c ****         if (rtIsInf(rtb_Add_op)) {
+ 1809              		.loc 1 702 22 is_stmt 0 view .LVU533
+ 1810 0bd4 45EC104B 		vmov	d0, r4, r5
+ 1811 0bd8 FFF7FEFF 		bl	floor
+ 1812              	.LVL164:
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cceK7Nzf.s 			page 50
+
+
+ 1813 0bdc B0EE409A 		vmov.f32	s18, s0
+ 1814 0be0 F0EE609A 		vmov.f32	s19, s1
+ 1815              	.LVL165:
+ 703:Follow_Balance.c ****           /* Switch: '<S20>/Switch1' */
+ 1816              		.loc 1 703 9 is_stmt 1 view .LVU534
+ 703:Follow_Balance.c ****           /* Switch: '<S20>/Switch1' */
+ 1817              		.loc 1 703 13 is_stmt 0 view .LVU535
+ 1818 0be4 FFF7FEFF 		bl	rtIsInf
+ 1819              	.LVL166:
+ 703:Follow_Balance.c ****           /* Switch: '<S20>/Switch1' */
+ 1820              		.loc 1 703 12 view .LVU536
+ 1821 0be8 20B1     		cbz	r0, .L74
+ 705:Follow_Balance.c ****         } else {
+ 1822              		.loc 1 705 11 is_stmt 1 view .LVU537
+ 705:Follow_Balance.c ****         } else {
+ 1823              		.loc 1 705 40 is_stmt 0 view .LVU538
+ 1824 0bea 554B     		ldr	r3, .L177+16
+ 1825 0bec 0022     		movs	r2, #0
+ 1826 0bee A3F87A20 		strh	r2, [r3, #122]	@ movhi
+ 1827 0bf2 55E0     		b	.L75
+ 1828              	.L74:
+ 708:Follow_Balance.c ****             65536.0);
+ 1829              		.loc 1 708 11 is_stmt 1 view .LVU539
+ 708:Follow_Balance.c ****             65536.0);
+ 1830              		.loc 1 708 60 is_stmt 0 view .LVU540
+ 1831 0bf4 9FED501B 		vldr.64	d1, .L177+8
+ 1832 0bf8 B0EE490A 		vmov.f32	s0, s18
+ 1833 0bfc F0EE690A 		vmov.f32	s1, s19
+ 1834 0c00 FFF7FEFF 		bl	fmod
+ 1835              	.LVL167:
+ 1836 0c04 51EC100B 		vmov	r0, r1, d0
+ 708:Follow_Balance.c ****             65536.0);
+ 1837              		.loc 1 708 51 view .LVU541
+ 1838 0c08 FFF7FEFF 		bl	__aeabi_d2iz
+ 1839              	.LVL168:
+ 708:Follow_Balance.c ****             65536.0);
+ 1840              		.loc 1 708 40 view .LVU542
+ 1841 0c0c 4C4B     		ldr	r3, .L177+16
+ 1842 0c0e A3F87A00 		strh	r0, [r3, #122]	@ movhi
+ 1843 0c12 45E0     		b	.L75
+ 1844              	.LVL169:
+ 1845              	.L142:
+ 716:Follow_Balance.c ****       }
+ 717:Follow_Balance.c **** 
+ 718:Follow_Balance.c ****       /* End of Switch: '<S20>/Switch2' */
+ 719:Follow_Balance.c ****     } else {
+ 720:Follow_Balance.c ****       rtb_Add_op = floor(rtb_Add_op);
+ 1846              		.loc 1 720 7 is_stmt 1 view .LVU543
+ 1847              		.loc 1 720 20 is_stmt 0 view .LVU544
+ 1848 0c14 45EC104B 		vmov	d0, r4, r5
+ 1849 0c18 FFF7FEFF 		bl	floor
+ 1850              	.LVL170:
+ 1851 0c1c B0EE409A 		vmov.f32	s18, s0
+ 1852 0c20 F0EE609A 		vmov.f32	s19, s1
+ 1853              	.LVL171:
+ 721:Follow_Balance.c ****       if (rtIsNaN(rtb_Add_op) || rtIsInf(rtb_Add_op)) {
+ 1854              		.loc 1 721 7 is_stmt 1 view .LVU545
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cceK7Nzf.s 			page 51
+
+
+ 1855              		.loc 1 721 11 is_stmt 0 view .LVU546
+ 1856 0c24 FFF7FEFF 		bl	rtIsNaN
+ 1857              	.LVL172:
+ 1858              		.loc 1 721 10 view .LVU547
+ 1859 0c28 88B1     		cbz	r0, .L165
+ 722:Follow_Balance.c ****         rtb_Add_op = 0.0;
+ 1860              		.loc 1 722 20 view .LVU548
+ 1861 0c2a 0024     		movs	r4, #0
+ 1862 0c2c 0025     		movs	r5, #0
+ 1863              	.LVL173:
+ 1864              	.L76:
+ 723:Follow_Balance.c ****       } else {
+ 724:Follow_Balance.c ****         rtb_Add_op = fmod(rtb_Add_op, 65536.0);
+ 725:Follow_Balance.c ****       }
+ 726:Follow_Balance.c **** 
+ 727:Follow_Balance.c ****       /* Switch: '<S20>/Switch1' */
+ 728:Follow_Balance.c ****       Follow_Balance_B.Saturation1 = (int16_T)(rtb_Add_op < 0.0 ? (int32_T)
+ 1865              		.loc 1 728 7 is_stmt 1 view .LVU549
+ 1866              		.loc 1 728 38 is_stmt 0 view .LVU550
+ 1867 0c2e 0022     		movs	r2, #0
+ 1868 0c30 0023     		movs	r3, #0
+ 1869 0c32 2046     		mov	r0, r4
+ 1870 0c34 2946     		mov	r1, r5
+ 1871 0c36 FFF7FEFF 		bl	__aeabi_dcmplt
+ 1872              	.LVL174:
+ 1873 0c3a E8B9     		cbnz	r0, .L166
+ 729:Follow_Balance.c ****         (int16_T)-(int16_T)(uint16_T)-rtb_Add_op : (int32_T)(int16_T)(uint16_T)
+ 1874              		.loc 1 729 70 discriminator 2 view .LVU551
+ 1875 0c3c 2046     		mov	r0, r4
+ 1876 0c3e 2946     		mov	r1, r5
+ 1877 0c40 FFF7FEFF 		bl	__aeabi_d2uiz
+ 1878              	.LVL175:
+ 728:Follow_Balance.c ****         (int16_T)-(int16_T)(uint16_T)-rtb_Add_op : (int32_T)(int16_T)(uint16_T)
+ 1879              		.loc 1 728 38 discriminator 2 view .LVU552
+ 1880 0c44 03B2     		sxth	r3, r0
+ 1881              	.L79:
+ 728:Follow_Balance.c ****         (int16_T)-(int16_T)(uint16_T)-rtb_Add_op : (int32_T)(int16_T)(uint16_T)
+ 1882              		.loc 1 728 36 discriminator 4 view .LVU553
+ 1883 0c46 3E4A     		ldr	r2, .L177+16
+ 1884 0c48 A2F87A30 		strh	r3, [r2, #122]	@ movhi
+ 1885 0c4c 28E0     		b	.L75
+ 1886              	.LVL176:
+ 1887              	.L165:
+ 721:Follow_Balance.c ****         rtb_Add_op = 0.0;
+ 1888              		.loc 1 721 34 discriminator 1 view .LVU554
+ 1889 0c4e B0EE490A 		vmov.f32	s0, s18
+ 1890 0c52 F0EE690A 		vmov.f32	s1, s19
+ 1891 0c56 FFF7FEFF 		bl	rtIsInf
+ 1892              	.LVL177:
+ 721:Follow_Balance.c ****         rtb_Add_op = 0.0;
+ 1893              		.loc 1 721 31 discriminator 1 view .LVU555
+ 1894 0c5a 10B1     		cbz	r0, .L167
+ 722:Follow_Balance.c ****       } else {
+ 1895              		.loc 1 722 20 view .LVU556
+ 1896 0c5c 0024     		movs	r4, #0
+ 1897 0c5e 0025     		movs	r5, #0
+ 1898 0c60 E5E7     		b	.L76
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cceK7Nzf.s 			page 52
+
+
+ 1899              	.L167:
+ 724:Follow_Balance.c ****       }
+ 1900              		.loc 1 724 9 is_stmt 1 view .LVU557
+ 724:Follow_Balance.c ****       }
+ 1901              		.loc 1 724 22 is_stmt 0 view .LVU558
+ 1902 0c62 9FED351B 		vldr.64	d1, .L177+8
+ 1903 0c66 B0EE490A 		vmov.f32	s0, s18
+ 1904 0c6a F0EE690A 		vmov.f32	s1, s19
+ 1905 0c6e FFF7FEFF 		bl	fmod
+ 1906              	.LVL178:
+ 1907 0c72 55EC104B 		vmov	r4, r5, d0
+ 1908              	.LVL179:
+ 724:Follow_Balance.c ****       }
+ 1909              		.loc 1 724 22 view .LVU559
+ 1910 0c76 DAE7     		b	.L76
+ 1911              	.L166:
+ 1912              		.loc 1 729 38 discriminator 1 view .LVU560
+ 1913 0c78 2046     		mov	r0, r4
+ 1914 0c7a 05F10041 		add	r1, r5, #-2147483648
+ 1915              		.loc 1 729 28 discriminator 1 view .LVU561
+ 1916 0c7e FFF7FEFF 		bl	__aeabi_d2uiz
+ 1917              	.LVL180:
+ 1918 0c82 83B2     		uxth	r3, r0
+ 1919              		.loc 1 729 9 discriminator 1 view .LVU562
+ 1920 0c84 5B42     		rsbs	r3, r3, #0
+ 728:Follow_Balance.c ****         (int16_T)-(int16_T)(uint16_T)-rtb_Add_op : (int32_T)(int16_T)(uint16_T)
+ 1921              		.loc 1 728 38 discriminator 1 view .LVU563
+ 1922 0c86 1BB2     		sxth	r3, r3
+ 1923 0c88 DDE7     		b	.L79
+ 1924              	.L141:
+ 730:Follow_Balance.c ****         rtb_Add_op);
+ 731:Follow_Balance.c ****     }
+ 732:Follow_Balance.c **** 
+ 733:Follow_Balance.c ****     /* End of Switch: '<S20>/Switch' */
+ 734:Follow_Balance.c ****   } else if (rtb_Add_op > 0.0) {
+ 1925              		.loc 1 734 10 is_stmt 1 view .LVU564
+ 1926              		.loc 1 734 13 is_stmt 0 view .LVU565
+ 1927 0c8a 0022     		movs	r2, #0
+ 1928 0c8c 0023     		movs	r3, #0
+ 1929 0c8e FFF7FEFF 		bl	__aeabi_dcmpgt
+ 1930              	.LVL181:
+ 1931 0c92 0028     		cmp	r0, #0
+ 1932 0c94 66D0     		beq	.L145
+ 735:Follow_Balance.c ****     /* Switch: '<S20>/Switch1' incorporates:
+ 736:Follow_Balance.c ****      *  Constant: '<S20>/Constant1'
+ 737:Follow_Balance.c ****      *  Switch: '<S20>/Switch3'
+ 738:Follow_Balance.c ****      */
+ 739:Follow_Balance.c ****     Follow_Balance_B.Saturation1 = -10;
+ 1933              		.loc 1 739 5 is_stmt 1 view .LVU566
+ 1934              		.loc 1 739 34 is_stmt 0 view .LVU567
+ 1935 0c96 2A4B     		ldr	r3, .L177+16
+ 1936 0c98 4FF6F672 		movw	r2, #65526
+ 1937 0c9c A3F87A20 		strh	r2, [r3, #122]	@ movhi
+ 1938              	.LVL182:
+ 1939              	.L75:
+ 740:Follow_Balance.c ****   } else {
+ 741:Follow_Balance.c ****     /* Switch: '<S20>/Switch3' */
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cceK7Nzf.s 			page 53
+
+
+ 742:Follow_Balance.c ****     rtb_Add_op = floor(rtb_Add_op);
+ 743:Follow_Balance.c ****     if (rtIsNaN(rtb_Add_op) || rtIsInf(rtb_Add_op)) {
+ 744:Follow_Balance.c ****       rtb_Add_op = 0.0;
+ 745:Follow_Balance.c ****     } else {
+ 746:Follow_Balance.c ****       rtb_Add_op = fmod(rtb_Add_op, 65536.0);
+ 747:Follow_Balance.c ****     }
+ 748:Follow_Balance.c **** 
+ 749:Follow_Balance.c ****     /* Switch: '<S20>/Switch1' incorporates:
+ 750:Follow_Balance.c ****      *  Switch: '<S20>/Switch3'
+ 751:Follow_Balance.c ****      */
+ 752:Follow_Balance.c ****     Follow_Balance_B.Saturation1 = (int16_T)(rtb_Add_op < 0.0 ? (int32_T)
+ 753:Follow_Balance.c ****       (int16_T)-(int16_T)(uint16_T)-rtb_Add_op : (int32_T)(int16_T)(uint16_T)
+ 754:Follow_Balance.c ****       rtb_Add_op);
+ 755:Follow_Balance.c ****   }
+ 756:Follow_Balance.c **** 
+ 757:Follow_Balance.c ****   /* End of Switch: '<S20>/Switch1' */
+ 758:Follow_Balance.c **** 
+ 759:Follow_Balance.c ****   /* Saturate: '<Root>/Saturation1' */
+ 760:Follow_Balance.c ****   if (Follow_Balance_B.Saturation1 > 4200) {
+ 1940              		.loc 1 760 3 is_stmt 1 view .LVU568
+ 1941              		.loc 1 760 23 is_stmt 0 view .LVU569
+ 1942 0ca0 274B     		ldr	r3, .L177+16
+ 1943 0ca2 B3F97A30 		ldrsh	r3, [r3, #122]
+ 1944              		.loc 1 760 6 view .LVU570
+ 1945 0ca6 41F26802 		movw	r2, #4200
+ 1946 0caa 9342     		cmp	r3, r2
+ 1947 0cac 40F39580 		ble	.L86
+ 761:Follow_Balance.c ****     /* Switch: '<S20>/Switch1' incorporates:
+ 762:Follow_Balance.c ****      *  Saturate: '<Root>/Saturation1'
+ 763:Follow_Balance.c ****      */
+ 764:Follow_Balance.c ****     Follow_Balance_B.Saturation1 = 4200;
+ 1948              		.loc 1 764 5 is_stmt 1 view .LVU571
+ 1949              		.loc 1 764 34 is_stmt 0 view .LVU572
+ 1950 0cb0 234B     		ldr	r3, .L177+16
+ 1951 0cb2 A3F87A20 		strh	r2, [r3, #122]	@ movhi
+ 1952              	.L87:
+ 765:Follow_Balance.c ****   } else if (Follow_Balance_B.Saturation1 < -4200) {
+ 766:Follow_Balance.c ****     /* Switch: '<S20>/Switch1' incorporates:
+ 767:Follow_Balance.c ****      *  Saturate: '<Root>/Saturation1'
+ 768:Follow_Balance.c ****      */
+ 769:Follow_Balance.c ****     Follow_Balance_B.Saturation1 = -4200;
+ 770:Follow_Balance.c ****   }
+ 771:Follow_Balance.c **** 
+ 772:Follow_Balance.c ****   /* End of Saturate: '<Root>/Saturation1' */
+ 773:Follow_Balance.c **** 
+ 774:Follow_Balance.c ****   /* S-Function (StackLiteDualDrive_DataLinkInput): '<Root>/DataLinkInput' */
+ 775:Follow_Balance.c **** 
+ 776:Follow_Balance.c ****   /*Input Data*/
+ 777:Follow_Balance.c ****   Follow_Balance_B.DataLinkInput_o1= DataLink_RevData[0].point;
+ 1953              		.loc 1 777 3 is_stmt 1 view .LVU573
+ 1954              		.loc 1 777 57 is_stmt 0 view .LVU574
+ 1955 0cb6 294A     		ldr	r2, .L177+44
+ 1956 0cb8 1668     		ldr	r6, [r2]	@ unaligned
+ 1957              		.loc 1 777 36 view .LVU575
+ 1958 0cba 214B     		ldr	r3, .L177+16
+ 1959 0cbc 1E62     		str	r6, [r3, #32]	@ float
+ 778:Follow_Balance.c ****   Follow_Balance_B.DataLinkInput_o2= DataLink_RevData[1].point;
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cceK7Nzf.s 			page 54
+
+
+ 1960              		.loc 1 778 3 is_stmt 1 view .LVU576
+ 1961              		.loc 1 778 57 is_stmt 0 view .LVU577
+ 1962 0cbe 5568     		ldr	r5, [r2, #4]	@ unaligned
+ 1963              		.loc 1 778 36 view .LVU578
+ 1964 0cc0 5D62     		str	r5, [r3, #36]	@ float
+ 779:Follow_Balance.c ****   Follow_Balance_B.DataLinkInput_o3= DataLink_RevData[2].point;
+ 1965              		.loc 1 779 3 is_stmt 1 view .LVU579
+ 1966              		.loc 1 779 57 is_stmt 0 view .LVU580
+ 1967 0cc2 9468     		ldr	r4, [r2, #8]	@ unaligned
+ 1968              		.loc 1 779 36 view .LVU581
+ 1969 0cc4 9C62     		str	r4, [r3, #40]	@ float
+ 780:Follow_Balance.c ****   Follow_Balance_B.DataLinkInput_o4= DataLink_RevData[3].point;
+ 1970              		.loc 1 780 3 is_stmt 1 view .LVU582
+ 1971              		.loc 1 780 57 is_stmt 0 view .LVU583
+ 1972 0cc6 D068     		ldr	r0, [r2, #12]	@ unaligned
+ 1973              		.loc 1 780 36 view .LVU584
+ 1974 0cc8 D862     		str	r0, [r3, #44]	@ float
+ 781:Follow_Balance.c ****   Follow_Balance_B.DataLinkInput_o5= DataLink_RevData[4].point;
+ 1975              		.loc 1 781 3 is_stmt 1 view .LVU585
+ 1976              		.loc 1 781 57 is_stmt 0 view .LVU586
+ 1977 0cca 1169     		ldr	r1, [r2, #16]	@ unaligned
+ 1978              		.loc 1 781 36 view .LVU587
+ 1979 0ccc 1963     		str	r1, [r3, #48]	@ float
+ 782:Follow_Balance.c ****   Follow_Balance_B.DataLinkInput_o6= DataLink_RevData[5].point;
+ 1980              		.loc 1 782 3 is_stmt 1 view .LVU588
+ 1981              		.loc 1 782 57 is_stmt 0 view .LVU589
+ 1982 0cce 5169     		ldr	r1, [r2, #20]	@ unaligned
+ 1983              		.loc 1 782 36 view .LVU590
+ 1984 0cd0 5963     		str	r1, [r3, #52]	@ float
+ 783:Follow_Balance.c ****   Follow_Balance_B.DataLinkInput_o7= DataLink_RevData[6].point;
+ 1985              		.loc 1 783 3 is_stmt 1 view .LVU591
+ 1986              		.loc 1 783 57 is_stmt 0 view .LVU592
+ 1987 0cd2 9169     		ldr	r1, [r2, #24]	@ unaligned
+ 1988              		.loc 1 783 36 view .LVU593
+ 1989 0cd4 9963     		str	r1, [r3, #56]	@ float
+ 784:Follow_Balance.c ****   Follow_Balance_B.DataLinkInput_o8= DataLink_RevData[7].point;
+ 1990              		.loc 1 784 3 is_stmt 1 view .LVU594
+ 1991              		.loc 1 784 57 is_stmt 0 view .LVU595
+ 1992 0cd6 D169     		ldr	r1, [r2, #28]	@ unaligned
+ 1993              		.loc 1 784 36 view .LVU596
+ 1994 0cd8 D963     		str	r1, [r3, #60]	@ float
+ 785:Follow_Balance.c ****   Follow_Balance_B.DataLinkInput_o9= DataLink_RevData[8].point;
+ 1995              		.loc 1 785 3 is_stmt 1 view .LVU597
+ 1996              		.loc 1 785 57 is_stmt 0 view .LVU598
+ 1997 0cda 116A     		ldr	r1, [r2, #32]	@ unaligned
+ 1998              		.loc 1 785 36 view .LVU599
+ 1999 0cdc 1964     		str	r1, [r3, #64]	@ float
+ 786:Follow_Balance.c ****   Follow_Balance_B.DataLinkInput_o10= DataLink_RevData[9].point;
+ 2000              		.loc 1 786 3 is_stmt 1 view .LVU600
+ 2001              		.loc 1 786 58 is_stmt 0 view .LVU601
+ 2002 0cde 526A     		ldr	r2, [r2, #36]	@ unaligned
+ 2003              		.loc 1 786 37 view .LVU602
+ 2004 0ce0 5A64     		str	r2, [r3, #68]	@ float
+ 787:Follow_Balance.c **** 
+ 788:Follow_Balance.c ****   /* DataStoreWrite: '<Root>/Data Store Write1' */
+ 789:Follow_Balance.c ****   Follow_Balance_DW.Kp_turn = Follow_Balance_B.DataLinkInput_o1;
+ 2005              		.loc 1 789 3 is_stmt 1 view .LVU603
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cceK7Nzf.s 			page 55
+
+
+ 2006              		.loc 1 789 29 is_stmt 0 view .LVU604
+ 2007 0ce2 1849     		ldr	r1, .L177+20
+ 2008 0ce4 C1F8F060 		str	r6, [r1, #240]	@ float
+ 790:Follow_Balance.c **** 
+ 791:Follow_Balance.c ****   /* DataStoreWrite: '<Root>/Data Store Write2' */
+ 792:Follow_Balance.c ****   Follow_Balance_DW.Ki_turn = Follow_Balance_B.DataLinkInput_o2;
+ 2009              		.loc 1 792 3 is_stmt 1 view .LVU605
+ 2010              		.loc 1 792 29 is_stmt 0 view .LVU606
+ 2011 0ce8 C1F8F850 		str	r5, [r1, #248]	@ float
+ 793:Follow_Balance.c **** 
+ 794:Follow_Balance.c ****   /* DataStoreWrite: '<Root>/Data Store Write3' */
+ 795:Follow_Balance.c ****   Follow_Balance_DW.Kd_turn = Follow_Balance_B.DataLinkInput_o3;
+ 2012              		.loc 1 795 3 is_stmt 1 view .LVU607
+ 2013              		.loc 1 795 29 is_stmt 0 view .LVU608
+ 2014 0cec C1F8FC40 		str	r4, [r1, #252]	@ float
+ 796:Follow_Balance.c **** 
+ 797:Follow_Balance.c ****   /* DataStoreWrite: '<Root>/Data Store Write4' */
+ 798:Follow_Balance.c ****   Follow_Balance_DW.tar_yaw = Follow_Balance_B.DataLinkInput_o4;
+ 2015              		.loc 1 798 3 is_stmt 1 view .LVU609
+ 2016              		.loc 1 798 29 is_stmt 0 view .LVU610
+ 2017 0cf0 C1F8F400 		str	r0, [r1, #244]	@ float
+ 799:Follow_Balance.c **** 
+ 800:Follow_Balance.c ****   /* Outputs for Enabled SubSystem: '<Root>/yaw to zero' incorporates:
+ 801:Follow_Balance.c ****    *  EnablePort: '<S18>/Enable'
+ 802:Follow_Balance.c ****    */
+ 803:Follow_Balance.c ****   /* Logic: '<Root>/AND' incorporates:
+ 804:Follow_Balance.c ****    *  Constant: '<S5>/Constant'
+ 805:Follow_Balance.c ****    *  DataStoreRead: '<Root>/Data Store Read11'
+ 806:Follow_Balance.c ****    *  DataStoreRead: '<Root>/Data Store Read12'
+ 807:Follow_Balance.c ****    *  RelationalOperator: '<S5>/Compare'
+ 808:Follow_Balance.c ****    *  RelationalOperator: '<S6>/Compare'
+ 809:Follow_Balance.c ****    */
+ 810:Follow_Balance.c ****   if ((Follow_Balance_DW.flag == 0.0) && (angle_yaw != 0)) {
+ 2018              		.loc 1 810 3 is_stmt 1 view .LVU611
+ 2019              		.loc 1 810 6 is_stmt 0 view .LVU612
+ 2020 0cf4 0022     		movs	r2, #0
+ 2021 0cf6 0023     		movs	r3, #0
+ 2022 0cf8 D1E90401 		ldrd	r0, [r1, #16]
+ 2023 0cfc FFF7FEFF 		bl	__aeabi_dcmpeq
+ 2024              	.LVL183:
+ 2025 0d00 50B1     		cbz	r0, .L88
+ 2026              		.loc 1 810 39 discriminator 1 view .LVU613
+ 2027 0d02 BBF1000F 		cmp	fp, #0
+ 2028 0d06 07D0     		beq	.L88
+ 811:Follow_Balance.c ****     /* DataStoreWrite: '<S18>/Data Store Write1' incorporates:
+ 812:Follow_Balance.c ****      *  Constant: '<S18>/Constant'
+ 813:Follow_Balance.c ****      */
+ 814:Follow_Balance.c ****     Follow_Balance_DW.flag = 1.0;
+ 2029              		.loc 1 814 5 is_stmt 1 view .LVU614
+ 2030              		.loc 1 814 28 is_stmt 0 view .LVU615
+ 2031 0d08 0E4B     		ldr	r3, .L177+20
+ 2032 0d0a 0020     		movs	r0, #0
+ 2033 0d0c 1449     		ldr	r1, .L177+48
+ 2034 0d0e C3E90401 		strd	r0, [r3, #16]
+ 815:Follow_Balance.c **** 
+ 816:Follow_Balance.c ****     /* DataStoreWrite: '<S18>/Data Store Write' incorporates:
+ 817:Follow_Balance.c ****      *  DataStoreRead: '<S18>/Data Store Read'
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cceK7Nzf.s 			page 56
+
+
+ 818:Follow_Balance.c ****      */
+ 819:Follow_Balance.c ****     Follow_Balance_DW.yaw_begin = angle_yaw;
+ 2035              		.loc 1 819 5 is_stmt 1 view .LVU616
+ 2036              		.loc 1 819 33 is_stmt 0 view .LVU617
+ 2037 0d12 019A     		ldr	r2, [sp, #4]
+ 2038 0d14 C3F80021 		str	r2, [r3, #256]
+ 2039              	.L88:
+ 820:Follow_Balance.c ****   }
+ 821:Follow_Balance.c **** 
+ 822:Follow_Balance.c ****   /* End of Logic: '<Root>/AND' */
+ 823:Follow_Balance.c ****   /* End of Outputs for SubSystem: '<Root>/yaw to zero' */
+ 824:Follow_Balance.c **** 
+ 825:Follow_Balance.c ****   /* Update for UnitDelay: '<S36>/UD'
+ 826:Follow_Balance.c ****    *
+ 827:Follow_Balance.c ****    * Block description for '<S36>/UD':
+ 828:Follow_Balance.c ****    *
+ 829:Follow_Balance.c ****    *  Store in Global RAM
+ 830:Follow_Balance.c ****    */
+ 831:Follow_Balance.c ****   Follow_Balance_DW.UD_DSTATE = rtb_Add1_f;
+ 2040              		.loc 1 831 3 is_stmt 1 view .LVU618
+ 2041              		.loc 1 831 31 is_stmt 0 view .LVU619
+ 2042 0d18 0A4B     		ldr	r3, .L177+20
+ 2043 0d1a C3ED108A 		vstr.32	s17, [r3, #64]
+ 832:Follow_Balance.c **** 
+ 833:Follow_Balance.c ****   /* Update for UnitDelay: '<S40>/UD'
+ 834:Follow_Balance.c ****    *
+ 835:Follow_Balance.c ****    * Block description for '<S40>/UD':
+ 836:Follow_Balance.c ****    *
+ 837:Follow_Balance.c ****    *  Store in Global RAM
+ 838:Follow_Balance.c ****    */
+ 839:Follow_Balance.c ****   Follow_Balance_DW.UD_DSTATE_a = rtb_Add1_a;
+ 2044              		.loc 1 839 3 is_stmt 1 view .LVU620
+ 2045              		.loc 1 839 33 is_stmt 0 view .LVU621
+ 2046 0d1e 83ED128A 		vstr.32	s16, [r3, #72]
+ 840:Follow_Balance.c **** }
+ 2047              		.loc 1 840 1 view .LVU622
+ 2048 0d22 05B0     		add	sp, sp, #20
+ 2049              	.LCFI3:
+ 2050              		.cfi_remember_state
+ 2051              		.cfi_def_cfa_offset 52
+ 2052              		@ sp needed
+ 2053 0d24 BDEC048B 		vldm	sp!, {d8-d9}
+ 2054              	.LCFI4:
+ 2055              		.cfi_restore 82
+ 2056              		.cfi_restore 83
+ 2057              		.cfi_restore 80
+ 2058              		.cfi_restore 81
+ 2059              		.cfi_def_cfa_offset 36
+ 2060              	.LVL184:
+ 2061              		.loc 1 840 1 view .LVU623
+ 2062 0d28 BDE8F08F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 2063              	.LVL185:
+ 2064              	.L178:
+ 2065              		.loc 1 840 1 view .LVU624
+ 2066 0d2c AFF30080 		.align	3
+ 2067              	.L177:
+ 2068 0d30 B81E85EB 		.word	-343597384
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cceK7Nzf.s 			page 57
+
+
+ 2069 0d34 51B89E3F 		.word	1067366481
+ 2070 0d38 00000000 		.word	0
+ 2071 0d3c 0000F040 		.word	1089470464
+ 2072 0d40 00000000 		.word	.LANCHOR0
+ 2073 0d44 00000000 		.word	.LANCHOR1
+ 2074 0d48 0000FA44 		.word	1157234688
+ 2075 0d4c 00001C40 		.word	1075576832
+ 2076 0d50 00001040 		.word	1074790400
+ 2077 0d54 98EFFFFF 		.word	-4200
+ 2078 0d58 0000FAC4 		.word	-990248960
+ 2079 0d5c 00000000 		.word	DataLink_RevData
+ 2080 0d60 0000F03F 		.word	1072693248
+ 2081              	.LVL186:
+ 2082              	.L145:
+ 2083              	.LCFI5:
+ 2084              		.cfi_restore_state
+ 742:Follow_Balance.c ****     if (rtIsNaN(rtb_Add_op) || rtIsInf(rtb_Add_op)) {
+ 2085              		.loc 1 742 5 is_stmt 1 view .LVU625
+ 742:Follow_Balance.c ****     if (rtIsNaN(rtb_Add_op) || rtIsInf(rtb_Add_op)) {
+ 2086              		.loc 1 742 18 is_stmt 0 view .LVU626
+ 2087 0d64 45EC104B 		vmov	d0, r4, r5
+ 2088 0d68 FFF7FEFF 		bl	floor
+ 2089              	.LVL187:
+ 2090 0d6c B0EE409A 		vmov.f32	s18, s0
+ 2091 0d70 F0EE609A 		vmov.f32	s19, s1
+ 2092              	.LVL188:
+ 743:Follow_Balance.c ****       rtb_Add_op = 0.0;
+ 2093              		.loc 1 743 5 is_stmt 1 view .LVU627
+ 743:Follow_Balance.c ****       rtb_Add_op = 0.0;
+ 2094              		.loc 1 743 9 is_stmt 0 view .LVU628
+ 2095 0d74 FFF7FEFF 		bl	rtIsNaN
+ 2096              	.LVL189:
+ 743:Follow_Balance.c ****       rtb_Add_op = 0.0;
+ 2097              		.loc 1 743 8 view .LVU629
+ 2098 0d78 88B1     		cbz	r0, .L168
+ 744:Follow_Balance.c ****     } else {
+ 2099              		.loc 1 744 18 view .LVU630
+ 2100 0d7a 0024     		movs	r4, #0
+ 2101 0d7c 0025     		movs	r5, #0
+ 2102              	.LVL190:
+ 2103              	.L82:
+ 752:Follow_Balance.c ****       (int16_T)-(int16_T)(uint16_T)-rtb_Add_op : (int32_T)(int16_T)(uint16_T)
+ 2104              		.loc 1 752 5 is_stmt 1 view .LVU631
+ 752:Follow_Balance.c ****       (int16_T)-(int16_T)(uint16_T)-rtb_Add_op : (int32_T)(int16_T)(uint16_T)
+ 2105              		.loc 1 752 36 is_stmt 0 view .LVU632
+ 2106 0d7e 0022     		movs	r2, #0
+ 2107 0d80 0023     		movs	r3, #0
+ 2108 0d82 2046     		mov	r0, r4
+ 2109 0d84 2946     		mov	r1, r5
+ 2110 0d86 FFF7FEFF 		bl	__aeabi_dcmplt
+ 2111              	.LVL191:
+ 2112 0d8a E8B9     		cbnz	r0, .L169
+ 753:Follow_Balance.c ****       rtb_Add_op);
+ 2113              		.loc 1 753 68 discriminator 2 view .LVU633
+ 2114 0d8c 2046     		mov	r0, r4
+ 2115 0d8e 2946     		mov	r1, r5
+ 2116 0d90 FFF7FEFF 		bl	__aeabi_d2uiz
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cceK7Nzf.s 			page 58
+
+
+ 2117              	.LVL192:
+ 752:Follow_Balance.c ****       (int16_T)-(int16_T)(uint16_T)-rtb_Add_op : (int32_T)(int16_T)(uint16_T)
+ 2118              		.loc 1 752 36 discriminator 2 view .LVU634
+ 2119 0d94 03B2     		sxth	r3, r0
+ 2120              	.L85:
+ 752:Follow_Balance.c ****       (int16_T)-(int16_T)(uint16_T)-rtb_Add_op : (int32_T)(int16_T)(uint16_T)
+ 2121              		.loc 1 752 34 discriminator 4 view .LVU635
+ 2122 0d96 184A     		ldr	r2, .L179+8
+ 2123 0d98 A2F87A30 		strh	r3, [r2, #122]	@ movhi
+ 2124 0d9c 80E7     		b	.L75
+ 2125              	.LVL193:
+ 2126              	.L168:
+ 743:Follow_Balance.c ****       rtb_Add_op = 0.0;
+ 2127              		.loc 1 743 32 discriminator 1 view .LVU636
+ 2128 0d9e B0EE490A 		vmov.f32	s0, s18
+ 2129 0da2 F0EE690A 		vmov.f32	s1, s19
+ 2130 0da6 FFF7FEFF 		bl	rtIsInf
+ 2131              	.LVL194:
+ 743:Follow_Balance.c ****       rtb_Add_op = 0.0;
+ 2132              		.loc 1 743 29 discriminator 1 view .LVU637
+ 2133 0daa 10B1     		cbz	r0, .L170
+ 744:Follow_Balance.c ****     } else {
+ 2134              		.loc 1 744 18 view .LVU638
+ 2135 0dac 0024     		movs	r4, #0
+ 2136 0dae 0025     		movs	r5, #0
+ 2137 0db0 E5E7     		b	.L82
+ 2138              	.L170:
+ 746:Follow_Balance.c ****     }
+ 2139              		.loc 1 746 7 is_stmt 1 view .LVU639
+ 746:Follow_Balance.c ****     }
+ 2140              		.loc 1 746 20 is_stmt 0 view .LVU640
+ 2141 0db2 9FED0F1B 		vldr.64	d1, .L179
+ 2142 0db6 B0EE490A 		vmov.f32	s0, s18
+ 2143 0dba F0EE690A 		vmov.f32	s1, s19
+ 2144 0dbe FFF7FEFF 		bl	fmod
+ 2145              	.LVL195:
+ 2146 0dc2 55EC104B 		vmov	r4, r5, d0
+ 2147              	.LVL196:
+ 746:Follow_Balance.c ****     }
+ 2148              		.loc 1 746 20 view .LVU641
+ 2149 0dc6 DAE7     		b	.L82
+ 2150              	.L169:
+ 753:Follow_Balance.c ****       rtb_Add_op);
+ 2151              		.loc 1 753 36 discriminator 1 view .LVU642
+ 2152 0dc8 2046     		mov	r0, r4
+ 2153 0dca 05F10041 		add	r1, r5, #-2147483648
+ 753:Follow_Balance.c ****       rtb_Add_op);
+ 2154              		.loc 1 753 26 discriminator 1 view .LVU643
+ 2155 0dce FFF7FEFF 		bl	__aeabi_d2uiz
+ 2156              	.LVL197:
+ 2157 0dd2 83B2     		uxth	r3, r0
+ 753:Follow_Balance.c ****       rtb_Add_op);
+ 2158              		.loc 1 753 7 discriminator 1 view .LVU644
+ 2159 0dd4 5B42     		rsbs	r3, r3, #0
+ 752:Follow_Balance.c ****       (int16_T)-(int16_T)(uint16_T)-rtb_Add_op : (int32_T)(int16_T)(uint16_T)
+ 2160              		.loc 1 752 36 discriminator 1 view .LVU645
+ 2161 0dd6 1BB2     		sxth	r3, r3
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cceK7Nzf.s 			page 59
+
+
+ 2162 0dd8 DDE7     		b	.L85
+ 2163              	.LVL198:
+ 2164              	.L86:
+ 765:Follow_Balance.c ****     /* Switch: '<S20>/Switch1' incorporates:
+ 2165              		.loc 1 765 10 is_stmt 1 view .LVU646
+ 765:Follow_Balance.c ****     /* Switch: '<S20>/Switch1' incorporates:
+ 2166              		.loc 1 765 13 is_stmt 0 view .LVU647
+ 2167 0dda 084A     		ldr	r2, .L179+12
+ 2168 0ddc 9342     		cmp	r3, r2
+ 2169 0dde BFF66AAF 		bge	.L87
+ 769:Follow_Balance.c ****   }
+ 2170              		.loc 1 769 5 is_stmt 1 view .LVU648
+ 769:Follow_Balance.c ****   }
+ 2171              		.loc 1 769 34 is_stmt 0 view .LVU649
+ 2172 0de2 054B     		ldr	r3, .L179+8
+ 2173 0de4 4EF69872 		movw	r2, #61336
+ 2174 0de8 A3F87A20 		strh	r2, [r3, #122]	@ movhi
+ 2175 0dec 63E7     		b	.L87
+ 2176              	.L180:
+ 2177 0dee 00BF     		.align	3
+ 2178              	.L179:
+ 2179 0df0 00000000 		.word	0
+ 2180 0df4 0000F040 		.word	1089470464
+ 2181 0df8 00000000 		.word	.LANCHOR0
+ 2182 0dfc 98EFFFFF 		.word	-4200
+ 2183              		.cfi_endproc
+ 2184              	.LFE238:
+ 2186              		.section	.text.Follow_Balance_initialize,"ax",%progbits
+ 2187              		.align	1
+ 2188              		.global	Follow_Balance_initialize
+ 2189              		.syntax unified
+ 2190              		.thumb
+ 2191              		.thumb_func
+ 2193              	Follow_Balance_initialize:
+ 2194              	.LFB239:
+ 841:Follow_Balance.c **** 
+ 842:Follow_Balance.c **** /* Model initialize function */
+ 843:Follow_Balance.c **** void Follow_Balance_initialize(void)
+ 844:Follow_Balance.c **** {
+ 2195              		.loc 1 844 1 is_stmt 1 view -0
+ 2196              		.cfi_startproc
+ 2197              		@ args = 0, pretend = 0, frame = 0
+ 2198              		@ frame_needed = 0, uses_anonymous_args = 0
+ 2199 0000 08B5     		push	{r3, lr}
+ 2200              	.LCFI6:
+ 2201              		.cfi_def_cfa_offset 8
+ 2202              		.cfi_offset 3, -8
+ 2203              		.cfi_offset 14, -4
+ 845:Follow_Balance.c ****   /* Registration code */
+ 846:Follow_Balance.c **** 
+ 847:Follow_Balance.c ****   /* initialize non-finites */
+ 848:Follow_Balance.c ****   rt_InitInfAndNaN(sizeof(real_T));
+ 2204              		.loc 1 848 3 view .LVU651
+ 2205 0002 0820     		movs	r0, #8
+ 2206 0004 FFF7FEFF 		bl	rt_InitInfAndNaN
+ 2207              	.LVL199:
+ 849:Follow_Balance.c **** }
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cceK7Nzf.s 			page 60
+
+
+ 2208              		.loc 1 849 1 is_stmt 0 view .LVU652
+ 2209 0008 08BD     		pop	{r3, pc}
+ 2210              		.cfi_endproc
+ 2211              	.LFE239:
+ 2213              		.section	.text.Follow_Balance_terminate,"ax",%progbits
+ 2214              		.align	1
+ 2215              		.global	Follow_Balance_terminate
+ 2216              		.syntax unified
+ 2217              		.thumb
+ 2218              		.thumb_func
+ 2220              	Follow_Balance_terminate:
+ 2221              	.LFB240:
+ 850:Follow_Balance.c **** 
+ 851:Follow_Balance.c **** /* Model terminate function */
+ 852:Follow_Balance.c **** void Follow_Balance_terminate(void)
+ 853:Follow_Balance.c **** {
+ 2222              		.loc 1 853 1 is_stmt 1 view -0
+ 2223              		.cfi_startproc
+ 2224              		@ args = 0, pretend = 0, frame = 0
+ 2225              		@ frame_needed = 0, uses_anonymous_args = 0
+ 2226              		@ link register save eliminated.
+ 854:Follow_Balance.c ****   /* (no terminate code required) */
+ 855:Follow_Balance.c **** }
+ 2227              		.loc 1 855 1 view .LVU654
+ 2228 0000 7047     		bx	lr
+ 2229              		.cfi_endproc
+ 2230              	.LFE240:
+ 2232              		.global	Follow_Balance_M
+ 2233              		.global	Follow_Balance_DW
+ 2234              		.global	Follow_Balance_B
+ 2235              		.global	Follow_Balance_U8GND
+ 2236              		.section	.bss.Follow_Balance_B,"aw",%nobits
+ 2237              		.align	3
+ 2238              		.set	.LANCHOR0,. + 0
+ 2241              	Follow_Balance_B:
+ 2242 0000 00000000 		.space	128
+ 2242      00000000 
+ 2242      00000000 
+ 2242      00000000 
+ 2242      00000000 
+ 2243              		.section	.bss.Follow_Balance_DW,"aw",%nobits
+ 2244              		.align	3
+ 2245              		.set	.LANCHOR1,. + 0
+ 2248              	Follow_Balance_DW:
+ 2249 0000 00000000 		.space	272
+ 2249      00000000 
+ 2249      00000000 
+ 2249      00000000 
+ 2249      00000000 
+ 2250              		.section	.bss.Follow_Balance_M_,"aw",%nobits
+ 2251              		.align	2
+ 2254              	Follow_Balance_M_:
+ 2255 0000 00000000 		.space	4
+ 2256              		.section	.rodata.Follow_Balance_M,"a"
+ 2257              		.align	2
+ 2260              	Follow_Balance_M:
+ 2261 0000 00000000 		.word	Follow_Balance_M_
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cceK7Nzf.s 			page 61
+
+
+ 2262              		.section	.rodata.Follow_Balance_U8GND,"a"
+ 2263              		.set	.LANCHOR2,. + 0
+ 2266              	Follow_Balance_U8GND:
+ 2267 0000 00       		.space	1
+ 2268              		.text
+ 2269              	.Letext0:
+ 2270              		.file 2 "c:\\program files (x86)\\arm gnu toolchain arm-none-eabi\\11.2 2022.02\\arm-none-eabi\\in
+ 2271              		.file 3 "c:\\program files (x86)\\arm gnu toolchain arm-none-eabi\\11.2 2022.02\\arm-none-eabi\\in
+ 2272              		.file 4 "../STM32CUBEMX/Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f405xx.h"
+ 2273              		.file 5 "c:\\program files (x86)\\arm gnu toolchain arm-none-eabi\\11.2 2022.02\\lib\\gcc\\arm-non
+ 2274              		.file 6 "../STM32CUBEMX/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h"
+ 2275              		.file 7 "../STM32CUBEMX/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h"
+ 2276              		.file 8 "../STM32CUBEMX/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h"
+ 2277              		.file 9 "../STM32CUBEMX/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h"
+ 2278              		.file 10 "../STM32CUBEMX/Core/Inc/ifr-scope_device.h"
+ 2279              		.file 11 "../STM32CUBEMX/Core/Inc/tim.h"
+ 2280              		.file 12 "rtwtypes.h"
+ 2281              		.file 13 "Follow_Balance_types.h"
+ 2282              		.file 14 "Follow_Balance.h"
+ 2283              		.file 15 "rt_nonfinite.h"
+ 2284              		.file 16 "c:\\program files (x86)\\arm gnu toolchain arm-none-eabi\\11.2 2022.02\\arm-none-eabi\\i
+ 2285              		.file 17 "c:\\program files (x86)\\arm gnu toolchain arm-none-eabi\\11.2 2022.02\\arm-none-eabi\\i
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cceK7Nzf.s 			page 62
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 Follow_Balance.c
+C:\Users\ysl\AppData\Local\Temp\cceK7Nzf.s:31     .text.Follow_Balance_step:00000000 $t
+C:\Users\ysl\AppData\Local\Temp\cceK7Nzf.s:37     .text.Follow_Balance_step:00000000 Follow_Balance_step
+C:\Users\ysl\AppData\Local\Temp\cceK7Nzf.s:567    .text.Follow_Balance_step:00000360 $d
+C:\Users\ysl\AppData\Local\Temp\cceK7Nzf.s:593    .text.Follow_Balance_step:000003bc $t
+C:\Users\ysl\AppData\Local\Temp\cceK7Nzf.s:1002   .text.Follow_Balance_step:00000670 $d
+C:\Users\ysl\AppData\Local\Temp\cceK7Nzf.s:1027   .text.Follow_Balance_step:000006c8 $t
+C:\Users\ysl\AppData\Local\Temp\cceK7Nzf.s:1540   .text.Follow_Balance_step:000009e8 $d
+C:\Users\ysl\AppData\Local\Temp\cceK7Nzf.s:1560   .text.Follow_Balance_step:00000a2c $t
+C:\Users\ysl\AppData\Local\Temp\cceK7Nzf.s:2068   .text.Follow_Balance_step:00000d30 $d
+C:\Users\ysl\AppData\Local\Temp\cceK7Nzf.s:2087   .text.Follow_Balance_step:00000d64 $t
+C:\Users\ysl\AppData\Local\Temp\cceK7Nzf.s:2179   .text.Follow_Balance_step:00000df0 $d
+C:\Users\ysl\AppData\Local\Temp\cceK7Nzf.s:2187   .text.Follow_Balance_initialize:00000000 $t
+C:\Users\ysl\AppData\Local\Temp\cceK7Nzf.s:2193   .text.Follow_Balance_initialize:00000000 Follow_Balance_initialize
+C:\Users\ysl\AppData\Local\Temp\cceK7Nzf.s:2214   .text.Follow_Balance_terminate:00000000 $t
+C:\Users\ysl\AppData\Local\Temp\cceK7Nzf.s:2220   .text.Follow_Balance_terminate:00000000 Follow_Balance_terminate
+C:\Users\ysl\AppData\Local\Temp\cceK7Nzf.s:2260   .rodata.Follow_Balance_M:00000000 Follow_Balance_M
+C:\Users\ysl\AppData\Local\Temp\cceK7Nzf.s:2248   .bss.Follow_Balance_DW:00000000 Follow_Balance_DW
+C:\Users\ysl\AppData\Local\Temp\cceK7Nzf.s:2241   .bss.Follow_Balance_B:00000000 Follow_Balance_B
+C:\Users\ysl\AppData\Local\Temp\cceK7Nzf.s:2266   .rodata.Follow_Balance_U8GND:00000000 Follow_Balance_U8GND
+C:\Users\ysl\AppData\Local\Temp\cceK7Nzf.s:2237   .bss.Follow_Balance_B:00000000 $d
+C:\Users\ysl\AppData\Local\Temp\cceK7Nzf.s:2244   .bss.Follow_Balance_DW:00000000 $d
+C:\Users\ysl\AppData\Local\Temp\cceK7Nzf.s:2251   .bss.Follow_Balance_M_:00000000 $d
+C:\Users\ysl\AppData\Local\Temp\cceK7Nzf.s:2254   .bss.Follow_Balance_M_:00000000 Follow_Balance_M_
+C:\Users\ysl\AppData\Local\Temp\cceK7Nzf.s:2257   .rodata.Follow_Balance_M:00000000 $d
+C:\Users\ysl\AppData\Local\Temp\cceK7Nzf.s:2267   .rodata.Follow_Balance_U8GND:00000000 $d
+
+UNDEFINED SYMBOLS
+__aeabi_dmul
+__aeabi_f2d
+__aeabi_d2f
+__aeabi_dadd
+__aeabi_dcmpgt
+__aeabi_dcmplt
+__aeabi_i2d
+__aeabi_dsub
+__aeabi_d2uiz
+__aeabi_d2iz
+__aeabi_dcmpeq
+HAL_GPIO_WritePin
+HI226_Angle
+HI226_AngleV
+htim5
+htim2
+adc_rawvalue
+DataLink_UpFrameData
+motor1_PwmData
+motor2_PwmData
+ws2812_data
+floor
+rtIsNaN
+fmod
+rtIsInf
+DataLink_RevData
+rt_InitInfAndNaN

@@ -1,0 +1,1308 @@
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccRQ6nHg.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"uart_fifo.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.text.DeleteAllQueue,"ax",%progbits
+  20              		.align	1
+  21              		.global	DeleteAllQueue
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	DeleteAllQueue:
+  27              	.LVL0:
+  28              	.LFB242:
+  29              		.file 1 "../STM32CUBEMX/Core/Src/uart_fifo.c"
+   1:../STM32CUBEMX/Core/Src/uart_fifo.c **** #include "uart_fifo.h"
+   2:../STM32CUBEMX/Core/Src/uart_fifo.c **** #include <string.h>
+   3:../STM32CUBEMX/Core/Src/uart_fifo.c **** 
+   4:../STM32CUBEMX/Core/Src/uart_fifo.c **** volatile int protect_flag=0;
+   5:../STM32CUBEMX/Core/Src/uart_fifo.c **** ////FIFO队列相关 by余鑫 2018：
+   6:../STM32CUBEMX/Core/Src/uart_fifo.c **** //入队列
+   7:../STM32CUBEMX/Core/Src/uart_fifo.c **** bool InsertQueue( USART_CircularQueueTypeDef *q, const uint8_t* source,uint16_t len)//USART_FIFO_SI
+   8:../STM32CUBEMX/Core/Src/uart_fifo.c **** {
+   9:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	//__disable_irq();  /* Disable global interrupt*/
+  10:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	
+  11:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	if(len<=GetQueueWriteCount(q)&&len>0)
+  12:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	{
+  13:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		if(q->FIFO_Front + len < USART_FIFO_SIZE)	//若存入数据未到队列边界
+  14:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		{
+  15:../STM32CUBEMX/Core/Src/uart_fifo.c **** 			memcpy(&q->SoftWare_FIFO[q->FIFO_Front], source, len);
+  16:../STM32CUBEMX/Core/Src/uart_fifo.c **** 			q->FIFO_Front+=len;
+  17:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		}
+  18:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		else
+  19:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		{
+  20:../STM32CUBEMX/Core/Src/uart_fifo.c **** 			unsigned int len_front=USART_FIFO_SIZE - q->FIFO_Front;
+  21:../STM32CUBEMX/Core/Src/uart_fifo.c **** 			memcpy(&q->SoftWare_FIFO[q->FIFO_Front], source, len_front);//从front到end
+  22:../STM32CUBEMX/Core/Src/uart_fifo.c **** 			memcpy(&q->SoftWare_FIFO[0], (source+len_front), len-len_front);	//从头至剩下led	//这里so
+  23:../STM32CUBEMX/Core/Src/uart_fifo.c **** 			q->FIFO_Front=len-len_front;
+  24:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		}
+  25:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	}
+  26:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	else
+  27:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	{
+  28:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		return false;
+  29:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	}
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccRQ6nHg.s 			page 2
+
+
+  30:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	//__enable_irq();    /*  Enable global interrupt */
+  31:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	return true;
+  32:../STM32CUBEMX/Core/Src/uart_fifo.c **** }
+  33:../STM32CUBEMX/Core/Src/uart_fifo.c **** 
+  34:../STM32CUBEMX/Core/Src/uart_fifo.c **** //出队列操作
+  35:../STM32CUBEMX/Core/Src/uart_fifo.c **** bool RemoveQueue(uint8_t* destination, USART_CircularQueueTypeDef *q,uint16_t len)
+  36:../STM32CUBEMX/Core/Src/uart_fifo.c **** {
+  37:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	//__disable_irq();  /* Disable global interrupt*/
+  38:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	//protect_flag=1;
+  39:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	if(len<=GetQueueReadCount(q)&&len>0)
+  40:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	{
+  41:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		if(q->FIFO_Rear + len < USART_FIFO_SIZE)	//若取出数据范围未到队列边界
+  42:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		{
+  43:../STM32CUBEMX/Core/Src/uart_fifo.c **** 			memcpy(destination, &q->SoftWare_FIFO[q->FIFO_Rear], len);
+  44:../STM32CUBEMX/Core/Src/uart_fifo.c **** 			q->FIFO_Rear+=len;
+  45:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		}
+  46:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		else
+  47:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		{
+  48:../STM32CUBEMX/Core/Src/uart_fifo.c **** 			unsigned int len_front=USART_FIFO_SIZE - q->FIFO_Rear;
+  49:../STM32CUBEMX/Core/Src/uart_fifo.c **** 			memcpy(destination, &q->SoftWare_FIFO[q->FIFO_Rear], len_front);//从front到end
+  50:../STM32CUBEMX/Core/Src/uart_fifo.c **** 			memcpy(destination+len_front, &q->SoftWare_FIFO[0], len-len_front);	//从头至剩下led
+  51:../STM32CUBEMX/Core/Src/uart_fifo.c **** 			q->FIFO_Rear=len-len_front;
+  52:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		}
+  53:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	}
+  54:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	else
+  55:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	{
+  56:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		return false;
+  57:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	}
+  58:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	//__enable_irq();    /*  Enable global interrupt */
+  59:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	//protect_flag=0;
+  60:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	return true;
+  61:../STM32CUBEMX/Core/Src/uart_fifo.c **** }
+  62:../STM32CUBEMX/Core/Src/uart_fifo.c **** 
+  63:../STM32CUBEMX/Core/Src/uart_fifo.c **** //出一个元素操作
+  64:../STM32CUBEMX/Core/Src/uart_fifo.c **** char RemoveAQueue( USART_CircularQueueTypeDef *q)
+  65:../STM32CUBEMX/Core/Src/uart_fifo.c **** {
+  66:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	uint16_t len=1;
+  67:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	char re_char;
+  68:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	if(len<=GetQueueReadCount(q)&&len>0)
+  69:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	{
+  70:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		if(q->FIFO_Rear + len < USART_FIFO_SIZE)	//若取出数据范围未到队列边界
+  71:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		{
+  72:../STM32CUBEMX/Core/Src/uart_fifo.c **** 			//memcpy(destination, &q->SoftWare_FIFO[q->FIFO_Rear], len);
+  73:../STM32CUBEMX/Core/Src/uart_fifo.c **** 			
+  74:../STM32CUBEMX/Core/Src/uart_fifo.c **** 			re_char = q->SoftWare_FIFO[q->FIFO_Rear];
+  75:../STM32CUBEMX/Core/Src/uart_fifo.c **** 			q->FIFO_Rear+=len;
+  76:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		}
+  77:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		else
+  78:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		{
+  79:../STM32CUBEMX/Core/Src/uart_fifo.c **** 			unsigned int len_front=USART_FIFO_SIZE - q->FIFO_Rear;
+  80:../STM32CUBEMX/Core/Src/uart_fifo.c **** 			//memcpy(destination, &q->SoftWare_FIFO[q->FIFO_Rear], len_front);//从front到end
+  81:../STM32CUBEMX/Core/Src/uart_fifo.c **** 			
+  82:../STM32CUBEMX/Core/Src/uart_fifo.c **** 			re_char = q->SoftWare_FIFO[q->FIFO_Rear];
+  83:../STM32CUBEMX/Core/Src/uart_fifo.c **** 			q->FIFO_Rear=len-len_front;
+  84:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		}
+  85:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		return re_char;
+  86:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	}
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccRQ6nHg.s 			page 3
+
+
+  87:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	else
+  88:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	{
+  89:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		return false;
+  90:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	}
+  91:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	
+  92:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	return true;
+  93:../STM32CUBEMX/Core/Src/uart_fifo.c **** }
+  94:../STM32CUBEMX/Core/Src/uart_fifo.c **** 
+  95:../STM32CUBEMX/Core/Src/uart_fifo.c **** /**    移出当前所有队列可读元素   **/
+  96:../STM32CUBEMX/Core/Src/uart_fifo.c **** uint16_t RemoveAllQueue(uint8_t* destination, USART_CircularQueueTypeDef *q)	//移出当前所有�
+  97:../STM32CUBEMX/Core/Src/uart_fifo.c **** {
+  98:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	uint16_t len=GetQueueReadCount(q);
+  99:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	if(len>0)
+ 100:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	{
+ 101:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		if(q->FIFO_Rear + len < USART_FIFO_SIZE)	//若取出数据范围未到队列边界
+ 102:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		{
+ 103:../STM32CUBEMX/Core/Src/uart_fifo.c **** 			memcpy(destination, &q->SoftWare_FIFO[q->FIFO_Rear], len);
+ 104:../STM32CUBEMX/Core/Src/uart_fifo.c **** 			q->FIFO_Rear+=len;
+ 105:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		}
+ 106:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		else
+ 107:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		{
+ 108:../STM32CUBEMX/Core/Src/uart_fifo.c **** 			uint16_t len_front=USART_FIFO_SIZE - q->FIFO_Rear;
+ 109:../STM32CUBEMX/Core/Src/uart_fifo.c **** 			memcpy(destination, &q->SoftWare_FIFO[q->FIFO_Rear], len_front);//从front到end
+ 110:../STM32CUBEMX/Core/Src/uart_fifo.c **** 			memcpy(destination+len_front, &q->SoftWare_FIFO[0], len-len_front);	//从头至剩下led
+ 111:../STM32CUBEMX/Core/Src/uart_fifo.c **** 			q->FIFO_Rear=len-len_front;
+ 112:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		}
+ 113:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	}
+ 114:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	else
+ 115:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	{
+ 116:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		return 0;
+ 117:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	}
+ 118:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	
+ 119:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	return len;
+ 120:../STM32CUBEMX/Core/Src/uart_fifo.c **** }
+ 121:../STM32CUBEMX/Core/Src/uart_fifo.c **** 
+ 122:../STM32CUBEMX/Core/Src/uart_fifo.c **** //char* GetCurrentQueuePoint()
+ 123:../STM32CUBEMX/Core/Src/uart_fifo.c **** 
+ 124:../STM32CUBEMX/Core/Src/uart_fifo.c **** //查询队列
+ 125:../STM32CUBEMX/Core/Src/uart_fifo.c **** bool QueryQueue(uint8_t* destination,  USART_CircularQueueTypeDef const * queue, uint16_t distance,
+ 126:../STM32CUBEMX/Core/Src/uart_fifo.c **** {
+ 127:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	if(distance+len<=GetQueueReadCount(queue)&&len>0)	//读取范围在队列可读范围内
+ 128:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	{
+ 129:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		unsigned int start=(queue->FIFO_Rear+distance)%USART_FIFO_SIZE;
+ 130:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	
+ 131:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		if(start + len < USART_FIFO_SIZE)	//若取出数据范围未到队列边界
+ 132:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		{
+ 133:../STM32CUBEMX/Core/Src/uart_fifo.c **** 			memcpy(destination, &queue->SoftWare_FIFO[start], len);
+ 134:../STM32CUBEMX/Core/Src/uart_fifo.c **** 			//q->FIFO_Rear+=len;
+ 135:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		}
+ 136:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		else
+ 137:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		{
+ 138:../STM32CUBEMX/Core/Src/uart_fifo.c **** 			unsigned int len_front=USART_FIFO_SIZE - start;
+ 139:../STM32CUBEMX/Core/Src/uart_fifo.c **** 			memcpy(destination, &queue->SoftWare_FIFO[start], len_front);//从front到end
+ 140:../STM32CUBEMX/Core/Src/uart_fifo.c **** 			memcpy(destination+len_front, &queue->SoftWare_FIFO[0], len-len_front);	//从头至剩下led
+ 141:../STM32CUBEMX/Core/Src/uart_fifo.c **** 			//q->FIFO_Rear=len-len_front;
+ 142:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		}
+ 143:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	}
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccRQ6nHg.s 			page 4
+
+
+ 144:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	else
+ 145:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	{
+ 146:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		return false;
+ 147:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	}
+ 148:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	
+ 149:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	return true;
+ 150:../STM32CUBEMX/Core/Src/uart_fifo.c **** }
+ 151:../STM32CUBEMX/Core/Src/uart_fifo.c **** 
+ 152:../STM32CUBEMX/Core/Src/uart_fifo.c **** //查询队列一个元素
+ 153:../STM32CUBEMX/Core/Src/uart_fifo.c **** char QueryAQueue( USART_CircularQueueTypeDef const * queue, uint16_t distance)
+ 154:../STM32CUBEMX/Core/Src/uart_fifo.c **** {
+ 155:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	uint16_t len=1;
+ 156:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	if(distance+len<=GetQueueReadCount(queue)&&len>0)	//读取范围在队列可读范围内
+ 157:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	{ 
+ 158:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		unsigned int start=(queue->FIFO_Rear+distance)%USART_FIFO_SIZE;
+ 159:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	
+ 160:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		return queue->SoftWare_FIFO[start];
+ 161:../STM32CUBEMX/Core/Src/uart_fifo.c **** //		if(start + len < USART_FIFO_SIZE)	//若取出数据范围未到队列边界
+ 162:../STM32CUBEMX/Core/Src/uart_fifo.c **** //		{
+ 163:../STM32CUBEMX/Core/Src/uart_fifo.c **** //			memcpy(destination, &queue->SoftWare_FIFO[start], len);
+ 164:../STM32CUBEMX/Core/Src/uart_fifo.c **** //			//q->FIFO_Rear+=len;
+ 165:../STM32CUBEMX/Core/Src/uart_fifo.c **** //			return q->SoftWare_FIFO[q->FIFO_Rear];
+ 166:../STM32CUBEMX/Core/Src/uart_fifo.c **** //		}
+ 167:../STM32CUBEMX/Core/Src/uart_fifo.c **** //		else
+ 168:../STM32CUBEMX/Core/Src/uart_fifo.c **** //		{
+ 169:../STM32CUBEMX/Core/Src/uart_fifo.c **** //			unsigned int len_front=USART_FIFO_SIZE - start;
+ 170:../STM32CUBEMX/Core/Src/uart_fifo.c **** //			memcpy(destination, &queue->SoftWare_FIFO[start], len_front);//从front到end
+ 171:../STM32CUBEMX/Core/Src/uart_fifo.c **** //			memcpy(destination, &queue->SoftWare_FIFO[0], len-len_front);	//从头至剩下led
+ 172:../STM32CUBEMX/Core/Src/uart_fifo.c **** //			//q->FIFO_Rear=len-len_front;
+ 173:../STM32CUBEMX/Core/Src/uart_fifo.c **** //			return q->SoftWare_FIFO[q->FIFO_Rear];
+ 174:../STM32CUBEMX/Core/Src/uart_fifo.c **** //		}
+ 175:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	}
+ 176:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	else
+ 177:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	{
+ 178:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		return false;
+ 179:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	}
+ 180:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	
+ 181:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	return true;
+ 182:../STM32CUBEMX/Core/Src/uart_fifo.c **** }
+ 183:../STM32CUBEMX/Core/Src/uart_fifo.c **** 
+ 184:../STM32CUBEMX/Core/Src/uart_fifo.c **** bool DeleteQueue( USART_CircularQueueTypeDef * q, uint16_t len)	//就是在移出队列的基础上
+ 185:../STM32CUBEMX/Core/Src/uart_fifo.c **** {
+ 186:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	if(len<=GetQueueReadCount(q)&&len>0)
+ 187:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	{
+ 188:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		if(q->FIFO_Rear + len < USART_FIFO_SIZE)	//若取出数据范围未到队列边界
+ 189:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		{
+ 190:../STM32CUBEMX/Core/Src/uart_fifo.c **** 			//memcpy(destination, &q->SoftWare_FIFO[q->FIFO_Rear], len);
+ 191:../STM32CUBEMX/Core/Src/uart_fifo.c **** 			q->FIFO_Rear+=len;
+ 192:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		}
+ 193:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		else
+ 194:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		{
+ 195:../STM32CUBEMX/Core/Src/uart_fifo.c **** 			unsigned int len_front=USART_FIFO_SIZE - q->FIFO_Rear;
+ 196:../STM32CUBEMX/Core/Src/uart_fifo.c **** 			//memcpy(destination, &q->SoftWare_FIFO[q->FIFO_Rear], len_front);//从front到end
+ 197:../STM32CUBEMX/Core/Src/uart_fifo.c **** 			//memcpy(destination, &q->SoftWare_FIFO[0], len-len_front);	//从头至剩下led
+ 198:../STM32CUBEMX/Core/Src/uart_fifo.c **** 			q->FIFO_Rear=len-len_front;
+ 199:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		}
+ 200:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	}
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccRQ6nHg.s 			page 5
+
+
+ 201:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	else
+ 202:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	{
+ 203:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		return false;
+ 204:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	}
+ 205:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	
+ 206:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	return true;
+ 207:../STM32CUBEMX/Core/Src/uart_fifo.c **** }
+ 208:../STM32CUBEMX/Core/Src/uart_fifo.c **** 
+ 209:../STM32CUBEMX/Core/Src/uart_fifo.c **** void DeleteAllQueue( USART_CircularQueueTypeDef * queue)
+ 210:../STM32CUBEMX/Core/Src/uart_fifo.c **** {
+  30              		.loc 1 210 1 view -0
+  31              		.cfi_startproc
+  32              		@ args = 0, pretend = 0, frame = 0
+  33              		@ frame_needed = 0, uses_anonymous_args = 0
+  34              		@ link register save eliminated.
+ 211:../STM32CUBEMX/Core/Src/uart_fifo.c ****     queue->FIFO_Front=0;
+  35              		.loc 1 211 5 view .LVU1
+  36              		.loc 1 211 22 is_stmt 0 view .LVU2
+  37 0000 0023     		movs	r3, #0
+  38 0002 A0F80031 		strh	r3, [r0, #256]	@ movhi
+ 212:../STM32CUBEMX/Core/Src/uart_fifo.c ****     queue->FIFO_Rear=0;
+  39              		.loc 1 212 5 is_stmt 1 view .LVU3
+  40              		.loc 1 212 21 is_stmt 0 view .LVU4
+  41 0006 A0F80231 		strh	r3, [r0, #258]	@ movhi
+ 213:../STM32CUBEMX/Core/Src/uart_fifo.c **** }
+  42              		.loc 1 213 1 view .LVU5
+  43 000a 7047     		bx	lr
+  44              		.cfi_endproc
+  45              	.LFE242:
+  47              		.section	.text.GetQueueReadCount,"ax",%progbits
+  48              		.align	1
+  49              		.global	GetQueueReadCount
+  50              		.syntax unified
+  51              		.thumb
+  52              		.thumb_func
+  54              	GetQueueReadCount:
+  55              	.LVL1:
+  56              	.LFB243:
+ 214:../STM32CUBEMX/Core/Src/uart_fifo.c **** 
+ 215:../STM32CUBEMX/Core/Src/uart_fifo.c **** uint16_t GetQueueReadCount( USART_CircularQueueTypeDef const * queue)	//传递指针而非值可以
+ 216:../STM32CUBEMX/Core/Src/uart_fifo.c **** {
+  57              		.loc 1 216 1 is_stmt 1 view -0
+  58              		.cfi_startproc
+  59              		@ args = 0, pretend = 0, frame = 0
+  60              		@ frame_needed = 0, uses_anonymous_args = 0
+  61              		@ link register save eliminated.
+ 217:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	if(queue->FIFO_Front==queue->FIFO_Rear)	return 0;//return QueueEmpty;
+  62              		.loc 1 217 2 view .LVU7
+  63              		.loc 1 217 10 is_stmt 0 view .LVU8
+  64 0000 B0F80031 		ldrh	r3, [r0, #256]
+  65              		.loc 1 217 29 view .LVU9
+  66 0004 B0F80221 		ldrh	r2, [r0, #258]
+  67              		.loc 1 217 4 view .LVU10
+  68 0008 9342     		cmp	r3, r2
+  69 000a 10D0     		beq	.L5
+ 218:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	if(queue->FIFO_Rear-queue->FIFO_Front==1||queue->FIFO_Rear-queue->FIFO_Front==-(USART_FIFO_SIZE-1)
+  70              		.loc 1 218 2 is_stmt 1 view .LVU11
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccRQ6nHg.s 			page 6
+
+
+  71              		.loc 1 218 21 is_stmt 0 view .LVU12
+  72 000c D11A     		subs	r1, r2, r3
+  73              		.loc 1 218 4 view .LVU13
+  74 000e 0129     		cmp	r1, #1
+  75 0010 0FD0     		beq	.L6
+  76              		.loc 1 218 42 discriminator 2 view .LVU14
+  77 0012 11F1FF0F 		cmn	r1, #255
+  78 0016 0ED0     		beq	.L7
+ 219:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	return (queue->FIFO_Front - queue->FIFO_Rear)>=0?(queue->FIFO_Front - queue->FIFO_Rear):(queue->FI
+  79              		.loc 1 219 2 is_stmt 1 view .LVU15
+  80              		.loc 1 219 28 is_stmt 0 view .LVU16
+  81 0018 991A     		subs	r1, r3, r2
+  82              		.loc 1 219 89 view .LVU17
+  83 001a 0029     		cmp	r1, #0
+  84 001c 01DB     		blt	.L4
+  85              		.loc 1 219 89 discriminator 1 view .LVU18
+  86 001e 88B2     		uxth	r0, r1
+  87              	.LVL2:
+  88              		.loc 1 219 89 discriminator 1 view .LVU19
+  89 0020 7047     		bx	lr
+  90              	.LVL3:
+  91              	.L4:
+  92              		.loc 1 219 109 discriminator 2 view .LVU20
+  93 0022 981A     		subs	r0, r3, r2
+  94              	.LVL4:
+  95              		.loc 1 219 109 discriminator 2 view .LVU21
+  96 0024 80B2     		uxth	r0, r0
+  97              		.loc 1 219 89 discriminator 2 view .LVU22
+  98 0026 00F58070 		add	r0, r0, #256
+  99 002a 80B2     		uxth	r0, r0
+ 100 002c 7047     		bx	lr
+ 101              	.LVL5:
+ 102              	.L5:
+ 217:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	if(queue->FIFO_Front==queue->FIFO_Rear)	return 0;//return QueueEmpty;
+ 103              		.loc 1 217 49 view .LVU23
+ 104 002e 0020     		movs	r0, #0
+ 105              	.LVL6:
+ 217:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	if(queue->FIFO_Front==queue->FIFO_Rear)	return 0;//return QueueEmpty;
+ 106              		.loc 1 217 49 view .LVU24
+ 107 0030 7047     		bx	lr
+ 108              	.LVL7:
+ 109              	.L6:
+ 218:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	if(queue->FIFO_Rear-queue->FIFO_Front==1||queue->FIFO_Rear-queue->FIFO_Front==-(USART_FIFO_SIZE-1)
+ 110              		.loc 1 218 109 view .LVU25
+ 111 0032 FF20     		movs	r0, #255
+ 112              	.LVL8:
+ 218:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	if(queue->FIFO_Rear-queue->FIFO_Front==1||queue->FIFO_Rear-queue->FIFO_Front==-(USART_FIFO_SIZE-1)
+ 113              		.loc 1 218 109 view .LVU26
+ 114 0034 7047     		bx	lr
+ 115              	.LVL9:
+ 116              	.L7:
+ 218:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	if(queue->FIFO_Rear-queue->FIFO_Front==1||queue->FIFO_Rear-queue->FIFO_Front==-(USART_FIFO_SIZE-1)
+ 117              		.loc 1 218 109 view .LVU27
+ 118 0036 FF20     		movs	r0, #255
+ 119              	.LVL10:
+ 220:../STM32CUBEMX/Core/Src/uart_fifo.c **** }
+ 120              		.loc 1 220 1 view .LVU28
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccRQ6nHg.s 			page 7
+
+
+ 121 0038 7047     		bx	lr
+ 122              		.cfi_endproc
+ 123              	.LFE243:
+ 125              		.section	.text.RemoveQueue,"ax",%progbits
+ 126              		.align	1
+ 127              		.global	RemoveQueue
+ 128              		.syntax unified
+ 129              		.thumb
+ 130              		.thumb_func
+ 132              	RemoveQueue:
+ 133              	.LVL11:
+ 134              	.LFB236:
+  36:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	//__disable_irq();  /* Disable global interrupt*/
+ 135              		.loc 1 36 1 is_stmt 1 view -0
+ 136              		.cfi_startproc
+ 137              		@ args = 0, pretend = 0, frame = 0
+ 138              		@ frame_needed = 0, uses_anonymous_args = 0
+  36:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	//__disable_irq();  /* Disable global interrupt*/
+ 139              		.loc 1 36 1 is_stmt 0 view .LVU30
+ 140 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+ 141              	.LCFI0:
+ 142              		.cfi_def_cfa_offset 24
+ 143              		.cfi_offset 3, -24
+ 144              		.cfi_offset 4, -20
+ 145              		.cfi_offset 5, -16
+ 146              		.cfi_offset 6, -12
+ 147              		.cfi_offset 7, -8
+ 148              		.cfi_offset 14, -4
+ 149 0002 0646     		mov	r6, r0
+ 150 0004 0D46     		mov	r5, r1
+ 151 0006 1446     		mov	r4, r2
+  39:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	{
+ 152              		.loc 1 39 2 is_stmt 1 view .LVU31
+  39:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	{
+ 153              		.loc 1 39 10 is_stmt 0 view .LVU32
+ 154 0008 0846     		mov	r0, r1
+ 155              	.LVL12:
+  39:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	{
+ 156              		.loc 1 39 10 view .LVU33
+ 157 000a FFF7FEFF 		bl	GetQueueReadCount
+ 158              	.LVL13:
+  39:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	{
+ 159              		.loc 1 39 4 view .LVU34
+ 160 000e A042     		cmp	r0, r4
+ 161 0010 22D3     		bcc	.L11
+  39:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	{
+ 162              		.loc 1 39 30 discriminator 1 view .LVU35
+ 163 0012 1CB3     		cbz	r4, .L12
+  41:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		{
+ 164              		.loc 1 41 3 is_stmt 1 view .LVU36
+  41:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		{
+ 165              		.loc 1 41 7 is_stmt 0 view .LVU37
+ 166 0014 B5F80211 		ldrh	r1, [r5, #258]
+  41:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		{
+ 167              		.loc 1 41 19 view .LVU38
+ 168 0018 6318     		adds	r3, r4, r1
+  41:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		{
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccRQ6nHg.s 			page 8
+
+
+ 169              		.loc 1 41 5 view .LVU39
+ 170 001a FF2B     		cmp	r3, #255
+ 171 001c 0BDC     		bgt	.L10
+  43:../STM32CUBEMX/Core/Src/uart_fifo.c **** 			q->FIFO_Rear+=len;
+ 172              		.loc 1 43 4 is_stmt 1 view .LVU40
+ 173 001e 2246     		mov	r2, r4
+ 174 0020 2944     		add	r1, r1, r5
+ 175 0022 3046     		mov	r0, r6
+ 176 0024 FFF7FEFF 		bl	memcpy
+ 177              	.LVL14:
+  44:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		}
+ 178              		.loc 1 44 4 view .LVU41
+  44:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		}
+ 179              		.loc 1 44 16 is_stmt 0 view .LVU42
+ 180 0028 B5F80231 		ldrh	r3, [r5, #258]
+ 181 002c 1C44     		add	r4, r4, r3
+ 182 002e A5F80241 		strh	r4, [r5, #258]	@ movhi
+  60:../STM32CUBEMX/Core/Src/uart_fifo.c **** }
+ 183              		.loc 1 60 9 view .LVU43
+ 184 0032 0120     		movs	r0, #1
+ 185 0034 11E0     		b	.L9
+ 186              	.L10:
+ 187              	.LBB2:
+  48:../STM32CUBEMX/Core/Src/uart_fifo.c **** 			memcpy(destination, &q->SoftWare_FIFO[q->FIFO_Rear], len_front);//从front到end
+ 188              		.loc 1 48 4 is_stmt 1 view .LVU44
+  48:../STM32CUBEMX/Core/Src/uart_fifo.c **** 			memcpy(destination, &q->SoftWare_FIFO[q->FIFO_Rear], len_front);//从front到end
+ 189              		.loc 1 48 43 is_stmt 0 view .LVU45
+ 190 0036 C1F58077 		rsb	r7, r1, #256
+ 191              	.LVL15:
+  49:../STM32CUBEMX/Core/Src/uart_fifo.c **** 			memcpy(destination+len_front, &q->SoftWare_FIFO[0], len-len_front);	//从头至剩下led
+ 192              		.loc 1 49 4 is_stmt 1 view .LVU46
+ 193 003a 3A46     		mov	r2, r7
+ 194 003c 2944     		add	r1, r1, r5
+ 195 003e 3046     		mov	r0, r6
+ 196 0040 FFF7FEFF 		bl	memcpy
+ 197              	.LVL16:
+  50:../STM32CUBEMX/Core/Src/uart_fifo.c **** 			q->FIFO_Rear=len-len_front;
+ 198              		.loc 1 50 4 view .LVU47
+ 199 0044 E21B     		subs	r2, r4, r7
+ 200 0046 2946     		mov	r1, r5
+ 201 0048 F019     		adds	r0, r6, r7
+ 202 004a FFF7FEFF 		bl	memcpy
+ 203              	.LVL17:
+  51:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		}
+ 204              		.loc 1 51 4 view .LVU48
+  51:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		}
+ 205              		.loc 1 51 20 is_stmt 0 view .LVU49
+ 206 004e E41B     		subs	r4, r4, r7
+  51:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		}
+ 207              		.loc 1 51 16 view .LVU50
+ 208 0050 A5F80241 		strh	r4, [r5, #258]	@ movhi
+ 209              	.LBE2:
+  60:../STM32CUBEMX/Core/Src/uart_fifo.c **** }
+ 210              		.loc 1 60 9 view .LVU51
+ 211 0054 0120     		movs	r0, #1
+ 212 0056 00E0     		b	.L9
+ 213              	.LVL18:
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccRQ6nHg.s 			page 9
+
+
+ 214              	.L11:
+  56:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	}
+ 215              		.loc 1 56 10 view .LVU52
+ 216 0058 0020     		movs	r0, #0
+ 217              	.L9:
+  61:../STM32CUBEMX/Core/Src/uart_fifo.c **** 
+ 218              		.loc 1 61 1 view .LVU53
+ 219 005a F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 220              	.LVL19:
+ 221              	.L12:
+  56:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	}
+ 222              		.loc 1 56 10 view .LVU54
+ 223 005c 0020     		movs	r0, #0
+ 224 005e FCE7     		b	.L9
+ 225              		.cfi_endproc
+ 226              	.LFE236:
+ 228              		.section	.text.RemoveAQueue,"ax",%progbits
+ 229              		.align	1
+ 230              		.global	RemoveAQueue
+ 231              		.syntax unified
+ 232              		.thumb
+ 233              		.thumb_func
+ 235              	RemoveAQueue:
+ 236              	.LVL20:
+ 237              	.LFB237:
+  65:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	uint16_t len=1;
+ 238              		.loc 1 65 1 is_stmt 1 view -0
+ 239              		.cfi_startproc
+ 240              		@ args = 0, pretend = 0, frame = 0
+ 241              		@ frame_needed = 0, uses_anonymous_args = 0
+  65:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	uint16_t len=1;
+ 242              		.loc 1 65 1 is_stmt 0 view .LVU56
+ 243 0000 10B5     		push	{r4, lr}
+ 244              	.LCFI1:
+ 245              		.cfi_def_cfa_offset 8
+ 246              		.cfi_offset 4, -8
+ 247              		.cfi_offset 14, -4
+ 248 0002 0446     		mov	r4, r0
+  66:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	char re_char;
+ 249              		.loc 1 66 2 is_stmt 1 view .LVU57
+ 250              	.LVL21:
+  67:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	if(len<=GetQueueReadCount(q)&&len>0)
+ 251              		.loc 1 67 2 view .LVU58
+  68:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	{
+ 252              		.loc 1 68 2 view .LVU59
+  68:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	{
+ 253              		.loc 1 68 10 is_stmt 0 view .LVU60
+ 254 0004 FFF7FEFF 		bl	GetQueueReadCount
+ 255              	.LVL22:
+  68:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	{
+ 256              		.loc 1 68 4 view .LVU61
+ 257 0008 68B1     		cbz	r0, .L18
+  70:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		{
+ 258              		.loc 1 70 3 is_stmt 1 view .LVU62
+  70:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		{
+ 259              		.loc 1 70 7 is_stmt 0 view .LVU63
+ 260 000a B4F80231 		ldrh	r3, [r4, #258]
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccRQ6nHg.s 			page 10
+
+
+  70:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		{
+ 261              		.loc 1 70 5 view .LVU64
+ 262 000e FE2B     		cmp	r3, #254
+ 263 0010 04D8     		bhi	.L16
+  74:../STM32CUBEMX/Core/Src/uart_fifo.c **** 			q->FIFO_Rear+=len;
+ 264              		.loc 1 74 4 is_stmt 1 view .LVU65
+  74:../STM32CUBEMX/Core/Src/uart_fifo.c **** 			q->FIFO_Rear+=len;
+ 265              		.loc 1 74 12 is_stmt 0 view .LVU66
+ 266 0012 E05C     		ldrb	r0, [r4, r3]	@ zero_extendqisi2
+ 267              	.LVL23:
+  75:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		}
+ 268              		.loc 1 75 4 is_stmt 1 view .LVU67
+  75:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		}
+ 269              		.loc 1 75 16 is_stmt 0 view .LVU68
+ 270 0014 0133     		adds	r3, r3, #1
+ 271 0016 A4F80231 		strh	r3, [r4, #258]	@ movhi
+ 272 001a 05E0     		b	.L15
+ 273              	.LVL24:
+ 274              	.L16:
+ 275              	.LBB3:
+  79:../STM32CUBEMX/Core/Src/uart_fifo.c **** 			//memcpy(destination, &q->SoftWare_FIFO[q->FIFO_Rear], len_front);//从front到end
+ 276              		.loc 1 79 4 is_stmt 1 view .LVU69
+  82:../STM32CUBEMX/Core/Src/uart_fifo.c **** 			q->FIFO_Rear=len-len_front;
+ 277              		.loc 1 82 4 view .LVU70
+  82:../STM32CUBEMX/Core/Src/uart_fifo.c **** 			q->FIFO_Rear=len-len_front;
+ 278              		.loc 1 82 12 is_stmt 0 view .LVU71
+ 279 001c E05C     		ldrb	r0, [r4, r3]	@ zero_extendqisi2
+ 280              	.LVL25:
+  83:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		}
+ 281              		.loc 1 83 4 is_stmt 1 view .LVU72
+  83:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		}
+ 282              		.loc 1 83 20 is_stmt 0 view .LVU73
+ 283 001e FF3B     		subs	r3, r3, #255
+ 284              	.LVL26:
+  83:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		}
+ 285              		.loc 1 83 16 view .LVU74
+ 286 0020 A4F80231 		strh	r3, [r4, #258]	@ movhi
+ 287              	.LVL27:
+  83:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		}
+ 288              		.loc 1 83 16 view .LVU75
+ 289              	.LBE3:
+  85:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	}
+ 290              		.loc 1 85 3 is_stmt 1 view .LVU76
+  85:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	}
+ 291              		.loc 1 85 10 is_stmt 0 view .LVU77
+ 292 0024 00E0     		b	.L15
+ 293              	.LVL28:
+ 294              	.L18:
+  89:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	}
+ 295              		.loc 1 89 10 view .LVU78
+ 296 0026 0020     		movs	r0, #0
+ 297              	.L15:
+  93:../STM32CUBEMX/Core/Src/uart_fifo.c **** 
+ 298              		.loc 1 93 1 view .LVU79
+ 299 0028 10BD     		pop	{r4, pc}
+  93:../STM32CUBEMX/Core/Src/uart_fifo.c **** 
+ 300              		.loc 1 93 1 view .LVU80
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccRQ6nHg.s 			page 11
+
+
+ 301              		.cfi_endproc
+ 302              	.LFE237:
+ 304              		.section	.text.RemoveAllQueue,"ax",%progbits
+ 305              		.align	1
+ 306              		.global	RemoveAllQueue
+ 307              		.syntax unified
+ 308              		.thumb
+ 309              		.thumb_func
+ 311              	RemoveAllQueue:
+ 312              	.LVL29:
+ 313              	.LFB238:
+  97:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	uint16_t len=GetQueueReadCount(q);
+ 314              		.loc 1 97 1 is_stmt 1 view -0
+ 315              		.cfi_startproc
+ 316              		@ args = 0, pretend = 0, frame = 0
+ 317              		@ frame_needed = 0, uses_anonymous_args = 0
+  97:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	uint16_t len=GetQueueReadCount(q);
+ 318              		.loc 1 97 1 is_stmt 0 view .LVU82
+ 319 0000 2DE9F041 		push	{r4, r5, r6, r7, r8, lr}
+ 320              	.LCFI2:
+ 321              		.cfi_def_cfa_offset 24
+ 322              		.cfi_offset 4, -24
+ 323              		.cfi_offset 5, -20
+ 324              		.cfi_offset 6, -16
+ 325              		.cfi_offset 7, -12
+ 326              		.cfi_offset 8, -8
+ 327              		.cfi_offset 14, -4
+ 328 0004 0646     		mov	r6, r0
+ 329 0006 0C46     		mov	r4, r1
+  98:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	if(len>0)
+ 330              		.loc 1 98 2 is_stmt 1 view .LVU83
+  98:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	if(len>0)
+ 331              		.loc 1 98 15 is_stmt 0 view .LVU84
+ 332 0008 0846     		mov	r0, r1
+ 333              	.LVL30:
+  98:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	if(len>0)
+ 334              		.loc 1 98 15 view .LVU85
+ 335 000a FFF7FEFF 		bl	GetQueueReadCount
+ 336              	.LVL31:
+  99:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	{
+ 337              		.loc 1 99 2 is_stmt 1 view .LVU86
+  99:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	{
+ 338              		.loc 1 99 4 is_stmt 0 view .LVU87
+ 339 000e 0746     		mov	r7, r0
+ 340 0010 70B1     		cbz	r0, .L21
+ 101:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		{
+ 341              		.loc 1 101 3 is_stmt 1 view .LVU88
+ 101:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		{
+ 342              		.loc 1 101 7 is_stmt 0 view .LVU89
+ 343 0012 B4F80251 		ldrh	r5, [r4, #258]
+ 101:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		{
+ 344              		.loc 1 101 19 view .LVU90
+ 345 0016 2B18     		adds	r3, r5, r0
+ 101:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		{
+ 346              		.loc 1 101 5 view .LVU91
+ 347 0018 FF2B     		cmp	r3, #255
+ 348 001a 0CDC     		bgt	.L22
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccRQ6nHg.s 			page 12
+
+
+ 103:../STM32CUBEMX/Core/Src/uart_fifo.c **** 			q->FIFO_Rear+=len;
+ 349              		.loc 1 103 4 is_stmt 1 view .LVU92
+ 350 001c 0246     		mov	r2, r0
+ 351 001e 6119     		adds	r1, r4, r5
+ 352 0020 3046     		mov	r0, r6
+ 353              	.LVL32:
+ 103:../STM32CUBEMX/Core/Src/uart_fifo.c **** 			q->FIFO_Rear+=len;
+ 354              		.loc 1 103 4 is_stmt 0 view .LVU93
+ 355 0022 FFF7FEFF 		bl	memcpy
+ 356              	.LVL33:
+ 104:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		}
+ 357              		.loc 1 104 4 is_stmt 1 view .LVU94
+ 104:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		}
+ 358              		.loc 1 104 16 is_stmt 0 view .LVU95
+ 359 0026 B4F80231 		ldrh	r3, [r4, #258]
+ 360 002a 3B44     		add	r3, r3, r7
+ 361 002c A4F80231 		strh	r3, [r4, #258]	@ movhi
+ 362              	.L21:
+ 120:../STM32CUBEMX/Core/Src/uart_fifo.c **** 
+ 363              		.loc 1 120 1 view .LVU96
+ 364 0030 3846     		mov	r0, r7
+ 365 0032 BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+ 366              	.LVL34:
+ 367              	.L22:
+ 368              	.LBB4:
+ 108:../STM32CUBEMX/Core/Src/uart_fifo.c **** 			memcpy(destination, &q->SoftWare_FIFO[q->FIFO_Rear], len_front);//从front到end
+ 369              		.loc 1 108 4 is_stmt 1 view .LVU97
+ 108:../STM32CUBEMX/Core/Src/uart_fifo.c **** 			memcpy(destination, &q->SoftWare_FIFO[q->FIFO_Rear], len_front);//从front到end
+ 370              		.loc 1 108 13 is_stmt 0 view .LVU98
+ 371 0036 C5F58078 		rsb	r8, r5, #256
+ 372 003a 1FFA88F8 		uxth	r8, r8
+ 373              	.LVL35:
+ 109:../STM32CUBEMX/Core/Src/uart_fifo.c **** 			memcpy(destination+len_front, &q->SoftWare_FIFO[0], len-len_front);	//从头至剩下led
+ 374              		.loc 1 109 4 is_stmt 1 view .LVU99
+ 375 003e 4246     		mov	r2, r8
+ 376 0040 6119     		adds	r1, r4, r5
+ 377 0042 3046     		mov	r0, r6
+ 378              	.LVL36:
+ 109:../STM32CUBEMX/Core/Src/uart_fifo.c **** 			memcpy(destination+len_front, &q->SoftWare_FIFO[0], len-len_front);	//从头至剩下led
+ 379              		.loc 1 109 4 is_stmt 0 view .LVU100
+ 380 0044 FFF7FEFF 		bl	memcpy
+ 381              	.LVL37:
+ 110:../STM32CUBEMX/Core/Src/uart_fifo.c **** 			q->FIFO_Rear=len-len_front;
+ 382              		.loc 1 110 4 is_stmt 1 view .LVU101
+ 383 0048 A7EB0802 		sub	r2, r7, r8
+ 384 004c 2146     		mov	r1, r4
+ 385 004e 06EB0800 		add	r0, r6, r8
+ 386 0052 FFF7FEFF 		bl	memcpy
+ 387              	.LVL38:
+ 111:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		}
+ 388              		.loc 1 111 4 view .LVU102
+ 111:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		}
+ 389              		.loc 1 111 20 is_stmt 0 view .LVU103
+ 390 0056 A5F58075 		sub	r5, r5, #256
+ 391 005a 3D44     		add	r5, r5, r7
+ 111:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		}
+ 392              		.loc 1 111 16 view .LVU104
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccRQ6nHg.s 			page 13
+
+
+ 393 005c A4F80251 		strh	r5, [r4, #258]	@ movhi
+ 394 0060 E6E7     		b	.L21
+ 395              	.LBE4:
+ 396              		.cfi_endproc
+ 397              	.LFE238:
+ 399              		.section	.text.QueryQueue,"ax",%progbits
+ 400              		.align	1
+ 401              		.global	QueryQueue
+ 402              		.syntax unified
+ 403              		.thumb
+ 404              		.thumb_func
+ 406              	QueryQueue:
+ 407              	.LVL39:
+ 408              	.LFB239:
+ 126:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	if(distance+len<=GetQueueReadCount(queue)&&len>0)	//读取范围在队列可读范围内
+ 409              		.loc 1 126 1 is_stmt 1 view -0
+ 410              		.cfi_startproc
+ 411              		@ args = 0, pretend = 0, frame = 0
+ 412              		@ frame_needed = 0, uses_anonymous_args = 0
+ 126:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	if(distance+len<=GetQueueReadCount(queue)&&len>0)	//读取范围在队列可读范围内
+ 413              		.loc 1 126 1 is_stmt 0 view .LVU106
+ 414 0000 2DE9F041 		push	{r4, r5, r6, r7, r8, lr}
+ 415              	.LCFI3:
+ 416              		.cfi_def_cfa_offset 24
+ 417              		.cfi_offset 4, -24
+ 418              		.cfi_offset 5, -20
+ 419              		.cfi_offset 6, -16
+ 420              		.cfi_offset 7, -12
+ 421              		.cfi_offset 8, -8
+ 422              		.cfi_offset 14, -4
+ 423 0004 0746     		mov	r7, r0
+ 424 0006 0D46     		mov	r5, r1
+ 425 0008 1646     		mov	r6, r2
+ 426 000a 1C46     		mov	r4, r3
+ 127:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	{
+ 427              		.loc 1 127 2 is_stmt 1 view .LVU107
+ 127:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	{
+ 428              		.loc 1 127 13 is_stmt 0 view .LVU108
+ 429 000c 02EB0308 		add	r8, r2, r3
+ 127:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	{
+ 430              		.loc 1 127 19 view .LVU109
+ 431 0010 0846     		mov	r0, r1
+ 432              	.LVL40:
+ 127:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	{
+ 433              		.loc 1 127 19 view .LVU110
+ 434 0012 FFF7FEFF 		bl	GetQueueReadCount
+ 435              	.LVL41:
+ 127:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	{
+ 436              		.loc 1 127 4 view .LVU111
+ 437 0016 8045     		cmp	r8, r0
+ 438 0018 1FDC     		bgt	.L27
+ 127:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	{
+ 439              		.loc 1 127 43 discriminator 1 view .LVU112
+ 440 001a 0CB3     		cbz	r4, .L28
+ 441              	.LBB5:
+ 129:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	
+ 442              		.loc 1 129 3 is_stmt 1 view .LVU113
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccRQ6nHg.s 			page 14
+
+
+ 129:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	
+ 443              		.loc 1 129 28 is_stmt 0 view .LVU114
+ 444 001c B5F80221 		ldrh	r2, [r5, #258]
+ 129:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	
+ 445              		.loc 1 129 49 view .LVU115
+ 446 0020 1644     		add	r6, r6, r2
+ 129:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	
+ 447              		.loc 1 129 16 view .LVU116
+ 448 0022 F6B2     		uxtb	r6, r6
+ 449              	.LVL42:
+ 131:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		{
+ 450              		.loc 1 131 3 is_stmt 1 view .LVU117
+ 131:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		{
+ 451              		.loc 1 131 12 is_stmt 0 view .LVU118
+ 452 0024 A319     		adds	r3, r4, r6
+ 131:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		{
+ 453              		.loc 1 131 5 view .LVU119
+ 454 0026 FF2B     		cmp	r3, #255
+ 455 0028 06D8     		bhi	.L26
+ 133:../STM32CUBEMX/Core/Src/uart_fifo.c **** 			//q->FIFO_Rear+=len;
+ 456              		.loc 1 133 4 is_stmt 1 view .LVU120
+ 457 002a 2246     		mov	r2, r4
+ 458 002c A919     		adds	r1, r5, r6
+ 459 002e 3846     		mov	r0, r7
+ 460 0030 FFF7FEFF 		bl	memcpy
+ 461              	.LVL43:
+ 462              	.LBE5:
+ 149:../STM32CUBEMX/Core/Src/uart_fifo.c **** }
+ 463              		.loc 1 149 9 is_stmt 0 view .LVU121
+ 464 0034 0120     		movs	r0, #1
+ 465              	.LBB7:
+ 466 0036 11E0     		b	.L25
+ 467              	.L26:
+ 468              	.LBB6:
+ 138:../STM32CUBEMX/Core/Src/uart_fifo.c **** 			memcpy(destination, &queue->SoftWare_FIFO[start], len_front);//从front到end
+ 469              		.loc 1 138 4 is_stmt 1 view .LVU122
+ 138:../STM32CUBEMX/Core/Src/uart_fifo.c **** 			memcpy(destination, &queue->SoftWare_FIFO[start], len_front);//从front到end
+ 470              		.loc 1 138 17 is_stmt 0 view .LVU123
+ 471 0038 C6F58078 		rsb	r8, r6, #256
+ 472              	.LVL44:
+ 139:../STM32CUBEMX/Core/Src/uart_fifo.c **** 			memcpy(destination+len_front, &queue->SoftWare_FIFO[0], len-len_front);	//从头至剩下led
+ 473              		.loc 1 139 4 is_stmt 1 view .LVU124
+ 474 003c 4246     		mov	r2, r8
+ 475 003e A919     		adds	r1, r5, r6
+ 476 0040 3846     		mov	r0, r7
+ 477 0042 FFF7FEFF 		bl	memcpy
+ 478              	.LVL45:
+ 140:../STM32CUBEMX/Core/Src/uart_fifo.c **** 			//q->FIFO_Rear=len-len_front;
+ 479              		.loc 1 140 4 view .LVU125
+ 480 0046 A6F58072 		sub	r2, r6, #256
+ 481 004a 2244     		add	r2, r2, r4
+ 482 004c 2946     		mov	r1, r5
+ 483 004e 07EB0800 		add	r0, r7, r8
+ 484 0052 FFF7FEFF 		bl	memcpy
+ 485              	.LVL46:
+ 486              	.LBE6:
+ 487              	.LBE7:
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccRQ6nHg.s 			page 15
+
+
+ 149:../STM32CUBEMX/Core/Src/uart_fifo.c **** }
+ 488              		.loc 1 149 9 is_stmt 0 view .LVU126
+ 489 0056 0120     		movs	r0, #1
+ 490 0058 00E0     		b	.L25
+ 491              	.LVL47:
+ 492              	.L27:
+ 146:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	}
+ 493              		.loc 1 146 10 view .LVU127
+ 494 005a 0020     		movs	r0, #0
+ 495              	.L25:
+ 150:../STM32CUBEMX/Core/Src/uart_fifo.c **** 
+ 496              		.loc 1 150 1 view .LVU128
+ 497 005c BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+ 498              	.LVL48:
+ 499              	.L28:
+ 146:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	}
+ 500              		.loc 1 146 10 view .LVU129
+ 501 0060 0020     		movs	r0, #0
+ 502 0062 FBE7     		b	.L25
+ 503              		.cfi_endproc
+ 504              	.LFE239:
+ 506              		.section	.text.QueryAQueue,"ax",%progbits
+ 507              		.align	1
+ 508              		.global	QueryAQueue
+ 509              		.syntax unified
+ 510              		.thumb
+ 511              		.thumb_func
+ 513              	QueryAQueue:
+ 514              	.LVL49:
+ 515              	.LFB240:
+ 154:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	uint16_t len=1;
+ 516              		.loc 1 154 1 is_stmt 1 view -0
+ 517              		.cfi_startproc
+ 518              		@ args = 0, pretend = 0, frame = 0
+ 519              		@ frame_needed = 0, uses_anonymous_args = 0
+ 154:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	uint16_t len=1;
+ 520              		.loc 1 154 1 is_stmt 0 view .LVU131
+ 521 0000 38B5     		push	{r3, r4, r5, lr}
+ 522              	.LCFI4:
+ 523              		.cfi_def_cfa_offset 16
+ 524              		.cfi_offset 3, -16
+ 525              		.cfi_offset 4, -12
+ 526              		.cfi_offset 5, -8
+ 527              		.cfi_offset 14, -4
+ 528 0002 0546     		mov	r5, r0
+ 529 0004 0C46     		mov	r4, r1
+ 155:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	if(distance+len<=GetQueueReadCount(queue)&&len>0)	//读取范围在队列可读范围内
+ 530              		.loc 1 155 2 is_stmt 1 view .LVU132
+ 531              	.LVL50:
+ 156:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	{ 
+ 532              		.loc 1 156 2 view .LVU133
+ 156:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	{ 
+ 533              		.loc 1 156 19 is_stmt 0 view .LVU134
+ 534 0006 FFF7FEFF 		bl	GetQueueReadCount
+ 535              	.LVL51:
+ 156:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	{ 
+ 536              		.loc 1 156 4 view .LVU135
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccRQ6nHg.s 			page 16
+
+
+ 537 000a A042     		cmp	r0, r4
+ 538 000c 05D9     		bls	.L32
+ 539              	.LBB8:
+ 158:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	
+ 540              		.loc 1 158 3 is_stmt 1 view .LVU136
+ 158:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	
+ 541              		.loc 1 158 28 is_stmt 0 view .LVU137
+ 542 000e B5F80231 		ldrh	r3, [r5, #258]
+ 158:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	
+ 543              		.loc 1 158 49 view .LVU138
+ 544 0012 2344     		add	r3, r3, r4
+ 158:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	
+ 545              		.loc 1 158 16 view .LVU139
+ 546 0014 DBB2     		uxtb	r3, r3
+ 547              	.LVL52:
+ 160:../STM32CUBEMX/Core/Src/uart_fifo.c **** //		if(start + len < USART_FIFO_SIZE)	//若取出数据范围未到队列边界
+ 548              		.loc 1 160 3 is_stmt 1 view .LVU140
+ 160:../STM32CUBEMX/Core/Src/uart_fifo.c **** //		if(start + len < USART_FIFO_SIZE)	//若取出数据范围未到队列边界
+ 549              		.loc 1 160 30 is_stmt 0 view .LVU141
+ 550 0016 E85C     		ldrb	r0, [r5, r3]	@ zero_extendqisi2
+ 551              	.LVL53:
+ 552              	.L31:
+ 160:../STM32CUBEMX/Core/Src/uart_fifo.c **** //		if(start + len < USART_FIFO_SIZE)	//若取出数据范围未到队列边界
+ 553              		.loc 1 160 30 view .LVU142
+ 554              	.LBE8:
+ 182:../STM32CUBEMX/Core/Src/uart_fifo.c **** 
+ 555              		.loc 1 182 1 view .LVU143
+ 556 0018 38BD     		pop	{r3, r4, r5, pc}
+ 557              	.LVL54:
+ 558              	.L32:
+ 178:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	}
+ 559              		.loc 1 178 10 view .LVU144
+ 560 001a 0020     		movs	r0, #0
+ 561 001c FCE7     		b	.L31
+ 562              		.cfi_endproc
+ 563              	.LFE240:
+ 565              		.section	.text.DeleteQueue,"ax",%progbits
+ 566              		.align	1
+ 567              		.global	DeleteQueue
+ 568              		.syntax unified
+ 569              		.thumb
+ 570              		.thumb_func
+ 572              	DeleteQueue:
+ 573              	.LVL55:
+ 574              	.LFB241:
+ 185:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	if(len<=GetQueueReadCount(q)&&len>0)
+ 575              		.loc 1 185 1 is_stmt 1 view -0
+ 576              		.cfi_startproc
+ 577              		@ args = 0, pretend = 0, frame = 0
+ 578              		@ frame_needed = 0, uses_anonymous_args = 0
+ 185:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	if(len<=GetQueueReadCount(q)&&len>0)
+ 579              		.loc 1 185 1 is_stmt 0 view .LVU146
+ 580 0000 38B5     		push	{r3, r4, r5, lr}
+ 581              	.LCFI5:
+ 582              		.cfi_def_cfa_offset 16
+ 583              		.cfi_offset 3, -16
+ 584              		.cfi_offset 4, -12
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccRQ6nHg.s 			page 17
+
+
+ 585              		.cfi_offset 5, -8
+ 586              		.cfi_offset 14, -4
+ 587 0002 0546     		mov	r5, r0
+ 588 0004 0C46     		mov	r4, r1
+ 186:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	{
+ 589              		.loc 1 186 2 is_stmt 1 view .LVU147
+ 186:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	{
+ 590              		.loc 1 186 10 is_stmt 0 view .LVU148
+ 591 0006 FFF7FEFF 		bl	GetQueueReadCount
+ 592              	.LVL56:
+ 186:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	{
+ 593              		.loc 1 186 4 view .LVU149
+ 594 000a A042     		cmp	r0, r4
+ 595 000c 10D3     		bcc	.L37
+ 186:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	{
+ 596              		.loc 1 186 30 discriminator 1 view .LVU150
+ 597 000e 8CB1     		cbz	r4, .L38
+ 188:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		{
+ 598              		.loc 1 188 3 is_stmt 1 view .LVU151
+ 188:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		{
+ 599              		.loc 1 188 7 is_stmt 0 view .LVU152
+ 600 0010 B5F80231 		ldrh	r3, [r5, #258]
+ 188:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		{
+ 601              		.loc 1 188 19 view .LVU153
+ 602 0014 E218     		adds	r2, r4, r3
+ 188:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		{
+ 603              		.loc 1 188 5 view .LVU154
+ 604 0016 FF2A     		cmp	r2, #255
+ 605 0018 03DC     		bgt	.L36
+ 191:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		}
+ 606              		.loc 1 191 4 is_stmt 1 view .LVU155
+ 191:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		}
+ 607              		.loc 1 191 16 is_stmt 0 view .LVU156
+ 608 001a A5F80221 		strh	r2, [r5, #258]	@ movhi
+ 206:../STM32CUBEMX/Core/Src/uart_fifo.c **** }
+ 609              		.loc 1 206 9 view .LVU157
+ 610 001e 0120     		movs	r0, #1
+ 611 0020 07E0     		b	.L35
+ 612              	.L36:
+ 613              	.LBB9:
+ 195:../STM32CUBEMX/Core/Src/uart_fifo.c **** 			//memcpy(destination, &q->SoftWare_FIFO[q->FIFO_Rear], len_front);//从front到end
+ 614              		.loc 1 195 4 is_stmt 1 view .LVU158
+ 195:../STM32CUBEMX/Core/Src/uart_fifo.c **** 			//memcpy(destination, &q->SoftWare_FIFO[q->FIFO_Rear], len_front);//从front到end
+ 615              		.loc 1 195 43 is_stmt 0 view .LVU159
+ 616 0022 C3F58073 		rsb	r3, r3, #256
+ 617              	.LVL57:
+ 198:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		}
+ 618              		.loc 1 198 4 is_stmt 1 view .LVU160
+ 198:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		}
+ 619              		.loc 1 198 20 is_stmt 0 view .LVU161
+ 620 0026 E41A     		subs	r4, r4, r3
+ 198:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		}
+ 621              		.loc 1 198 16 view .LVU162
+ 622 0028 A5F80241 		strh	r4, [r5, #258]	@ movhi
+ 623              	.LBE9:
+ 206:../STM32CUBEMX/Core/Src/uart_fifo.c **** }
+ 624              		.loc 1 206 9 view .LVU163
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccRQ6nHg.s 			page 18
+
+
+ 625 002c 0120     		movs	r0, #1
+ 626 002e 00E0     		b	.L35
+ 627              	.LVL58:
+ 628              	.L37:
+ 203:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	}
+ 629              		.loc 1 203 10 view .LVU164
+ 630 0030 0020     		movs	r0, #0
+ 631              	.L35:
+ 207:../STM32CUBEMX/Core/Src/uart_fifo.c **** 
+ 632              		.loc 1 207 1 view .LVU165
+ 633 0032 38BD     		pop	{r3, r4, r5, pc}
+ 634              	.LVL59:
+ 635              	.L38:
+ 203:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	}
+ 636              		.loc 1 203 10 view .LVU166
+ 637 0034 0020     		movs	r0, #0
+ 638 0036 FCE7     		b	.L35
+ 639              		.cfi_endproc
+ 640              	.LFE241:
+ 642              		.section	.text.GetQueueWriteCount,"ax",%progbits
+ 643              		.align	1
+ 644              		.global	GetQueueWriteCount
+ 645              		.syntax unified
+ 646              		.thumb
+ 647              		.thumb_func
+ 649              	GetQueueWriteCount:
+ 650              	.LVL60:
+ 651              	.LFB244:
+ 221:../STM32CUBEMX/Core/Src/uart_fifo.c **** 
+ 222:../STM32CUBEMX/Core/Src/uart_fifo.c **** uint16_t GetQueueWriteCount( USART_CircularQueueTypeDef const * queue)	//传递指针而非值可�
+ 223:../STM32CUBEMX/Core/Src/uart_fifo.c **** {
+ 652              		.loc 1 223 1 is_stmt 1 view -0
+ 653              		.cfi_startproc
+ 654              		@ args = 0, pretend = 0, frame = 0
+ 655              		@ frame_needed = 0, uses_anonymous_args = 0
+ 656              		@ link register save eliminated.
+ 224:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	if(queue->FIFO_Front==queue->FIFO_Rear)	return USART_FIFO_SIZE-1;//return QueueEmpty;
+ 657              		.loc 1 224 2 view .LVU168
+ 658              		.loc 1 224 10 is_stmt 0 view .LVU169
+ 659 0000 B0F80021 		ldrh	r2, [r0, #256]
+ 660              		.loc 1 224 29 view .LVU170
+ 661 0004 B0F80231 		ldrh	r3, [r0, #258]
+ 662              		.loc 1 224 4 view .LVU171
+ 663 0008 9A42     		cmp	r2, r3
+ 664 000a 10D0     		beq	.L43
+ 225:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	if(queue->FIFO_Rear-queue->FIFO_Front==1||queue->FIFO_Rear-queue->FIFO_Front==-(USART_FIFO_SIZE-1)
+ 665              		.loc 1 225 2 is_stmt 1 view .LVU172
+ 666              		.loc 1 225 21 is_stmt 0 view .LVU173
+ 667 000c 991A     		subs	r1, r3, r2
+ 668              		.loc 1 225 4 view .LVU174
+ 669 000e 0129     		cmp	r1, #1
+ 670 0010 0FD0     		beq	.L44
+ 671              		.loc 1 225 42 discriminator 2 view .LVU175
+ 672 0012 11F1FF0F 		cmn	r1, #255
+ 673 0016 0ED0     		beq	.L45
+ 226:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	return (queue->FIFO_Rear - queue->FIFO_Front-1)>=0?(queue->FIFO_Rear - queue->FIFO_Front-1):(queue
+ 674              		.loc 1 226 2 is_stmt 1 view .LVU176
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccRQ6nHg.s 			page 19
+
+
+ 675              		.loc 1 226 93 is_stmt 0 view .LVU177
+ 676 0018 0029     		cmp	r1, #0
+ 677 001a 03DD     		ble	.L42
+ 678              		.loc 1 226 71 discriminator 1 view .LVU178
+ 679 001c 88B2     		uxth	r0, r1
+ 680              	.LVL61:
+ 681              		.loc 1 226 93 discriminator 1 view .LVU179
+ 682 001e 0138     		subs	r0, r0, #1
+ 683 0020 80B2     		uxth	r0, r0
+ 684 0022 7047     		bx	lr
+ 685              	.LVL62:
+ 686              	.L42:
+ 687              		.loc 1 226 112 discriminator 2 view .LVU180
+ 688 0024 981A     		subs	r0, r3, r2
+ 689              	.LVL63:
+ 690              		.loc 1 226 112 discriminator 2 view .LVU181
+ 691 0026 80B2     		uxth	r0, r0
+ 692              		.loc 1 226 93 discriminator 2 view .LVU182
+ 693 0028 FF30     		adds	r0, r0, #255
+ 694 002a 80B2     		uxth	r0, r0
+ 695 002c 7047     		bx	lr
+ 696              	.LVL64:
+ 697              	.L43:
+ 224:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	if(queue->FIFO_Front==queue->FIFO_Rear)	return USART_FIFO_SIZE-1;//return QueueEmpty;
+ 698              		.loc 1 224 49 view .LVU183
+ 699 002e FF20     		movs	r0, #255
+ 700              	.LVL65:
+ 224:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	if(queue->FIFO_Front==queue->FIFO_Rear)	return USART_FIFO_SIZE-1;//return QueueEmpty;
+ 701              		.loc 1 224 49 view .LVU184
+ 702 0030 7047     		bx	lr
+ 703              	.LVL66:
+ 704              	.L44:
+ 225:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	if(queue->FIFO_Rear-queue->FIFO_Front==1||queue->FIFO_Rear-queue->FIFO_Front==-(USART_FIFO_SIZE-1)
+ 705              		.loc 1 225 109 view .LVU185
+ 706 0032 0020     		movs	r0, #0
+ 707              	.LVL67:
+ 225:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	if(queue->FIFO_Rear-queue->FIFO_Front==1||queue->FIFO_Rear-queue->FIFO_Front==-(USART_FIFO_SIZE-1)
+ 708              		.loc 1 225 109 view .LVU186
+ 709 0034 7047     		bx	lr
+ 710              	.LVL68:
+ 711              	.L45:
+ 225:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	if(queue->FIFO_Rear-queue->FIFO_Front==1||queue->FIFO_Rear-queue->FIFO_Front==-(USART_FIFO_SIZE-1)
+ 712              		.loc 1 225 109 view .LVU187
+ 713 0036 0020     		movs	r0, #0
+ 714              	.LVL69:
+ 227:../STM32CUBEMX/Core/Src/uart_fifo.c **** }
+ 715              		.loc 1 227 1 view .LVU188
+ 716 0038 7047     		bx	lr
+ 717              		.cfi_endproc
+ 718              	.LFE244:
+ 720              		.section	.text.InsertQueue,"ax",%progbits
+ 721              		.align	1
+ 722              		.global	InsertQueue
+ 723              		.syntax unified
+ 724              		.thumb
+ 725              		.thumb_func
+ 727              	InsertQueue:
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccRQ6nHg.s 			page 20
+
+
+ 728              	.LVL70:
+ 729              	.LFB235:
+   8:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	//__disable_irq();  /* Disable global interrupt*/
+ 730              		.loc 1 8 1 is_stmt 1 view -0
+ 731              		.cfi_startproc
+ 732              		@ args = 0, pretend = 0, frame = 0
+ 733              		@ frame_needed = 0, uses_anonymous_args = 0
+   8:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	//__disable_irq();  /* Disable global interrupt*/
+ 734              		.loc 1 8 1 is_stmt 0 view .LVU190
+ 735 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+ 736              	.LCFI6:
+ 737              		.cfi_def_cfa_offset 24
+ 738              		.cfi_offset 3, -24
+ 739              		.cfi_offset 4, -20
+ 740              		.cfi_offset 5, -16
+ 741              		.cfi_offset 6, -12
+ 742              		.cfi_offset 7, -8
+ 743              		.cfi_offset 14, -4
+ 744 0002 0546     		mov	r5, r0
+ 745 0004 0E46     		mov	r6, r1
+ 746 0006 1446     		mov	r4, r2
+  11:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	{
+ 747              		.loc 1 11 2 is_stmt 1 view .LVU191
+  11:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	{
+ 748              		.loc 1 11 10 is_stmt 0 view .LVU192
+ 749 0008 FFF7FEFF 		bl	GetQueueWriteCount
+ 750              	.LVL71:
+  11:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	{
+ 751              		.loc 1 11 4 view .LVU193
+ 752 000c A042     		cmp	r0, r4
+ 753 000e 22D3     		bcc	.L49
+  11:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	{
+ 754              		.loc 1 11 31 discriminator 1 view .LVU194
+ 755 0010 1CB3     		cbz	r4, .L50
+  13:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		{
+ 756              		.loc 1 13 3 is_stmt 1 view .LVU195
+  13:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		{
+ 757              		.loc 1 13 7 is_stmt 0 view .LVU196
+ 758 0012 B5F80001 		ldrh	r0, [r5, #256]
+  13:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		{
+ 759              		.loc 1 13 20 view .LVU197
+ 760 0016 2318     		adds	r3, r4, r0
+  13:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		{
+ 761              		.loc 1 13 5 view .LVU198
+ 762 0018 FF2B     		cmp	r3, #255
+ 763 001a 0BDC     		bgt	.L48
+  15:../STM32CUBEMX/Core/Src/uart_fifo.c **** 			q->FIFO_Front+=len;
+ 764              		.loc 1 15 4 is_stmt 1 view .LVU199
+ 765 001c 2246     		mov	r2, r4
+ 766 001e 3146     		mov	r1, r6
+ 767 0020 2844     		add	r0, r0, r5
+ 768 0022 FFF7FEFF 		bl	memcpy
+ 769              	.LVL72:
+  16:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		}
+ 770              		.loc 1 16 4 view .LVU200
+  16:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		}
+ 771              		.loc 1 16 17 is_stmt 0 view .LVU201
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccRQ6nHg.s 			page 21
+
+
+ 772 0026 B5F80031 		ldrh	r3, [r5, #256]
+ 773 002a 1C44     		add	r4, r4, r3
+ 774 002c A5F80041 		strh	r4, [r5, #256]	@ movhi
+  31:../STM32CUBEMX/Core/Src/uart_fifo.c **** }
+ 775              		.loc 1 31 9 view .LVU202
+ 776 0030 0120     		movs	r0, #1
+ 777 0032 11E0     		b	.L47
+ 778              	.L48:
+ 779              	.LBB10:
+  20:../STM32CUBEMX/Core/Src/uart_fifo.c **** 			memcpy(&q->SoftWare_FIFO[q->FIFO_Front], source, len_front);//从front到end
+ 780              		.loc 1 20 4 is_stmt 1 view .LVU203
+  20:../STM32CUBEMX/Core/Src/uart_fifo.c **** 			memcpy(&q->SoftWare_FIFO[q->FIFO_Front], source, len_front);//从front到end
+ 781              		.loc 1 20 43 is_stmt 0 view .LVU204
+ 782 0034 C0F58077 		rsb	r7, r0, #256
+ 783              	.LVL73:
+  21:../STM32CUBEMX/Core/Src/uart_fifo.c **** 			memcpy(&q->SoftWare_FIFO[0], (source+len_front), len-len_front);	//从头至剩下led	//这里so
+ 784              		.loc 1 21 4 is_stmt 1 view .LVU205
+ 785 0038 3A46     		mov	r2, r7
+ 786 003a 3146     		mov	r1, r6
+ 787 003c 2844     		add	r0, r0, r5
+ 788 003e FFF7FEFF 		bl	memcpy
+ 789              	.LVL74:
+  22:../STM32CUBEMX/Core/Src/uart_fifo.c **** 			q->FIFO_Front=len-len_front;
+ 790              		.loc 1 22 4 view .LVU206
+ 791 0042 E21B     		subs	r2, r4, r7
+ 792 0044 F119     		adds	r1, r6, r7
+ 793 0046 2846     		mov	r0, r5
+ 794 0048 FFF7FEFF 		bl	memcpy
+ 795              	.LVL75:
+  23:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		}
+ 796              		.loc 1 23 4 view .LVU207
+  23:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		}
+ 797              		.loc 1 23 21 is_stmt 0 view .LVU208
+ 798 004c E41B     		subs	r4, r4, r7
+  23:../STM32CUBEMX/Core/Src/uart_fifo.c **** 		}
+ 799              		.loc 1 23 17 view .LVU209
+ 800 004e A5F80041 		strh	r4, [r5, #256]	@ movhi
+ 801              	.LBE10:
+  31:../STM32CUBEMX/Core/Src/uart_fifo.c **** }
+ 802              		.loc 1 31 9 view .LVU210
+ 803 0052 0120     		movs	r0, #1
+ 804 0054 00E0     		b	.L47
+ 805              	.LVL76:
+ 806              	.L49:
+  28:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	}
+ 807              		.loc 1 28 10 view .LVU211
+ 808 0056 0020     		movs	r0, #0
+ 809              	.L47:
+  32:../STM32CUBEMX/Core/Src/uart_fifo.c **** 
+ 810              		.loc 1 32 1 view .LVU212
+ 811 0058 F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 812              	.LVL77:
+ 813              	.L50:
+  28:../STM32CUBEMX/Core/Src/uart_fifo.c **** 	}
+ 814              		.loc 1 28 10 view .LVU213
+ 815 005a 0020     		movs	r0, #0
+ 816 005c FCE7     		b	.L47
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccRQ6nHg.s 			page 22
+
+
+ 817              		.cfi_endproc
+ 818              	.LFE235:
+ 820              		.global	protect_flag
+ 821              		.section	.bss.protect_flag,"aw",%nobits
+ 822              		.align	2
+ 825              	protect_flag:
+ 826 0000 00000000 		.space	4
+ 827              		.text
+ 828              	.Letext0:
+ 829              		.file 2 "c:\\program files (x86)\\arm gnu toolchain arm-none-eabi\\11.2 2022.02\\arm-none-eabi\\in
+ 830              		.file 3 "c:\\program files (x86)\\arm gnu toolchain arm-none-eabi\\11.2 2022.02\\arm-none-eabi\\in
+ 831              		.file 4 "c:\\program files (x86)\\arm gnu toolchain arm-none-eabi\\11.2 2022.02\\lib\\gcc\\arm-non
+ 832              		.file 5 "../STM32CUBEMX/Core/Src/uart_fifo.h"
+ 833              		.file 6 "c:\\program files (x86)\\arm gnu toolchain arm-none-eabi\\11.2 2022.02\\arm-none-eabi\\in
+ 834              		.file 7 "<built-in>"
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccRQ6nHg.s 			page 23
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 uart_fifo.c
+C:\Users\ysl\AppData\Local\Temp\ccRQ6nHg.s:20     .text.DeleteAllQueue:00000000 $t
+C:\Users\ysl\AppData\Local\Temp\ccRQ6nHg.s:26     .text.DeleteAllQueue:00000000 DeleteAllQueue
+C:\Users\ysl\AppData\Local\Temp\ccRQ6nHg.s:48     .text.GetQueueReadCount:00000000 $t
+C:\Users\ysl\AppData\Local\Temp\ccRQ6nHg.s:54     .text.GetQueueReadCount:00000000 GetQueueReadCount
+C:\Users\ysl\AppData\Local\Temp\ccRQ6nHg.s:126    .text.RemoveQueue:00000000 $t
+C:\Users\ysl\AppData\Local\Temp\ccRQ6nHg.s:132    .text.RemoveQueue:00000000 RemoveQueue
+C:\Users\ysl\AppData\Local\Temp\ccRQ6nHg.s:229    .text.RemoveAQueue:00000000 $t
+C:\Users\ysl\AppData\Local\Temp\ccRQ6nHg.s:235    .text.RemoveAQueue:00000000 RemoveAQueue
+C:\Users\ysl\AppData\Local\Temp\ccRQ6nHg.s:305    .text.RemoveAllQueue:00000000 $t
+C:\Users\ysl\AppData\Local\Temp\ccRQ6nHg.s:311    .text.RemoveAllQueue:00000000 RemoveAllQueue
+C:\Users\ysl\AppData\Local\Temp\ccRQ6nHg.s:400    .text.QueryQueue:00000000 $t
+C:\Users\ysl\AppData\Local\Temp\ccRQ6nHg.s:406    .text.QueryQueue:00000000 QueryQueue
+C:\Users\ysl\AppData\Local\Temp\ccRQ6nHg.s:507    .text.QueryAQueue:00000000 $t
+C:\Users\ysl\AppData\Local\Temp\ccRQ6nHg.s:513    .text.QueryAQueue:00000000 QueryAQueue
+C:\Users\ysl\AppData\Local\Temp\ccRQ6nHg.s:566    .text.DeleteQueue:00000000 $t
+C:\Users\ysl\AppData\Local\Temp\ccRQ6nHg.s:572    .text.DeleteQueue:00000000 DeleteQueue
+C:\Users\ysl\AppData\Local\Temp\ccRQ6nHg.s:643    .text.GetQueueWriteCount:00000000 $t
+C:\Users\ysl\AppData\Local\Temp\ccRQ6nHg.s:649    .text.GetQueueWriteCount:00000000 GetQueueWriteCount
+C:\Users\ysl\AppData\Local\Temp\ccRQ6nHg.s:721    .text.InsertQueue:00000000 $t
+C:\Users\ysl\AppData\Local\Temp\ccRQ6nHg.s:727    .text.InsertQueue:00000000 InsertQueue
+C:\Users\ysl\AppData\Local\Temp\ccRQ6nHg.s:825    .bss.protect_flag:00000000 protect_flag
+C:\Users\ysl\AppData\Local\Temp\ccRQ6nHg.s:822    .bss.protect_flag:00000000 $d
+
+UNDEFINED SYMBOLS
+memcpy

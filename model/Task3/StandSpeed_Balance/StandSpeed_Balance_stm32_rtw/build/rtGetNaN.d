@@ -1,0 +1,4 @@
+build/rtGetNaN.o: rtGetNaN.c rtGetNaN.h rtwtypes.h rt_nonfinite.h
+rtGetNaN.h:
+rtwtypes.h:
+rt_nonfinite.h:

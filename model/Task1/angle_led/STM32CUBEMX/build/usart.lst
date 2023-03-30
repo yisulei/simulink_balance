@@ -1,0 +1,3453 @@
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"usart.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.text.crc16_update,"ax",%progbits
+  20              		.align	1
+  21              		.syntax unified
+  22              		.thumb
+  23              		.thumb_func
+  25              	crc16_update:
+  26              	.LVL0:
+  27              	.LFB242:
+  28              		.file 1 "../STM32CUBEMX/Core/Src/usart.c"
+   1:../STM32CUBEMX/Core/Src/usart.c **** /* USER CODE BEGIN Header */
+   2:../STM32CUBEMX/Core/Src/usart.c **** /**
+   3:../STM32CUBEMX/Core/Src/usart.c ****   ******************************************************************************
+   4:../STM32CUBEMX/Core/Src/usart.c ****   * @file    usart.c
+   5:../STM32CUBEMX/Core/Src/usart.c ****   * @brief   This file provides code for the configuration
+   6:../STM32CUBEMX/Core/Src/usart.c ****   *          of the USART instances.
+   7:../STM32CUBEMX/Core/Src/usart.c ****   ******************************************************************************
+   8:../STM32CUBEMX/Core/Src/usart.c ****   * @attention
+   9:../STM32CUBEMX/Core/Src/usart.c ****   *
+  10:../STM32CUBEMX/Core/Src/usart.c ****   * Copyright (c) 2022 STMicroelectronics.
+  11:../STM32CUBEMX/Core/Src/usart.c ****   * All rights reserved.
+  12:../STM32CUBEMX/Core/Src/usart.c ****   *
+  13:../STM32CUBEMX/Core/Src/usart.c ****   * This software is licensed under terms that can be found in the LICENSE file
+  14:../STM32CUBEMX/Core/Src/usart.c ****   * in the root directory of this software component.
+  15:../STM32CUBEMX/Core/Src/usart.c ****   * If no LICENSE file comes with this software, it is provided AS-IS.
+  16:../STM32CUBEMX/Core/Src/usart.c ****   *
+  17:../STM32CUBEMX/Core/Src/usart.c ****   ******************************************************************************
+  18:../STM32CUBEMX/Core/Src/usart.c ****   */
+  19:../STM32CUBEMX/Core/Src/usart.c **** /* USER CODE END Header */
+  20:../STM32CUBEMX/Core/Src/usart.c **** /* Includes ------------------------------------------------------------------*/
+  21:../STM32CUBEMX/Core/Src/usart.c **** #include "usart.h"
+  22:../STM32CUBEMX/Core/Src/usart.c **** 
+  23:../STM32CUBEMX/Core/Src/usart.c **** /* USER CODE BEGIN 0 */
+  24:../STM32CUBEMX/Core/Src/usart.c **** #include "uart_fifo.h"
+  25:../STM32CUBEMX/Core/Src/usart.c **** extern uint8_t Uart3DMABuffer[UART3DMA_RXBUFFER_SIZE];
+  26:../STM32CUBEMX/Core/Src/usart.c **** UartDMADataTypeDef Uart1DMAData;
+  27:../STM32CUBEMX/Core/Src/usart.c **** USART_CircularQueueTypeDef USART1_Software_FIFO={0};
+  28:../STM32CUBEMX/Core/Src/usart.c **** uint16_t UART1_DMA_NDTR=0;
+  29:../STM32CUBEMX/Core/Src/usart.c **** /* USER CODE END 0 */
+  30:../STM32CUBEMX/Core/Src/usart.c **** 
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s 			page 2
+
+
+  31:../STM32CUBEMX/Core/Src/usart.c **** UART_HandleTypeDef huart4;
+  32:../STM32CUBEMX/Core/Src/usart.c **** UART_HandleTypeDef huart5;
+  33:../STM32CUBEMX/Core/Src/usart.c **** UART_HandleTypeDef huart1;
+  34:../STM32CUBEMX/Core/Src/usart.c **** UART_HandleTypeDef huart3;
+  35:../STM32CUBEMX/Core/Src/usart.c **** DMA_HandleTypeDef hdma_usart1_rx;
+  36:../STM32CUBEMX/Core/Src/usart.c **** DMA_HandleTypeDef hdma_usart1_tx;
+  37:../STM32CUBEMX/Core/Src/usart.c **** DMA_HandleTypeDef hdma_usart3_rx;
+  38:../STM32CUBEMX/Core/Src/usart.c **** 
+  39:../STM32CUBEMX/Core/Src/usart.c **** /* UART4 init function */
+  40:../STM32CUBEMX/Core/Src/usart.c **** void MX_UART4_Init(void)
+  41:../STM32CUBEMX/Core/Src/usart.c **** {
+  42:../STM32CUBEMX/Core/Src/usart.c **** 
+  43:../STM32CUBEMX/Core/Src/usart.c ****   /* USER CODE BEGIN UART4_Init 0 */
+  44:../STM32CUBEMX/Core/Src/usart.c **** 
+  45:../STM32CUBEMX/Core/Src/usart.c ****   /* USER CODE END UART4_Init 0 */
+  46:../STM32CUBEMX/Core/Src/usart.c **** 
+  47:../STM32CUBEMX/Core/Src/usart.c ****   /* USER CODE BEGIN UART4_Init 1 */
+  48:../STM32CUBEMX/Core/Src/usart.c **** 
+  49:../STM32CUBEMX/Core/Src/usart.c ****   /* USER CODE END UART4_Init 1 */
+  50:../STM32CUBEMX/Core/Src/usart.c ****   huart4.Instance = UART4;
+  51:../STM32CUBEMX/Core/Src/usart.c ****   huart4.Init.BaudRate = 921600;
+  52:../STM32CUBEMX/Core/Src/usart.c ****   huart4.Init.WordLength = UART_WORDLENGTH_8B;
+  53:../STM32CUBEMX/Core/Src/usart.c ****   huart4.Init.StopBits = UART_STOPBITS_1;
+  54:../STM32CUBEMX/Core/Src/usart.c ****   huart4.Init.Parity = UART_PARITY_NONE;
+  55:../STM32CUBEMX/Core/Src/usart.c ****   huart4.Init.Mode = UART_MODE_TX_RX;
+  56:../STM32CUBEMX/Core/Src/usart.c ****   huart4.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  57:../STM32CUBEMX/Core/Src/usart.c ****   huart4.Init.OverSampling = UART_OVERSAMPLING_16;
+  58:../STM32CUBEMX/Core/Src/usart.c ****   if (HAL_UART_Init(&huart4) != HAL_OK)
+  59:../STM32CUBEMX/Core/Src/usart.c ****   {
+  60:../STM32CUBEMX/Core/Src/usart.c ****     Error_Handler();
+  61:../STM32CUBEMX/Core/Src/usart.c ****   }
+  62:../STM32CUBEMX/Core/Src/usart.c ****   /* USER CODE BEGIN UART4_Init 2 */
+  63:../STM32CUBEMX/Core/Src/usart.c **** 
+  64:../STM32CUBEMX/Core/Src/usart.c ****   /* USER CODE END UART4_Init 2 */
+  65:../STM32CUBEMX/Core/Src/usart.c **** 
+  66:../STM32CUBEMX/Core/Src/usart.c **** }
+  67:../STM32CUBEMX/Core/Src/usart.c **** /* UART5 init function */
+  68:../STM32CUBEMX/Core/Src/usart.c **** void MX_UART5_Init(void)
+  69:../STM32CUBEMX/Core/Src/usart.c **** {
+  70:../STM32CUBEMX/Core/Src/usart.c **** 
+  71:../STM32CUBEMX/Core/Src/usart.c ****   /* USER CODE BEGIN UART5_Init 0 */
+  72:../STM32CUBEMX/Core/Src/usart.c **** 
+  73:../STM32CUBEMX/Core/Src/usart.c ****   /* USER CODE END UART5_Init 0 */
+  74:../STM32CUBEMX/Core/Src/usart.c **** 
+  75:../STM32CUBEMX/Core/Src/usart.c ****   /* USER CODE BEGIN UART5_Init 1 */
+  76:../STM32CUBEMX/Core/Src/usart.c **** 
+  77:../STM32CUBEMX/Core/Src/usart.c ****   /* USER CODE END UART5_Init 1 */
+  78:../STM32CUBEMX/Core/Src/usart.c ****   huart5.Instance = UART5;
+  79:../STM32CUBEMX/Core/Src/usart.c ****   huart5.Init.BaudRate = 921600;
+  80:../STM32CUBEMX/Core/Src/usart.c ****   huart5.Init.WordLength = UART_WORDLENGTH_8B;
+  81:../STM32CUBEMX/Core/Src/usart.c ****   huart5.Init.StopBits = UART_STOPBITS_1;
+  82:../STM32CUBEMX/Core/Src/usart.c ****   huart5.Init.Parity = UART_PARITY_NONE;
+  83:../STM32CUBEMX/Core/Src/usart.c ****   huart5.Init.Mode = UART_MODE_TX_RX;
+  84:../STM32CUBEMX/Core/Src/usart.c ****   huart5.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  85:../STM32CUBEMX/Core/Src/usart.c ****   huart5.Init.OverSampling = UART_OVERSAMPLING_16;
+  86:../STM32CUBEMX/Core/Src/usart.c ****   if (HAL_UART_Init(&huart5) != HAL_OK)
+  87:../STM32CUBEMX/Core/Src/usart.c ****   {
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s 			page 3
+
+
+  88:../STM32CUBEMX/Core/Src/usart.c ****     Error_Handler();
+  89:../STM32CUBEMX/Core/Src/usart.c ****   }
+  90:../STM32CUBEMX/Core/Src/usart.c ****   /* USER CODE BEGIN UART5_Init 2 */
+  91:../STM32CUBEMX/Core/Src/usart.c **** 
+  92:../STM32CUBEMX/Core/Src/usart.c ****   /* USER CODE END UART5_Init 2 */
+  93:../STM32CUBEMX/Core/Src/usart.c **** 
+  94:../STM32CUBEMX/Core/Src/usart.c **** }
+  95:../STM32CUBEMX/Core/Src/usart.c **** /* USART1 init function */
+  96:../STM32CUBEMX/Core/Src/usart.c **** 
+  97:../STM32CUBEMX/Core/Src/usart.c **** void MX_USART1_UART_Init(void)
+  98:../STM32CUBEMX/Core/Src/usart.c **** {
+  99:../STM32CUBEMX/Core/Src/usart.c **** 
+ 100:../STM32CUBEMX/Core/Src/usart.c ****   /* USER CODE BEGIN USART1_Init 0 */
+ 101:../STM32CUBEMX/Core/Src/usart.c **** 
+ 102:../STM32CUBEMX/Core/Src/usart.c ****   /* USER CODE END USART1_Init 0 */
+ 103:../STM32CUBEMX/Core/Src/usart.c **** 
+ 104:../STM32CUBEMX/Core/Src/usart.c ****   /* USER CODE BEGIN USART1_Init 1 */
+ 105:../STM32CUBEMX/Core/Src/usart.c **** 
+ 106:../STM32CUBEMX/Core/Src/usart.c ****   /* USER CODE END USART1_Init 1 */
+ 107:../STM32CUBEMX/Core/Src/usart.c ****   huart1.Instance = USART1;
+ 108:../STM32CUBEMX/Core/Src/usart.c ****   huart1.Init.BaudRate = 921600;
+ 109:../STM32CUBEMX/Core/Src/usart.c ****   huart1.Init.WordLength = UART_WORDLENGTH_8B;
+ 110:../STM32CUBEMX/Core/Src/usart.c ****   huart1.Init.StopBits = UART_STOPBITS_1;
+ 111:../STM32CUBEMX/Core/Src/usart.c ****   huart1.Init.Parity = UART_PARITY_NONE;
+ 112:../STM32CUBEMX/Core/Src/usart.c ****   huart1.Init.Mode = UART_MODE_TX_RX;
+ 113:../STM32CUBEMX/Core/Src/usart.c ****   huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+ 114:../STM32CUBEMX/Core/Src/usart.c ****   huart1.Init.OverSampling = UART_OVERSAMPLING_16;
+ 115:../STM32CUBEMX/Core/Src/usart.c ****   if (HAL_UART_Init(&huart1) != HAL_OK)
+ 116:../STM32CUBEMX/Core/Src/usart.c ****   {
+ 117:../STM32CUBEMX/Core/Src/usart.c ****     Error_Handler();
+ 118:../STM32CUBEMX/Core/Src/usart.c ****   }
+ 119:../STM32CUBEMX/Core/Src/usart.c ****   /* USER CODE BEGIN USART1_Init 2 */
+ 120:../STM32CUBEMX/Core/Src/usart.c **** 
+ 121:../STM32CUBEMX/Core/Src/usart.c ****   /* USER CODE END USART1_Init 2 */
+ 122:../STM32CUBEMX/Core/Src/usart.c **** 
+ 123:../STM32CUBEMX/Core/Src/usart.c **** }
+ 124:../STM32CUBEMX/Core/Src/usart.c **** /* USART3 init function */
+ 125:../STM32CUBEMX/Core/Src/usart.c **** 
+ 126:../STM32CUBEMX/Core/Src/usart.c **** void MX_USART3_UART_Init(void)
+ 127:../STM32CUBEMX/Core/Src/usart.c **** {
+ 128:../STM32CUBEMX/Core/Src/usart.c **** 
+ 129:../STM32CUBEMX/Core/Src/usart.c ****   /* USER CODE BEGIN USART3_Init 0 */
+ 130:../STM32CUBEMX/Core/Src/usart.c **** 
+ 131:../STM32CUBEMX/Core/Src/usart.c ****   /* USER CODE END USART3_Init 0 */
+ 132:../STM32CUBEMX/Core/Src/usart.c **** 
+ 133:../STM32CUBEMX/Core/Src/usart.c ****   /* USER CODE BEGIN USART3_Init 1 */
+ 134:../STM32CUBEMX/Core/Src/usart.c **** 
+ 135:../STM32CUBEMX/Core/Src/usart.c ****   /* USER CODE END USART3_Init 1 */
+ 136:../STM32CUBEMX/Core/Src/usart.c ****   huart3.Instance = USART3;
+ 137:../STM32CUBEMX/Core/Src/usart.c ****   huart3.Init.BaudRate = 921600;
+ 138:../STM32CUBEMX/Core/Src/usart.c ****   huart3.Init.WordLength = UART_WORDLENGTH_8B;
+ 139:../STM32CUBEMX/Core/Src/usart.c ****   huart3.Init.StopBits = UART_STOPBITS_1;
+ 140:../STM32CUBEMX/Core/Src/usart.c ****   huart3.Init.Parity = UART_PARITY_NONE;
+ 141:../STM32CUBEMX/Core/Src/usart.c ****   huart3.Init.Mode = UART_MODE_TX_RX;
+ 142:../STM32CUBEMX/Core/Src/usart.c ****   huart3.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+ 143:../STM32CUBEMX/Core/Src/usart.c ****   huart3.Init.OverSampling = UART_OVERSAMPLING_16;
+ 144:../STM32CUBEMX/Core/Src/usart.c ****   if (HAL_UART_Init(&huart3) != HAL_OK)
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s 			page 4
+
+
+ 145:../STM32CUBEMX/Core/Src/usart.c ****   {
+ 146:../STM32CUBEMX/Core/Src/usart.c ****     Error_Handler();
+ 147:../STM32CUBEMX/Core/Src/usart.c ****   }
+ 148:../STM32CUBEMX/Core/Src/usart.c ****   /* USER CODE BEGIN USART3_Init 2 */
+ 149:../STM32CUBEMX/Core/Src/usart.c **** 
+ 150:../STM32CUBEMX/Core/Src/usart.c ****   /* USER CODE END USART3_Init 2 */
+ 151:../STM32CUBEMX/Core/Src/usart.c **** 
+ 152:../STM32CUBEMX/Core/Src/usart.c **** }
+ 153:../STM32CUBEMX/Core/Src/usart.c **** 
+ 154:../STM32CUBEMX/Core/Src/usart.c **** void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
+ 155:../STM32CUBEMX/Core/Src/usart.c **** {
+ 156:../STM32CUBEMX/Core/Src/usart.c **** 
+ 157:../STM32CUBEMX/Core/Src/usart.c ****   GPIO_InitTypeDef GPIO_InitStruct = {0};
+ 158:../STM32CUBEMX/Core/Src/usart.c ****   if(uartHandle->Instance==UART4)
+ 159:../STM32CUBEMX/Core/Src/usart.c ****   {
+ 160:../STM32CUBEMX/Core/Src/usart.c ****   /* USER CODE BEGIN UART4_MspInit 0 */
+ 161:../STM32CUBEMX/Core/Src/usart.c **** 
+ 162:../STM32CUBEMX/Core/Src/usart.c ****   /* USER CODE END UART4_MspInit 0 */
+ 163:../STM32CUBEMX/Core/Src/usart.c ****     /* UART4 clock enable */
+ 164:../STM32CUBEMX/Core/Src/usart.c ****     __HAL_RCC_UART4_CLK_ENABLE();
+ 165:../STM32CUBEMX/Core/Src/usart.c **** 
+ 166:../STM32CUBEMX/Core/Src/usart.c ****     __HAL_RCC_GPIOC_CLK_ENABLE();
+ 167:../STM32CUBEMX/Core/Src/usart.c ****     /**UART4 GPIO Configuration
+ 168:../STM32CUBEMX/Core/Src/usart.c ****     PC10     ------> UART4_TX
+ 169:../STM32CUBEMX/Core/Src/usart.c ****     PC11     ------> UART4_RX
+ 170:../STM32CUBEMX/Core/Src/usart.c ****     */
+ 171:../STM32CUBEMX/Core/Src/usart.c ****     GPIO_InitStruct.Pin = GPIO_PIN_10|GPIO_PIN_11;
+ 172:../STM32CUBEMX/Core/Src/usart.c ****     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+ 173:../STM32CUBEMX/Core/Src/usart.c ****     GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 174:../STM32CUBEMX/Core/Src/usart.c ****     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+ 175:../STM32CUBEMX/Core/Src/usart.c ****     GPIO_InitStruct.Alternate = GPIO_AF8_UART4;
+ 176:../STM32CUBEMX/Core/Src/usart.c ****     HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+ 177:../STM32CUBEMX/Core/Src/usart.c **** 
+ 178:../STM32CUBEMX/Core/Src/usart.c ****   /* USER CODE BEGIN UART4_MspInit 1 */
+ 179:../STM32CUBEMX/Core/Src/usart.c **** 
+ 180:../STM32CUBEMX/Core/Src/usart.c ****   /* USER CODE END UART4_MspInit 1 */
+ 181:../STM32CUBEMX/Core/Src/usart.c ****   }
+ 182:../STM32CUBEMX/Core/Src/usart.c ****   else if(uartHandle->Instance==UART5)
+ 183:../STM32CUBEMX/Core/Src/usart.c ****   {
+ 184:../STM32CUBEMX/Core/Src/usart.c ****   /* USER CODE BEGIN UART5_MspInit 0 */
+ 185:../STM32CUBEMX/Core/Src/usart.c **** 
+ 186:../STM32CUBEMX/Core/Src/usart.c ****   /* USER CODE END UART5_MspInit 0 */
+ 187:../STM32CUBEMX/Core/Src/usart.c ****     /* UART5 clock enable */
+ 188:../STM32CUBEMX/Core/Src/usart.c ****     __HAL_RCC_UART5_CLK_ENABLE();
+ 189:../STM32CUBEMX/Core/Src/usart.c **** 
+ 190:../STM32CUBEMX/Core/Src/usart.c ****     __HAL_RCC_GPIOC_CLK_ENABLE();
+ 191:../STM32CUBEMX/Core/Src/usart.c ****     __HAL_RCC_GPIOD_CLK_ENABLE();
+ 192:../STM32CUBEMX/Core/Src/usart.c ****     /**UART5 GPIO Configuration
+ 193:../STM32CUBEMX/Core/Src/usart.c ****     PC12     ------> UART5_TX
+ 194:../STM32CUBEMX/Core/Src/usart.c ****     PD2     ------> UART5_RX
+ 195:../STM32CUBEMX/Core/Src/usart.c ****     */
+ 196:../STM32CUBEMX/Core/Src/usart.c ****     GPIO_InitStruct.Pin = GPIO_PIN_12;
+ 197:../STM32CUBEMX/Core/Src/usart.c ****     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+ 198:../STM32CUBEMX/Core/Src/usart.c ****     GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 199:../STM32CUBEMX/Core/Src/usart.c ****     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+ 200:../STM32CUBEMX/Core/Src/usart.c ****     GPIO_InitStruct.Alternate = GPIO_AF8_UART5;
+ 201:../STM32CUBEMX/Core/Src/usart.c ****     HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s 			page 5
+
+
+ 202:../STM32CUBEMX/Core/Src/usart.c **** 
+ 203:../STM32CUBEMX/Core/Src/usart.c ****     GPIO_InitStruct.Pin = GPIO_PIN_2;
+ 204:../STM32CUBEMX/Core/Src/usart.c ****     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+ 205:../STM32CUBEMX/Core/Src/usart.c ****     GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 206:../STM32CUBEMX/Core/Src/usart.c ****     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+ 207:../STM32CUBEMX/Core/Src/usart.c ****     GPIO_InitStruct.Alternate = GPIO_AF8_UART5;
+ 208:../STM32CUBEMX/Core/Src/usart.c ****     HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+ 209:../STM32CUBEMX/Core/Src/usart.c **** 
+ 210:../STM32CUBEMX/Core/Src/usart.c ****   /* USER CODE BEGIN UART5_MspInit 1 */
+ 211:../STM32CUBEMX/Core/Src/usart.c **** 
+ 212:../STM32CUBEMX/Core/Src/usart.c ****   /* USER CODE END UART5_MspInit 1 */
+ 213:../STM32CUBEMX/Core/Src/usart.c ****   }
+ 214:../STM32CUBEMX/Core/Src/usart.c ****   else if(uartHandle->Instance==USART1)
+ 215:../STM32CUBEMX/Core/Src/usart.c ****   {
+ 216:../STM32CUBEMX/Core/Src/usart.c ****   /* USER CODE BEGIN USART1_MspInit 0 */
+ 217:../STM32CUBEMX/Core/Src/usart.c **** 
+ 218:../STM32CUBEMX/Core/Src/usart.c ****   /* USER CODE END USART1_MspInit 0 */
+ 219:../STM32CUBEMX/Core/Src/usart.c ****     /* USART1 clock enable */
+ 220:../STM32CUBEMX/Core/Src/usart.c ****     __HAL_RCC_USART1_CLK_ENABLE();
+ 221:../STM32CUBEMX/Core/Src/usart.c **** 
+ 222:../STM32CUBEMX/Core/Src/usart.c ****     __HAL_RCC_GPIOA_CLK_ENABLE();
+ 223:../STM32CUBEMX/Core/Src/usart.c ****     /**USART1 GPIO Configuration
+ 224:../STM32CUBEMX/Core/Src/usart.c ****     PA9     ------> USART1_TX
+ 225:../STM32CUBEMX/Core/Src/usart.c ****     PA10     ------> USART1_RX
+ 226:../STM32CUBEMX/Core/Src/usart.c ****     */
+ 227:../STM32CUBEMX/Core/Src/usart.c ****     GPIO_InitStruct.Pin = GPIO_PIN_9|GPIO_PIN_10;
+ 228:../STM32CUBEMX/Core/Src/usart.c ****     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+ 229:../STM32CUBEMX/Core/Src/usart.c ****     GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 230:../STM32CUBEMX/Core/Src/usart.c ****     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+ 231:../STM32CUBEMX/Core/Src/usart.c ****     GPIO_InitStruct.Alternate = GPIO_AF7_USART1;
+ 232:../STM32CUBEMX/Core/Src/usart.c ****     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+ 233:../STM32CUBEMX/Core/Src/usart.c **** 
+ 234:../STM32CUBEMX/Core/Src/usart.c ****     /* USART1 DMA Init */
+ 235:../STM32CUBEMX/Core/Src/usart.c ****     /* USART1_RX Init */
+ 236:../STM32CUBEMX/Core/Src/usart.c ****     hdma_usart1_rx.Instance = DMA2_Stream5;
+ 237:../STM32CUBEMX/Core/Src/usart.c ****     hdma_usart1_rx.Init.Channel = DMA_CHANNEL_4;
+ 238:../STM32CUBEMX/Core/Src/usart.c ****     hdma_usart1_rx.Init.Direction = DMA_PERIPH_TO_MEMORY;
+ 239:../STM32CUBEMX/Core/Src/usart.c ****     hdma_usart1_rx.Init.PeriphInc = DMA_PINC_DISABLE;
+ 240:../STM32CUBEMX/Core/Src/usart.c ****     hdma_usart1_rx.Init.MemInc = DMA_MINC_ENABLE;
+ 241:../STM32CUBEMX/Core/Src/usart.c ****     hdma_usart1_rx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
+ 242:../STM32CUBEMX/Core/Src/usart.c ****     hdma_usart1_rx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
+ 243:../STM32CUBEMX/Core/Src/usart.c ****     hdma_usart1_rx.Init.Mode = DMA_NORMAL;
+ 244:../STM32CUBEMX/Core/Src/usart.c ****     hdma_usart1_rx.Init.Priority = DMA_PRIORITY_LOW;
+ 245:../STM32CUBEMX/Core/Src/usart.c ****     hdma_usart1_rx.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
+ 246:../STM32CUBEMX/Core/Src/usart.c ****     if (HAL_DMA_Init(&hdma_usart1_rx) != HAL_OK)
+ 247:../STM32CUBEMX/Core/Src/usart.c ****     {
+ 248:../STM32CUBEMX/Core/Src/usart.c ****       Error_Handler();
+ 249:../STM32CUBEMX/Core/Src/usart.c ****     }
+ 250:../STM32CUBEMX/Core/Src/usart.c **** 
+ 251:../STM32CUBEMX/Core/Src/usart.c ****     __HAL_LINKDMA(uartHandle,hdmarx,hdma_usart1_rx);
+ 252:../STM32CUBEMX/Core/Src/usart.c **** 
+ 253:../STM32CUBEMX/Core/Src/usart.c ****     /* USART1_TX Init */
+ 254:../STM32CUBEMX/Core/Src/usart.c ****     hdma_usart1_tx.Instance = DMA2_Stream7;
+ 255:../STM32CUBEMX/Core/Src/usart.c ****     hdma_usart1_tx.Init.Channel = DMA_CHANNEL_4;
+ 256:../STM32CUBEMX/Core/Src/usart.c ****     hdma_usart1_tx.Init.Direction = DMA_MEMORY_TO_PERIPH;
+ 257:../STM32CUBEMX/Core/Src/usart.c ****     hdma_usart1_tx.Init.PeriphInc = DMA_PINC_DISABLE;
+ 258:../STM32CUBEMX/Core/Src/usart.c ****     hdma_usart1_tx.Init.MemInc = DMA_MINC_ENABLE;
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s 			page 6
+
+
+ 259:../STM32CUBEMX/Core/Src/usart.c ****     hdma_usart1_tx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
+ 260:../STM32CUBEMX/Core/Src/usart.c ****     hdma_usart1_tx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
+ 261:../STM32CUBEMX/Core/Src/usart.c ****     hdma_usart1_tx.Init.Mode = DMA_NORMAL;
+ 262:../STM32CUBEMX/Core/Src/usart.c ****     hdma_usart1_tx.Init.Priority = DMA_PRIORITY_LOW;
+ 263:../STM32CUBEMX/Core/Src/usart.c ****     hdma_usart1_tx.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
+ 264:../STM32CUBEMX/Core/Src/usart.c ****     if (HAL_DMA_Init(&hdma_usart1_tx) != HAL_OK)
+ 265:../STM32CUBEMX/Core/Src/usart.c ****     {
+ 266:../STM32CUBEMX/Core/Src/usart.c ****       Error_Handler();
+ 267:../STM32CUBEMX/Core/Src/usart.c ****     }
+ 268:../STM32CUBEMX/Core/Src/usart.c **** 
+ 269:../STM32CUBEMX/Core/Src/usart.c ****     __HAL_LINKDMA(uartHandle,hdmatx,hdma_usart1_tx);
+ 270:../STM32CUBEMX/Core/Src/usart.c **** 
+ 271:../STM32CUBEMX/Core/Src/usart.c ****     /* USART1 interrupt Init */
+ 272:../STM32CUBEMX/Core/Src/usart.c ****     HAL_NVIC_SetPriority(USART1_IRQn, 0, 0);
+ 273:../STM32CUBEMX/Core/Src/usart.c ****     HAL_NVIC_EnableIRQ(USART1_IRQn);
+ 274:../STM32CUBEMX/Core/Src/usart.c ****   /* USER CODE BEGIN USART1_MspInit 1 */
+ 275:../STM32CUBEMX/Core/Src/usart.c ****   __HAL_UART_ENABLE_IT(&huart1, UART_IT_IDLE);						//Open ENC_UART IDLE IT
+ 276:../STM32CUBEMX/Core/Src/usart.c ****   HAL_UART_Receive_DMA(&huart1, Uart1DMAData.rxDMABuf, UART1DMA_RXBUFFER_SIZE);//set Buffer,??rtIOS
+ 277:../STM32CUBEMX/Core/Src/usart.c ****   /* USER CODE END USART1_MspInit 1 */
+ 278:../STM32CUBEMX/Core/Src/usart.c ****   }
+ 279:../STM32CUBEMX/Core/Src/usart.c ****   else if(uartHandle->Instance==USART3)
+ 280:../STM32CUBEMX/Core/Src/usart.c ****   {
+ 281:../STM32CUBEMX/Core/Src/usart.c ****   /* USER CODE BEGIN USART3_MspInit 0 */
+ 282:../STM32CUBEMX/Core/Src/usart.c **** 
+ 283:../STM32CUBEMX/Core/Src/usart.c ****   /* USER CODE END USART3_MspInit 0 */
+ 284:../STM32CUBEMX/Core/Src/usart.c ****     /* USART3 clock enable */
+ 285:../STM32CUBEMX/Core/Src/usart.c ****     __HAL_RCC_USART3_CLK_ENABLE();
+ 286:../STM32CUBEMX/Core/Src/usart.c **** 
+ 287:../STM32CUBEMX/Core/Src/usart.c ****     __HAL_RCC_GPIOB_CLK_ENABLE();
+ 288:../STM32CUBEMX/Core/Src/usart.c ****     /**USART3 GPIO Configuration
+ 289:../STM32CUBEMX/Core/Src/usart.c ****     PB10     ------> USART3_TX
+ 290:../STM32CUBEMX/Core/Src/usart.c ****     PB11     ------> USART3_RX
+ 291:../STM32CUBEMX/Core/Src/usart.c ****     */
+ 292:../STM32CUBEMX/Core/Src/usart.c ****     GPIO_InitStruct.Pin = GPIO_PIN_10|GPIO_PIN_11;
+ 293:../STM32CUBEMX/Core/Src/usart.c ****     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+ 294:../STM32CUBEMX/Core/Src/usart.c ****     GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 295:../STM32CUBEMX/Core/Src/usart.c ****     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+ 296:../STM32CUBEMX/Core/Src/usart.c ****     GPIO_InitStruct.Alternate = GPIO_AF7_USART3;
+ 297:../STM32CUBEMX/Core/Src/usart.c ****     HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+ 298:../STM32CUBEMX/Core/Src/usart.c **** 
+ 299:../STM32CUBEMX/Core/Src/usart.c ****     /* USART3 DMA Init */
+ 300:../STM32CUBEMX/Core/Src/usart.c ****     /* USART3_RX Init */
+ 301:../STM32CUBEMX/Core/Src/usart.c ****     hdma_usart3_rx.Instance = DMA1_Stream1;
+ 302:../STM32CUBEMX/Core/Src/usart.c ****     hdma_usart3_rx.Init.Channel = DMA_CHANNEL_4;
+ 303:../STM32CUBEMX/Core/Src/usart.c ****     hdma_usart3_rx.Init.Direction = DMA_PERIPH_TO_MEMORY;
+ 304:../STM32CUBEMX/Core/Src/usart.c ****     hdma_usart3_rx.Init.PeriphInc = DMA_PINC_DISABLE;
+ 305:../STM32CUBEMX/Core/Src/usart.c ****     hdma_usart3_rx.Init.MemInc = DMA_MINC_ENABLE;
+ 306:../STM32CUBEMX/Core/Src/usart.c ****     hdma_usart3_rx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
+ 307:../STM32CUBEMX/Core/Src/usart.c ****     hdma_usart3_rx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
+ 308:../STM32CUBEMX/Core/Src/usart.c ****     hdma_usart3_rx.Init.Mode = DMA_NORMAL;
+ 309:../STM32CUBEMX/Core/Src/usart.c ****     hdma_usart3_rx.Init.Priority = DMA_PRIORITY_MEDIUM;
+ 310:../STM32CUBEMX/Core/Src/usart.c ****     hdma_usart3_rx.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
+ 311:../STM32CUBEMX/Core/Src/usart.c ****     if (HAL_DMA_Init(&hdma_usart3_rx) != HAL_OK)
+ 312:../STM32CUBEMX/Core/Src/usart.c ****     {
+ 313:../STM32CUBEMX/Core/Src/usart.c ****       Error_Handler();
+ 314:../STM32CUBEMX/Core/Src/usart.c ****     }
+ 315:../STM32CUBEMX/Core/Src/usart.c **** 
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s 			page 7
+
+
+ 316:../STM32CUBEMX/Core/Src/usart.c ****     __HAL_LINKDMA(uartHandle,hdmarx,hdma_usart3_rx);
+ 317:../STM32CUBEMX/Core/Src/usart.c **** 
+ 318:../STM32CUBEMX/Core/Src/usart.c ****     /* USART3 interrupt Init */
+ 319:../STM32CUBEMX/Core/Src/usart.c ****     HAL_NVIC_SetPriority(USART3_IRQn, 0, 0);
+ 320:../STM32CUBEMX/Core/Src/usart.c ****     HAL_NVIC_EnableIRQ(USART3_IRQn);
+ 321:../STM32CUBEMX/Core/Src/usart.c ****   /* USER CODE BEGIN USART3_MspInit 1 */
+ 322:../STM32CUBEMX/Core/Src/usart.c **** 	__HAL_UART_ENABLE_IT(&huart3,UART_IT_IDLE);	//OPEN HI226_UART IDLE
+ 323:../STM32CUBEMX/Core/Src/usart.c **** 	HAL_UART_Receive_DMA(&huart3,Uart3DMABuffer,UART3DMA_RXBUFFER_SIZE);//Start DMA at main
+ 324:../STM32CUBEMX/Core/Src/usart.c ****   /* USER CODE END USART3_MspInit 1 */
+ 325:../STM32CUBEMX/Core/Src/usart.c ****   }
+ 326:../STM32CUBEMX/Core/Src/usart.c **** }
+ 327:../STM32CUBEMX/Core/Src/usart.c **** 
+ 328:../STM32CUBEMX/Core/Src/usart.c **** void HAL_UART_MspDeInit(UART_HandleTypeDef* uartHandle)
+ 329:../STM32CUBEMX/Core/Src/usart.c **** {
+ 330:../STM32CUBEMX/Core/Src/usart.c **** 
+ 331:../STM32CUBEMX/Core/Src/usart.c ****   if(uartHandle->Instance==UART4)
+ 332:../STM32CUBEMX/Core/Src/usart.c ****   {
+ 333:../STM32CUBEMX/Core/Src/usart.c ****   /* USER CODE BEGIN UART4_MspDeInit 0 */
+ 334:../STM32CUBEMX/Core/Src/usart.c **** 
+ 335:../STM32CUBEMX/Core/Src/usart.c ****   /* USER CODE END UART4_MspDeInit 0 */
+ 336:../STM32CUBEMX/Core/Src/usart.c ****     /* Peripheral clock disable */
+ 337:../STM32CUBEMX/Core/Src/usart.c ****     __HAL_RCC_UART4_CLK_DISABLE();
+ 338:../STM32CUBEMX/Core/Src/usart.c **** 
+ 339:../STM32CUBEMX/Core/Src/usart.c ****     /**UART4 GPIO Configuration
+ 340:../STM32CUBEMX/Core/Src/usart.c ****     PC10     ------> UART4_TX
+ 341:../STM32CUBEMX/Core/Src/usart.c ****     PC11     ------> UART4_RX
+ 342:../STM32CUBEMX/Core/Src/usart.c ****     */
+ 343:../STM32CUBEMX/Core/Src/usart.c ****     HAL_GPIO_DeInit(GPIOC, GPIO_PIN_10|GPIO_PIN_11);
+ 344:../STM32CUBEMX/Core/Src/usart.c **** 
+ 345:../STM32CUBEMX/Core/Src/usart.c ****   /* USER CODE BEGIN UART4_MspDeInit 1 */
+ 346:../STM32CUBEMX/Core/Src/usart.c **** 
+ 347:../STM32CUBEMX/Core/Src/usart.c ****   /* USER CODE END UART4_MspDeInit 1 */
+ 348:../STM32CUBEMX/Core/Src/usart.c ****   }
+ 349:../STM32CUBEMX/Core/Src/usart.c ****   else if(uartHandle->Instance==UART5)
+ 350:../STM32CUBEMX/Core/Src/usart.c ****   {
+ 351:../STM32CUBEMX/Core/Src/usart.c ****   /* USER CODE BEGIN UART5_MspDeInit 0 */
+ 352:../STM32CUBEMX/Core/Src/usart.c **** 
+ 353:../STM32CUBEMX/Core/Src/usart.c ****   /* USER CODE END UART5_MspDeInit 0 */
+ 354:../STM32CUBEMX/Core/Src/usart.c ****     /* Peripheral clock disable */
+ 355:../STM32CUBEMX/Core/Src/usart.c ****     __HAL_RCC_UART5_CLK_DISABLE();
+ 356:../STM32CUBEMX/Core/Src/usart.c **** 
+ 357:../STM32CUBEMX/Core/Src/usart.c ****     /**UART5 GPIO Configuration
+ 358:../STM32CUBEMX/Core/Src/usart.c ****     PC12     ------> UART5_TX
+ 359:../STM32CUBEMX/Core/Src/usart.c ****     PD2     ------> UART5_RX
+ 360:../STM32CUBEMX/Core/Src/usart.c ****     */
+ 361:../STM32CUBEMX/Core/Src/usart.c ****     HAL_GPIO_DeInit(GPIOC, GPIO_PIN_12);
+ 362:../STM32CUBEMX/Core/Src/usart.c **** 
+ 363:../STM32CUBEMX/Core/Src/usart.c ****     HAL_GPIO_DeInit(GPIOD, GPIO_PIN_2);
+ 364:../STM32CUBEMX/Core/Src/usart.c **** 
+ 365:../STM32CUBEMX/Core/Src/usart.c ****   /* USER CODE BEGIN UART5_MspDeInit 1 */
+ 366:../STM32CUBEMX/Core/Src/usart.c **** 
+ 367:../STM32CUBEMX/Core/Src/usart.c ****   /* USER CODE END UART5_MspDeInit 1 */
+ 368:../STM32CUBEMX/Core/Src/usart.c ****   }
+ 369:../STM32CUBEMX/Core/Src/usart.c ****   else if(uartHandle->Instance==USART1)
+ 370:../STM32CUBEMX/Core/Src/usart.c ****   {
+ 371:../STM32CUBEMX/Core/Src/usart.c ****   /* USER CODE BEGIN USART1_MspDeInit 0 */
+ 372:../STM32CUBEMX/Core/Src/usart.c **** 
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s 			page 8
+
+
+ 373:../STM32CUBEMX/Core/Src/usart.c ****   /* USER CODE END USART1_MspDeInit 0 */
+ 374:../STM32CUBEMX/Core/Src/usart.c ****     /* Peripheral clock disable */
+ 375:../STM32CUBEMX/Core/Src/usart.c ****     __HAL_RCC_USART1_CLK_DISABLE();
+ 376:../STM32CUBEMX/Core/Src/usart.c **** 
+ 377:../STM32CUBEMX/Core/Src/usart.c ****     /**USART1 GPIO Configuration
+ 378:../STM32CUBEMX/Core/Src/usart.c ****     PA9     ------> USART1_TX
+ 379:../STM32CUBEMX/Core/Src/usart.c ****     PA10     ------> USART1_RX
+ 380:../STM32CUBEMX/Core/Src/usart.c ****     */
+ 381:../STM32CUBEMX/Core/Src/usart.c ****     HAL_GPIO_DeInit(GPIOA, GPIO_PIN_9|GPIO_PIN_10);
+ 382:../STM32CUBEMX/Core/Src/usart.c **** 
+ 383:../STM32CUBEMX/Core/Src/usart.c ****     /* USART1 DMA DeInit */
+ 384:../STM32CUBEMX/Core/Src/usart.c ****     HAL_DMA_DeInit(uartHandle->hdmarx);
+ 385:../STM32CUBEMX/Core/Src/usart.c ****     HAL_DMA_DeInit(uartHandle->hdmatx);
+ 386:../STM32CUBEMX/Core/Src/usart.c **** 
+ 387:../STM32CUBEMX/Core/Src/usart.c ****     /* USART1 interrupt Deinit */
+ 388:../STM32CUBEMX/Core/Src/usart.c ****     HAL_NVIC_DisableIRQ(USART1_IRQn);
+ 389:../STM32CUBEMX/Core/Src/usart.c ****   /* USER CODE BEGIN USART1_MspDeInit 1 */
+ 390:../STM32CUBEMX/Core/Src/usart.c **** 
+ 391:../STM32CUBEMX/Core/Src/usart.c ****   /* USER CODE END USART1_MspDeInit 1 */
+ 392:../STM32CUBEMX/Core/Src/usart.c ****   }
+ 393:../STM32CUBEMX/Core/Src/usart.c ****   else if(uartHandle->Instance==USART3)
+ 394:../STM32CUBEMX/Core/Src/usart.c ****   {
+ 395:../STM32CUBEMX/Core/Src/usart.c ****   /* USER CODE BEGIN USART3_MspDeInit 0 */
+ 396:../STM32CUBEMX/Core/Src/usart.c **** 
+ 397:../STM32CUBEMX/Core/Src/usart.c ****   /* USER CODE END USART3_MspDeInit 0 */
+ 398:../STM32CUBEMX/Core/Src/usart.c ****     /* Peripheral clock disable */
+ 399:../STM32CUBEMX/Core/Src/usart.c ****     __HAL_RCC_USART3_CLK_DISABLE();
+ 400:../STM32CUBEMX/Core/Src/usart.c **** 
+ 401:../STM32CUBEMX/Core/Src/usart.c ****     /**USART3 GPIO Configuration
+ 402:../STM32CUBEMX/Core/Src/usart.c ****     PB10     ------> USART3_TX
+ 403:../STM32CUBEMX/Core/Src/usart.c ****     PB11     ------> USART3_RX
+ 404:../STM32CUBEMX/Core/Src/usart.c ****     */
+ 405:../STM32CUBEMX/Core/Src/usart.c ****     HAL_GPIO_DeInit(GPIOB, GPIO_PIN_10|GPIO_PIN_11);
+ 406:../STM32CUBEMX/Core/Src/usart.c **** 
+ 407:../STM32CUBEMX/Core/Src/usart.c ****     /* USART3 DMA DeInit */
+ 408:../STM32CUBEMX/Core/Src/usart.c ****     HAL_DMA_DeInit(uartHandle->hdmarx);
+ 409:../STM32CUBEMX/Core/Src/usart.c **** 
+ 410:../STM32CUBEMX/Core/Src/usart.c ****     /* USART3 interrupt Deinit */
+ 411:../STM32CUBEMX/Core/Src/usart.c ****     HAL_NVIC_DisableIRQ(USART3_IRQn);
+ 412:../STM32CUBEMX/Core/Src/usart.c ****   /* USER CODE BEGIN USART3_MspDeInit 1 */
+ 413:../STM32CUBEMX/Core/Src/usart.c **** 
+ 414:../STM32CUBEMX/Core/Src/usart.c ****   /* USER CODE END USART3_MspDeInit 1 */
+ 415:../STM32CUBEMX/Core/Src/usart.c ****   }
+ 416:../STM32CUBEMX/Core/Src/usart.c **** }
+ 417:../STM32CUBEMX/Core/Src/usart.c **** 
+ 418:../STM32CUBEMX/Core/Src/usart.c **** /* USER CODE BEGIN 1 */
+ 419:../STM32CUBEMX/Core/Src/usart.c **** uint8_t achCRCHi[]={ 0,193,129,64,1,192,128,65,1,192,128,65,0,193,129,64,1,192,128,65,0,193,129,64,
+ 420:../STM32CUBEMX/Core/Src/usart.c **** uint8_t achCRCLo[]={ 0,192,193,1,195,3,2,194,198,6,7,199,5,197,196,4,204,12,13,205,15,207,206,14,10
+ 421:../STM32CUBEMX/Core/Src/usart.c **** 	
+ 422:../STM32CUBEMX/Core/Src/usart.c **** uint16_t CalcCRC_Modbus(uint8_t MsgToCRC[],int MsgLenToCRC)
+ 423:../STM32CUBEMX/Core/Src/usart.c **** {
+ 424:../STM32CUBEMX/Core/Src/usart.c **** 	uint8_t crchi = 0xff;
+ 425:../STM32CUBEMX/Core/Src/usart.c **** 	uint8_t crclo = 0xff;
+ 426:../STM32CUBEMX/Core/Src/usart.c **** 	int idx=0;
+ 427:../STM32CUBEMX/Core/Src/usart.c **** 	for(idx=0;idx<MsgLenToCRC;idx++)
+ 428:../STM32CUBEMX/Core/Src/usart.c **** 	{
+ 429:../STM32CUBEMX/Core/Src/usart.c **** 		uint8_t idxCRC = (uint8_t)(crchi^MsgToCRC[idx]);
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s 			page 9
+
+
+ 430:../STM32CUBEMX/Core/Src/usart.c **** 		crchi = (uint8_t)( crclo^achCRCHi[idxCRC] );
+ 431:../STM32CUBEMX/Core/Src/usart.c ****         crclo = (uint8_t)( achCRCLo[idxCRC] );
+ 432:../STM32CUBEMX/Core/Src/usart.c **** 	}
+ 433:../STM32CUBEMX/Core/Src/usart.c **** 	return crchi<<8|crclo;
+ 434:../STM32CUBEMX/Core/Src/usart.c **** }
+ 435:../STM32CUBEMX/Core/Src/usart.c **** 
+ 436:../STM32CUBEMX/Core/Src/usart.c **** static void crc16_update(uint16_t *currect_crc, const uint8_t *src, uint32_t len)
+ 437:../STM32CUBEMX/Core/Src/usart.c **** {
+  29              		.loc 1 437 1 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 0
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33              		.loc 1 437 1 is_stmt 0 view .LVU1
+  34 0000 10B5     		push	{r4, lr}
+  35              	.LCFI0:
+  36              		.cfi_def_cfa_offset 8
+  37              		.cfi_offset 4, -8
+  38              		.cfi_offset 14, -4
+  39 0002 0446     		mov	r4, r0
+  40 0004 0846     		mov	r0, r1
+  41              	.LVL1:
+  42              		.loc 1 437 1 view .LVU2
+  43 0006 1146     		mov	r1, r2
+  44              	.LVL2:
+ 438:../STM32CUBEMX/Core/Src/usart.c ****     uint32_t crc = *currect_crc;
+  45              		.loc 1 438 5 is_stmt 1 view .LVU3
+  46              		.loc 1 438 20 is_stmt 0 view .LVU4
+  47 0008 2388     		ldrh	r3, [r4]
+  48              	.LVL3:
+ 439:../STM32CUBEMX/Core/Src/usart.c ****     uint32_t j;
+  49              		.loc 1 439 5 is_stmt 1 view .LVU5
+ 440:../STM32CUBEMX/Core/Src/usart.c ****     for (j=0; j < len; ++j)
+  50              		.loc 1 440 5 view .LVU6
+  51              		.loc 1 440 11 is_stmt 0 view .LVU7
+  52 000a 0022     		movs	r2, #0
+  53              	.LVL4:
+  54              		.loc 1 440 5 view .LVU8
+  55 000c 10E0     		b	.L2
+  56              	.LVL5:
+  57              	.L7:
+  58              	.LBB2:
+  59              	.LBB3:
+ 441:../STM32CUBEMX/Core/Src/usart.c ****     {
+ 442:../STM32CUBEMX/Core/Src/usart.c ****         uint32_t i;
+ 443:../STM32CUBEMX/Core/Src/usart.c ****         uint32_t byte = src[j];
+ 444:../STM32CUBEMX/Core/Src/usart.c ****         crc ^= byte << 8;
+ 445:../STM32CUBEMX/Core/Src/usart.c ****         for (i = 0; i < 8; ++i)
+ 446:../STM32CUBEMX/Core/Src/usart.c ****         {
+ 447:../STM32CUBEMX/Core/Src/usart.c ****             uint32_t temp = crc << 1;
+  60              		.loc 1 447 22 view .LVU9
+  61 000e 7346     		mov	r3, lr
+  62              	.LVL6:
+  63              	.L4:
+ 448:../STM32CUBEMX/Core/Src/usart.c ****             if (crc & 0x8000)
+ 449:../STM32CUBEMX/Core/Src/usart.c ****             {
+ 450:../STM32CUBEMX/Core/Src/usart.c ****                 temp ^= 0x1021;
+ 451:../STM32CUBEMX/Core/Src/usart.c ****             }
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s 			page 10
+
+
+ 452:../STM32CUBEMX/Core/Src/usart.c ****             crc = temp;
+  64              		.loc 1 452 13 is_stmt 1 discriminator 2 view .LVU10
+  65              		.loc 1 452 13 is_stmt 0 discriminator 2 view .LVU11
+  66              	.LBE3:
+ 445:../STM32CUBEMX/Core/Src/usart.c ****         {
+  67              		.loc 1 445 28 is_stmt 1 discriminator 2 view .LVU12
+  68 0010 0CF1010C 		add	ip, ip, #1
+  69              	.LVL7:
+  70              	.L3:
+ 445:../STM32CUBEMX/Core/Src/usart.c ****         {
+  71              		.loc 1 445 23 discriminator 1 view .LVU13
+  72 0014 BCF1070F 		cmp	ip, #7
+  73 0018 09D8     		bhi	.L9
+  74              	.LBB4:
+ 447:../STM32CUBEMX/Core/Src/usart.c ****             if (crc & 0x8000)
+  75              		.loc 1 447 13 view .LVU14
+ 447:../STM32CUBEMX/Core/Src/usart.c ****             if (crc & 0x8000)
+  76              		.loc 1 447 22 is_stmt 0 view .LVU15
+  77 001a 4FEA430E 		lsl	lr, r3, #1
+  78              	.LVL8:
+ 448:../STM32CUBEMX/Core/Src/usart.c ****             if (crc & 0x8000)
+  79              		.loc 1 448 13 is_stmt 1 view .LVU16
+ 448:../STM32CUBEMX/Core/Src/usart.c ****             if (crc & 0x8000)
+  80              		.loc 1 448 16 is_stmt 0 view .LVU17
+  81 001e 13F4004F 		tst	r3, #32768
+  82 0022 F4D0     		beq	.L7
+ 450:../STM32CUBEMX/Core/Src/usart.c ****             }
+  83              		.loc 1 450 17 is_stmt 1 view .LVU18
+ 450:../STM32CUBEMX/Core/Src/usart.c ****             }
+  84              		.loc 1 450 22 is_stmt 0 view .LVU19
+  85 0024 8EF48153 		eor	r3, lr, #4128
+  86              	.LVL9:
+ 450:../STM32CUBEMX/Core/Src/usart.c ****             }
+  87              		.loc 1 450 22 view .LVU20
+  88 0028 83F00103 		eor	r3, r3, #1
+  89              	.LVL10:
+ 450:../STM32CUBEMX/Core/Src/usart.c ****             }
+  90              		.loc 1 450 22 view .LVU21
+  91 002c F0E7     		b	.L4
+  92              	.LVL11:
+  93              	.L9:
+ 450:../STM32CUBEMX/Core/Src/usart.c ****             }
+  94              		.loc 1 450 22 view .LVU22
+  95              	.LBE4:
+  96              	.LBE2:
+ 440:../STM32CUBEMX/Core/Src/usart.c ****     {
+  97              		.loc 1 440 24 is_stmt 1 discriminator 2 view .LVU23
+  98 002e 0132     		adds	r2, r2, #1
+  99              	.LVL12:
+ 100              	.L2:
+ 440:../STM32CUBEMX/Core/Src/usart.c ****     {
+ 101              		.loc 1 440 17 discriminator 1 view .LVU24
+ 102 0030 8A42     		cmp	r2, r1
+ 103 0032 06D2     		bcs	.L10
+ 104              	.LBB5:
+ 442:../STM32CUBEMX/Core/Src/usart.c ****         uint32_t byte = src[j];
+ 105              		.loc 1 442 9 view .LVU25
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s 			page 11
+
+
+ 443:../STM32CUBEMX/Core/Src/usart.c ****         crc ^= byte << 8;
+ 106              		.loc 1 443 9 view .LVU26
+ 443:../STM32CUBEMX/Core/Src/usart.c ****         crc ^= byte << 8;
+ 107              		.loc 1 443 28 is_stmt 0 view .LVU27
+ 108 0034 10F802C0 		ldrb	ip, [r0, r2]	@ zero_extendqisi2
+ 109              	.LVL13:
+ 444:../STM32CUBEMX/Core/Src/usart.c ****         for (i = 0; i < 8; ++i)
+ 110              		.loc 1 444 9 is_stmt 1 view .LVU28
+ 444:../STM32CUBEMX/Core/Src/usart.c ****         for (i = 0; i < 8; ++i)
+ 111              		.loc 1 444 13 is_stmt 0 view .LVU29
+ 112 0038 83EA0C23 		eor	r3, r3, ip, lsl #8
+ 113              	.LVL14:
+ 445:../STM32CUBEMX/Core/Src/usart.c ****         {
+ 114              		.loc 1 445 9 is_stmt 1 view .LVU30
+ 445:../STM32CUBEMX/Core/Src/usart.c ****         {
+ 115              		.loc 1 445 16 is_stmt 0 view .LVU31
+ 116 003c 4FF0000C 		mov	ip, #0
+ 117              	.LVL15:
+ 445:../STM32CUBEMX/Core/Src/usart.c ****         {
+ 118              		.loc 1 445 9 view .LVU32
+ 119 0040 E8E7     		b	.L3
+ 120              	.LVL16:
+ 121              	.L10:
+ 445:../STM32CUBEMX/Core/Src/usart.c ****         {
+ 122              		.loc 1 445 9 view .LVU33
+ 123              	.LBE5:
+ 453:../STM32CUBEMX/Core/Src/usart.c ****         }
+ 454:../STM32CUBEMX/Core/Src/usart.c ****     } 
+ 455:../STM32CUBEMX/Core/Src/usart.c ****     *currect_crc = crc;
+ 124              		.loc 1 455 5 is_stmt 1 view .LVU34
+ 125              		.loc 1 455 18 is_stmt 0 view .LVU35
+ 126 0042 2380     		strh	r3, [r4]	@ movhi
+ 456:../STM32CUBEMX/Core/Src/usart.c **** }
+ 127              		.loc 1 456 1 view .LVU36
+ 128 0044 10BD     		pop	{r4, pc}
+ 129              		.loc 1 456 1 view .LVU37
+ 130              		.cfi_endproc
+ 131              	.LFE242:
+ 133              		.section	.text.MX_UART4_Init,"ax",%progbits
+ 134              		.align	1
+ 135              		.global	MX_UART4_Init
+ 136              		.syntax unified
+ 137              		.thumb
+ 138              		.thumb_func
+ 140              	MX_UART4_Init:
+ 141              	.LFB235:
+  41:../STM32CUBEMX/Core/Src/usart.c **** 
+ 142              		.loc 1 41 1 is_stmt 1 view -0
+ 143              		.cfi_startproc
+ 144              		@ args = 0, pretend = 0, frame = 0
+ 145              		@ frame_needed = 0, uses_anonymous_args = 0
+ 146 0000 08B5     		push	{r3, lr}
+ 147              	.LCFI1:
+ 148              		.cfi_def_cfa_offset 8
+ 149              		.cfi_offset 3, -8
+ 150              		.cfi_offset 14, -4
+  50:../STM32CUBEMX/Core/Src/usart.c ****   huart4.Init.BaudRate = 921600;
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s 			page 12
+
+
+ 151              		.loc 1 50 3 view .LVU39
+  50:../STM32CUBEMX/Core/Src/usart.c ****   huart4.Init.BaudRate = 921600;
+ 152              		.loc 1 50 19 is_stmt 0 view .LVU40
+ 153 0002 0A48     		ldr	r0, .L15
+ 154 0004 0A4B     		ldr	r3, .L15+4
+ 155 0006 0360     		str	r3, [r0]
+  51:../STM32CUBEMX/Core/Src/usart.c ****   huart4.Init.WordLength = UART_WORDLENGTH_8B;
+ 156              		.loc 1 51 3 is_stmt 1 view .LVU41
+  51:../STM32CUBEMX/Core/Src/usart.c ****   huart4.Init.WordLength = UART_WORDLENGTH_8B;
+ 157              		.loc 1 51 24 is_stmt 0 view .LVU42
+ 158 0008 4FF46123 		mov	r3, #921600
+ 159 000c 4360     		str	r3, [r0, #4]
+  52:../STM32CUBEMX/Core/Src/usart.c ****   huart4.Init.StopBits = UART_STOPBITS_1;
+ 160              		.loc 1 52 3 is_stmt 1 view .LVU43
+  52:../STM32CUBEMX/Core/Src/usart.c ****   huart4.Init.StopBits = UART_STOPBITS_1;
+ 161              		.loc 1 52 26 is_stmt 0 view .LVU44
+ 162 000e 0023     		movs	r3, #0
+ 163 0010 8360     		str	r3, [r0, #8]
+  53:../STM32CUBEMX/Core/Src/usart.c ****   huart4.Init.Parity = UART_PARITY_NONE;
+ 164              		.loc 1 53 3 is_stmt 1 view .LVU45
+  53:../STM32CUBEMX/Core/Src/usart.c ****   huart4.Init.Parity = UART_PARITY_NONE;
+ 165              		.loc 1 53 24 is_stmt 0 view .LVU46
+ 166 0012 C360     		str	r3, [r0, #12]
+  54:../STM32CUBEMX/Core/Src/usart.c ****   huart4.Init.Mode = UART_MODE_TX_RX;
+ 167              		.loc 1 54 3 is_stmt 1 view .LVU47
+  54:../STM32CUBEMX/Core/Src/usart.c ****   huart4.Init.Mode = UART_MODE_TX_RX;
+ 168              		.loc 1 54 22 is_stmt 0 view .LVU48
+ 169 0014 0361     		str	r3, [r0, #16]
+  55:../STM32CUBEMX/Core/Src/usart.c ****   huart4.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+ 170              		.loc 1 55 3 is_stmt 1 view .LVU49
+  55:../STM32CUBEMX/Core/Src/usart.c ****   huart4.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+ 171              		.loc 1 55 20 is_stmt 0 view .LVU50
+ 172 0016 0C22     		movs	r2, #12
+ 173 0018 4261     		str	r2, [r0, #20]
+  56:../STM32CUBEMX/Core/Src/usart.c ****   huart4.Init.OverSampling = UART_OVERSAMPLING_16;
+ 174              		.loc 1 56 3 is_stmt 1 view .LVU51
+  56:../STM32CUBEMX/Core/Src/usart.c ****   huart4.Init.OverSampling = UART_OVERSAMPLING_16;
+ 175              		.loc 1 56 25 is_stmt 0 view .LVU52
+ 176 001a 8361     		str	r3, [r0, #24]
+  57:../STM32CUBEMX/Core/Src/usart.c ****   if (HAL_UART_Init(&huart4) != HAL_OK)
+ 177              		.loc 1 57 3 is_stmt 1 view .LVU53
+  57:../STM32CUBEMX/Core/Src/usart.c ****   if (HAL_UART_Init(&huart4) != HAL_OK)
+ 178              		.loc 1 57 28 is_stmt 0 view .LVU54
+ 179 001c C361     		str	r3, [r0, #28]
+  58:../STM32CUBEMX/Core/Src/usart.c ****   {
+ 180              		.loc 1 58 3 is_stmt 1 view .LVU55
+  58:../STM32CUBEMX/Core/Src/usart.c ****   {
+ 181              		.loc 1 58 7 is_stmt 0 view .LVU56
+ 182 001e FFF7FEFF 		bl	HAL_UART_Init
+ 183              	.LVL17:
+  58:../STM32CUBEMX/Core/Src/usart.c ****   {
+ 184              		.loc 1 58 6 view .LVU57
+ 185 0022 00B9     		cbnz	r0, .L14
+ 186              	.L11:
+  66:../STM32CUBEMX/Core/Src/usart.c **** /* UART5 init function */
+ 187              		.loc 1 66 1 view .LVU58
+ 188 0024 08BD     		pop	{r3, pc}
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s 			page 13
+
+
+ 189              	.L14:
+  60:../STM32CUBEMX/Core/Src/usart.c ****   }
+ 190              		.loc 1 60 5 is_stmt 1 view .LVU59
+ 191 0026 FFF7FEFF 		bl	Error_Handler
+ 192              	.LVL18:
+  66:../STM32CUBEMX/Core/Src/usart.c **** /* UART5 init function */
+ 193              		.loc 1 66 1 is_stmt 0 view .LVU60
+ 194 002a FBE7     		b	.L11
+ 195              	.L16:
+ 196              		.align	2
+ 197              	.L15:
+ 198 002c 00000000 		.word	.LANCHOR0
+ 199 0030 004C0040 		.word	1073761280
+ 200              		.cfi_endproc
+ 201              	.LFE235:
+ 203              		.section	.text.MX_UART5_Init,"ax",%progbits
+ 204              		.align	1
+ 205              		.global	MX_UART5_Init
+ 206              		.syntax unified
+ 207              		.thumb
+ 208              		.thumb_func
+ 210              	MX_UART5_Init:
+ 211              	.LFB236:
+  69:../STM32CUBEMX/Core/Src/usart.c **** 
+ 212              		.loc 1 69 1 is_stmt 1 view -0
+ 213              		.cfi_startproc
+ 214              		@ args = 0, pretend = 0, frame = 0
+ 215              		@ frame_needed = 0, uses_anonymous_args = 0
+ 216 0000 08B5     		push	{r3, lr}
+ 217              	.LCFI2:
+ 218              		.cfi_def_cfa_offset 8
+ 219              		.cfi_offset 3, -8
+ 220              		.cfi_offset 14, -4
+  78:../STM32CUBEMX/Core/Src/usart.c ****   huart5.Init.BaudRate = 921600;
+ 221              		.loc 1 78 3 view .LVU62
+  78:../STM32CUBEMX/Core/Src/usart.c ****   huart5.Init.BaudRate = 921600;
+ 222              		.loc 1 78 19 is_stmt 0 view .LVU63
+ 223 0002 0A48     		ldr	r0, .L21
+ 224 0004 0A4B     		ldr	r3, .L21+4
+ 225 0006 0360     		str	r3, [r0]
+  79:../STM32CUBEMX/Core/Src/usart.c ****   huart5.Init.WordLength = UART_WORDLENGTH_8B;
+ 226              		.loc 1 79 3 is_stmt 1 view .LVU64
+  79:../STM32CUBEMX/Core/Src/usart.c ****   huart5.Init.WordLength = UART_WORDLENGTH_8B;
+ 227              		.loc 1 79 24 is_stmt 0 view .LVU65
+ 228 0008 4FF46123 		mov	r3, #921600
+ 229 000c 4360     		str	r3, [r0, #4]
+  80:../STM32CUBEMX/Core/Src/usart.c ****   huart5.Init.StopBits = UART_STOPBITS_1;
+ 230              		.loc 1 80 3 is_stmt 1 view .LVU66
+  80:../STM32CUBEMX/Core/Src/usart.c ****   huart5.Init.StopBits = UART_STOPBITS_1;
+ 231              		.loc 1 80 26 is_stmt 0 view .LVU67
+ 232 000e 0023     		movs	r3, #0
+ 233 0010 8360     		str	r3, [r0, #8]
+  81:../STM32CUBEMX/Core/Src/usart.c ****   huart5.Init.Parity = UART_PARITY_NONE;
+ 234              		.loc 1 81 3 is_stmt 1 view .LVU68
+  81:../STM32CUBEMX/Core/Src/usart.c ****   huart5.Init.Parity = UART_PARITY_NONE;
+ 235              		.loc 1 81 24 is_stmt 0 view .LVU69
+ 236 0012 C360     		str	r3, [r0, #12]
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s 			page 14
+
+
+  82:../STM32CUBEMX/Core/Src/usart.c ****   huart5.Init.Mode = UART_MODE_TX_RX;
+ 237              		.loc 1 82 3 is_stmt 1 view .LVU70
+  82:../STM32CUBEMX/Core/Src/usart.c ****   huart5.Init.Mode = UART_MODE_TX_RX;
+ 238              		.loc 1 82 22 is_stmt 0 view .LVU71
+ 239 0014 0361     		str	r3, [r0, #16]
+  83:../STM32CUBEMX/Core/Src/usart.c ****   huart5.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+ 240              		.loc 1 83 3 is_stmt 1 view .LVU72
+  83:../STM32CUBEMX/Core/Src/usart.c ****   huart5.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+ 241              		.loc 1 83 20 is_stmt 0 view .LVU73
+ 242 0016 0C22     		movs	r2, #12
+ 243 0018 4261     		str	r2, [r0, #20]
+  84:../STM32CUBEMX/Core/Src/usart.c ****   huart5.Init.OverSampling = UART_OVERSAMPLING_16;
+ 244              		.loc 1 84 3 is_stmt 1 view .LVU74
+  84:../STM32CUBEMX/Core/Src/usart.c ****   huart5.Init.OverSampling = UART_OVERSAMPLING_16;
+ 245              		.loc 1 84 25 is_stmt 0 view .LVU75
+ 246 001a 8361     		str	r3, [r0, #24]
+  85:../STM32CUBEMX/Core/Src/usart.c ****   if (HAL_UART_Init(&huart5) != HAL_OK)
+ 247              		.loc 1 85 3 is_stmt 1 view .LVU76
+  85:../STM32CUBEMX/Core/Src/usart.c ****   if (HAL_UART_Init(&huart5) != HAL_OK)
+ 248              		.loc 1 85 28 is_stmt 0 view .LVU77
+ 249 001c C361     		str	r3, [r0, #28]
+  86:../STM32CUBEMX/Core/Src/usart.c ****   {
+ 250              		.loc 1 86 3 is_stmt 1 view .LVU78
+  86:../STM32CUBEMX/Core/Src/usart.c ****   {
+ 251              		.loc 1 86 7 is_stmt 0 view .LVU79
+ 252 001e FFF7FEFF 		bl	HAL_UART_Init
+ 253              	.LVL19:
+  86:../STM32CUBEMX/Core/Src/usart.c ****   {
+ 254              		.loc 1 86 6 view .LVU80
+ 255 0022 00B9     		cbnz	r0, .L20
+ 256              	.L17:
+  94:../STM32CUBEMX/Core/Src/usart.c **** /* USART1 init function */
+ 257              		.loc 1 94 1 view .LVU81
+ 258 0024 08BD     		pop	{r3, pc}
+ 259              	.L20:
+  88:../STM32CUBEMX/Core/Src/usart.c ****   }
+ 260              		.loc 1 88 5 is_stmt 1 view .LVU82
+ 261 0026 FFF7FEFF 		bl	Error_Handler
+ 262              	.LVL20:
+  94:../STM32CUBEMX/Core/Src/usart.c **** /* USART1 init function */
+ 263              		.loc 1 94 1 is_stmt 0 view .LVU83
+ 264 002a FBE7     		b	.L17
+ 265              	.L22:
+ 266              		.align	2
+ 267              	.L21:
+ 268 002c 00000000 		.word	.LANCHOR1
+ 269 0030 00500040 		.word	1073762304
+ 270              		.cfi_endproc
+ 271              	.LFE236:
+ 273              		.section	.text.MX_USART1_UART_Init,"ax",%progbits
+ 274              		.align	1
+ 275              		.global	MX_USART1_UART_Init
+ 276              		.syntax unified
+ 277              		.thumb
+ 278              		.thumb_func
+ 280              	MX_USART1_UART_Init:
+ 281              	.LFB237:
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s 			page 15
+
+
+  98:../STM32CUBEMX/Core/Src/usart.c **** 
+ 282              		.loc 1 98 1 is_stmt 1 view -0
+ 283              		.cfi_startproc
+ 284              		@ args = 0, pretend = 0, frame = 0
+ 285              		@ frame_needed = 0, uses_anonymous_args = 0
+ 286 0000 08B5     		push	{r3, lr}
+ 287              	.LCFI3:
+ 288              		.cfi_def_cfa_offset 8
+ 289              		.cfi_offset 3, -8
+ 290              		.cfi_offset 14, -4
+ 107:../STM32CUBEMX/Core/Src/usart.c ****   huart1.Init.BaudRate = 921600;
+ 291              		.loc 1 107 3 view .LVU85
+ 107:../STM32CUBEMX/Core/Src/usart.c ****   huart1.Init.BaudRate = 921600;
+ 292              		.loc 1 107 19 is_stmt 0 view .LVU86
+ 293 0002 0A48     		ldr	r0, .L27
+ 294 0004 0A4B     		ldr	r3, .L27+4
+ 295 0006 0360     		str	r3, [r0]
+ 108:../STM32CUBEMX/Core/Src/usart.c ****   huart1.Init.WordLength = UART_WORDLENGTH_8B;
+ 296              		.loc 1 108 3 is_stmt 1 view .LVU87
+ 108:../STM32CUBEMX/Core/Src/usart.c ****   huart1.Init.WordLength = UART_WORDLENGTH_8B;
+ 297              		.loc 1 108 24 is_stmt 0 view .LVU88
+ 298 0008 4FF46123 		mov	r3, #921600
+ 299 000c 4360     		str	r3, [r0, #4]
+ 109:../STM32CUBEMX/Core/Src/usart.c ****   huart1.Init.StopBits = UART_STOPBITS_1;
+ 300              		.loc 1 109 3 is_stmt 1 view .LVU89
+ 109:../STM32CUBEMX/Core/Src/usart.c ****   huart1.Init.StopBits = UART_STOPBITS_1;
+ 301              		.loc 1 109 26 is_stmt 0 view .LVU90
+ 302 000e 0023     		movs	r3, #0
+ 303 0010 8360     		str	r3, [r0, #8]
+ 110:../STM32CUBEMX/Core/Src/usart.c ****   huart1.Init.Parity = UART_PARITY_NONE;
+ 304              		.loc 1 110 3 is_stmt 1 view .LVU91
+ 110:../STM32CUBEMX/Core/Src/usart.c ****   huart1.Init.Parity = UART_PARITY_NONE;
+ 305              		.loc 1 110 24 is_stmt 0 view .LVU92
+ 306 0012 C360     		str	r3, [r0, #12]
+ 111:../STM32CUBEMX/Core/Src/usart.c ****   huart1.Init.Mode = UART_MODE_TX_RX;
+ 307              		.loc 1 111 3 is_stmt 1 view .LVU93
+ 111:../STM32CUBEMX/Core/Src/usart.c ****   huart1.Init.Mode = UART_MODE_TX_RX;
+ 308              		.loc 1 111 22 is_stmt 0 view .LVU94
+ 309 0014 0361     		str	r3, [r0, #16]
+ 112:../STM32CUBEMX/Core/Src/usart.c ****   huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+ 310              		.loc 1 112 3 is_stmt 1 view .LVU95
+ 112:../STM32CUBEMX/Core/Src/usart.c ****   huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+ 311              		.loc 1 112 20 is_stmt 0 view .LVU96
+ 312 0016 0C22     		movs	r2, #12
+ 313 0018 4261     		str	r2, [r0, #20]
+ 113:../STM32CUBEMX/Core/Src/usart.c ****   huart1.Init.OverSampling = UART_OVERSAMPLING_16;
+ 314              		.loc 1 113 3 is_stmt 1 view .LVU97
+ 113:../STM32CUBEMX/Core/Src/usart.c ****   huart1.Init.OverSampling = UART_OVERSAMPLING_16;
+ 315              		.loc 1 113 25 is_stmt 0 view .LVU98
+ 316 001a 8361     		str	r3, [r0, #24]
+ 114:../STM32CUBEMX/Core/Src/usart.c ****   if (HAL_UART_Init(&huart1) != HAL_OK)
+ 317              		.loc 1 114 3 is_stmt 1 view .LVU99
+ 114:../STM32CUBEMX/Core/Src/usart.c ****   if (HAL_UART_Init(&huart1) != HAL_OK)
+ 318              		.loc 1 114 28 is_stmt 0 view .LVU100
+ 319 001c C361     		str	r3, [r0, #28]
+ 115:../STM32CUBEMX/Core/Src/usart.c ****   {
+ 320              		.loc 1 115 3 is_stmt 1 view .LVU101
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s 			page 16
+
+
+ 115:../STM32CUBEMX/Core/Src/usart.c ****   {
+ 321              		.loc 1 115 7 is_stmt 0 view .LVU102
+ 322 001e FFF7FEFF 		bl	HAL_UART_Init
+ 323              	.LVL21:
+ 115:../STM32CUBEMX/Core/Src/usart.c ****   {
+ 324              		.loc 1 115 6 view .LVU103
+ 325 0022 00B9     		cbnz	r0, .L26
+ 326              	.L23:
+ 123:../STM32CUBEMX/Core/Src/usart.c **** /* USART3 init function */
+ 327              		.loc 1 123 1 view .LVU104
+ 328 0024 08BD     		pop	{r3, pc}
+ 329              	.L26:
+ 117:../STM32CUBEMX/Core/Src/usart.c ****   }
+ 330              		.loc 1 117 5 is_stmt 1 view .LVU105
+ 331 0026 FFF7FEFF 		bl	Error_Handler
+ 332              	.LVL22:
+ 123:../STM32CUBEMX/Core/Src/usart.c **** /* USART3 init function */
+ 333              		.loc 1 123 1 is_stmt 0 view .LVU106
+ 334 002a FBE7     		b	.L23
+ 335              	.L28:
+ 336              		.align	2
+ 337              	.L27:
+ 338 002c 00000000 		.word	.LANCHOR2
+ 339 0030 00100140 		.word	1073811456
+ 340              		.cfi_endproc
+ 341              	.LFE237:
+ 343              		.section	.text.MX_USART3_UART_Init,"ax",%progbits
+ 344              		.align	1
+ 345              		.global	MX_USART3_UART_Init
+ 346              		.syntax unified
+ 347              		.thumb
+ 348              		.thumb_func
+ 350              	MX_USART3_UART_Init:
+ 351              	.LFB238:
+ 127:../STM32CUBEMX/Core/Src/usart.c **** 
+ 352              		.loc 1 127 1 is_stmt 1 view -0
+ 353              		.cfi_startproc
+ 354              		@ args = 0, pretend = 0, frame = 0
+ 355              		@ frame_needed = 0, uses_anonymous_args = 0
+ 356 0000 08B5     		push	{r3, lr}
+ 357              	.LCFI4:
+ 358              		.cfi_def_cfa_offset 8
+ 359              		.cfi_offset 3, -8
+ 360              		.cfi_offset 14, -4
+ 136:../STM32CUBEMX/Core/Src/usart.c ****   huart3.Init.BaudRate = 921600;
+ 361              		.loc 1 136 3 view .LVU108
+ 136:../STM32CUBEMX/Core/Src/usart.c ****   huart3.Init.BaudRate = 921600;
+ 362              		.loc 1 136 19 is_stmt 0 view .LVU109
+ 363 0002 0A48     		ldr	r0, .L33
+ 364 0004 0A4B     		ldr	r3, .L33+4
+ 365 0006 0360     		str	r3, [r0]
+ 137:../STM32CUBEMX/Core/Src/usart.c ****   huart3.Init.WordLength = UART_WORDLENGTH_8B;
+ 366              		.loc 1 137 3 is_stmt 1 view .LVU110
+ 137:../STM32CUBEMX/Core/Src/usart.c ****   huart3.Init.WordLength = UART_WORDLENGTH_8B;
+ 367              		.loc 1 137 24 is_stmt 0 view .LVU111
+ 368 0008 4FF46123 		mov	r3, #921600
+ 369 000c 4360     		str	r3, [r0, #4]
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s 			page 17
+
+
+ 138:../STM32CUBEMX/Core/Src/usart.c ****   huart3.Init.StopBits = UART_STOPBITS_1;
+ 370              		.loc 1 138 3 is_stmt 1 view .LVU112
+ 138:../STM32CUBEMX/Core/Src/usart.c ****   huart3.Init.StopBits = UART_STOPBITS_1;
+ 371              		.loc 1 138 26 is_stmt 0 view .LVU113
+ 372 000e 0023     		movs	r3, #0
+ 373 0010 8360     		str	r3, [r0, #8]
+ 139:../STM32CUBEMX/Core/Src/usart.c ****   huart3.Init.Parity = UART_PARITY_NONE;
+ 374              		.loc 1 139 3 is_stmt 1 view .LVU114
+ 139:../STM32CUBEMX/Core/Src/usart.c ****   huart3.Init.Parity = UART_PARITY_NONE;
+ 375              		.loc 1 139 24 is_stmt 0 view .LVU115
+ 376 0012 C360     		str	r3, [r0, #12]
+ 140:../STM32CUBEMX/Core/Src/usart.c ****   huart3.Init.Mode = UART_MODE_TX_RX;
+ 377              		.loc 1 140 3 is_stmt 1 view .LVU116
+ 140:../STM32CUBEMX/Core/Src/usart.c ****   huart3.Init.Mode = UART_MODE_TX_RX;
+ 378              		.loc 1 140 22 is_stmt 0 view .LVU117
+ 379 0014 0361     		str	r3, [r0, #16]
+ 141:../STM32CUBEMX/Core/Src/usart.c ****   huart3.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+ 380              		.loc 1 141 3 is_stmt 1 view .LVU118
+ 141:../STM32CUBEMX/Core/Src/usart.c ****   huart3.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+ 381              		.loc 1 141 20 is_stmt 0 view .LVU119
+ 382 0016 0C22     		movs	r2, #12
+ 383 0018 4261     		str	r2, [r0, #20]
+ 142:../STM32CUBEMX/Core/Src/usart.c ****   huart3.Init.OverSampling = UART_OVERSAMPLING_16;
+ 384              		.loc 1 142 3 is_stmt 1 view .LVU120
+ 142:../STM32CUBEMX/Core/Src/usart.c ****   huart3.Init.OverSampling = UART_OVERSAMPLING_16;
+ 385              		.loc 1 142 25 is_stmt 0 view .LVU121
+ 386 001a 8361     		str	r3, [r0, #24]
+ 143:../STM32CUBEMX/Core/Src/usart.c ****   if (HAL_UART_Init(&huart3) != HAL_OK)
+ 387              		.loc 1 143 3 is_stmt 1 view .LVU122
+ 143:../STM32CUBEMX/Core/Src/usart.c ****   if (HAL_UART_Init(&huart3) != HAL_OK)
+ 388              		.loc 1 143 28 is_stmt 0 view .LVU123
+ 389 001c C361     		str	r3, [r0, #28]
+ 144:../STM32CUBEMX/Core/Src/usart.c ****   {
+ 390              		.loc 1 144 3 is_stmt 1 view .LVU124
+ 144:../STM32CUBEMX/Core/Src/usart.c ****   {
+ 391              		.loc 1 144 7 is_stmt 0 view .LVU125
+ 392 001e FFF7FEFF 		bl	HAL_UART_Init
+ 393              	.LVL23:
+ 144:../STM32CUBEMX/Core/Src/usart.c ****   {
+ 394              		.loc 1 144 6 view .LVU126
+ 395 0022 00B9     		cbnz	r0, .L32
+ 396              	.L29:
+ 152:../STM32CUBEMX/Core/Src/usart.c **** 
+ 397              		.loc 1 152 1 view .LVU127
+ 398 0024 08BD     		pop	{r3, pc}
+ 399              	.L32:
+ 146:../STM32CUBEMX/Core/Src/usart.c ****   }
+ 400              		.loc 1 146 5 is_stmt 1 view .LVU128
+ 401 0026 FFF7FEFF 		bl	Error_Handler
+ 402              	.LVL24:
+ 152:../STM32CUBEMX/Core/Src/usart.c **** 
+ 403              		.loc 1 152 1 is_stmt 0 view .LVU129
+ 404 002a FBE7     		b	.L29
+ 405              	.L34:
+ 406              		.align	2
+ 407              	.L33:
+ 408 002c 00000000 		.word	.LANCHOR3
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s 			page 18
+
+
+ 409 0030 00480040 		.word	1073760256
+ 410              		.cfi_endproc
+ 411              	.LFE238:
+ 413              		.section	.text.HAL_UART_MspInit,"ax",%progbits
+ 414              		.align	1
+ 415              		.global	HAL_UART_MspInit
+ 416              		.syntax unified
+ 417              		.thumb
+ 418              		.thumb_func
+ 420              	HAL_UART_MspInit:
+ 421              	.LVL25:
+ 422              	.LFB239:
+ 155:../STM32CUBEMX/Core/Src/usart.c **** 
+ 423              		.loc 1 155 1 is_stmt 1 view -0
+ 424              		.cfi_startproc
+ 425              		@ args = 0, pretend = 0, frame = 56
+ 426              		@ frame_needed = 0, uses_anonymous_args = 0
+ 155:../STM32CUBEMX/Core/Src/usart.c **** 
+ 427              		.loc 1 155 1 is_stmt 0 view .LVU131
+ 428 0000 F0B5     		push	{r4, r5, r6, r7, lr}
+ 429              	.LCFI5:
+ 430              		.cfi_def_cfa_offset 20
+ 431              		.cfi_offset 4, -20
+ 432              		.cfi_offset 5, -16
+ 433              		.cfi_offset 6, -12
+ 434              		.cfi_offset 7, -8
+ 435              		.cfi_offset 14, -4
+ 436 0002 8FB0     		sub	sp, sp, #60
+ 437              	.LCFI6:
+ 438              		.cfi_def_cfa_offset 80
+ 157:../STM32CUBEMX/Core/Src/usart.c ****   if(uartHandle->Instance==UART4)
+ 439              		.loc 1 157 3 is_stmt 1 view .LVU132
+ 157:../STM32CUBEMX/Core/Src/usart.c ****   if(uartHandle->Instance==UART4)
+ 440              		.loc 1 157 20 is_stmt 0 view .LVU133
+ 441 0004 0023     		movs	r3, #0
+ 442 0006 0993     		str	r3, [sp, #36]
+ 443 0008 0A93     		str	r3, [sp, #40]
+ 444 000a 0B93     		str	r3, [sp, #44]
+ 445 000c 0C93     		str	r3, [sp, #48]
+ 446 000e 0D93     		str	r3, [sp, #52]
+ 158:../STM32CUBEMX/Core/Src/usart.c ****   {
+ 447              		.loc 1 158 3 is_stmt 1 view .LVU134
+ 158:../STM32CUBEMX/Core/Src/usart.c ****   {
+ 448              		.loc 1 158 16 is_stmt 0 view .LVU135
+ 449 0010 0368     		ldr	r3, [r0]
+ 158:../STM32CUBEMX/Core/Src/usart.c ****   {
+ 450              		.loc 1 158 5 view .LVU136
+ 451 0012 944A     		ldr	r2, .L51
+ 452 0014 9342     		cmp	r3, r2
+ 453 0016 0CD0     		beq	.L44
+ 454 0018 0446     		mov	r4, r0
+ 182:../STM32CUBEMX/Core/Src/usart.c ****   {
+ 455              		.loc 1 182 8 is_stmt 1 view .LVU137
+ 182:../STM32CUBEMX/Core/Src/usart.c ****   {
+ 456              		.loc 1 182 10 is_stmt 0 view .LVU138
+ 457 001a 934A     		ldr	r2, .L51+4
+ 458 001c 9342     		cmp	r3, r2
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s 			page 19
+
+
+ 459 001e 2CD0     		beq	.L45
+ 214:../STM32CUBEMX/Core/Src/usart.c ****   {
+ 460              		.loc 1 214 8 is_stmt 1 view .LVU139
+ 214:../STM32CUBEMX/Core/Src/usart.c ****   {
+ 461              		.loc 1 214 10 is_stmt 0 view .LVU140
+ 462 0020 924A     		ldr	r2, .L51+8
+ 463 0022 9342     		cmp	r3, r2
+ 464 0024 61D0     		beq	.L46
+ 279:../STM32CUBEMX/Core/Src/usart.c ****   {
+ 465              		.loc 1 279 8 is_stmt 1 view .LVU141
+ 279:../STM32CUBEMX/Core/Src/usart.c ****   {
+ 466              		.loc 1 279 10 is_stmt 0 view .LVU142
+ 467 0026 924A     		ldr	r2, .L51+12
+ 468 0028 9342     		cmp	r3, r2
+ 469 002a 00F0C980 		beq	.L47
+ 470              	.LVL26:
+ 471              	.L35:
+ 326:../STM32CUBEMX/Core/Src/usart.c **** 
+ 472              		.loc 1 326 1 view .LVU143
+ 473 002e 0FB0     		add	sp, sp, #60
+ 474              	.LCFI7:
+ 475              		.cfi_remember_state
+ 476              		.cfi_def_cfa_offset 20
+ 477              		@ sp needed
+ 478 0030 F0BD     		pop	{r4, r5, r6, r7, pc}
+ 479              	.LVL27:
+ 480              	.L44:
+ 481              	.LCFI8:
+ 482              		.cfi_restore_state
+ 164:../STM32CUBEMX/Core/Src/usart.c **** 
+ 483              		.loc 1 164 5 is_stmt 1 view .LVU144
+ 484              	.LBB6:
+ 164:../STM32CUBEMX/Core/Src/usart.c **** 
+ 485              		.loc 1 164 5 view .LVU145
+ 486 0032 0021     		movs	r1, #0
+ 487 0034 0091     		str	r1, [sp]
+ 164:../STM32CUBEMX/Core/Src/usart.c **** 
+ 488              		.loc 1 164 5 view .LVU146
+ 489 0036 8F4B     		ldr	r3, .L51+16
+ 490 0038 1A6C     		ldr	r2, [r3, #64]
+ 491 003a 42F40022 		orr	r2, r2, #524288
+ 492 003e 1A64     		str	r2, [r3, #64]
+ 164:../STM32CUBEMX/Core/Src/usart.c **** 
+ 493              		.loc 1 164 5 view .LVU147
+ 494 0040 1A6C     		ldr	r2, [r3, #64]
+ 495 0042 02F40022 		and	r2, r2, #524288
+ 496 0046 0092     		str	r2, [sp]
+ 164:../STM32CUBEMX/Core/Src/usart.c **** 
+ 497              		.loc 1 164 5 view .LVU148
+ 498 0048 009A     		ldr	r2, [sp]
+ 499              	.LBE6:
+ 164:../STM32CUBEMX/Core/Src/usart.c **** 
+ 500              		.loc 1 164 5 view .LVU149
+ 166:../STM32CUBEMX/Core/Src/usart.c ****     /**UART4 GPIO Configuration
+ 501              		.loc 1 166 5 view .LVU150
+ 502              	.LBB7:
+ 166:../STM32CUBEMX/Core/Src/usart.c ****     /**UART4 GPIO Configuration
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s 			page 20
+
+
+ 503              		.loc 1 166 5 view .LVU151
+ 504 004a 0191     		str	r1, [sp, #4]
+ 166:../STM32CUBEMX/Core/Src/usart.c ****     /**UART4 GPIO Configuration
+ 505              		.loc 1 166 5 view .LVU152
+ 506 004c 1A6B     		ldr	r2, [r3, #48]
+ 507 004e 42F00402 		orr	r2, r2, #4
+ 508 0052 1A63     		str	r2, [r3, #48]
+ 166:../STM32CUBEMX/Core/Src/usart.c ****     /**UART4 GPIO Configuration
+ 509              		.loc 1 166 5 view .LVU153
+ 510 0054 1B6B     		ldr	r3, [r3, #48]
+ 511 0056 03F00403 		and	r3, r3, #4
+ 512 005a 0193     		str	r3, [sp, #4]
+ 166:../STM32CUBEMX/Core/Src/usart.c ****     /**UART4 GPIO Configuration
+ 513              		.loc 1 166 5 view .LVU154
+ 514 005c 019B     		ldr	r3, [sp, #4]
+ 515              	.LBE7:
+ 166:../STM32CUBEMX/Core/Src/usart.c ****     /**UART4 GPIO Configuration
+ 516              		.loc 1 166 5 view .LVU155
+ 171:../STM32CUBEMX/Core/Src/usart.c ****     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+ 517              		.loc 1 171 5 view .LVU156
+ 171:../STM32CUBEMX/Core/Src/usart.c ****     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+ 518              		.loc 1 171 25 is_stmt 0 view .LVU157
+ 519 005e 4FF44063 		mov	r3, #3072
+ 520 0062 0993     		str	r3, [sp, #36]
+ 172:../STM32CUBEMX/Core/Src/usart.c ****     GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 521              		.loc 1 172 5 is_stmt 1 view .LVU158
+ 172:../STM32CUBEMX/Core/Src/usart.c ****     GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 522              		.loc 1 172 26 is_stmt 0 view .LVU159
+ 523 0064 0223     		movs	r3, #2
+ 524 0066 0A93     		str	r3, [sp, #40]
+ 173:../STM32CUBEMX/Core/Src/usart.c ****     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+ 525              		.loc 1 173 5 is_stmt 1 view .LVU160
+ 174:../STM32CUBEMX/Core/Src/usart.c ****     GPIO_InitStruct.Alternate = GPIO_AF8_UART4;
+ 526              		.loc 1 174 5 view .LVU161
+ 174:../STM32CUBEMX/Core/Src/usart.c ****     GPIO_InitStruct.Alternate = GPIO_AF8_UART4;
+ 527              		.loc 1 174 27 is_stmt 0 view .LVU162
+ 528 0068 0323     		movs	r3, #3
+ 529 006a 0C93     		str	r3, [sp, #48]
+ 175:../STM32CUBEMX/Core/Src/usart.c ****     HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+ 530              		.loc 1 175 5 is_stmt 1 view .LVU163
+ 175:../STM32CUBEMX/Core/Src/usart.c ****     HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+ 531              		.loc 1 175 31 is_stmt 0 view .LVU164
+ 532 006c 0823     		movs	r3, #8
+ 533 006e 0D93     		str	r3, [sp, #52]
+ 176:../STM32CUBEMX/Core/Src/usart.c **** 
+ 534              		.loc 1 176 5 is_stmt 1 view .LVU165
+ 535 0070 09A9     		add	r1, sp, #36
+ 536 0072 8148     		ldr	r0, .L51+20
+ 537              	.LVL28:
+ 176:../STM32CUBEMX/Core/Src/usart.c **** 
+ 538              		.loc 1 176 5 is_stmt 0 view .LVU166
+ 539 0074 FFF7FEFF 		bl	HAL_GPIO_Init
+ 540              	.LVL29:
+ 541 0078 D9E7     		b	.L35
+ 542              	.LVL30:
+ 543              	.L45:
+ 188:../STM32CUBEMX/Core/Src/usart.c **** 
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s 			page 21
+
+
+ 544              		.loc 1 188 5 is_stmt 1 view .LVU167
+ 545              	.LBB8:
+ 188:../STM32CUBEMX/Core/Src/usart.c **** 
+ 546              		.loc 1 188 5 view .LVU168
+ 547 007a 0024     		movs	r4, #0
+ 548 007c 0294     		str	r4, [sp, #8]
+ 188:../STM32CUBEMX/Core/Src/usart.c **** 
+ 549              		.loc 1 188 5 view .LVU169
+ 550 007e 7D4B     		ldr	r3, .L51+16
+ 551 0080 1A6C     		ldr	r2, [r3, #64]
+ 552 0082 42F48012 		orr	r2, r2, #1048576
+ 553 0086 1A64     		str	r2, [r3, #64]
+ 188:../STM32CUBEMX/Core/Src/usart.c **** 
+ 554              		.loc 1 188 5 view .LVU170
+ 555 0088 1A6C     		ldr	r2, [r3, #64]
+ 556 008a 02F48012 		and	r2, r2, #1048576
+ 557 008e 0292     		str	r2, [sp, #8]
+ 188:../STM32CUBEMX/Core/Src/usart.c **** 
+ 558              		.loc 1 188 5 view .LVU171
+ 559 0090 029A     		ldr	r2, [sp, #8]
+ 560              	.LBE8:
+ 188:../STM32CUBEMX/Core/Src/usart.c **** 
+ 561              		.loc 1 188 5 view .LVU172
+ 190:../STM32CUBEMX/Core/Src/usart.c ****     __HAL_RCC_GPIOD_CLK_ENABLE();
+ 562              		.loc 1 190 5 view .LVU173
+ 563              	.LBB9:
+ 190:../STM32CUBEMX/Core/Src/usart.c ****     __HAL_RCC_GPIOD_CLK_ENABLE();
+ 564              		.loc 1 190 5 view .LVU174
+ 565 0092 0394     		str	r4, [sp, #12]
+ 190:../STM32CUBEMX/Core/Src/usart.c ****     __HAL_RCC_GPIOD_CLK_ENABLE();
+ 566              		.loc 1 190 5 view .LVU175
+ 567 0094 1A6B     		ldr	r2, [r3, #48]
+ 568 0096 42F00402 		orr	r2, r2, #4
+ 569 009a 1A63     		str	r2, [r3, #48]
+ 190:../STM32CUBEMX/Core/Src/usart.c ****     __HAL_RCC_GPIOD_CLK_ENABLE();
+ 570              		.loc 1 190 5 view .LVU176
+ 571 009c 1A6B     		ldr	r2, [r3, #48]
+ 572 009e 02F00402 		and	r2, r2, #4
+ 573 00a2 0392     		str	r2, [sp, #12]
+ 190:../STM32CUBEMX/Core/Src/usart.c ****     __HAL_RCC_GPIOD_CLK_ENABLE();
+ 574              		.loc 1 190 5 view .LVU177
+ 575 00a4 039A     		ldr	r2, [sp, #12]
+ 576              	.LBE9:
+ 190:../STM32CUBEMX/Core/Src/usart.c ****     __HAL_RCC_GPIOD_CLK_ENABLE();
+ 577              		.loc 1 190 5 view .LVU178
+ 191:../STM32CUBEMX/Core/Src/usart.c ****     /**UART5 GPIO Configuration
+ 578              		.loc 1 191 5 view .LVU179
+ 579              	.LBB10:
+ 191:../STM32CUBEMX/Core/Src/usart.c ****     /**UART5 GPIO Configuration
+ 580              		.loc 1 191 5 view .LVU180
+ 581 00a6 0494     		str	r4, [sp, #16]
+ 191:../STM32CUBEMX/Core/Src/usart.c ****     /**UART5 GPIO Configuration
+ 582              		.loc 1 191 5 view .LVU181
+ 583 00a8 1A6B     		ldr	r2, [r3, #48]
+ 584 00aa 42F00802 		orr	r2, r2, #8
+ 585 00ae 1A63     		str	r2, [r3, #48]
+ 191:../STM32CUBEMX/Core/Src/usart.c ****     /**UART5 GPIO Configuration
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s 			page 22
+
+
+ 586              		.loc 1 191 5 view .LVU182
+ 587 00b0 1B6B     		ldr	r3, [r3, #48]
+ 588 00b2 03F00803 		and	r3, r3, #8
+ 589 00b6 0493     		str	r3, [sp, #16]
+ 191:../STM32CUBEMX/Core/Src/usart.c ****     /**UART5 GPIO Configuration
+ 590              		.loc 1 191 5 view .LVU183
+ 591 00b8 049B     		ldr	r3, [sp, #16]
+ 592              	.LBE10:
+ 191:../STM32CUBEMX/Core/Src/usart.c ****     /**UART5 GPIO Configuration
+ 593              		.loc 1 191 5 view .LVU184
+ 196:../STM32CUBEMX/Core/Src/usart.c ****     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+ 594              		.loc 1 196 5 view .LVU185
+ 196:../STM32CUBEMX/Core/Src/usart.c ****     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+ 595              		.loc 1 196 25 is_stmt 0 view .LVU186
+ 596 00ba 4FF48053 		mov	r3, #4096
+ 597 00be 0993     		str	r3, [sp, #36]
+ 197:../STM32CUBEMX/Core/Src/usart.c ****     GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 598              		.loc 1 197 5 is_stmt 1 view .LVU187
+ 197:../STM32CUBEMX/Core/Src/usart.c ****     GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 599              		.loc 1 197 26 is_stmt 0 view .LVU188
+ 600 00c0 0227     		movs	r7, #2
+ 601 00c2 0A97     		str	r7, [sp, #40]
+ 198:../STM32CUBEMX/Core/Src/usart.c ****     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+ 602              		.loc 1 198 5 is_stmt 1 view .LVU189
+ 199:../STM32CUBEMX/Core/Src/usart.c ****     GPIO_InitStruct.Alternate = GPIO_AF8_UART5;
+ 603              		.loc 1 199 5 view .LVU190
+ 199:../STM32CUBEMX/Core/Src/usart.c ****     GPIO_InitStruct.Alternate = GPIO_AF8_UART5;
+ 604              		.loc 1 199 27 is_stmt 0 view .LVU191
+ 605 00c4 0326     		movs	r6, #3
+ 606 00c6 0C96     		str	r6, [sp, #48]
+ 200:../STM32CUBEMX/Core/Src/usart.c ****     HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+ 607              		.loc 1 200 5 is_stmt 1 view .LVU192
+ 200:../STM32CUBEMX/Core/Src/usart.c ****     HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+ 608              		.loc 1 200 31 is_stmt 0 view .LVU193
+ 609 00c8 0825     		movs	r5, #8
+ 610 00ca 0D95     		str	r5, [sp, #52]
+ 201:../STM32CUBEMX/Core/Src/usart.c **** 
+ 611              		.loc 1 201 5 is_stmt 1 view .LVU194
+ 612 00cc 09A9     		add	r1, sp, #36
+ 613 00ce 6A48     		ldr	r0, .L51+20
+ 614              	.LVL31:
+ 201:../STM32CUBEMX/Core/Src/usart.c **** 
+ 615              		.loc 1 201 5 is_stmt 0 view .LVU195
+ 616 00d0 FFF7FEFF 		bl	HAL_GPIO_Init
+ 617              	.LVL32:
+ 203:../STM32CUBEMX/Core/Src/usart.c ****     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+ 618              		.loc 1 203 5 is_stmt 1 view .LVU196
+ 203:../STM32CUBEMX/Core/Src/usart.c ****     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+ 619              		.loc 1 203 25 is_stmt 0 view .LVU197
+ 620 00d4 0423     		movs	r3, #4
+ 621 00d6 0993     		str	r3, [sp, #36]
+ 204:../STM32CUBEMX/Core/Src/usart.c ****     GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 622              		.loc 1 204 5 is_stmt 1 view .LVU198
+ 204:../STM32CUBEMX/Core/Src/usart.c ****     GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 623              		.loc 1 204 26 is_stmt 0 view .LVU199
+ 624 00d8 0A97     		str	r7, [sp, #40]
+ 205:../STM32CUBEMX/Core/Src/usart.c ****     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s 			page 23
+
+
+ 625              		.loc 1 205 5 is_stmt 1 view .LVU200
+ 205:../STM32CUBEMX/Core/Src/usart.c ****     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+ 626              		.loc 1 205 26 is_stmt 0 view .LVU201
+ 627 00da 0B94     		str	r4, [sp, #44]
+ 206:../STM32CUBEMX/Core/Src/usart.c ****     GPIO_InitStruct.Alternate = GPIO_AF8_UART5;
+ 628              		.loc 1 206 5 is_stmt 1 view .LVU202
+ 206:../STM32CUBEMX/Core/Src/usart.c ****     GPIO_InitStruct.Alternate = GPIO_AF8_UART5;
+ 629              		.loc 1 206 27 is_stmt 0 view .LVU203
+ 630 00dc 0C96     		str	r6, [sp, #48]
+ 207:../STM32CUBEMX/Core/Src/usart.c ****     HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+ 631              		.loc 1 207 5 is_stmt 1 view .LVU204
+ 207:../STM32CUBEMX/Core/Src/usart.c ****     HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+ 632              		.loc 1 207 31 is_stmt 0 view .LVU205
+ 633 00de 0D95     		str	r5, [sp, #52]
+ 208:../STM32CUBEMX/Core/Src/usart.c **** 
+ 634              		.loc 1 208 5 is_stmt 1 view .LVU206
+ 635 00e0 09A9     		add	r1, sp, #36
+ 636 00e2 6648     		ldr	r0, .L51+24
+ 637 00e4 FFF7FEFF 		bl	HAL_GPIO_Init
+ 638              	.LVL33:
+ 639 00e8 A1E7     		b	.L35
+ 640              	.LVL34:
+ 641              	.L46:
+ 220:../STM32CUBEMX/Core/Src/usart.c **** 
+ 642              		.loc 1 220 5 view .LVU207
+ 643              	.LBB11:
+ 220:../STM32CUBEMX/Core/Src/usart.c **** 
+ 644              		.loc 1 220 5 view .LVU208
+ 645 00ea 0025     		movs	r5, #0
+ 646 00ec 0595     		str	r5, [sp, #20]
+ 220:../STM32CUBEMX/Core/Src/usart.c **** 
+ 647              		.loc 1 220 5 view .LVU209
+ 648 00ee 614B     		ldr	r3, .L51+16
+ 649 00f0 5A6C     		ldr	r2, [r3, #68]
+ 650 00f2 42F01002 		orr	r2, r2, #16
+ 651 00f6 5A64     		str	r2, [r3, #68]
+ 220:../STM32CUBEMX/Core/Src/usart.c **** 
+ 652              		.loc 1 220 5 view .LVU210
+ 653 00f8 5A6C     		ldr	r2, [r3, #68]
+ 654 00fa 02F01002 		and	r2, r2, #16
+ 655 00fe 0592     		str	r2, [sp, #20]
+ 220:../STM32CUBEMX/Core/Src/usart.c **** 
+ 656              		.loc 1 220 5 view .LVU211
+ 657 0100 059A     		ldr	r2, [sp, #20]
+ 658              	.LBE11:
+ 220:../STM32CUBEMX/Core/Src/usart.c **** 
+ 659              		.loc 1 220 5 view .LVU212
+ 222:../STM32CUBEMX/Core/Src/usart.c ****     /**USART1 GPIO Configuration
+ 660              		.loc 1 222 5 view .LVU213
+ 661              	.LBB12:
+ 222:../STM32CUBEMX/Core/Src/usart.c ****     /**USART1 GPIO Configuration
+ 662              		.loc 1 222 5 view .LVU214
+ 663 0102 0695     		str	r5, [sp, #24]
+ 222:../STM32CUBEMX/Core/Src/usart.c ****     /**USART1 GPIO Configuration
+ 664              		.loc 1 222 5 view .LVU215
+ 665 0104 1A6B     		ldr	r2, [r3, #48]
+ 666 0106 42F00102 		orr	r2, r2, #1
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s 			page 24
+
+
+ 667 010a 1A63     		str	r2, [r3, #48]
+ 222:../STM32CUBEMX/Core/Src/usart.c ****     /**USART1 GPIO Configuration
+ 668              		.loc 1 222 5 view .LVU216
+ 669 010c 1B6B     		ldr	r3, [r3, #48]
+ 670 010e 03F00103 		and	r3, r3, #1
+ 671 0112 0693     		str	r3, [sp, #24]
+ 222:../STM32CUBEMX/Core/Src/usart.c ****     /**USART1 GPIO Configuration
+ 672              		.loc 1 222 5 view .LVU217
+ 673 0114 069B     		ldr	r3, [sp, #24]
+ 674              	.LBE12:
+ 222:../STM32CUBEMX/Core/Src/usart.c ****     /**USART1 GPIO Configuration
+ 675              		.loc 1 222 5 view .LVU218
+ 227:../STM32CUBEMX/Core/Src/usart.c ****     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+ 676              		.loc 1 227 5 view .LVU219
+ 227:../STM32CUBEMX/Core/Src/usart.c ****     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+ 677              		.loc 1 227 25 is_stmt 0 view .LVU220
+ 678 0116 4FF4C063 		mov	r3, #1536
+ 679 011a 0993     		str	r3, [sp, #36]
+ 228:../STM32CUBEMX/Core/Src/usart.c ****     GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 680              		.loc 1 228 5 is_stmt 1 view .LVU221
+ 228:../STM32CUBEMX/Core/Src/usart.c ****     GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 681              		.loc 1 228 26 is_stmt 0 view .LVU222
+ 682 011c 0223     		movs	r3, #2
+ 683 011e 0A93     		str	r3, [sp, #40]
+ 229:../STM32CUBEMX/Core/Src/usart.c ****     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+ 684              		.loc 1 229 5 is_stmt 1 view .LVU223
+ 230:../STM32CUBEMX/Core/Src/usart.c ****     GPIO_InitStruct.Alternate = GPIO_AF7_USART1;
+ 685              		.loc 1 230 5 view .LVU224
+ 230:../STM32CUBEMX/Core/Src/usart.c ****     GPIO_InitStruct.Alternate = GPIO_AF7_USART1;
+ 686              		.loc 1 230 27 is_stmt 0 view .LVU225
+ 687 0120 0323     		movs	r3, #3
+ 688 0122 0C93     		str	r3, [sp, #48]
+ 231:../STM32CUBEMX/Core/Src/usart.c ****     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+ 689              		.loc 1 231 5 is_stmt 1 view .LVU226
+ 231:../STM32CUBEMX/Core/Src/usart.c ****     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+ 690              		.loc 1 231 31 is_stmt 0 view .LVU227
+ 691 0124 0723     		movs	r3, #7
+ 692 0126 0D93     		str	r3, [sp, #52]
+ 232:../STM32CUBEMX/Core/Src/usart.c **** 
+ 693              		.loc 1 232 5 is_stmt 1 view .LVU228
+ 694 0128 09A9     		add	r1, sp, #36
+ 695 012a 5548     		ldr	r0, .L51+28
+ 696              	.LVL35:
+ 232:../STM32CUBEMX/Core/Src/usart.c **** 
+ 697              		.loc 1 232 5 is_stmt 0 view .LVU229
+ 698 012c FFF7FEFF 		bl	HAL_GPIO_Init
+ 699              	.LVL36:
+ 236:../STM32CUBEMX/Core/Src/usart.c ****     hdma_usart1_rx.Init.Channel = DMA_CHANNEL_4;
+ 700              		.loc 1 236 5 is_stmt 1 view .LVU230
+ 236:../STM32CUBEMX/Core/Src/usart.c ****     hdma_usart1_rx.Init.Channel = DMA_CHANNEL_4;
+ 701              		.loc 1 236 29 is_stmt 0 view .LVU231
+ 702 0130 5448     		ldr	r0, .L51+32
+ 703 0132 554B     		ldr	r3, .L51+36
+ 704 0134 0360     		str	r3, [r0]
+ 237:../STM32CUBEMX/Core/Src/usart.c ****     hdma_usart1_rx.Init.Direction = DMA_PERIPH_TO_MEMORY;
+ 705              		.loc 1 237 5 is_stmt 1 view .LVU232
+ 237:../STM32CUBEMX/Core/Src/usart.c ****     hdma_usart1_rx.Init.Direction = DMA_PERIPH_TO_MEMORY;
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s 			page 25
+
+
+ 706              		.loc 1 237 33 is_stmt 0 view .LVU233
+ 707 0136 4FF00063 		mov	r3, #134217728
+ 708 013a 4360     		str	r3, [r0, #4]
+ 238:../STM32CUBEMX/Core/Src/usart.c ****     hdma_usart1_rx.Init.PeriphInc = DMA_PINC_DISABLE;
+ 709              		.loc 1 238 5 is_stmt 1 view .LVU234
+ 238:../STM32CUBEMX/Core/Src/usart.c ****     hdma_usart1_rx.Init.PeriphInc = DMA_PINC_DISABLE;
+ 710              		.loc 1 238 35 is_stmt 0 view .LVU235
+ 711 013c 8560     		str	r5, [r0, #8]
+ 239:../STM32CUBEMX/Core/Src/usart.c ****     hdma_usart1_rx.Init.MemInc = DMA_MINC_ENABLE;
+ 712              		.loc 1 239 5 is_stmt 1 view .LVU236
+ 239:../STM32CUBEMX/Core/Src/usart.c ****     hdma_usart1_rx.Init.MemInc = DMA_MINC_ENABLE;
+ 713              		.loc 1 239 35 is_stmt 0 view .LVU237
+ 714 013e C560     		str	r5, [r0, #12]
+ 240:../STM32CUBEMX/Core/Src/usart.c ****     hdma_usart1_rx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
+ 715              		.loc 1 240 5 is_stmt 1 view .LVU238
+ 240:../STM32CUBEMX/Core/Src/usart.c ****     hdma_usart1_rx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
+ 716              		.loc 1 240 32 is_stmt 0 view .LVU239
+ 717 0140 4FF48063 		mov	r3, #1024
+ 718 0144 0361     		str	r3, [r0, #16]
+ 241:../STM32CUBEMX/Core/Src/usart.c ****     hdma_usart1_rx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
+ 719              		.loc 1 241 5 is_stmt 1 view .LVU240
+ 241:../STM32CUBEMX/Core/Src/usart.c ****     hdma_usart1_rx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
+ 720              		.loc 1 241 45 is_stmt 0 view .LVU241
+ 721 0146 4561     		str	r5, [r0, #20]
+ 242:../STM32CUBEMX/Core/Src/usart.c ****     hdma_usart1_rx.Init.Mode = DMA_NORMAL;
+ 722              		.loc 1 242 5 is_stmt 1 view .LVU242
+ 242:../STM32CUBEMX/Core/Src/usart.c ****     hdma_usart1_rx.Init.Mode = DMA_NORMAL;
+ 723              		.loc 1 242 42 is_stmt 0 view .LVU243
+ 724 0148 8561     		str	r5, [r0, #24]
+ 243:../STM32CUBEMX/Core/Src/usart.c ****     hdma_usart1_rx.Init.Priority = DMA_PRIORITY_LOW;
+ 725              		.loc 1 243 5 is_stmt 1 view .LVU244
+ 243:../STM32CUBEMX/Core/Src/usart.c ****     hdma_usart1_rx.Init.Priority = DMA_PRIORITY_LOW;
+ 726              		.loc 1 243 30 is_stmt 0 view .LVU245
+ 727 014a C561     		str	r5, [r0, #28]
+ 244:../STM32CUBEMX/Core/Src/usart.c ****     hdma_usart1_rx.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
+ 728              		.loc 1 244 5 is_stmt 1 view .LVU246
+ 244:../STM32CUBEMX/Core/Src/usart.c ****     hdma_usart1_rx.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
+ 729              		.loc 1 244 34 is_stmt 0 view .LVU247
+ 730 014c 0562     		str	r5, [r0, #32]
+ 245:../STM32CUBEMX/Core/Src/usart.c ****     if (HAL_DMA_Init(&hdma_usart1_rx) != HAL_OK)
+ 731              		.loc 1 245 5 is_stmt 1 view .LVU248
+ 245:../STM32CUBEMX/Core/Src/usart.c ****     if (HAL_DMA_Init(&hdma_usart1_rx) != HAL_OK)
+ 732              		.loc 1 245 34 is_stmt 0 view .LVU249
+ 733 014e 4562     		str	r5, [r0, #36]
+ 246:../STM32CUBEMX/Core/Src/usart.c ****     {
+ 734              		.loc 1 246 5 is_stmt 1 view .LVU250
+ 246:../STM32CUBEMX/Core/Src/usart.c ****     {
+ 735              		.loc 1 246 9 is_stmt 0 view .LVU251
+ 736 0150 FFF7FEFF 		bl	HAL_DMA_Init
+ 737              	.LVL37:
+ 246:../STM32CUBEMX/Core/Src/usart.c ****     {
+ 738              		.loc 1 246 8 view .LVU252
+ 739 0154 0028     		cmp	r0, #0
+ 740 0156 2DD1     		bne	.L48
+ 741              	.L40:
+ 251:../STM32CUBEMX/Core/Src/usart.c **** 
+ 742              		.loc 1 251 5 is_stmt 1 view .LVU253
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s 			page 26
+
+
+ 251:../STM32CUBEMX/Core/Src/usart.c **** 
+ 743              		.loc 1 251 5 view .LVU254
+ 744 0158 4A4B     		ldr	r3, .L51+32
+ 745 015a A363     		str	r3, [r4, #56]
+ 251:../STM32CUBEMX/Core/Src/usart.c **** 
+ 746              		.loc 1 251 5 view .LVU255
+ 747 015c 9C63     		str	r4, [r3, #56]
+ 251:../STM32CUBEMX/Core/Src/usart.c **** 
+ 748              		.loc 1 251 5 view .LVU256
+ 254:../STM32CUBEMX/Core/Src/usart.c ****     hdma_usart1_tx.Init.Channel = DMA_CHANNEL_4;
+ 749              		.loc 1 254 5 view .LVU257
+ 254:../STM32CUBEMX/Core/Src/usart.c ****     hdma_usart1_tx.Init.Channel = DMA_CHANNEL_4;
+ 750              		.loc 1 254 29 is_stmt 0 view .LVU258
+ 751 015e 4B48     		ldr	r0, .L51+40
+ 752 0160 4B4B     		ldr	r3, .L51+44
+ 753 0162 0360     		str	r3, [r0]
+ 255:../STM32CUBEMX/Core/Src/usart.c ****     hdma_usart1_tx.Init.Direction = DMA_MEMORY_TO_PERIPH;
+ 754              		.loc 1 255 5 is_stmt 1 view .LVU259
+ 255:../STM32CUBEMX/Core/Src/usart.c ****     hdma_usart1_tx.Init.Direction = DMA_MEMORY_TO_PERIPH;
+ 755              		.loc 1 255 33 is_stmt 0 view .LVU260
+ 756 0164 4FF00063 		mov	r3, #134217728
+ 757 0168 4360     		str	r3, [r0, #4]
+ 256:../STM32CUBEMX/Core/Src/usart.c ****     hdma_usart1_tx.Init.PeriphInc = DMA_PINC_DISABLE;
+ 758              		.loc 1 256 5 is_stmt 1 view .LVU261
+ 256:../STM32CUBEMX/Core/Src/usart.c ****     hdma_usart1_tx.Init.PeriphInc = DMA_PINC_DISABLE;
+ 759              		.loc 1 256 35 is_stmt 0 view .LVU262
+ 760 016a 4023     		movs	r3, #64
+ 761 016c 8360     		str	r3, [r0, #8]
+ 257:../STM32CUBEMX/Core/Src/usart.c ****     hdma_usart1_tx.Init.MemInc = DMA_MINC_ENABLE;
+ 762              		.loc 1 257 5 is_stmt 1 view .LVU263
+ 257:../STM32CUBEMX/Core/Src/usart.c ****     hdma_usart1_tx.Init.MemInc = DMA_MINC_ENABLE;
+ 763              		.loc 1 257 35 is_stmt 0 view .LVU264
+ 764 016e 0023     		movs	r3, #0
+ 765 0170 C360     		str	r3, [r0, #12]
+ 258:../STM32CUBEMX/Core/Src/usart.c ****     hdma_usart1_tx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
+ 766              		.loc 1 258 5 is_stmt 1 view .LVU265
+ 258:../STM32CUBEMX/Core/Src/usart.c ****     hdma_usart1_tx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
+ 767              		.loc 1 258 32 is_stmt 0 view .LVU266
+ 768 0172 4FF48062 		mov	r2, #1024
+ 769 0176 0261     		str	r2, [r0, #16]
+ 259:../STM32CUBEMX/Core/Src/usart.c ****     hdma_usart1_tx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
+ 770              		.loc 1 259 5 is_stmt 1 view .LVU267
+ 259:../STM32CUBEMX/Core/Src/usart.c ****     hdma_usart1_tx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
+ 771              		.loc 1 259 45 is_stmt 0 view .LVU268
+ 772 0178 4361     		str	r3, [r0, #20]
+ 260:../STM32CUBEMX/Core/Src/usart.c ****     hdma_usart1_tx.Init.Mode = DMA_NORMAL;
+ 773              		.loc 1 260 5 is_stmt 1 view .LVU269
+ 260:../STM32CUBEMX/Core/Src/usart.c ****     hdma_usart1_tx.Init.Mode = DMA_NORMAL;
+ 774              		.loc 1 260 42 is_stmt 0 view .LVU270
+ 775 017a 8361     		str	r3, [r0, #24]
+ 261:../STM32CUBEMX/Core/Src/usart.c ****     hdma_usart1_tx.Init.Priority = DMA_PRIORITY_LOW;
+ 776              		.loc 1 261 5 is_stmt 1 view .LVU271
+ 261:../STM32CUBEMX/Core/Src/usart.c ****     hdma_usart1_tx.Init.Priority = DMA_PRIORITY_LOW;
+ 777              		.loc 1 261 30 is_stmt 0 view .LVU272
+ 778 017c C361     		str	r3, [r0, #28]
+ 262:../STM32CUBEMX/Core/Src/usart.c ****     hdma_usart1_tx.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
+ 779              		.loc 1 262 5 is_stmt 1 view .LVU273
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s 			page 27
+
+
+ 262:../STM32CUBEMX/Core/Src/usart.c ****     hdma_usart1_tx.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
+ 780              		.loc 1 262 34 is_stmt 0 view .LVU274
+ 781 017e 0362     		str	r3, [r0, #32]
+ 263:../STM32CUBEMX/Core/Src/usart.c ****     if (HAL_DMA_Init(&hdma_usart1_tx) != HAL_OK)
+ 782              		.loc 1 263 5 is_stmt 1 view .LVU275
+ 263:../STM32CUBEMX/Core/Src/usart.c ****     if (HAL_DMA_Init(&hdma_usart1_tx) != HAL_OK)
+ 783              		.loc 1 263 34 is_stmt 0 view .LVU276
+ 784 0180 4362     		str	r3, [r0, #36]
+ 264:../STM32CUBEMX/Core/Src/usart.c ****     {
+ 785              		.loc 1 264 5 is_stmt 1 view .LVU277
+ 264:../STM32CUBEMX/Core/Src/usart.c ****     {
+ 786              		.loc 1 264 9 is_stmt 0 view .LVU278
+ 787 0182 FFF7FEFF 		bl	HAL_DMA_Init
+ 788              	.LVL38:
+ 264:../STM32CUBEMX/Core/Src/usart.c ****     {
+ 789              		.loc 1 264 8 view .LVU279
+ 790 0186 C0B9     		cbnz	r0, .L49
+ 791              	.L41:
+ 269:../STM32CUBEMX/Core/Src/usart.c **** 
+ 792              		.loc 1 269 5 is_stmt 1 view .LVU280
+ 269:../STM32CUBEMX/Core/Src/usart.c **** 
+ 793              		.loc 1 269 5 view .LVU281
+ 794 0188 404B     		ldr	r3, .L51+40
+ 795 018a 6363     		str	r3, [r4, #52]
+ 269:../STM32CUBEMX/Core/Src/usart.c **** 
+ 796              		.loc 1 269 5 view .LVU282
+ 797 018c 9C63     		str	r4, [r3, #56]
+ 269:../STM32CUBEMX/Core/Src/usart.c **** 
+ 798              		.loc 1 269 5 view .LVU283
+ 272:../STM32CUBEMX/Core/Src/usart.c ****     HAL_NVIC_EnableIRQ(USART1_IRQn);
+ 799              		.loc 1 272 5 view .LVU284
+ 800 018e 0022     		movs	r2, #0
+ 801 0190 1146     		mov	r1, r2
+ 802 0192 2520     		movs	r0, #37
+ 803 0194 FFF7FEFF 		bl	HAL_NVIC_SetPriority
+ 804              	.LVL39:
+ 273:../STM32CUBEMX/Core/Src/usart.c ****   /* USER CODE BEGIN USART1_MspInit 1 */
+ 805              		.loc 1 273 5 view .LVU285
+ 806 0198 2520     		movs	r0, #37
+ 807 019a FFF7FEFF 		bl	HAL_NVIC_EnableIRQ
+ 808              	.LVL40:
+ 275:../STM32CUBEMX/Core/Src/usart.c ****   HAL_UART_Receive_DMA(&huart1, Uart1DMAData.rxDMABuf, UART1DMA_RXBUFFER_SIZE);//set Buffer,??rtIOS
+ 809              		.loc 1 275 3 view .LVU286
+ 810 019e 3D48     		ldr	r0, .L51+48
+ 811 01a0 0268     		ldr	r2, [r0]
+ 812 01a2 D368     		ldr	r3, [r2, #12]
+ 813 01a4 43F01003 		orr	r3, r3, #16
+ 814 01a8 D360     		str	r3, [r2, #12]
+ 276:../STM32CUBEMX/Core/Src/usart.c ****   /* USER CODE END USART1_MspInit 1 */
+ 815              		.loc 1 276 3 view .LVU287
+ 816 01aa 6422     		movs	r2, #100
+ 817 01ac 3A49     		ldr	r1, .L51+52
+ 818 01ae FFF7FEFF 		bl	HAL_UART_Receive_DMA
+ 819              	.LVL41:
+ 820 01b2 3CE7     		b	.L35
+ 821              	.L48:
+ 248:../STM32CUBEMX/Core/Src/usart.c ****     }
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s 			page 28
+
+
+ 822              		.loc 1 248 7 view .LVU288
+ 823 01b4 FFF7FEFF 		bl	Error_Handler
+ 824              	.LVL42:
+ 825 01b8 CEE7     		b	.L40
+ 826              	.L49:
+ 266:../STM32CUBEMX/Core/Src/usart.c ****     }
+ 827              		.loc 1 266 7 view .LVU289
+ 828 01ba FFF7FEFF 		bl	Error_Handler
+ 829              	.LVL43:
+ 830 01be E3E7     		b	.L41
+ 831              	.LVL44:
+ 832              	.L47:
+ 285:../STM32CUBEMX/Core/Src/usart.c **** 
+ 833              		.loc 1 285 5 view .LVU290
+ 834              	.LBB13:
+ 285:../STM32CUBEMX/Core/Src/usart.c **** 
+ 835              		.loc 1 285 5 view .LVU291
+ 836 01c0 0025     		movs	r5, #0
+ 837 01c2 0795     		str	r5, [sp, #28]
+ 285:../STM32CUBEMX/Core/Src/usart.c **** 
+ 838              		.loc 1 285 5 view .LVU292
+ 839 01c4 2B4B     		ldr	r3, .L51+16
+ 840 01c6 1A6C     		ldr	r2, [r3, #64]
+ 841 01c8 42F48022 		orr	r2, r2, #262144
+ 842 01cc 1A64     		str	r2, [r3, #64]
+ 285:../STM32CUBEMX/Core/Src/usart.c **** 
+ 843              		.loc 1 285 5 view .LVU293
+ 844 01ce 1A6C     		ldr	r2, [r3, #64]
+ 845 01d0 02F48022 		and	r2, r2, #262144
+ 846 01d4 0792     		str	r2, [sp, #28]
+ 285:../STM32CUBEMX/Core/Src/usart.c **** 
+ 847              		.loc 1 285 5 view .LVU294
+ 848 01d6 079A     		ldr	r2, [sp, #28]
+ 849              	.LBE13:
+ 285:../STM32CUBEMX/Core/Src/usart.c **** 
+ 850              		.loc 1 285 5 view .LVU295
+ 287:../STM32CUBEMX/Core/Src/usart.c ****     /**USART3 GPIO Configuration
+ 851              		.loc 1 287 5 view .LVU296
+ 852              	.LBB14:
+ 287:../STM32CUBEMX/Core/Src/usart.c ****     /**USART3 GPIO Configuration
+ 853              		.loc 1 287 5 view .LVU297
+ 854 01d8 0895     		str	r5, [sp, #32]
+ 287:../STM32CUBEMX/Core/Src/usart.c ****     /**USART3 GPIO Configuration
+ 855              		.loc 1 287 5 view .LVU298
+ 856 01da 1A6B     		ldr	r2, [r3, #48]
+ 857 01dc 42F00202 		orr	r2, r2, #2
+ 858 01e0 1A63     		str	r2, [r3, #48]
+ 287:../STM32CUBEMX/Core/Src/usart.c ****     /**USART3 GPIO Configuration
+ 859              		.loc 1 287 5 view .LVU299
+ 860 01e2 1B6B     		ldr	r3, [r3, #48]
+ 861 01e4 03F00203 		and	r3, r3, #2
+ 862 01e8 0893     		str	r3, [sp, #32]
+ 287:../STM32CUBEMX/Core/Src/usart.c ****     /**USART3 GPIO Configuration
+ 863              		.loc 1 287 5 view .LVU300
+ 864 01ea 089B     		ldr	r3, [sp, #32]
+ 865              	.LBE14:
+ 287:../STM32CUBEMX/Core/Src/usart.c ****     /**USART3 GPIO Configuration
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s 			page 29
+
+
+ 866              		.loc 1 287 5 view .LVU301
+ 292:../STM32CUBEMX/Core/Src/usart.c ****     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+ 867              		.loc 1 292 5 view .LVU302
+ 292:../STM32CUBEMX/Core/Src/usart.c ****     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+ 868              		.loc 1 292 25 is_stmt 0 view .LVU303
+ 869 01ec 4FF44063 		mov	r3, #3072
+ 870 01f0 0993     		str	r3, [sp, #36]
+ 293:../STM32CUBEMX/Core/Src/usart.c ****     GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 871              		.loc 1 293 5 is_stmt 1 view .LVU304
+ 293:../STM32CUBEMX/Core/Src/usart.c ****     GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 872              		.loc 1 293 26 is_stmt 0 view .LVU305
+ 873 01f2 0223     		movs	r3, #2
+ 874 01f4 0A93     		str	r3, [sp, #40]
+ 294:../STM32CUBEMX/Core/Src/usart.c ****     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+ 875              		.loc 1 294 5 is_stmt 1 view .LVU306
+ 295:../STM32CUBEMX/Core/Src/usart.c ****     GPIO_InitStruct.Alternate = GPIO_AF7_USART3;
+ 876              		.loc 1 295 5 view .LVU307
+ 295:../STM32CUBEMX/Core/Src/usart.c ****     GPIO_InitStruct.Alternate = GPIO_AF7_USART3;
+ 877              		.loc 1 295 27 is_stmt 0 view .LVU308
+ 878 01f6 0323     		movs	r3, #3
+ 879 01f8 0C93     		str	r3, [sp, #48]
+ 296:../STM32CUBEMX/Core/Src/usart.c ****     HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+ 880              		.loc 1 296 5 is_stmt 1 view .LVU309
+ 296:../STM32CUBEMX/Core/Src/usart.c ****     HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+ 881              		.loc 1 296 31 is_stmt 0 view .LVU310
+ 882 01fa 0723     		movs	r3, #7
+ 883 01fc 0D93     		str	r3, [sp, #52]
+ 297:../STM32CUBEMX/Core/Src/usart.c **** 
+ 884              		.loc 1 297 5 is_stmt 1 view .LVU311
+ 885 01fe 09A9     		add	r1, sp, #36
+ 886 0200 2648     		ldr	r0, .L51+56
+ 887              	.LVL45:
+ 297:../STM32CUBEMX/Core/Src/usart.c **** 
+ 888              		.loc 1 297 5 is_stmt 0 view .LVU312
+ 889 0202 FFF7FEFF 		bl	HAL_GPIO_Init
+ 890              	.LVL46:
+ 301:../STM32CUBEMX/Core/Src/usart.c ****     hdma_usart3_rx.Init.Channel = DMA_CHANNEL_4;
+ 891              		.loc 1 301 5 is_stmt 1 view .LVU313
+ 301:../STM32CUBEMX/Core/Src/usart.c ****     hdma_usart3_rx.Init.Channel = DMA_CHANNEL_4;
+ 892              		.loc 1 301 29 is_stmt 0 view .LVU314
+ 893 0206 2648     		ldr	r0, .L51+60
+ 894 0208 264B     		ldr	r3, .L51+64
+ 895 020a 0360     		str	r3, [r0]
+ 302:../STM32CUBEMX/Core/Src/usart.c ****     hdma_usart3_rx.Init.Direction = DMA_PERIPH_TO_MEMORY;
+ 896              		.loc 1 302 5 is_stmt 1 view .LVU315
+ 302:../STM32CUBEMX/Core/Src/usart.c ****     hdma_usart3_rx.Init.Direction = DMA_PERIPH_TO_MEMORY;
+ 897              		.loc 1 302 33 is_stmt 0 view .LVU316
+ 898 020c 4FF00063 		mov	r3, #134217728
+ 899 0210 4360     		str	r3, [r0, #4]
+ 303:../STM32CUBEMX/Core/Src/usart.c ****     hdma_usart3_rx.Init.PeriphInc = DMA_PINC_DISABLE;
+ 900              		.loc 1 303 5 is_stmt 1 view .LVU317
+ 303:../STM32CUBEMX/Core/Src/usart.c ****     hdma_usart3_rx.Init.PeriphInc = DMA_PINC_DISABLE;
+ 901              		.loc 1 303 35 is_stmt 0 view .LVU318
+ 902 0212 8560     		str	r5, [r0, #8]
+ 304:../STM32CUBEMX/Core/Src/usart.c ****     hdma_usart3_rx.Init.MemInc = DMA_MINC_ENABLE;
+ 903              		.loc 1 304 5 is_stmt 1 view .LVU319
+ 304:../STM32CUBEMX/Core/Src/usart.c ****     hdma_usart3_rx.Init.MemInc = DMA_MINC_ENABLE;
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s 			page 30
+
+
+ 904              		.loc 1 304 35 is_stmt 0 view .LVU320
+ 905 0214 C560     		str	r5, [r0, #12]
+ 305:../STM32CUBEMX/Core/Src/usart.c ****     hdma_usart3_rx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
+ 906              		.loc 1 305 5 is_stmt 1 view .LVU321
+ 305:../STM32CUBEMX/Core/Src/usart.c ****     hdma_usart3_rx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
+ 907              		.loc 1 305 32 is_stmt 0 view .LVU322
+ 908 0216 4FF48063 		mov	r3, #1024
+ 909 021a 0361     		str	r3, [r0, #16]
+ 306:../STM32CUBEMX/Core/Src/usart.c ****     hdma_usart3_rx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
+ 910              		.loc 1 306 5 is_stmt 1 view .LVU323
+ 306:../STM32CUBEMX/Core/Src/usart.c ****     hdma_usart3_rx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
+ 911              		.loc 1 306 45 is_stmt 0 view .LVU324
+ 912 021c 4561     		str	r5, [r0, #20]
+ 307:../STM32CUBEMX/Core/Src/usart.c ****     hdma_usart3_rx.Init.Mode = DMA_NORMAL;
+ 913              		.loc 1 307 5 is_stmt 1 view .LVU325
+ 307:../STM32CUBEMX/Core/Src/usart.c ****     hdma_usart3_rx.Init.Mode = DMA_NORMAL;
+ 914              		.loc 1 307 42 is_stmt 0 view .LVU326
+ 915 021e 8561     		str	r5, [r0, #24]
+ 308:../STM32CUBEMX/Core/Src/usart.c ****     hdma_usart3_rx.Init.Priority = DMA_PRIORITY_MEDIUM;
+ 916              		.loc 1 308 5 is_stmt 1 view .LVU327
+ 308:../STM32CUBEMX/Core/Src/usart.c ****     hdma_usart3_rx.Init.Priority = DMA_PRIORITY_MEDIUM;
+ 917              		.loc 1 308 30 is_stmt 0 view .LVU328
+ 918 0220 C561     		str	r5, [r0, #28]
+ 309:../STM32CUBEMX/Core/Src/usart.c ****     hdma_usart3_rx.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
+ 919              		.loc 1 309 5 is_stmt 1 view .LVU329
+ 309:../STM32CUBEMX/Core/Src/usart.c ****     hdma_usart3_rx.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
+ 920              		.loc 1 309 34 is_stmt 0 view .LVU330
+ 921 0222 4FF48033 		mov	r3, #65536
+ 922 0226 0362     		str	r3, [r0, #32]
+ 310:../STM32CUBEMX/Core/Src/usart.c ****     if (HAL_DMA_Init(&hdma_usart3_rx) != HAL_OK)
+ 923              		.loc 1 310 5 is_stmt 1 view .LVU331
+ 310:../STM32CUBEMX/Core/Src/usart.c ****     if (HAL_DMA_Init(&hdma_usart3_rx) != HAL_OK)
+ 924              		.loc 1 310 34 is_stmt 0 view .LVU332
+ 925 0228 4562     		str	r5, [r0, #36]
+ 311:../STM32CUBEMX/Core/Src/usart.c ****     {
+ 926              		.loc 1 311 5 is_stmt 1 view .LVU333
+ 311:../STM32CUBEMX/Core/Src/usart.c ****     {
+ 927              		.loc 1 311 9 is_stmt 0 view .LVU334
+ 928 022a FFF7FEFF 		bl	HAL_DMA_Init
+ 929              	.LVL47:
+ 311:../STM32CUBEMX/Core/Src/usart.c ****     {
+ 930              		.loc 1 311 8 view .LVU335
+ 931 022e A8B9     		cbnz	r0, .L50
+ 932              	.L42:
+ 316:../STM32CUBEMX/Core/Src/usart.c **** 
+ 933              		.loc 1 316 5 is_stmt 1 view .LVU336
+ 316:../STM32CUBEMX/Core/Src/usart.c **** 
+ 934              		.loc 1 316 5 view .LVU337
+ 935 0230 1B4B     		ldr	r3, .L51+60
+ 936 0232 A363     		str	r3, [r4, #56]
+ 316:../STM32CUBEMX/Core/Src/usart.c **** 
+ 937              		.loc 1 316 5 view .LVU338
+ 938 0234 9C63     		str	r4, [r3, #56]
+ 316:../STM32CUBEMX/Core/Src/usart.c **** 
+ 939              		.loc 1 316 5 view .LVU339
+ 319:../STM32CUBEMX/Core/Src/usart.c ****     HAL_NVIC_EnableIRQ(USART3_IRQn);
+ 940              		.loc 1 319 5 view .LVU340
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s 			page 31
+
+
+ 941 0236 0022     		movs	r2, #0
+ 942 0238 1146     		mov	r1, r2
+ 943 023a 2720     		movs	r0, #39
+ 944 023c FFF7FEFF 		bl	HAL_NVIC_SetPriority
+ 945              	.LVL48:
+ 320:../STM32CUBEMX/Core/Src/usart.c ****   /* USER CODE BEGIN USART3_MspInit 1 */
+ 946              		.loc 1 320 5 view .LVU341
+ 947 0240 2720     		movs	r0, #39
+ 948 0242 FFF7FEFF 		bl	HAL_NVIC_EnableIRQ
+ 949              	.LVL49:
+ 322:../STM32CUBEMX/Core/Src/usart.c **** 	HAL_UART_Receive_DMA(&huart3,Uart3DMABuffer,UART3DMA_RXBUFFER_SIZE);//Start DMA at main
+ 950              		.loc 1 322 2 view .LVU342
+ 951 0246 1848     		ldr	r0, .L51+68
+ 952 0248 0268     		ldr	r2, [r0]
+ 953 024a D368     		ldr	r3, [r2, #12]
+ 954 024c 43F01003 		orr	r3, r3, #16
+ 955 0250 D360     		str	r3, [r2, #12]
+ 323:../STM32CUBEMX/Core/Src/usart.c ****   /* USER CODE END USART3_MspInit 1 */
+ 956              		.loc 1 323 2 view .LVU343
+ 957 0252 3222     		movs	r2, #50
+ 958 0254 1549     		ldr	r1, .L51+72
+ 959 0256 FFF7FEFF 		bl	HAL_UART_Receive_DMA
+ 960              	.LVL50:
+ 326:../STM32CUBEMX/Core/Src/usart.c **** 
+ 961              		.loc 1 326 1 is_stmt 0 view .LVU344
+ 962 025a E8E6     		b	.L35
+ 963              	.L50:
+ 313:../STM32CUBEMX/Core/Src/usart.c ****     }
+ 964              		.loc 1 313 7 is_stmt 1 view .LVU345
+ 965 025c FFF7FEFF 		bl	Error_Handler
+ 966              	.LVL51:
+ 967 0260 E6E7     		b	.L42
+ 968              	.L52:
+ 969 0262 00BF     		.align	2
+ 970              	.L51:
+ 971 0264 004C0040 		.word	1073761280
+ 972 0268 00500040 		.word	1073762304
+ 973 026c 00100140 		.word	1073811456
+ 974 0270 00480040 		.word	1073760256
+ 975 0274 00380240 		.word	1073887232
+ 976 0278 00080240 		.word	1073874944
+ 977 027c 000C0240 		.word	1073875968
+ 978 0280 00000240 		.word	1073872896
+ 979 0284 00000000 		.word	.LANCHOR4
+ 980 0288 88640240 		.word	1073898632
+ 981 028c 00000000 		.word	.LANCHOR5
+ 982 0290 B8640240 		.word	1073898680
+ 983 0294 00000000 		.word	.LANCHOR2
+ 984 0298 04000000 		.word	.LANCHOR6+4
+ 985 029c 00040240 		.word	1073873920
+ 986 02a0 00000000 		.word	.LANCHOR7
+ 987 02a4 28600240 		.word	1073897512
+ 988 02a8 00000000 		.word	.LANCHOR3
+ 989 02ac 00000000 		.word	Uart3DMABuffer
+ 990              		.cfi_endproc
+ 991              	.LFE239:
+ 993              		.section	.text.HAL_UART_MspDeInit,"ax",%progbits
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s 			page 32
+
+
+ 994              		.align	1
+ 995              		.global	HAL_UART_MspDeInit
+ 996              		.syntax unified
+ 997              		.thumb
+ 998              		.thumb_func
+ 1000              	HAL_UART_MspDeInit:
+ 1001              	.LVL52:
+ 1002              	.LFB240:
+ 329:../STM32CUBEMX/Core/Src/usart.c **** 
+ 1003              		.loc 1 329 1 view -0
+ 1004              		.cfi_startproc
+ 1005              		@ args = 0, pretend = 0, frame = 0
+ 1006              		@ frame_needed = 0, uses_anonymous_args = 0
+ 329:../STM32CUBEMX/Core/Src/usart.c **** 
+ 1007              		.loc 1 329 1 is_stmt 0 view .LVU347
+ 1008 0000 10B5     		push	{r4, lr}
+ 1009              	.LCFI9:
+ 1010              		.cfi_def_cfa_offset 8
+ 1011              		.cfi_offset 4, -8
+ 1012              		.cfi_offset 14, -4
+ 331:../STM32CUBEMX/Core/Src/usart.c ****   {
+ 1013              		.loc 1 331 3 is_stmt 1 view .LVU348
+ 331:../STM32CUBEMX/Core/Src/usart.c ****   {
+ 1014              		.loc 1 331 16 is_stmt 0 view .LVU349
+ 1015 0002 0368     		ldr	r3, [r0]
+ 331:../STM32CUBEMX/Core/Src/usart.c ****   {
+ 1016              		.loc 1 331 5 view .LVU350
+ 1017 0004 284A     		ldr	r2, .L63
+ 1018 0006 9342     		cmp	r3, r2
+ 1019 0008 0AD0     		beq	.L59
+ 1020 000a 0446     		mov	r4, r0
+ 349:../STM32CUBEMX/Core/Src/usart.c ****   {
+ 1021              		.loc 1 349 8 is_stmt 1 view .LVU351
+ 349:../STM32CUBEMX/Core/Src/usart.c ****   {
+ 1022              		.loc 1 349 10 is_stmt 0 view .LVU352
+ 1023 000c 274A     		ldr	r2, .L63+4
+ 1024 000e 9342     		cmp	r3, r2
+ 1025 0010 12D0     		beq	.L60
+ 369:../STM32CUBEMX/Core/Src/usart.c ****   {
+ 1026              		.loc 1 369 8 is_stmt 1 view .LVU353
+ 369:../STM32CUBEMX/Core/Src/usart.c ****   {
+ 1027              		.loc 1 369 10 is_stmt 0 view .LVU354
+ 1028 0012 274A     		ldr	r2, .L63+8
+ 1029 0014 9342     		cmp	r3, r2
+ 1030 0016 1FD0     		beq	.L61
+ 393:../STM32CUBEMX/Core/Src/usart.c ****   {
+ 1031              		.loc 1 393 8 is_stmt 1 view .LVU355
+ 393:../STM32CUBEMX/Core/Src/usart.c ****   {
+ 1032              		.loc 1 393 10 is_stmt 0 view .LVU356
+ 1033 0018 264A     		ldr	r2, .L63+12
+ 1034 001a 9342     		cmp	r3, r2
+ 1035 001c 31D0     		beq	.L62
+ 1036              	.LVL53:
+ 1037              	.L53:
+ 416:../STM32CUBEMX/Core/Src/usart.c **** 
+ 1038              		.loc 1 416 1 view .LVU357
+ 1039 001e 10BD     		pop	{r4, pc}
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s 			page 33
+
+
+ 1040              	.LVL54:
+ 1041              	.L59:
+ 337:../STM32CUBEMX/Core/Src/usart.c **** 
+ 1042              		.loc 1 337 5 is_stmt 1 view .LVU358
+ 1043 0020 02F5F632 		add	r2, r2, #125952
+ 1044 0024 136C     		ldr	r3, [r2, #64]
+ 1045 0026 23F40023 		bic	r3, r3, #524288
+ 1046 002a 1364     		str	r3, [r2, #64]
+ 343:../STM32CUBEMX/Core/Src/usart.c **** 
+ 1047              		.loc 1 343 5 view .LVU359
+ 1048 002c 4FF44061 		mov	r1, #3072
+ 1049 0030 2148     		ldr	r0, .L63+16
+ 1050              	.LVL55:
+ 343:../STM32CUBEMX/Core/Src/usart.c **** 
+ 1051              		.loc 1 343 5 is_stmt 0 view .LVU360
+ 1052 0032 FFF7FEFF 		bl	HAL_GPIO_DeInit
+ 1053              	.LVL56:
+ 1054 0036 F2E7     		b	.L53
+ 1055              	.LVL57:
+ 1056              	.L60:
+ 355:../STM32CUBEMX/Core/Src/usart.c **** 
+ 1057              		.loc 1 355 5 is_stmt 1 view .LVU361
+ 1058 0038 02F5F432 		add	r2, r2, #124928
+ 1059 003c 136C     		ldr	r3, [r2, #64]
+ 1060 003e 23F48013 		bic	r3, r3, #1048576
+ 1061 0042 1364     		str	r3, [r2, #64]
+ 361:../STM32CUBEMX/Core/Src/usart.c **** 
+ 1062              		.loc 1 361 5 view .LVU362
+ 1063 0044 4FF48051 		mov	r1, #4096
+ 1064 0048 1B48     		ldr	r0, .L63+16
+ 1065              	.LVL58:
+ 361:../STM32CUBEMX/Core/Src/usart.c **** 
+ 1066              		.loc 1 361 5 is_stmt 0 view .LVU363
+ 1067 004a FFF7FEFF 		bl	HAL_GPIO_DeInit
+ 1068              	.LVL59:
+ 363:../STM32CUBEMX/Core/Src/usart.c **** 
+ 1069              		.loc 1 363 5 is_stmt 1 view .LVU364
+ 1070 004e 0421     		movs	r1, #4
+ 1071 0050 1A48     		ldr	r0, .L63+20
+ 1072 0052 FFF7FEFF 		bl	HAL_GPIO_DeInit
+ 1073              	.LVL60:
+ 1074 0056 E2E7     		b	.L53
+ 1075              	.LVL61:
+ 1076              	.L61:
+ 375:../STM32CUBEMX/Core/Src/usart.c **** 
+ 1077              		.loc 1 375 5 view .LVU365
+ 1078 0058 02F59432 		add	r2, r2, #75776
+ 1079 005c 536C     		ldr	r3, [r2, #68]
+ 1080 005e 23F01003 		bic	r3, r3, #16
+ 1081 0062 5364     		str	r3, [r2, #68]
+ 381:../STM32CUBEMX/Core/Src/usart.c **** 
+ 1082              		.loc 1 381 5 view .LVU366
+ 1083 0064 4FF4C061 		mov	r1, #1536
+ 1084 0068 1548     		ldr	r0, .L63+24
+ 1085              	.LVL62:
+ 381:../STM32CUBEMX/Core/Src/usart.c **** 
+ 1086              		.loc 1 381 5 is_stmt 0 view .LVU367
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s 			page 34
+
+
+ 1087 006a FFF7FEFF 		bl	HAL_GPIO_DeInit
+ 1088              	.LVL63:
+ 384:../STM32CUBEMX/Core/Src/usart.c ****     HAL_DMA_DeInit(uartHandle->hdmatx);
+ 1089              		.loc 1 384 5 is_stmt 1 view .LVU368
+ 1090 006e A06B     		ldr	r0, [r4, #56]
+ 1091 0070 FFF7FEFF 		bl	HAL_DMA_DeInit
+ 1092              	.LVL64:
+ 385:../STM32CUBEMX/Core/Src/usart.c **** 
+ 1093              		.loc 1 385 5 view .LVU369
+ 1094 0074 606B     		ldr	r0, [r4, #52]
+ 1095 0076 FFF7FEFF 		bl	HAL_DMA_DeInit
+ 1096              	.LVL65:
+ 388:../STM32CUBEMX/Core/Src/usart.c ****   /* USER CODE BEGIN USART1_MspDeInit 1 */
+ 1097              		.loc 1 388 5 view .LVU370
+ 1098 007a 2520     		movs	r0, #37
+ 1099 007c FFF7FEFF 		bl	HAL_NVIC_DisableIRQ
+ 1100              	.LVL66:
+ 1101 0080 CDE7     		b	.L53
+ 1102              	.LVL67:
+ 1103              	.L62:
+ 399:../STM32CUBEMX/Core/Src/usart.c **** 
+ 1104              		.loc 1 399 5 view .LVU371
+ 1105 0082 02F5F832 		add	r2, r2, #126976
+ 1106 0086 136C     		ldr	r3, [r2, #64]
+ 1107 0088 23F48023 		bic	r3, r3, #262144
+ 1108 008c 1364     		str	r3, [r2, #64]
+ 405:../STM32CUBEMX/Core/Src/usart.c **** 
+ 1109              		.loc 1 405 5 view .LVU372
+ 1110 008e 4FF44061 		mov	r1, #3072
+ 1111 0092 0C48     		ldr	r0, .L63+28
+ 1112              	.LVL68:
+ 405:../STM32CUBEMX/Core/Src/usart.c **** 
+ 1113              		.loc 1 405 5 is_stmt 0 view .LVU373
+ 1114 0094 FFF7FEFF 		bl	HAL_GPIO_DeInit
+ 1115              	.LVL69:
+ 408:../STM32CUBEMX/Core/Src/usart.c **** 
+ 1116              		.loc 1 408 5 is_stmt 1 view .LVU374
+ 1117 0098 A06B     		ldr	r0, [r4, #56]
+ 1118 009a FFF7FEFF 		bl	HAL_DMA_DeInit
+ 1119              	.LVL70:
+ 411:../STM32CUBEMX/Core/Src/usart.c ****   /* USER CODE BEGIN USART3_MspDeInit 1 */
+ 1120              		.loc 1 411 5 view .LVU375
+ 1121 009e 2720     		movs	r0, #39
+ 1122 00a0 FFF7FEFF 		bl	HAL_NVIC_DisableIRQ
+ 1123              	.LVL71:
+ 416:../STM32CUBEMX/Core/Src/usart.c **** 
+ 1124              		.loc 1 416 1 is_stmt 0 view .LVU376
+ 1125 00a4 BBE7     		b	.L53
+ 1126              	.L64:
+ 1127 00a6 00BF     		.align	2
+ 1128              	.L63:
+ 1129 00a8 004C0040 		.word	1073761280
+ 1130 00ac 00500040 		.word	1073762304
+ 1131 00b0 00100140 		.word	1073811456
+ 1132 00b4 00480040 		.word	1073760256
+ 1133 00b8 00080240 		.word	1073874944
+ 1134 00bc 000C0240 		.word	1073875968
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s 			page 35
+
+
+ 1135 00c0 00000240 		.word	1073872896
+ 1136 00c4 00040240 		.word	1073873920
+ 1137              		.cfi_endproc
+ 1138              	.LFE240:
+ 1140              		.section	.text.CalcCRC_Modbus,"ax",%progbits
+ 1141              		.align	1
+ 1142              		.global	CalcCRC_Modbus
+ 1143              		.syntax unified
+ 1144              		.thumb
+ 1145              		.thumb_func
+ 1147              	CalcCRC_Modbus:
+ 1148              	.LVL72:
+ 1149              	.LFB241:
+ 423:../STM32CUBEMX/Core/Src/usart.c **** 	uint8_t crchi = 0xff;
+ 1150              		.loc 1 423 1 is_stmt 1 view -0
+ 1151              		.cfi_startproc
+ 1152              		@ args = 0, pretend = 0, frame = 0
+ 1153              		@ frame_needed = 0, uses_anonymous_args = 0
+ 423:../STM32CUBEMX/Core/Src/usart.c **** 	uint8_t crchi = 0xff;
+ 1154              		.loc 1 423 1 is_stmt 0 view .LVU378
+ 1155 0000 10B5     		push	{r4, lr}
+ 1156              	.LCFI10:
+ 1157              		.cfi_def_cfa_offset 8
+ 1158              		.cfi_offset 4, -8
+ 1159              		.cfi_offset 14, -4
+ 424:../STM32CUBEMX/Core/Src/usart.c **** 	uint8_t crclo = 0xff;
+ 1160              		.loc 1 424 2 is_stmt 1 view .LVU379
+ 1161              	.LVL73:
+ 425:../STM32CUBEMX/Core/Src/usart.c **** 	int idx=0;
+ 1162              		.loc 1 425 2 view .LVU380
+ 426:../STM32CUBEMX/Core/Src/usart.c **** 	for(idx=0;idx<MsgLenToCRC;idx++)
+ 1163              		.loc 1 426 2 view .LVU381
+ 427:../STM32CUBEMX/Core/Src/usart.c **** 	{
+ 1164              		.loc 1 427 2 view .LVU382
+ 427:../STM32CUBEMX/Core/Src/usart.c **** 	{
+ 1165              		.loc 1 427 9 is_stmt 0 view .LVU383
+ 1166 0002 4FF0000C 		mov	ip, #0
+ 425:../STM32CUBEMX/Core/Src/usart.c **** 	int idx=0;
+ 1167              		.loc 1 425 10 view .LVU384
+ 1168 0006 4FF0FF0E 		mov	lr, #255
+ 424:../STM32CUBEMX/Core/Src/usart.c **** 	uint8_t crclo = 0xff;
+ 1169              		.loc 1 424 10 view .LVU385
+ 1170 000a 7246     		mov	r2, lr
+ 427:../STM32CUBEMX/Core/Src/usart.c **** 	{
+ 1171              		.loc 1 427 2 view .LVU386
+ 1172 000c 0BE0     		b	.L66
+ 1173              	.LVL74:
+ 1174              	.L67:
+ 1175              	.LBB15:
+ 429:../STM32CUBEMX/Core/Src/usart.c **** 		crchi = (uint8_t)( crclo^achCRCHi[idxCRC] );
+ 1176              		.loc 1 429 3 is_stmt 1 discriminator 3 view .LVU387
+ 429:../STM32CUBEMX/Core/Src/usart.c **** 		crchi = (uint8_t)( crclo^achCRCHi[idxCRC] );
+ 1177              		.loc 1 429 44 is_stmt 0 discriminator 3 view .LVU388
+ 1178 000e 10F80C30 		ldrb	r3, [r0, ip]	@ zero_extendqisi2
+ 429:../STM32CUBEMX/Core/Src/usart.c **** 		crchi = (uint8_t)( crclo^achCRCHi[idxCRC] );
+ 1179              		.loc 1 429 11 discriminator 3 view .LVU389
+ 1180 0012 5340     		eors	r3, r3, r2
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s 			page 36
+
+
+ 1181              	.LVL75:
+ 430:../STM32CUBEMX/Core/Src/usart.c ****         crclo = (uint8_t)( achCRCLo[idxCRC] );
+ 1182              		.loc 1 430 3 is_stmt 1 discriminator 3 view .LVU390
+ 430:../STM32CUBEMX/Core/Src/usart.c ****         crclo = (uint8_t)( achCRCLo[idxCRC] );
+ 1183              		.loc 1 430 36 is_stmt 0 discriminator 3 view .LVU391
+ 1184 0014 064A     		ldr	r2, .L69
+ 1185              	.LVL76:
+ 430:../STM32CUBEMX/Core/Src/usart.c ****         crclo = (uint8_t)( achCRCLo[idxCRC] );
+ 1186              		.loc 1 430 36 discriminator 3 view .LVU392
+ 1187 0016 D25C     		ldrb	r2, [r2, r3]	@ zero_extendqisi2
+ 430:../STM32CUBEMX/Core/Src/usart.c ****         crclo = (uint8_t)( achCRCLo[idxCRC] );
+ 1188              		.loc 1 430 9 discriminator 3 view .LVU393
+ 1189 0018 82EA0E02 		eor	r2, r2, lr
+ 1190              	.LVL77:
+ 431:../STM32CUBEMX/Core/Src/usart.c **** 	}
+ 1191              		.loc 1 431 9 is_stmt 1 discriminator 3 view .LVU394
+ 431:../STM32CUBEMX/Core/Src/usart.c **** 	}
+ 1192              		.loc 1 431 15 is_stmt 0 discriminator 3 view .LVU395
+ 1193 001c 054C     		ldr	r4, .L69+4
+ 1194 001e 14F803E0 		ldrb	lr, [r4, r3]	@ zero_extendqisi2
+ 1195              	.LVL78:
+ 431:../STM32CUBEMX/Core/Src/usart.c **** 	}
+ 1196              		.loc 1 431 15 discriminator 3 view .LVU396
+ 1197              	.LBE15:
+ 427:../STM32CUBEMX/Core/Src/usart.c **** 	{
+ 1198              		.loc 1 427 31 is_stmt 1 discriminator 3 view .LVU397
+ 1199 0022 0CF1010C 		add	ip, ip, #1
+ 1200              	.LVL79:
+ 1201              	.L66:
+ 427:../STM32CUBEMX/Core/Src/usart.c **** 	{
+ 1202              		.loc 1 427 15 discriminator 1 view .LVU398
+ 1203 0026 8C45     		cmp	ip, r1
+ 1204 0028 F1DB     		blt	.L67
+ 433:../STM32CUBEMX/Core/Src/usart.c **** }
+ 1205              		.loc 1 433 2 view .LVU399
+ 434:../STM32CUBEMX/Core/Src/usart.c **** 
+ 1206              		.loc 1 434 1 is_stmt 0 view .LVU400
+ 1207 002a 4EEA0220 		orr	r0, lr, r2, lsl #8
+ 1208              	.LVL80:
+ 434:../STM32CUBEMX/Core/Src/usart.c **** 
+ 1209              		.loc 1 434 1 view .LVU401
+ 1210 002e 10BD     		pop	{r4, pc}
+ 1211              	.L70:
+ 1212              		.align	2
+ 1213              	.L69:
+ 1214 0030 00000000 		.word	.LANCHOR8
+ 1215 0034 00000000 		.word	.LANCHOR9
+ 1216              		.cfi_endproc
+ 1217              	.LFE241:
+ 1219              		.section	.text.HI226_Decode,"ax",%progbits
+ 1220              		.align	1
+ 1221              		.global	HI226_Decode
+ 1222              		.syntax unified
+ 1223              		.thumb
+ 1224              		.thumb_func
+ 1226              	HI226_Decode:
+ 1227              	.LVL81:
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s 			page 37
+
+
+ 1228              	.LFB243:
+ 457:../STM32CUBEMX/Core/Src/usart.c **** 
+ 458:../STM32CUBEMX/Core/Src/usart.c **** uint16_t DMA_NDTR=0;
+ 459:../STM32CUBEMX/Core/Src/usart.c **** uint16_t uart3rx_bufnum=0;
+ 460:../STM32CUBEMX/Core/Src/usart.c **** int16_t HI226_Angle[3]={0};
+ 461:../STM32CUBEMX/Core/Src/usart.c **** int16_t HI226_AngleV[3]={0};
+ 462:../STM32CUBEMX/Core/Src/usart.c **** uint16_t HI226_len = 0;
+ 463:../STM32CUBEMX/Core/Src/usart.c **** uint16_t HI226_Recvcrc = 0;
+ 464:../STM32CUBEMX/Core/Src/usart.c **** uint16_t HI226_Calccrc = 0;
+ 465:../STM32CUBEMX/Core/Src/usart.c **** uint16_t HI226_ErrorCount=0;
+ 466:../STM32CUBEMX/Core/Src/usart.c **** uint16_t HI226_FreqCount = 0;
+ 467:../STM32CUBEMX/Core/Src/usart.c **** uint8_t HI226_Decode(uint8_t *buffer,uint16_t length,int16_t *angle,int16_t *angle_v)
+ 468:../STM32CUBEMX/Core/Src/usart.c **** {
+ 1229              		.loc 1 468 1 is_stmt 1 view -0
+ 1230              		.cfi_startproc
+ 1231              		@ args = 0, pretend = 0, frame = 0
+ 1232              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1233              		.loc 1 468 1 is_stmt 0 view .LVU403
+ 1234 0000 2DE9F047 		push	{r4, r5, r6, r7, r8, r9, r10, lr}
+ 1235              	.LCFI11:
+ 1236              		.cfi_def_cfa_offset 32
+ 1237              		.cfi_offset 4, -32
+ 1238              		.cfi_offset 5, -28
+ 1239              		.cfi_offset 6, -24
+ 1240              		.cfi_offset 7, -20
+ 1241              		.cfi_offset 8, -16
+ 1242              		.cfi_offset 9, -12
+ 1243              		.cfi_offset 10, -8
+ 1244              		.cfi_offset 14, -4
+ 1245 0004 0446     		mov	r4, r0
+ 469:../STM32CUBEMX/Core/Src/usart.c **** 	if(buffer[0]==0x5A&&buffer[1]==0xA5)
+ 1246              		.loc 1 469 2 is_stmt 1 view .LVU404
+ 1247              		.loc 1 469 11 is_stmt 0 view .LVU405
+ 1248 0006 0078     		ldrb	r0, [r0]	@ zero_extendqisi2
+ 1249              	.LVL82:
+ 1250              		.loc 1 469 4 view .LVU406
+ 1251 0008 5A28     		cmp	r0, #90
+ 1252 000a 5ED1     		bne	.L77
+ 1253 000c 0F46     		mov	r7, r1
+ 1254 000e 1646     		mov	r6, r2
+ 1255 0010 1D46     		mov	r5, r3
+ 1256              		.loc 1 469 28 discriminator 1 view .LVU407
+ 1257 0012 6378     		ldrb	r3, [r4, #1]	@ zero_extendqisi2
+ 1258              	.LVL83:
+ 1259              		.loc 1 469 20 discriminator 1 view .LVU408
+ 1260 0014 A52B     		cmp	r3, #165
+ 1261 0016 01D0     		beq	.L81
+ 470:../STM32CUBEMX/Core/Src/usart.c **** 	{
+ 471:../STM32CUBEMX/Core/Src/usart.c **** 		HI226_len=buffer[2]|buffer[3]<<8;
+ 472:../STM32CUBEMX/Core/Src/usart.c **** 		HI226_Recvcrc=buffer[4]|buffer[5]<<8;
+ 473:../STM32CUBEMX/Core/Src/usart.c **** //		for(int i=5;i>=2;i--)//Removing CRC fields, filling buffer
+ 474:../STM32CUBEMX/Core/Src/usart.c **** //		{
+ 475:../STM32CUBEMX/Core/Src/usart.c **** //			buffer[i]=buffer[i-2];
+ 476:../STM32CUBEMX/Core/Src/usart.c **** //		}
+ 477:../STM32CUBEMX/Core/Src/usart.c **** 		HI226_Calccrc=0;
+ 478:../STM32CUBEMX/Core/Src/usart.c **** 		crc16_update(&HI226_Calccrc, buffer, 4);
+ 479:../STM32CUBEMX/Core/Src/usart.c **** 		crc16_update(&HI226_Calccrc, &buffer[6], HI226_len);
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s 			page 38
+
+
+ 480:../STM32CUBEMX/Core/Src/usart.c **** 		if(HI226_Calccrc==HI226_Recvcrc)
+ 481:../STM32CUBEMX/Core/Src/usart.c **** 		{
+ 482:../STM32CUBEMX/Core/Src/usart.c **** 			for(int i=6;i<length-6;i++)
+ 483:../STM32CUBEMX/Core/Src/usart.c **** 			{
+ 484:../STM32CUBEMX/Core/Src/usart.c **** 				if(buffer[i]==0xB0)	//angle_v
+ 485:../STM32CUBEMX/Core/Src/usart.c **** 				{
+ 486:../STM32CUBEMX/Core/Src/usart.c **** 					angle_v[0]=buffer[i+1]|buffer[i+2]<<8;
+ 487:../STM32CUBEMX/Core/Src/usart.c **** 					angle_v[1]=buffer[i+3]|buffer[i+4]<<8;
+ 488:../STM32CUBEMX/Core/Src/usart.c **** 					angle_v[2]=buffer[i+5]|buffer[i+6]<<8;
+ 489:../STM32CUBEMX/Core/Src/usart.c **** 				}
+ 490:../STM32CUBEMX/Core/Src/usart.c **** 				else if(buffer[i]==0xD0)	//angle
+ 491:../STM32CUBEMX/Core/Src/usart.c **** 				{
+ 492:../STM32CUBEMX/Core/Src/usart.c **** 					angle[0]=buffer[i+1]|buffer[i+2]<<8;
+ 493:../STM32CUBEMX/Core/Src/usart.c **** 					angle[1]=buffer[i+3]|buffer[i+4]<<8;
+ 494:../STM32CUBEMX/Core/Src/usart.c **** 					angle[2]=buffer[i+5]|buffer[i+6]<<8;
+ 495:../STM32CUBEMX/Core/Src/usart.c **** 				}
+ 496:../STM32CUBEMX/Core/Src/usart.c **** 			}
+ 497:../STM32CUBEMX/Core/Src/usart.c **** 			return 1;
+ 498:../STM32CUBEMX/Core/Src/usart.c **** 		}
+ 499:../STM32CUBEMX/Core/Src/usart.c **** 		else
+ 500:../STM32CUBEMX/Core/Src/usart.c **** 		{
+ 501:../STM32CUBEMX/Core/Src/usart.c **** 			return 0;
+ 502:../STM32CUBEMX/Core/Src/usart.c **** 		}
+ 503:../STM32CUBEMX/Core/Src/usart.c **** 	}
+ 504:../STM32CUBEMX/Core/Src/usart.c **** 	else
+ 505:../STM32CUBEMX/Core/Src/usart.c **** 	{
+ 506:../STM32CUBEMX/Core/Src/usart.c **** 		return 0;
+ 1262              		.loc 1 506 10 view .LVU409
+ 1263 0018 0020     		movs	r0, #0
+ 1264 001a 57E0     		b	.L72
+ 1265              	.L81:
+ 471:../STM32CUBEMX/Core/Src/usart.c **** 		HI226_Recvcrc=buffer[4]|buffer[5]<<8;
+ 1266              		.loc 1 471 3 is_stmt 1 view .LVU410
+ 471:../STM32CUBEMX/Core/Src/usart.c **** 		HI226_Recvcrc=buffer[4]|buffer[5]<<8;
+ 1267              		.loc 1 471 19 is_stmt 0 view .LVU411
+ 1268 001c A378     		ldrb	r3, [r4, #2]	@ zero_extendqisi2
+ 471:../STM32CUBEMX/Core/Src/usart.c **** 		HI226_Recvcrc=buffer[4]|buffer[5]<<8;
+ 1269              		.loc 1 471 29 view .LVU412
+ 1270 001e E278     		ldrb	r2, [r4, #3]	@ zero_extendqisi2
+ 1271              	.LVL84:
+ 471:../STM32CUBEMX/Core/Src/usart.c **** 		HI226_Recvcrc=buffer[4]|buffer[5]<<8;
+ 1272              		.loc 1 471 22 view .LVU413
+ 1273 0020 43EA0223 		orr	r3, r3, r2, lsl #8
+ 471:../STM32CUBEMX/Core/Src/usart.c **** 		HI226_Recvcrc=buffer[4]|buffer[5]<<8;
+ 1274              		.loc 1 471 12 view .LVU414
+ 1275 0024 DFF8A890 		ldr	r9, .L84
+ 1276 0028 A9F80030 		strh	r3, [r9]	@ movhi
+ 472:../STM32CUBEMX/Core/Src/usart.c **** //		for(int i=5;i>=2;i--)//Removing CRC fields, filling buffer
+ 1277              		.loc 1 472 3 is_stmt 1 view .LVU415
+ 472:../STM32CUBEMX/Core/Src/usart.c **** //		for(int i=5;i>=2;i--)//Removing CRC fields, filling buffer
+ 1278              		.loc 1 472 23 is_stmt 0 view .LVU416
+ 1279 002c 2379     		ldrb	r3, [r4, #4]	@ zero_extendqisi2
+ 472:../STM32CUBEMX/Core/Src/usart.c **** //		for(int i=5;i>=2;i--)//Removing CRC fields, filling buffer
+ 1280              		.loc 1 472 33 view .LVU417
+ 1281 002e 6279     		ldrb	r2, [r4, #5]	@ zero_extendqisi2
+ 472:../STM32CUBEMX/Core/Src/usart.c **** //		for(int i=5;i>=2;i--)//Removing CRC fields, filling buffer
+ 1282              		.loc 1 472 26 view .LVU418
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s 			page 39
+
+
+ 1283 0030 43EA0223 		orr	r3, r3, r2, lsl #8
+ 472:../STM32CUBEMX/Core/Src/usart.c **** //		for(int i=5;i>=2;i--)//Removing CRC fields, filling buffer
+ 1284              		.loc 1 472 16 view .LVU419
+ 1285 0034 DFF89CA0 		ldr	r10, .L84+4
+ 1286 0038 AAF80030 		strh	r3, [r10]	@ movhi
+ 477:../STM32CUBEMX/Core/Src/usart.c **** 		crc16_update(&HI226_Calccrc, buffer, 4);
+ 1287              		.loc 1 477 3 is_stmt 1 view .LVU420
+ 477:../STM32CUBEMX/Core/Src/usart.c **** 		crc16_update(&HI226_Calccrc, buffer, 4);
+ 1288              		.loc 1 477 16 is_stmt 0 view .LVU421
+ 1289 003c DFF89880 		ldr	r8, .L84+8
+ 1290 0040 0023     		movs	r3, #0
+ 1291 0042 A8F80030 		strh	r3, [r8]	@ movhi
+ 478:../STM32CUBEMX/Core/Src/usart.c **** 		crc16_update(&HI226_Calccrc, &buffer[6], HI226_len);
+ 1292              		.loc 1 478 3 is_stmt 1 view .LVU422
+ 1293 0046 0422     		movs	r2, #4
+ 1294 0048 2146     		mov	r1, r4
+ 1295              	.LVL85:
+ 478:../STM32CUBEMX/Core/Src/usart.c **** 		crc16_update(&HI226_Calccrc, &buffer[6], HI226_len);
+ 1296              		.loc 1 478 3 is_stmt 0 view .LVU423
+ 1297 004a 4046     		mov	r0, r8
+ 1298 004c FFF7FEFF 		bl	crc16_update
+ 1299              	.LVL86:
+ 479:../STM32CUBEMX/Core/Src/usart.c **** 		if(HI226_Calccrc==HI226_Recvcrc)
+ 1300              		.loc 1 479 3 is_stmt 1 view .LVU424
+ 1301 0050 B9F80020 		ldrh	r2, [r9]
+ 1302 0054 A11D     		adds	r1, r4, #6
+ 1303 0056 4046     		mov	r0, r8
+ 1304 0058 FFF7FEFF 		bl	crc16_update
+ 1305              	.LVL87:
+ 480:../STM32CUBEMX/Core/Src/usart.c **** 		{
+ 1306              		.loc 1 480 3 view .LVU425
+ 480:../STM32CUBEMX/Core/Src/usart.c **** 		{
+ 1307              		.loc 1 480 19 is_stmt 0 view .LVU426
+ 1308 005c B8F80020 		ldrh	r2, [r8]
+ 1309 0060 BAF80030 		ldrh	r3, [r10]
+ 480:../STM32CUBEMX/Core/Src/usart.c **** 		{
+ 1310              		.loc 1 480 5 view .LVU427
+ 1311 0064 9A42     		cmp	r2, r3
+ 1312 0066 2CD0     		beq	.L79
+ 501:../STM32CUBEMX/Core/Src/usart.c **** 		}
+ 1313              		.loc 1 501 11 view .LVU428
+ 1314 0068 0020     		movs	r0, #0
+ 1315 006a 2FE0     		b	.L72
+ 1316              	.LVL88:
+ 1317              	.L83:
+ 1318              	.LBB16:
+ 486:../STM32CUBEMX/Core/Src/usart.c **** 					angle_v[1]=buffer[i+3]|buffer[i+4]<<8;
+ 1319              		.loc 1 486 6 is_stmt 1 view .LVU429
+ 486:../STM32CUBEMX/Core/Src/usart.c **** 					angle_v[1]=buffer[i+3]|buffer[i+4]<<8;
+ 1320              		.loc 1 486 23 is_stmt 0 view .LVU430
+ 1321 006c 2318     		adds	r3, r4, r0
+ 1322 006e 5A78     		ldrb	r2, [r3, #1]	@ zero_extendqisi2
+ 486:../STM32CUBEMX/Core/Src/usart.c **** 					angle_v[1]=buffer[i+3]|buffer[i+4]<<8;
+ 1323              		.loc 1 486 35 view .LVU431
+ 1324 0070 9978     		ldrb	r1, [r3, #2]	@ zero_extendqisi2
+ 486:../STM32CUBEMX/Core/Src/usart.c **** 					angle_v[1]=buffer[i+3]|buffer[i+4]<<8;
+ 1325              		.loc 1 486 28 view .LVU432
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s 			page 40
+
+
+ 1326 0072 42EA0122 		orr	r2, r2, r1, lsl #8
+ 486:../STM32CUBEMX/Core/Src/usart.c **** 					angle_v[1]=buffer[i+3]|buffer[i+4]<<8;
+ 1327              		.loc 1 486 16 view .LVU433
+ 1328 0076 2A80     		strh	r2, [r5]	@ movhi
+ 487:../STM32CUBEMX/Core/Src/usart.c **** 					angle_v[2]=buffer[i+5]|buffer[i+6]<<8;
+ 1329              		.loc 1 487 6 is_stmt 1 view .LVU434
+ 487:../STM32CUBEMX/Core/Src/usart.c **** 					angle_v[2]=buffer[i+5]|buffer[i+6]<<8;
+ 1330              		.loc 1 487 23 is_stmt 0 view .LVU435
+ 1331 0078 DA78     		ldrb	r2, [r3, #3]	@ zero_extendqisi2
+ 487:../STM32CUBEMX/Core/Src/usart.c **** 					angle_v[2]=buffer[i+5]|buffer[i+6]<<8;
+ 1332              		.loc 1 487 35 view .LVU436
+ 1333 007a 1979     		ldrb	r1, [r3, #4]	@ zero_extendqisi2
+ 487:../STM32CUBEMX/Core/Src/usart.c **** 					angle_v[2]=buffer[i+5]|buffer[i+6]<<8;
+ 1334              		.loc 1 487 28 view .LVU437
+ 1335 007c 42EA0122 		orr	r2, r2, r1, lsl #8
+ 487:../STM32CUBEMX/Core/Src/usart.c **** 					angle_v[2]=buffer[i+5]|buffer[i+6]<<8;
+ 1336              		.loc 1 487 16 view .LVU438
+ 1337 0080 6A80     		strh	r2, [r5, #2]	@ movhi
+ 488:../STM32CUBEMX/Core/Src/usart.c **** 				}
+ 1338              		.loc 1 488 6 is_stmt 1 view .LVU439
+ 488:../STM32CUBEMX/Core/Src/usart.c **** 				}
+ 1339              		.loc 1 488 23 is_stmt 0 view .LVU440
+ 1340 0082 5A79     		ldrb	r2, [r3, #5]	@ zero_extendqisi2
+ 488:../STM32CUBEMX/Core/Src/usart.c **** 				}
+ 1341              		.loc 1 488 35 view .LVU441
+ 1342 0084 9B79     		ldrb	r3, [r3, #6]	@ zero_extendqisi2
+ 488:../STM32CUBEMX/Core/Src/usart.c **** 				}
+ 1343              		.loc 1 488 28 view .LVU442
+ 1344 0086 42EA0323 		orr	r3, r2, r3, lsl #8
+ 488:../STM32CUBEMX/Core/Src/usart.c **** 				}
+ 1345              		.loc 1 488 16 view .LVU443
+ 1346 008a AB80     		strh	r3, [r5, #4]	@ movhi
+ 1347              	.L75:
+ 482:../STM32CUBEMX/Core/Src/usart.c **** 			{
+ 1348              		.loc 1 482 28 is_stmt 1 discriminator 2 view .LVU444
+ 1349 008c 0130     		adds	r0, r0, #1
+ 1350              	.LVL89:
+ 1351              	.L73:
+ 482:../STM32CUBEMX/Core/Src/usart.c **** 			{
+ 1352              		.loc 1 482 17 discriminator 1 view .LVU445
+ 482:../STM32CUBEMX/Core/Src/usart.c **** 			{
+ 1353              		.loc 1 482 24 is_stmt 0 discriminator 1 view .LVU446
+ 1354 008e BB1F     		subs	r3, r7, #6
+ 482:../STM32CUBEMX/Core/Src/usart.c **** 			{
+ 1355              		.loc 1 482 17 discriminator 1 view .LVU447
+ 1356 0090 8342     		cmp	r3, r0
+ 1357 0092 18DD     		ble	.L82
+ 484:../STM32CUBEMX/Core/Src/usart.c **** 				{
+ 1358              		.loc 1 484 5 is_stmt 1 view .LVU448
+ 484:../STM32CUBEMX/Core/Src/usart.c **** 				{
+ 1359              		.loc 1 484 14 is_stmt 0 view .LVU449
+ 1360 0094 0346     		mov	r3, r0
+ 1361 0096 225C     		ldrb	r2, [r4, r0]	@ zero_extendqisi2
+ 484:../STM32CUBEMX/Core/Src/usart.c **** 				{
+ 1362              		.loc 1 484 7 view .LVU450
+ 1363 0098 B02A     		cmp	r2, #176
+ 1364 009a E7D0     		beq	.L83
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s 			page 41
+
+
+ 490:../STM32CUBEMX/Core/Src/usart.c **** 				{
+ 1365              		.loc 1 490 10 is_stmt 1 view .LVU451
+ 490:../STM32CUBEMX/Core/Src/usart.c **** 				{
+ 1366              		.loc 1 490 12 is_stmt 0 view .LVU452
+ 1367 009c D02A     		cmp	r2, #208
+ 1368 009e F5D1     		bne	.L75
+ 492:../STM32CUBEMX/Core/Src/usart.c **** 					angle[1]=buffer[i+3]|buffer[i+4]<<8;
+ 1369              		.loc 1 492 6 is_stmt 1 view .LVU453
+ 492:../STM32CUBEMX/Core/Src/usart.c **** 					angle[1]=buffer[i+3]|buffer[i+4]<<8;
+ 1370              		.loc 1 492 21 is_stmt 0 view .LVU454
+ 1371 00a0 2344     		add	r3, r3, r4
+ 1372 00a2 5A78     		ldrb	r2, [r3, #1]	@ zero_extendqisi2
+ 492:../STM32CUBEMX/Core/Src/usart.c **** 					angle[1]=buffer[i+3]|buffer[i+4]<<8;
+ 1373              		.loc 1 492 33 view .LVU455
+ 1374 00a4 9978     		ldrb	r1, [r3, #2]	@ zero_extendqisi2
+ 492:../STM32CUBEMX/Core/Src/usart.c **** 					angle[1]=buffer[i+3]|buffer[i+4]<<8;
+ 1375              		.loc 1 492 26 view .LVU456
+ 1376 00a6 42EA0122 		orr	r2, r2, r1, lsl #8
+ 492:../STM32CUBEMX/Core/Src/usart.c **** 					angle[1]=buffer[i+3]|buffer[i+4]<<8;
+ 1377              		.loc 1 492 14 view .LVU457
+ 1378 00aa 3280     		strh	r2, [r6]	@ movhi
+ 493:../STM32CUBEMX/Core/Src/usart.c **** 					angle[2]=buffer[i+5]|buffer[i+6]<<8;
+ 1379              		.loc 1 493 6 is_stmt 1 view .LVU458
+ 493:../STM32CUBEMX/Core/Src/usart.c **** 					angle[2]=buffer[i+5]|buffer[i+6]<<8;
+ 1380              		.loc 1 493 21 is_stmt 0 view .LVU459
+ 1381 00ac DA78     		ldrb	r2, [r3, #3]	@ zero_extendqisi2
+ 493:../STM32CUBEMX/Core/Src/usart.c **** 					angle[2]=buffer[i+5]|buffer[i+6]<<8;
+ 1382              		.loc 1 493 33 view .LVU460
+ 1383 00ae 1979     		ldrb	r1, [r3, #4]	@ zero_extendqisi2
+ 493:../STM32CUBEMX/Core/Src/usart.c **** 					angle[2]=buffer[i+5]|buffer[i+6]<<8;
+ 1384              		.loc 1 493 26 view .LVU461
+ 1385 00b0 42EA0122 		orr	r2, r2, r1, lsl #8
+ 493:../STM32CUBEMX/Core/Src/usart.c **** 					angle[2]=buffer[i+5]|buffer[i+6]<<8;
+ 1386              		.loc 1 493 14 view .LVU462
+ 1387 00b4 7280     		strh	r2, [r6, #2]	@ movhi
+ 494:../STM32CUBEMX/Core/Src/usart.c **** 				}
+ 1388              		.loc 1 494 6 is_stmt 1 view .LVU463
+ 494:../STM32CUBEMX/Core/Src/usart.c **** 				}
+ 1389              		.loc 1 494 21 is_stmt 0 view .LVU464
+ 1390 00b6 5A79     		ldrb	r2, [r3, #5]	@ zero_extendqisi2
+ 494:../STM32CUBEMX/Core/Src/usart.c **** 				}
+ 1391              		.loc 1 494 33 view .LVU465
+ 1392 00b8 9B79     		ldrb	r3, [r3, #6]	@ zero_extendqisi2
+ 494:../STM32CUBEMX/Core/Src/usart.c **** 				}
+ 1393              		.loc 1 494 26 view .LVU466
+ 1394 00ba 42EA0323 		orr	r3, r2, r3, lsl #8
+ 494:../STM32CUBEMX/Core/Src/usart.c **** 				}
+ 1395              		.loc 1 494 14 view .LVU467
+ 1396 00be B380     		strh	r3, [r6, #4]	@ movhi
+ 1397 00c0 E4E7     		b	.L75
+ 1398              	.LVL90:
+ 1399              	.L79:
+ 482:../STM32CUBEMX/Core/Src/usart.c **** 			{
+ 1400              		.loc 1 482 12 view .LVU468
+ 1401 00c2 0620     		movs	r0, #6
+ 1402 00c4 E3E7     		b	.L73
+ 1403              	.LVL91:
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s 			page 42
+
+
+ 1404              	.L82:
+ 482:../STM32CUBEMX/Core/Src/usart.c **** 			{
+ 1405              		.loc 1 482 12 view .LVU469
+ 1406              	.LBE16:
+ 497:../STM32CUBEMX/Core/Src/usart.c **** 		}
+ 1407              		.loc 1 497 11 view .LVU470
+ 1408 00c6 0120     		movs	r0, #1
+ 1409              	.LVL92:
+ 1410              	.LBB17:
+ 497:../STM32CUBEMX/Core/Src/usart.c **** 		}
+ 1411              		.loc 1 497 11 view .LVU471
+ 1412 00c8 00E0     		b	.L72
+ 1413              	.LVL93:
+ 1414              	.L77:
+ 497:../STM32CUBEMX/Core/Src/usart.c **** 		}
+ 1415              		.loc 1 497 11 view .LVU472
+ 1416              	.LBE17:
+ 1417              		.loc 1 506 10 view .LVU473
+ 1418 00ca 0020     		movs	r0, #0
+ 1419              	.LVL94:
+ 1420              	.L72:
+ 507:../STM32CUBEMX/Core/Src/usart.c **** 	}
+ 508:../STM32CUBEMX/Core/Src/usart.c **** }
+ 1421              		.loc 1 508 1 view .LVU474
+ 1422 00cc BDE8F087 		pop	{r4, r5, r6, r7, r8, r9, r10, pc}
+ 1423              	.LVL95:
+ 1424              	.L85:
+ 1425              		.loc 1 508 1 view .LVU475
+ 1426              		.align	2
+ 1427              	.L84:
+ 1428 00d0 00000000 		.word	.LANCHOR10
+ 1429 00d4 00000000 		.word	.LANCHOR11
+ 1430 00d8 00000000 		.word	.LANCHOR12
+ 1431              		.cfi_endproc
+ 1432              	.LFE243:
+ 1434              		.section	.text.USER_UART_RxIdleCallback,"ax",%progbits
+ 1435              		.align	1
+ 1436              		.global	USER_UART_RxIdleCallback
+ 1437              		.syntax unified
+ 1438              		.thumb
+ 1439              		.thumb_func
+ 1441              	USER_UART_RxIdleCallback:
+ 1442              	.LVL96:
+ 1443              	.LFB244:
+ 509:../STM32CUBEMX/Core/Src/usart.c **** 
+ 510:../STM32CUBEMX/Core/Src/usart.c **** void USER_UART_RxIdleCallback(UART_HandleTypeDef *huart)
+ 511:../STM32CUBEMX/Core/Src/usart.c **** {
+ 1444              		.loc 1 511 1 is_stmt 1 view -0
+ 1445              		.cfi_startproc
+ 1446              		@ args = 0, pretend = 0, frame = 8
+ 1447              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1448              		.loc 1 511 1 is_stmt 0 view .LVU477
+ 1449 0000 00B5     		push	{lr}
+ 1450              	.LCFI12:
+ 1451              		.cfi_def_cfa_offset 4
+ 1452              		.cfi_offset 14, -4
+ 1453 0002 83B0     		sub	sp, sp, #12
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s 			page 43
+
+
+ 1454              	.LCFI13:
+ 1455              		.cfi_def_cfa_offset 16
+ 512:../STM32CUBEMX/Core/Src/usart.c **** 	if(huart->Instance==huart3.Instance)
+ 1456              		.loc 1 512 2 is_stmt 1 view .LVU478
+ 1457              		.loc 1 512 10 is_stmt 0 view .LVU479
+ 1458 0004 0368     		ldr	r3, [r0]
+ 1459              		.loc 1 512 28 view .LVU480
+ 1460 0006 3A4A     		ldr	r2, .L97
+ 1461 0008 1268     		ldr	r2, [r2]
+ 1462              		.loc 1 512 4 view .LVU481
+ 1463 000a 9342     		cmp	r3, r2
+ 1464 000c 06D0     		beq	.L93
+ 513:../STM32CUBEMX/Core/Src/usart.c **** 	{
+ 514:../STM32CUBEMX/Core/Src/usart.c **** 		if((__HAL_UART_GET_FLAG(huart,UART_FLAG_IDLE) != RESET))
+ 515:../STM32CUBEMX/Core/Src/usart.c **** 		{
+ 516:../STM32CUBEMX/Core/Src/usart.c **** 			uint8_t t = huart->Instance->SR;
+ 517:../STM32CUBEMX/Core/Src/usart.c **** 			t = huart->Instance->DR;
+ 518:../STM32CUBEMX/Core/Src/usart.c **** 			  __HAL_UART_CLEAR_IDLEFLAG(huart);
+ 519:../STM32CUBEMX/Core/Src/usart.c **** 			  DMA_NDTR=__HAL_DMA_GET_COUNTER(&hdma_usart3_rx);
+ 520:../STM32CUBEMX/Core/Src/usart.c **** 			  if(DMA_NDTR<UART3DMA_RXBUFFER_SIZE)  //??DMA?????????IDLE
+ 521:../STM32CUBEMX/Core/Src/usart.c **** 			  {
+ 522:../STM32CUBEMX/Core/Src/usart.c **** 				HAL_UART_DMAStop(huart);
+ 523:../STM32CUBEMX/Core/Src/usart.c **** 				uart3rx_bufnum = UART3DMA_RXBUFFER_SIZE - DMA_NDTR;
+ 524:../STM32CUBEMX/Core/Src/usart.c **** 				if(uart3rx_bufnum==20)
+ 525:../STM32CUBEMX/Core/Src/usart.c **** 				{
+ 526:../STM32CUBEMX/Core/Src/usart.c **** 					if(HI226_Decode(Uart3DMABuffer,uart3rx_bufnum,HI226_Angle,HI226_AngleV)==0)
+ 527:../STM32CUBEMX/Core/Src/usart.c **** 					{
+ 528:../STM32CUBEMX/Core/Src/usart.c **** 						HI226_ErrorCount++;
+ 529:../STM32CUBEMX/Core/Src/usart.c **** 					}
+ 530:../STM32CUBEMX/Core/Src/usart.c **** 					else
+ 531:../STM32CUBEMX/Core/Src/usart.c **** 					{
+ 532:../STM32CUBEMX/Core/Src/usart.c **** 						HI226_FreqCount++;
+ 533:../STM32CUBEMX/Core/Src/usart.c **** 					}
+ 534:../STM32CUBEMX/Core/Src/usart.c **** 				}
+ 535:../STM32CUBEMX/Core/Src/usart.c **** 				HAL_UART_Receive_DMA(&huart3,Uart3DMABuffer,UART3DMA_RXBUFFER_SIZE);
+ 536:../STM32CUBEMX/Core/Src/usart.c **** 				
+ 537:../STM32CUBEMX/Core/Src/usart.c **** 			  }
+ 538:../STM32CUBEMX/Core/Src/usart.c **** 			
+ 539:../STM32CUBEMX/Core/Src/usart.c **** 		}
+ 540:../STM32CUBEMX/Core/Src/usart.c **** 	}
+ 541:../STM32CUBEMX/Core/Src/usart.c **** 	else if(huart->Instance==huart1.Instance)
+ 1465              		.loc 1 541 7 is_stmt 1 view .LVU482
+ 1466              		.loc 1 541 33 is_stmt 0 view .LVU483
+ 1467 000e 394A     		ldr	r2, .L97+4
+ 1468 0010 1268     		ldr	r2, [r2]
+ 1469              		.loc 1 541 9 view .LVU484
+ 1470 0012 9342     		cmp	r3, r2
+ 1471 0014 38D0     		beq	.L94
+ 1472              	.LVL97:
+ 1473              	.L86:
+ 542:../STM32CUBEMX/Core/Src/usart.c **** 	{
+ 543:../STM32CUBEMX/Core/Src/usart.c **** 		if((__HAL_UART_GET_FLAG(huart,UART_FLAG_IDLE) != RESET))
+ 544:../STM32CUBEMX/Core/Src/usart.c **** 		{
+ 545:../STM32CUBEMX/Core/Src/usart.c **** 			__HAL_UART_CLEAR_IDLEFLAG(huart);
+ 546:../STM32CUBEMX/Core/Src/usart.c **** 			UART1_DMA_NDTR=__HAL_DMA_GET_COUNTER(&hdma_usart1_rx);
+ 547:../STM32CUBEMX/Core/Src/usart.c **** 			if(UART1_DMA_NDTR<UART1DMA_RXBUFFER_SIZE)  //??DMA?????????IDLE &&UART1_DMA_NDTR!=0
+ 548:../STM32CUBEMX/Core/Src/usart.c **** 			{//The first frame after a soft reboot will have NDTR=0 and all buffer is 0
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s 			page 44
+
+
+ 549:../STM32CUBEMX/Core/Src/usart.c **** 				HAL_UART_DMAStop(huart);
+ 550:../STM32CUBEMX/Core/Src/usart.c **** 				Uart1DMAData.rxBufNum = UART1DMA_RXBUFFER_SIZE - UART1_DMA_NDTR;
+ 551:../STM32CUBEMX/Core/Src/usart.c **** 				Uart1DMAData.rxFlag=1;
+ 552:../STM32CUBEMX/Core/Src/usart.c **** 				if(InsertQueue(&USART1_Software_FIFO,Uart1DMAData.rxDMABuf,Uart1DMAData.rxBufNum)==false)
+ 553:../STM32CUBEMX/Core/Src/usart.c **** 				{
+ 554:../STM32CUBEMX/Core/Src/usart.c **** 					HAL_GPIO_TogglePin(USER_LED_GPIO_Port,USER_LED_Pin);
+ 555:../STM32CUBEMX/Core/Src/usart.c **** 				}
+ 556:../STM32CUBEMX/Core/Src/usart.c **** 				HAL_UART_Receive_DMA(&huart1, Uart1DMAData.rxDMABuf, UART1DMA_RXBUFFER_SIZE);
+ 557:../STM32CUBEMX/Core/Src/usart.c **** 
+ 558:../STM32CUBEMX/Core/Src/usart.c **** 			}
+ 559:../STM32CUBEMX/Core/Src/usart.c **** 
+ 560:../STM32CUBEMX/Core/Src/usart.c **** 		}
+ 561:../STM32CUBEMX/Core/Src/usart.c **** 	}
+ 562:../STM32CUBEMX/Core/Src/usart.c **** }
+ 1474              		.loc 1 562 1 view .LVU485
+ 1475 0016 03B0     		add	sp, sp, #12
+ 1476              	.LCFI14:
+ 1477              		.cfi_remember_state
+ 1478              		.cfi_def_cfa_offset 4
+ 1479              		@ sp needed
+ 1480 0018 5DF804FB 		ldr	pc, [sp], #4
+ 1481              	.LVL98:
+ 1482              	.L93:
+ 1483              	.LCFI15:
+ 1484              		.cfi_restore_state
+ 514:../STM32CUBEMX/Core/Src/usart.c **** 		{
+ 1485              		.loc 1 514 3 is_stmt 1 view .LVU486
+ 514:../STM32CUBEMX/Core/Src/usart.c **** 		{
+ 1486              		.loc 1 514 7 is_stmt 0 view .LVU487
+ 1487 001c 1A68     		ldr	r2, [r3]
+ 514:../STM32CUBEMX/Core/Src/usart.c **** 		{
+ 1488              		.loc 1 514 5 view .LVU488
+ 1489 001e 12F0100F 		tst	r2, #16
+ 1490 0022 F8D0     		beq	.L86
+ 1491              	.LBB18:
+ 516:../STM32CUBEMX/Core/Src/usart.c **** 			t = huart->Instance->DR;
+ 1492              		.loc 1 516 4 is_stmt 1 view .LVU489
+ 516:../STM32CUBEMX/Core/Src/usart.c **** 			t = huart->Instance->DR;
+ 1493              		.loc 1 516 31 is_stmt 0 view .LVU490
+ 1494 0024 1A68     		ldr	r2, [r3]
+ 517:../STM32CUBEMX/Core/Src/usart.c **** 			  __HAL_UART_CLEAR_IDLEFLAG(huart);
+ 1495              		.loc 1 517 4 is_stmt 1 view .LVU491
+ 517:../STM32CUBEMX/Core/Src/usart.c **** 			  __HAL_UART_CLEAR_IDLEFLAG(huart);
+ 1496              		.loc 1 517 23 is_stmt 0 view .LVU492
+ 1497 0026 5A68     		ldr	r2, [r3, #4]
+ 518:../STM32CUBEMX/Core/Src/usart.c **** 			  DMA_NDTR=__HAL_DMA_GET_COUNTER(&hdma_usart3_rx);
+ 1498              		.loc 1 518 6 is_stmt 1 view .LVU493
+ 1499              	.LBB19:
+ 518:../STM32CUBEMX/Core/Src/usart.c **** 			  DMA_NDTR=__HAL_DMA_GET_COUNTER(&hdma_usart3_rx);
+ 1500              		.loc 1 518 6 view .LVU494
+ 1501 0028 0022     		movs	r2, #0
+ 1502 002a 0092     		str	r2, [sp]
+ 518:../STM32CUBEMX/Core/Src/usart.c **** 			  DMA_NDTR=__HAL_DMA_GET_COUNTER(&hdma_usart3_rx);
+ 1503              		.loc 1 518 6 view .LVU495
+ 1504 002c 1A68     		ldr	r2, [r3]
+ 1505 002e 0092     		str	r2, [sp]
+ 518:../STM32CUBEMX/Core/Src/usart.c **** 			  DMA_NDTR=__HAL_DMA_GET_COUNTER(&hdma_usart3_rx);
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s 			page 45
+
+
+ 1506              		.loc 1 518 6 view .LVU496
+ 1507 0030 5B68     		ldr	r3, [r3, #4]
+ 1508 0032 0093     		str	r3, [sp]
+ 518:../STM32CUBEMX/Core/Src/usart.c **** 			  DMA_NDTR=__HAL_DMA_GET_COUNTER(&hdma_usart3_rx);
+ 1509              		.loc 1 518 6 view .LVU497
+ 1510 0034 009B     		ldr	r3, [sp]
+ 1511              	.LBE19:
+ 518:../STM32CUBEMX/Core/Src/usart.c **** 			  DMA_NDTR=__HAL_DMA_GET_COUNTER(&hdma_usart3_rx);
+ 1512              		.loc 1 518 6 view .LVU498
+ 519:../STM32CUBEMX/Core/Src/usart.c **** 			  if(DMA_NDTR<UART3DMA_RXBUFFER_SIZE)  //??DMA?????????IDLE
+ 1513              		.loc 1 519 6 view .LVU499
+ 519:../STM32CUBEMX/Core/Src/usart.c **** 			  if(DMA_NDTR<UART3DMA_RXBUFFER_SIZE)  //??DMA?????????IDLE
+ 1514              		.loc 1 519 15 is_stmt 0 view .LVU500
+ 1515 0036 304B     		ldr	r3, .L97+8
+ 1516 0038 1B68     		ldr	r3, [r3]
+ 1517 003a 5B68     		ldr	r3, [r3, #4]
+ 519:../STM32CUBEMX/Core/Src/usart.c **** 			  if(DMA_NDTR<UART3DMA_RXBUFFER_SIZE)  //??DMA?????????IDLE
+ 1518              		.loc 1 519 14 view .LVU501
+ 1519 003c 9BB2     		uxth	r3, r3
+ 1520 003e 2F4A     		ldr	r2, .L97+12
+ 1521 0040 1380     		strh	r3, [r2]	@ movhi
+ 520:../STM32CUBEMX/Core/Src/usart.c **** 			  {
+ 1522              		.loc 1 520 6 is_stmt 1 view .LVU502
+ 520:../STM32CUBEMX/Core/Src/usart.c **** 			  {
+ 1523              		.loc 1 520 8 is_stmt 0 view .LVU503
+ 1524 0042 312B     		cmp	r3, #49
+ 1525 0044 E7D8     		bhi	.L86
+ 522:../STM32CUBEMX/Core/Src/usart.c **** 				uart3rx_bufnum = UART3DMA_RXBUFFER_SIZE - DMA_NDTR;
+ 1526              		.loc 1 522 5 is_stmt 1 view .LVU504
+ 1527 0046 FFF7FEFF 		bl	HAL_UART_DMAStop
+ 1528              	.LVL99:
+ 523:../STM32CUBEMX/Core/Src/usart.c **** 				if(uart3rx_bufnum==20)
+ 1529              		.loc 1 523 5 view .LVU505
+ 523:../STM32CUBEMX/Core/Src/usart.c **** 				if(uart3rx_bufnum==20)
+ 1530              		.loc 1 523 45 is_stmt 0 view .LVU506
+ 1531 004a 2C4B     		ldr	r3, .L97+12
+ 1532 004c 1988     		ldrh	r1, [r3]
+ 1533 004e C1F13201 		rsb	r1, r1, #50
+ 1534 0052 89B2     		uxth	r1, r1
+ 523:../STM32CUBEMX/Core/Src/usart.c **** 				if(uart3rx_bufnum==20)
+ 1535              		.loc 1 523 20 view .LVU507
+ 1536 0054 2A4B     		ldr	r3, .L97+16
+ 1537 0056 1980     		strh	r1, [r3]	@ movhi
+ 524:../STM32CUBEMX/Core/Src/usart.c **** 				{
+ 1538              		.loc 1 524 5 is_stmt 1 view .LVU508
+ 524:../STM32CUBEMX/Core/Src/usart.c **** 				{
+ 1539              		.loc 1 524 7 is_stmt 0 view .LVU509
+ 1540 0058 1429     		cmp	r1, #20
+ 1541 005a 05D0     		beq	.L95
+ 1542              	.L89:
+ 535:../STM32CUBEMX/Core/Src/usart.c **** 				
+ 1543              		.loc 1 535 5 is_stmt 1 view .LVU510
+ 1544 005c 3222     		movs	r2, #50
+ 1545 005e 2949     		ldr	r1, .L97+20
+ 1546 0060 2348     		ldr	r0, .L97
+ 1547 0062 FFF7FEFF 		bl	HAL_UART_Receive_DMA
+ 1548              	.LVL100:
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s 			page 46
+
+
+ 1549 0066 D6E7     		b	.L86
+ 1550              	.L95:
+ 526:../STM32CUBEMX/Core/Src/usart.c **** 					{
+ 1551              		.loc 1 526 6 view .LVU511
+ 526:../STM32CUBEMX/Core/Src/usart.c **** 					{
+ 1552              		.loc 1 526 9 is_stmt 0 view .LVU512
+ 1553 0068 274B     		ldr	r3, .L97+24
+ 1554 006a 284A     		ldr	r2, .L97+28
+ 1555 006c 2548     		ldr	r0, .L97+20
+ 1556 006e FFF7FEFF 		bl	HI226_Decode
+ 1557              	.LVL101:
+ 526:../STM32CUBEMX/Core/Src/usart.c **** 					{
+ 1558              		.loc 1 526 8 view .LVU513
+ 1559 0072 20B9     		cbnz	r0, .L90
+ 528:../STM32CUBEMX/Core/Src/usart.c **** 					}
+ 1560              		.loc 1 528 7 is_stmt 1 view .LVU514
+ 528:../STM32CUBEMX/Core/Src/usart.c **** 					}
+ 1561              		.loc 1 528 23 is_stmt 0 view .LVU515
+ 1562 0074 264A     		ldr	r2, .L97+32
+ 1563 0076 1388     		ldrh	r3, [r2]
+ 1564 0078 0133     		adds	r3, r3, #1
+ 1565 007a 1380     		strh	r3, [r2]	@ movhi
+ 1566 007c EEE7     		b	.L89
+ 1567              	.L90:
+ 532:../STM32CUBEMX/Core/Src/usart.c **** 					}
+ 1568              		.loc 1 532 7 is_stmt 1 view .LVU516
+ 532:../STM32CUBEMX/Core/Src/usart.c **** 					}
+ 1569              		.loc 1 532 22 is_stmt 0 view .LVU517
+ 1570 007e 254A     		ldr	r2, .L97+36
+ 1571 0080 1388     		ldrh	r3, [r2]
+ 1572 0082 0133     		adds	r3, r3, #1
+ 1573 0084 1380     		strh	r3, [r2]	@ movhi
+ 1574 0086 E9E7     		b	.L89
+ 1575              	.LVL102:
+ 1576              	.L94:
+ 532:../STM32CUBEMX/Core/Src/usart.c **** 					}
+ 1577              		.loc 1 532 22 view .LVU518
+ 1578              	.LBE18:
+ 543:../STM32CUBEMX/Core/Src/usart.c **** 		{
+ 1579              		.loc 1 543 3 is_stmt 1 view .LVU519
+ 543:../STM32CUBEMX/Core/Src/usart.c **** 		{
+ 1580              		.loc 1 543 7 is_stmt 0 view .LVU520
+ 1581 0088 1A68     		ldr	r2, [r3]
+ 543:../STM32CUBEMX/Core/Src/usart.c **** 		{
+ 1582              		.loc 1 543 5 view .LVU521
+ 1583 008a 12F0100F 		tst	r2, #16
+ 1584 008e C2D0     		beq	.L86
+ 545:../STM32CUBEMX/Core/Src/usart.c **** 			UART1_DMA_NDTR=__HAL_DMA_GET_COUNTER(&hdma_usart1_rx);
+ 1585              		.loc 1 545 4 is_stmt 1 view .LVU522
+ 1586              	.LBB20:
+ 545:../STM32CUBEMX/Core/Src/usart.c **** 			UART1_DMA_NDTR=__HAL_DMA_GET_COUNTER(&hdma_usart1_rx);
+ 1587              		.loc 1 545 4 view .LVU523
+ 1588 0090 0022     		movs	r2, #0
+ 1589 0092 0192     		str	r2, [sp, #4]
+ 545:../STM32CUBEMX/Core/Src/usart.c **** 			UART1_DMA_NDTR=__HAL_DMA_GET_COUNTER(&hdma_usart1_rx);
+ 1590              		.loc 1 545 4 view .LVU524
+ 1591 0094 1A68     		ldr	r2, [r3]
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s 			page 47
+
+
+ 1592 0096 0192     		str	r2, [sp, #4]
+ 545:../STM32CUBEMX/Core/Src/usart.c **** 			UART1_DMA_NDTR=__HAL_DMA_GET_COUNTER(&hdma_usart1_rx);
+ 1593              		.loc 1 545 4 view .LVU525
+ 1594 0098 5B68     		ldr	r3, [r3, #4]
+ 1595 009a 0193     		str	r3, [sp, #4]
+ 545:../STM32CUBEMX/Core/Src/usart.c **** 			UART1_DMA_NDTR=__HAL_DMA_GET_COUNTER(&hdma_usart1_rx);
+ 1596              		.loc 1 545 4 view .LVU526
+ 1597 009c 019B     		ldr	r3, [sp, #4]
+ 1598              	.LBE20:
+ 545:../STM32CUBEMX/Core/Src/usart.c **** 			UART1_DMA_NDTR=__HAL_DMA_GET_COUNTER(&hdma_usart1_rx);
+ 1599              		.loc 1 545 4 view .LVU527
+ 546:../STM32CUBEMX/Core/Src/usart.c **** 			if(UART1_DMA_NDTR<UART1DMA_RXBUFFER_SIZE)  //??DMA?????????IDLE &&UART1_DMA_NDTR!=0
+ 1600              		.loc 1 546 4 view .LVU528
+ 546:../STM32CUBEMX/Core/Src/usart.c **** 			if(UART1_DMA_NDTR<UART1DMA_RXBUFFER_SIZE)  //??DMA?????????IDLE &&UART1_DMA_NDTR!=0
+ 1601              		.loc 1 546 19 is_stmt 0 view .LVU529
+ 1602 009e 1E4B     		ldr	r3, .L97+40
+ 1603 00a0 1B68     		ldr	r3, [r3]
+ 1604 00a2 5B68     		ldr	r3, [r3, #4]
+ 546:../STM32CUBEMX/Core/Src/usart.c **** 			if(UART1_DMA_NDTR<UART1DMA_RXBUFFER_SIZE)  //??DMA?????????IDLE &&UART1_DMA_NDTR!=0
+ 1605              		.loc 1 546 18 view .LVU530
+ 1606 00a4 9BB2     		uxth	r3, r3
+ 1607 00a6 1D4A     		ldr	r2, .L97+44
+ 1608 00a8 1380     		strh	r3, [r2]	@ movhi
+ 547:../STM32CUBEMX/Core/Src/usart.c **** 			{//The first frame after a soft reboot will have NDTR=0 and all buffer is 0
+ 1609              		.loc 1 547 4 is_stmt 1 view .LVU531
+ 547:../STM32CUBEMX/Core/Src/usart.c **** 			{//The first frame after a soft reboot will have NDTR=0 and all buffer is 0
+ 1610              		.loc 1 547 6 is_stmt 0 view .LVU532
+ 1611 00aa 632B     		cmp	r3, #99
+ 1612 00ac B3D8     		bhi	.L86
+ 549:../STM32CUBEMX/Core/Src/usart.c **** 				Uart1DMAData.rxBufNum = UART1DMA_RXBUFFER_SIZE - UART1_DMA_NDTR;
+ 1613              		.loc 1 549 5 is_stmt 1 view .LVU533
+ 1614 00ae FFF7FEFF 		bl	HAL_UART_DMAStop
+ 1615              	.LVL103:
+ 550:../STM32CUBEMX/Core/Src/usart.c **** 				Uart1DMAData.rxFlag=1;
+ 1616              		.loc 1 550 5 view .LVU534
+ 550:../STM32CUBEMX/Core/Src/usart.c **** 				Uart1DMAData.rxFlag=1;
+ 1617              		.loc 1 550 52 is_stmt 0 view .LVU535
+ 1618 00b2 1A4B     		ldr	r3, .L97+44
+ 1619 00b4 1A88     		ldrh	r2, [r3]
+ 1620 00b6 C2F16402 		rsb	r2, r2, #100
+ 1621 00ba 92B2     		uxth	r2, r2
+ 550:../STM32CUBEMX/Core/Src/usart.c **** 				Uart1DMAData.rxFlag=1;
+ 1622              		.loc 1 550 27 view .LVU536
+ 1623 00bc 1849     		ldr	r1, .L97+48
+ 1624 00be 4A80     		strh	r2, [r1, #2]	@ movhi
+ 551:../STM32CUBEMX/Core/Src/usart.c **** 				if(InsertQueue(&USART1_Software_FIFO,Uart1DMAData.rxDMABuf,Uart1DMAData.rxBufNum)==false)
+ 1625              		.loc 1 551 5 is_stmt 1 view .LVU537
+ 551:../STM32CUBEMX/Core/Src/usart.c **** 				if(InsertQueue(&USART1_Software_FIFO,Uart1DMAData.rxDMABuf,Uart1DMAData.rxBufNum)==false)
+ 1626              		.loc 1 551 24 is_stmt 0 view .LVU538
+ 1627 00c0 0B78     		ldrb	r3, [r1]	@ zero_extendqisi2
+ 1628 00c2 43F00103 		orr	r3, r3, #1
+ 1629 00c6 01F8043B 		strb	r3, [r1], #4
+ 552:../STM32CUBEMX/Core/Src/usart.c **** 				{
+ 1630              		.loc 1 552 5 is_stmt 1 view .LVU539
+ 552:../STM32CUBEMX/Core/Src/usart.c **** 				{
+ 1631              		.loc 1 552 8 is_stmt 0 view .LVU540
+ 1632 00ca 1648     		ldr	r0, .L97+52
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s 			page 48
+
+
+ 1633 00cc FFF7FEFF 		bl	InsertQueue
+ 1634              	.LVL104:
+ 552:../STM32CUBEMX/Core/Src/usart.c **** 				{
+ 1635              		.loc 1 552 7 view .LVU541
+ 1636 00d0 28B1     		cbz	r0, .L96
+ 1637              	.L91:
+ 556:../STM32CUBEMX/Core/Src/usart.c **** 
+ 1638              		.loc 1 556 5 is_stmt 1 view .LVU542
+ 1639 00d2 6422     		movs	r2, #100
+ 1640 00d4 1449     		ldr	r1, .L97+56
+ 1641 00d6 0748     		ldr	r0, .L97+4
+ 1642 00d8 FFF7FEFF 		bl	HAL_UART_Receive_DMA
+ 1643              	.LVL105:
+ 1644              		.loc 1 562 1 is_stmt 0 view .LVU543
+ 1645 00dc 9BE7     		b	.L86
+ 1646              	.L96:
+ 554:../STM32CUBEMX/Core/Src/usart.c **** 				}
+ 1647              		.loc 1 554 6 is_stmt 1 view .LVU544
+ 1648 00de 4FF48041 		mov	r1, #16384
+ 1649 00e2 00F18040 		add	r0, r0, #1073741824
+ 1650 00e6 00F50230 		add	r0, r0, #133120
+ 1651 00ea FFF7FEFF 		bl	HAL_GPIO_TogglePin
+ 1652              	.LVL106:
+ 1653 00ee F0E7     		b	.L91
+ 1654              	.L98:
+ 1655              		.align	2
+ 1656              	.L97:
+ 1657 00f0 00000000 		.word	.LANCHOR3
+ 1658 00f4 00000000 		.word	.LANCHOR2
+ 1659 00f8 00000000 		.word	.LANCHOR7
+ 1660 00fc 00000000 		.word	.LANCHOR13
+ 1661 0100 00000000 		.word	.LANCHOR14
+ 1662 0104 00000000 		.word	Uart3DMABuffer
+ 1663 0108 00000000 		.word	.LANCHOR15
+ 1664 010c 00000000 		.word	.LANCHOR16
+ 1665 0110 00000000 		.word	.LANCHOR17
+ 1666 0114 00000000 		.word	.LANCHOR18
+ 1667 0118 00000000 		.word	.LANCHOR4
+ 1668 011c 00000000 		.word	.LANCHOR19
+ 1669 0120 00000000 		.word	.LANCHOR6
+ 1670 0124 00000000 		.word	.LANCHOR20
+ 1671 0128 04000000 		.word	.LANCHOR6+4
+ 1672              		.cfi_endproc
+ 1673              	.LFE244:
+ 1675              		.section	.text.HAL_UART_RxCpltCallback,"ax",%progbits
+ 1676              		.align	1
+ 1677              		.global	HAL_UART_RxCpltCallback
+ 1678              		.syntax unified
+ 1679              		.thumb
+ 1680              		.thumb_func
+ 1682              	HAL_UART_RxCpltCallback:
+ 1683              	.LVL107:
+ 1684              	.LFB245:
+ 563:../STM32CUBEMX/Core/Src/usart.c **** 
+ 564:../STM32CUBEMX/Core/Src/usart.c **** void HAL_UART_RxCpltCallback(UART_HandleTypeDef * huart)
+ 565:../STM32CUBEMX/Core/Src/usart.c **** {
+ 1685              		.loc 1 565 1 view -0
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s 			page 49
+
+
+ 1686              		.cfi_startproc
+ 1687              		@ args = 0, pretend = 0, frame = 0
+ 1688              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1689              		.loc 1 565 1 is_stmt 0 view .LVU546
+ 1690 0000 38B5     		push	{r3, r4, r5, lr}
+ 1691              	.LCFI16:
+ 1692              		.cfi_def_cfa_offset 16
+ 1693              		.cfi_offset 3, -16
+ 1694              		.cfi_offset 4, -12
+ 1695              		.cfi_offset 5, -8
+ 1696              		.cfi_offset 14, -4
+ 566:../STM32CUBEMX/Core/Src/usart.c ****     if(huart->Instance==huart3.Instance)
+ 1697              		.loc 1 566 5 is_stmt 1 view .LVU547
+ 1698              		.loc 1 566 13 is_stmt 0 view .LVU548
+ 1699 0002 0368     		ldr	r3, [r0]
+ 1700              		.loc 1 566 31 view .LVU549
+ 1701 0004 184A     		ldr	r2, .L105
+ 1702 0006 1268     		ldr	r2, [r2]
+ 1703              		.loc 1 566 7 view .LVU550
+ 1704 0008 9342     		cmp	r3, r2
+ 1705 000a 04D0     		beq	.L103
+ 567:../STM32CUBEMX/Core/Src/usart.c **** 	{
+ 568:../STM32CUBEMX/Core/Src/usart.c ****       
+ 569:../STM32CUBEMX/Core/Src/usart.c ****       HAL_UART_Receive_DMA(&huart3,Uart3DMABuffer,UART3DMA_RXBUFFER_SIZE);
+ 570:../STM32CUBEMX/Core/Src/usart.c **** 			
+ 571:../STM32CUBEMX/Core/Src/usart.c ****       
+ 572:../STM32CUBEMX/Core/Src/usart.c ****       {//debug
+ 573:../STM32CUBEMX/Core/Src/usart.c ****         //HAL_GPIO_WritePin(USER_LED2_GPIO_Port,USER_LED2_Pin,1);//??
+ 574:../STM32CUBEMX/Core/Src/usart.c ****         //HAL_GPIO_TogglePin(USER_LED2_GPIO_Port,USER_LED2_Pin);
+ 575:../STM32CUBEMX/Core/Src/usart.c ****         //HAL_UART_Transmit_DMA(&huart1,Uart1DMAData.rxDMABuf,Uart1DMAData.rxBufNum);
+ 576:../STM32CUBEMX/Core/Src/usart.c ****         //HAL_UART_Transmit_DMA(&huart1,&sendtestBufDMA[2],1);
+ 577:../STM32CUBEMX/Core/Src/usart.c ****         //HAL_UART_Transmit_IT(&huart1,Uart1DMAData.rxDMABuf,Uart1DMAData.rxBufNum);
+ 578:../STM32CUBEMX/Core/Src/usart.c ****         //HAL_UART_Transmit_IT(&huart1,&DMA_NDTR,2);
+ 579:../STM32CUBEMX/Core/Src/usart.c ****       }
+ 580:../STM32CUBEMX/Core/Src/usart.c **** 	}
+ 581:../STM32CUBEMX/Core/Src/usart.c **** 	else if(huart->Instance==huart1.Instance)
+ 1706              		.loc 1 581 7 is_stmt 1 view .LVU551
+ 1707              		.loc 1 581 33 is_stmt 0 view .LVU552
+ 1708 000c 174A     		ldr	r2, .L105+4
+ 1709 000e 1268     		ldr	r2, [r2]
+ 1710              		.loc 1 581 9 view .LVU553
+ 1711 0010 9342     		cmp	r3, r2
+ 1712 0012 06D0     		beq	.L104
+ 1713              	.LVL108:
+ 1714              	.L99:
+ 582:../STM32CUBEMX/Core/Src/usart.c **** 	{
+ 583:../STM32CUBEMX/Core/Src/usart.c **** 		//(void)huart->Instance->SR;//????IDLE??,???????,??????NUM!=SIZE????IDLE
+ 584:../STM32CUBEMX/Core/Src/usart.c **** 		//(void)huart->Instance->DR;
+ 585:../STM32CUBEMX/Core/Src/usart.c **** 		//__HAL_UART_CLEAR_IDLEFLAG(huart);
+ 586:../STM32CUBEMX/Core/Src/usart.c **** 		//HAL_UART_DMAStop(huart);
+ 587:../STM32CUBEMX/Core/Src/usart.c **** 		Uart1DMAData.rxBufNum = UART1DMA_RXBUFFER_SIZE - __HAL_DMA_GET_COUNTER(&hdma_usart1_rx); //?????U
+ 588:../STM32CUBEMX/Core/Src/usart.c **** 		Uart1DMAData.rxFlag=1;
+ 589:../STM32CUBEMX/Core/Src/usart.c **** 		HAL_UART_Receive_DMA(&huart1, Uart1DMAData.rxDMABuf, UART1DMA_RXBUFFER_SIZE);
+ 590:../STM32CUBEMX/Core/Src/usart.c **** 		if(InsertQueue(&USART1_Software_FIFO,Uart1DMAData.rxDMABuf,Uart1DMAData.rxBufNum)==false)
+ 591:../STM32CUBEMX/Core/Src/usart.c **** 		{
+ 592:../STM32CUBEMX/Core/Src/usart.c **** 			HAL_GPIO_TogglePin(USER_LED_GPIO_Port,USER_LED_Pin);
+ 593:../STM32CUBEMX/Core/Src/usart.c **** 		}
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s 			page 50
+
+
+ 594:../STM32CUBEMX/Core/Src/usart.c **** 	}
+ 595:../STM32CUBEMX/Core/Src/usart.c **** }
+ 1715              		.loc 1 595 1 view .LVU554
+ 1716 0014 38BD     		pop	{r3, r4, r5, pc}
+ 1717              	.LVL109:
+ 1718              	.L103:
+ 569:../STM32CUBEMX/Core/Src/usart.c **** 			
+ 1719              		.loc 1 569 7 is_stmt 1 view .LVU555
+ 1720 0016 3222     		movs	r2, #50
+ 1721 0018 1549     		ldr	r1, .L105+8
+ 1722 001a 1348     		ldr	r0, .L105
+ 1723              	.LVL110:
+ 569:../STM32CUBEMX/Core/Src/usart.c **** 			
+ 1724              		.loc 1 569 7 is_stmt 0 view .LVU556
+ 1725 001c FFF7FEFF 		bl	HAL_UART_Receive_DMA
+ 1726              	.LVL111:
+ 579:../STM32CUBEMX/Core/Src/usart.c **** 	}
+ 1727              		.loc 1 579 7 is_stmt 1 view .LVU557
+ 1728 0020 F8E7     		b	.L99
+ 1729              	.LVL112:
+ 1730              	.L104:
+ 587:../STM32CUBEMX/Core/Src/usart.c **** 		Uart1DMAData.rxFlag=1;
+ 1731              		.loc 1 587 3 view .LVU558
+ 587:../STM32CUBEMX/Core/Src/usart.c **** 		Uart1DMAData.rxFlag=1;
+ 1732              		.loc 1 587 52 is_stmt 0 view .LVU559
+ 1733 0022 144B     		ldr	r3, .L105+12
+ 1734 0024 1B68     		ldr	r3, [r3]
+ 1735 0026 5B68     		ldr	r3, [r3, #4]
+ 587:../STM32CUBEMX/Core/Src/usart.c **** 		Uart1DMAData.rxFlag=1;
+ 1736              		.loc 1 587 50 view .LVU560
+ 1737 0028 C3F16403 		rsb	r3, r3, #100
+ 587:../STM32CUBEMX/Core/Src/usart.c **** 		Uart1DMAData.rxFlag=1;
+ 1738              		.loc 1 587 25 view .LVU561
+ 1739 002c 124D     		ldr	r5, .L105+16
+ 1740 002e 6B80     		strh	r3, [r5, #2]	@ movhi
+ 588:../STM32CUBEMX/Core/Src/usart.c **** 		HAL_UART_Receive_DMA(&huart1, Uart1DMAData.rxDMABuf, UART1DMA_RXBUFFER_SIZE);
+ 1741              		.loc 1 588 3 is_stmt 1 view .LVU562
+ 588:../STM32CUBEMX/Core/Src/usart.c **** 		HAL_UART_Receive_DMA(&huart1, Uart1DMAData.rxDMABuf, UART1DMA_RXBUFFER_SIZE);
+ 1742              		.loc 1 588 22 is_stmt 0 view .LVU563
+ 1743 0030 2B78     		ldrb	r3, [r5]	@ zero_extendqisi2
+ 1744 0032 43F00103 		orr	r3, r3, #1
+ 1745 0036 2C46     		mov	r4, r5
+ 1746 0038 04F8043B 		strb	r3, [r4], #4
+ 589:../STM32CUBEMX/Core/Src/usart.c **** 		if(InsertQueue(&USART1_Software_FIFO,Uart1DMAData.rxDMABuf,Uart1DMAData.rxBufNum)==false)
+ 1747              		.loc 1 589 3 is_stmt 1 view .LVU564
+ 1748 003c 6422     		movs	r2, #100
+ 1749 003e 2146     		mov	r1, r4
+ 1750 0040 0A48     		ldr	r0, .L105+4
+ 1751              	.LVL113:
+ 589:../STM32CUBEMX/Core/Src/usart.c **** 		if(InsertQueue(&USART1_Software_FIFO,Uart1DMAData.rxDMABuf,Uart1DMAData.rxBufNum)==false)
+ 1752              		.loc 1 589 3 is_stmt 0 view .LVU565
+ 1753 0042 FFF7FEFF 		bl	HAL_UART_Receive_DMA
+ 1754              	.LVL114:
+ 590:../STM32CUBEMX/Core/Src/usart.c **** 		{
+ 1755              		.loc 1 590 3 is_stmt 1 view .LVU566
+ 590:../STM32CUBEMX/Core/Src/usart.c **** 		{
+ 1756              		.loc 1 590 6 is_stmt 0 view .LVU567
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s 			page 51
+
+
+ 1757 0046 6A88     		ldrh	r2, [r5, #2]
+ 1758 0048 2146     		mov	r1, r4
+ 1759 004a 0C48     		ldr	r0, .L105+20
+ 1760 004c FFF7FEFF 		bl	InsertQueue
+ 1761              	.LVL115:
+ 590:../STM32CUBEMX/Core/Src/usart.c **** 		{
+ 1762              		.loc 1 590 5 view .LVU568
+ 1763 0050 0028     		cmp	r0, #0
+ 1764 0052 DFD1     		bne	.L99
+ 592:../STM32CUBEMX/Core/Src/usart.c **** 		}
+ 1765              		.loc 1 592 4 is_stmt 1 view .LVU569
+ 1766 0054 4FF48041 		mov	r1, #16384
+ 1767 0058 00F18040 		add	r0, r0, #1073741824
+ 1768 005c 00F50230 		add	r0, r0, #133120
+ 1769 0060 FFF7FEFF 		bl	HAL_GPIO_TogglePin
+ 1770              	.LVL116:
+ 1771              		.loc 1 595 1 is_stmt 0 view .LVU570
+ 1772 0064 D6E7     		b	.L99
+ 1773              	.L106:
+ 1774 0066 00BF     		.align	2
+ 1775              	.L105:
+ 1776 0068 00000000 		.word	.LANCHOR3
+ 1777 006c 00000000 		.word	.LANCHOR2
+ 1778 0070 00000000 		.word	Uart3DMABuffer
+ 1779 0074 00000000 		.word	.LANCHOR4
+ 1780 0078 00000000 		.word	.LANCHOR6
+ 1781 007c 00000000 		.word	.LANCHOR20
+ 1782              		.cfi_endproc
+ 1783              	.LFE245:
+ 1785              		.global	HI226_FreqCount
+ 1786              		.global	HI226_ErrorCount
+ 1787              		.global	HI226_Calccrc
+ 1788              		.global	HI226_Recvcrc
+ 1789              		.global	HI226_len
+ 1790              		.global	HI226_AngleV
+ 1791              		.global	HI226_Angle
+ 1792              		.global	uart3rx_bufnum
+ 1793              		.global	DMA_NDTR
+ 1794              		.global	achCRCLo
+ 1795              		.global	achCRCHi
+ 1796              		.global	hdma_usart3_rx
+ 1797              		.global	hdma_usart1_tx
+ 1798              		.global	hdma_usart1_rx
+ 1799              		.global	huart3
+ 1800              		.global	huart1
+ 1801              		.global	huart5
+ 1802              		.global	huart4
+ 1803              		.global	UART1_DMA_NDTR
+ 1804              		.global	USART1_Software_FIFO
+ 1805              		.global	Uart1DMAData
+ 1806              		.section	.bss.DMA_NDTR,"aw",%nobits
+ 1807              		.align	1
+ 1808              		.set	.LANCHOR13,. + 0
+ 1811              	DMA_NDTR:
+ 1812 0000 0000     		.space	2
+ 1813              		.section	.bss.HI226_Angle,"aw",%nobits
+ 1814              		.align	2
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s 			page 52
+
+
+ 1815              		.set	.LANCHOR16,. + 0
+ 1818              	HI226_Angle:
+ 1819 0000 00000000 		.space	6
+ 1819      0000
+ 1820              		.section	.bss.HI226_AngleV,"aw",%nobits
+ 1821              		.align	2
+ 1822              		.set	.LANCHOR15,. + 0
+ 1825              	HI226_AngleV:
+ 1826 0000 00000000 		.space	6
+ 1826      0000
+ 1827              		.section	.bss.HI226_Calccrc,"aw",%nobits
+ 1828              		.align	1
+ 1829              		.set	.LANCHOR12,. + 0
+ 1832              	HI226_Calccrc:
+ 1833 0000 0000     		.space	2
+ 1834              		.section	.bss.HI226_ErrorCount,"aw",%nobits
+ 1835              		.align	1
+ 1836              		.set	.LANCHOR17,. + 0
+ 1839              	HI226_ErrorCount:
+ 1840 0000 0000     		.space	2
+ 1841              		.section	.bss.HI226_FreqCount,"aw",%nobits
+ 1842              		.align	1
+ 1843              		.set	.LANCHOR18,. + 0
+ 1846              	HI226_FreqCount:
+ 1847 0000 0000     		.space	2
+ 1848              		.section	.bss.HI226_Recvcrc,"aw",%nobits
+ 1849              		.align	1
+ 1850              		.set	.LANCHOR11,. + 0
+ 1853              	HI226_Recvcrc:
+ 1854 0000 0000     		.space	2
+ 1855              		.section	.bss.HI226_len,"aw",%nobits
+ 1856              		.align	1
+ 1857              		.set	.LANCHOR10,. + 0
+ 1860              	HI226_len:
+ 1861 0000 0000     		.space	2
+ 1862              		.section	.bss.UART1_DMA_NDTR,"aw",%nobits
+ 1863              		.align	1
+ 1864              		.set	.LANCHOR19,. + 0
+ 1867              	UART1_DMA_NDTR:
+ 1868 0000 0000     		.space	2
+ 1869              		.section	.bss.USART1_Software_FIFO,"aw",%nobits
+ 1870              		.align	2
+ 1871              		.set	.LANCHOR20,. + 0
+ 1874              	USART1_Software_FIFO:
+ 1875 0000 00000000 		.space	264
+ 1875      00000000 
+ 1875      00000000 
+ 1875      00000000 
+ 1875      00000000 
+ 1876              		.section	.bss.Uart1DMAData,"aw",%nobits
+ 1877              		.align	2
+ 1878              		.set	.LANCHOR6,. + 0
+ 1881              	Uart1DMAData:
+ 1882 0000 00000000 		.space	104
+ 1882      00000000 
+ 1882      00000000 
+ 1882      00000000 
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s 			page 53
+
+
+ 1882      00000000 
+ 1883              		.section	.bss.hdma_usart1_rx,"aw",%nobits
+ 1884              		.align	2
+ 1885              		.set	.LANCHOR4,. + 0
+ 1888              	hdma_usart1_rx:
+ 1889 0000 00000000 		.space	96
+ 1889      00000000 
+ 1889      00000000 
+ 1889      00000000 
+ 1889      00000000 
+ 1890              		.section	.bss.hdma_usart1_tx,"aw",%nobits
+ 1891              		.align	2
+ 1892              		.set	.LANCHOR5,. + 0
+ 1895              	hdma_usart1_tx:
+ 1896 0000 00000000 		.space	96
+ 1896      00000000 
+ 1896      00000000 
+ 1896      00000000 
+ 1896      00000000 
+ 1897              		.section	.bss.hdma_usart3_rx,"aw",%nobits
+ 1898              		.align	2
+ 1899              		.set	.LANCHOR7,. + 0
+ 1902              	hdma_usart3_rx:
+ 1903 0000 00000000 		.space	96
+ 1903      00000000 
+ 1903      00000000 
+ 1903      00000000 
+ 1903      00000000 
+ 1904              		.section	.bss.huart1,"aw",%nobits
+ 1905              		.align	2
+ 1906              		.set	.LANCHOR2,. + 0
+ 1909              	huart1:
+ 1910 0000 00000000 		.space	68
+ 1910      00000000 
+ 1910      00000000 
+ 1910      00000000 
+ 1910      00000000 
+ 1911              		.section	.bss.huart3,"aw",%nobits
+ 1912              		.align	2
+ 1913              		.set	.LANCHOR3,. + 0
+ 1916              	huart3:
+ 1917 0000 00000000 		.space	68
+ 1917      00000000 
+ 1917      00000000 
+ 1917      00000000 
+ 1917      00000000 
+ 1918              		.section	.bss.huart4,"aw",%nobits
+ 1919              		.align	2
+ 1920              		.set	.LANCHOR0,. + 0
+ 1923              	huart4:
+ 1924 0000 00000000 		.space	68
+ 1924      00000000 
+ 1924      00000000 
+ 1924      00000000 
+ 1924      00000000 
+ 1925              		.section	.bss.huart5,"aw",%nobits
+ 1926              		.align	2
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s 			page 54
+
+
+ 1927              		.set	.LANCHOR1,. + 0
+ 1930              	huart5:
+ 1931 0000 00000000 		.space	68
+ 1931      00000000 
+ 1931      00000000 
+ 1931      00000000 
+ 1931      00000000 
+ 1932              		.section	.bss.uart3rx_bufnum,"aw",%nobits
+ 1933              		.align	1
+ 1934              		.set	.LANCHOR14,. + 0
+ 1937              	uart3rx_bufnum:
+ 1938 0000 0000     		.space	2
+ 1939              		.section	.data.achCRCHi,"aw"
+ 1940              		.align	2
+ 1941              		.set	.LANCHOR8,. + 0
+ 1944              	achCRCHi:
+ 1945 0000 00C18140 		.ascii	"\000\301\201@\001\300\200A\001\300\200A\000\301\201"
+ 1945      01C08041 
+ 1945      01C08041 
+ 1945      00C181
+ 1946 000f 4001C080 		.ascii	"@\001\300\200A\000\301\201@\000\301\201@\001\300\200"
+ 1946      4100C181 
+ 1946      4000C181 
+ 1946      4001C080 
+ 1947 001f 4101C080 		.ascii	"A\001\300\200A\000\301\201@\000\301\201@\001\300\200"
+ 1947      4100C181 
+ 1947      4000C181 
+ 1947      4001C080 
+ 1948 002f 4100C181 		.ascii	"A\000\301\201@\001\300\200A\001\300\200A\000\301\201"
+ 1948      4001C080 
+ 1948      4101C080 
+ 1948      4100C181 
+ 1949 003f 4001C080 		.ascii	"@\001\300\200A\000\301\201@\000\301\201@\001\300\200"
+ 1949      4100C181 
+ 1949      4000C181 
+ 1949      4001C080 
+ 1950 004f 4100C181 		.ascii	"A\000\301\201@\001\300\200A\001\300\200A\000\301\201"
+ 1950      4001C080 
+ 1950      4101C080 
+ 1950      4100C181 
+ 1951 005f 4000C181 		.ascii	"@\000\301\201@\001\300\200A\001\300\200A\000\301\201"
+ 1951      4001C080 
+ 1951      4101C080 
+ 1951      4100C181 
+ 1952 006f 4001C080 		.ascii	"@\001\300\200A\000\301\201@\000\301\201@\001\300\200"
+ 1952      4100C181 
+ 1952      4000C181 
+ 1952      4001C080 
+ 1953 007f 4101C080 		.ascii	"A\001\300\200A\000\301\201@\000\301\201@\001\300\200"
+ 1953      4100C181 
+ 1953      4000C181 
+ 1953      4001C080 
+ 1954 008f 4100C181 		.ascii	"A\000\301\201@\001\300\200A\001\300\200A\000\301\201"
+ 1954      4001C080 
+ 1954      4101C080 
+ 1954      4100C181 
+ 1955 009f 4000C181 		.ascii	"@\000\301\201@\001\300\200A\001\300\200A\000\301\201"
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s 			page 55
+
+
+ 1955      4001C080 
+ 1955      4101C080 
+ 1955      4100C181 
+ 1956 00af 4001C080 		.ascii	"@\001\300\200A\000\301\201@\000\301\201@\001\300\200"
+ 1956      4100C181 
+ 1956      4000C181 
+ 1956      4001C080 
+ 1957 00bf 4100C181 		.ascii	"A\000\301\201@\001\300\200A\001\300\200A\000\301\201"
+ 1957      4001C080 
+ 1957      4101C080 
+ 1957      4100C181 
+ 1958 00cf 4001C080 		.ascii	"@\001\300\200A\000\301\201@\000\301\201@\001\300\200"
+ 1958      4100C181 
+ 1958      4000C181 
+ 1958      4001C080 
+ 1959 00df 4101C080 		.ascii	"A\001\300\200A\000\301\201@\000\301\201@\001\300\200"
+ 1959      4100C181 
+ 1959      4000C181 
+ 1959      4001C080 
+ 1960 00ef 4100C181 		.ascii	"A\000\301\201@\001\300\200A\001\300\200A\000\301\201"
+ 1960      4001C080 
+ 1960      4101C080 
+ 1960      4100C181 
+ 1961 00ff 40       		.ascii	"@"
+ 1962              		.section	.data.achCRCLo,"aw"
+ 1963              		.align	2
+ 1964              		.set	.LANCHOR9,. + 0
+ 1967              	achCRCLo:
+ 1968 0000 00C0C101 		.ascii	"\000\300\301\001\303\003\002\302\306\006\007\307\005"
+ 1968      C30302C2 
+ 1968      C60607C7 
+ 1968      05
+ 1969 000d C5C404CC 		.ascii	"\305\304\004\314\014\015\315\017\317\316\016\012\312"
+ 1969      0C0DCD0F 
+ 1969      CFCE0E0A 
+ 1969      CA
+ 1970 001a CB0BC909 		.ascii	"\313\013\311\011\010\310\330\030\031\331\033\333\332"
+ 1970      08C8D818 
+ 1970      19D91BDB 
+ 1970      DA
+ 1971 0027 1A1EDEDF 		.ascii	"\032\036\336\337\037\335\035\034\334\024\324\325\025"
+ 1971      1FDD1D1C 
+ 1971      DC14D4D5 
+ 1971      15
+ 1972 0034 D71716D6 		.ascii	"\327\027\026\326\322\022\023\323\021\321\320\020\360"
+ 1972      D21213D3 
+ 1972      11D1D010 
+ 1972      F0
+ 1973 0041 3031F133 		.ascii	"01\3613\363\36226\366\3677\36554\364<\374\375=\377?"
+ 1973      F3F23236 
+ 1973      F6F737F5 
+ 1973      3534F43C 
+ 1973      FCFD3DFF 
+ 1974 0056 3EFEFA3A 		.ascii	">\376\372:;\3739\371\3708(\350\351)\353+*\352\356./"
+ 1974      3BFB39F9 
+ 1974      F83828E8 
+ 1974      E929EB2B 
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s 			page 56
+
+
+ 1974      2AEAEE2E 
+ 1975 006b EF2DEDEC 		.ascii	"\357-\355\354,\344$%\345'\347\346&\"\342\343#\341! "
+ 1975      2CE42425 
+ 1975      E527E7E6 
+ 1975      2622E2E3 
+ 1975      23E12120 
+ 1976 007f E0A06061 		.ascii	"\340\240`a\241c\243\242bf\246\247g\245ed\244l\254\255"
+ 1976      A163A3A2 
+ 1976      6266A6A7 
+ 1976      67A56564 
+ 1976      A46CACAD 
+ 1977 0093 6DAF6F6E 		.ascii	"m\257on\256\252jk\253i\251\250hx\270\271y\273{z\272"
+ 1977      AEAA6A6B 
+ 1977      AB69A9A8 
+ 1977      6878B8B9 
+ 1977      79BB7B7A 
+ 1978 00a8 BE7E7FBF 		.ascii	"\276~\177\277}\275\274|\264tu\265w\267\266vr\262\263"
+ 1978      7DBDBC7C 
+ 1978      B47475B5 
+ 1978      77B7B676 
+ 1978      72B2B3
+ 1979 00bb 73B17170 		.ascii	"s\261qp\260P\220\221Q\223SR\222\226VW\227U\225\224T"
+ 1979      B0509091 
+ 1979      51935352 
+ 1979      92965657 
+ 1979      97559594 
+ 1980 00d0 9C5C5D9D 		.ascii	"\234\\]\235_\237\236^Z\232\233[\231YX\230\210HI\211"
+ 1980      5F9F9E5E 
+ 1980      5A9A9B5B 
+ 1980      99595898 
+ 1980      88484989 
+ 1981 00e4 4B8B8A4A 		.ascii	"K\213\212JN\216\217O\215ML\214D\204\205E\207GF\206\202"
+ 1981      4E8E8F4F 
+ 1981      8D4D4C8C 
+ 1981      44848545 
+ 1981      87474686 
+ 1982 00f9 42438341 		.ascii	"BC\203A\201\200@"
+ 1982      818040
+ 1983              		.text
+ 1984              	.Letext0:
+ 1985              		.file 2 "../STM32CUBEMX/Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f405xx.h"
+ 1986              		.file 3 "c:\\program files (x86)\\arm gnu toolchain arm-none-eabi\\11.2 2022.02\\arm-none-eabi\\in
+ 1987              		.file 4 "c:\\program files (x86)\\arm gnu toolchain arm-none-eabi\\11.2 2022.02\\arm-none-eabi\\in
+ 1988              		.file 5 "../STM32CUBEMX/Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h"
+ 1989              		.file 6 "../STM32CUBEMX/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h"
+ 1990              		.file 7 "../STM32CUBEMX/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h"
+ 1991              		.file 8 "../STM32CUBEMX/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h"
+ 1992              		.file 9 "../STM32CUBEMX/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h"
+ 1993              		.file 10 "../STM32CUBEMX/Core/Inc/usart.h"
+ 1994              		.file 11 "../STM32CUBEMX/Core/Src/uart_fifo.h"
+ 1995              		.file 12 "../STM32CUBEMX/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h"
+ 1996              		.file 13 "../STM32CUBEMX/Core/Inc/main.h"
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s 			page 57
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 usart.c
+C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s:20     .text.crc16_update:00000000 $t
+C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s:25     .text.crc16_update:00000000 crc16_update
+C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s:134    .text.MX_UART4_Init:00000000 $t
+C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s:140    .text.MX_UART4_Init:00000000 MX_UART4_Init
+C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s:198    .text.MX_UART4_Init:0000002c $d
+C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s:204    .text.MX_UART5_Init:00000000 $t
+C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s:210    .text.MX_UART5_Init:00000000 MX_UART5_Init
+C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s:268    .text.MX_UART5_Init:0000002c $d
+C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s:274    .text.MX_USART1_UART_Init:00000000 $t
+C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s:280    .text.MX_USART1_UART_Init:00000000 MX_USART1_UART_Init
+C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s:338    .text.MX_USART1_UART_Init:0000002c $d
+C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s:344    .text.MX_USART3_UART_Init:00000000 $t
+C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s:350    .text.MX_USART3_UART_Init:00000000 MX_USART3_UART_Init
+C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s:408    .text.MX_USART3_UART_Init:0000002c $d
+C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s:414    .text.HAL_UART_MspInit:00000000 $t
+C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s:420    .text.HAL_UART_MspInit:00000000 HAL_UART_MspInit
+C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s:971    .text.HAL_UART_MspInit:00000264 $d
+C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s:994    .text.HAL_UART_MspDeInit:00000000 $t
+C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s:1000   .text.HAL_UART_MspDeInit:00000000 HAL_UART_MspDeInit
+C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s:1129   .text.HAL_UART_MspDeInit:000000a8 $d
+C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s:1141   .text.CalcCRC_Modbus:00000000 $t
+C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s:1147   .text.CalcCRC_Modbus:00000000 CalcCRC_Modbus
+C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s:1214   .text.CalcCRC_Modbus:00000030 $d
+C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s:1220   .text.HI226_Decode:00000000 $t
+C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s:1226   .text.HI226_Decode:00000000 HI226_Decode
+C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s:1428   .text.HI226_Decode:000000d0 $d
+C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s:1435   .text.USER_UART_RxIdleCallback:00000000 $t
+C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s:1441   .text.USER_UART_RxIdleCallback:00000000 USER_UART_RxIdleCallback
+C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s:1657   .text.USER_UART_RxIdleCallback:000000f0 $d
+C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s:1676   .text.HAL_UART_RxCpltCallback:00000000 $t
+C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s:1682   .text.HAL_UART_RxCpltCallback:00000000 HAL_UART_RxCpltCallback
+C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s:1776   .text.HAL_UART_RxCpltCallback:00000068 $d
+C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s:1846   .bss.HI226_FreqCount:00000000 HI226_FreqCount
+C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s:1839   .bss.HI226_ErrorCount:00000000 HI226_ErrorCount
+C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s:1832   .bss.HI226_Calccrc:00000000 HI226_Calccrc
+C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s:1853   .bss.HI226_Recvcrc:00000000 HI226_Recvcrc
+C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s:1860   .bss.HI226_len:00000000 HI226_len
+C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s:1825   .bss.HI226_AngleV:00000000 HI226_AngleV
+C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s:1818   .bss.HI226_Angle:00000000 HI226_Angle
+C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s:1937   .bss.uart3rx_bufnum:00000000 uart3rx_bufnum
+C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s:1811   .bss.DMA_NDTR:00000000 DMA_NDTR
+C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s:1967   .data.achCRCLo:00000000 achCRCLo
+C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s:1944   .data.achCRCHi:00000000 achCRCHi
+C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s:1902   .bss.hdma_usart3_rx:00000000 hdma_usart3_rx
+C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s:1895   .bss.hdma_usart1_tx:00000000 hdma_usart1_tx
+C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s:1888   .bss.hdma_usart1_rx:00000000 hdma_usart1_rx
+C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s:1916   .bss.huart3:00000000 huart3
+C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s:1909   .bss.huart1:00000000 huart1
+C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s:1930   .bss.huart5:00000000 huart5
+C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s:1923   .bss.huart4:00000000 huart4
+C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s:1867   .bss.UART1_DMA_NDTR:00000000 UART1_DMA_NDTR
+C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s:1874   .bss.USART1_Software_FIFO:00000000 USART1_Software_FIFO
+C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s:1881   .bss.Uart1DMAData:00000000 Uart1DMAData
+C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s:1807   .bss.DMA_NDTR:00000000 $d
+C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s:1814   .bss.HI226_Angle:00000000 $d
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s 			page 58
+
+
+C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s:1821   .bss.HI226_AngleV:00000000 $d
+C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s:1828   .bss.HI226_Calccrc:00000000 $d
+C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s:1835   .bss.HI226_ErrorCount:00000000 $d
+C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s:1842   .bss.HI226_FreqCount:00000000 $d
+C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s:1849   .bss.HI226_Recvcrc:00000000 $d
+C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s:1856   .bss.HI226_len:00000000 $d
+C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s:1863   .bss.UART1_DMA_NDTR:00000000 $d
+C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s:1870   .bss.USART1_Software_FIFO:00000000 $d
+C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s:1877   .bss.Uart1DMAData:00000000 $d
+C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s:1884   .bss.hdma_usart1_rx:00000000 $d
+C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s:1891   .bss.hdma_usart1_tx:00000000 $d
+C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s:1898   .bss.hdma_usart3_rx:00000000 $d
+C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s:1905   .bss.huart1:00000000 $d
+C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s:1912   .bss.huart3:00000000 $d
+C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s:1919   .bss.huart4:00000000 $d
+C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s:1926   .bss.huart5:00000000 $d
+C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s:1933   .bss.uart3rx_bufnum:00000000 $d
+C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s:1940   .data.achCRCHi:00000000 $d
+C:\Users\ysl\AppData\Local\Temp\ccXMvtRb.s:1963   .data.achCRCLo:00000000 $d
+
+UNDEFINED SYMBOLS
+HAL_UART_Init
+Error_Handler
+HAL_GPIO_Init
+HAL_DMA_Init
+HAL_NVIC_SetPriority
+HAL_NVIC_EnableIRQ
+HAL_UART_Receive_DMA
+Uart3DMABuffer
+HAL_GPIO_DeInit
+HAL_DMA_DeInit
+HAL_NVIC_DisableIRQ
+HAL_UART_DMAStop
+InsertQueue
+HAL_GPIO_TogglePin

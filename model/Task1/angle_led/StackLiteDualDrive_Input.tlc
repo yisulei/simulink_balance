@@ -1,0 +1,23 @@
+%implements  StackLiteDualDrive_Input "C"
+
+%function BlockTypeSetup(block, system) void
+%openfile Input = "StackLiteDualDrive_Input.c" %%兼容simulink不怎么智能的MODULES tocken
+/* dummy by simulink */
+%closefile Input
+%endfunction
+
+%function Outputs(block, system) Output
+%assign angle = LibBlockOutputSignalAddr(0, "", "",0)
+%assign anglev = LibBlockOutputSignalAddr(1, "", "",0)
+%assign encoder1 = LibBlockOutputSignal(2, "", "",0)
+%assign encoder2 = LibBlockOutputSignal(3, "", "",0)
+%assign adc1 = LibBlockOutputSignalAddr(4, "", "",0)
+%assign adc2 = LibBlockOutputSignalAddr(5, "", "",0)
+/*Input Data*/
+memcpy(%<angle>,HI226_Angle,3*2);
+memcpy(%<anglev>,HI226_AngleV,3*2);
+%<encoder1>=(int32_t)(__HAL_TIM_GetCounter(&htim2));
+%<encoder2>=-(int32_t)(__HAL_TIM_GetCounter(&htim5));
+memcpy(%<adc1>,adc_rawvalue[0],5*2);
+memcpy(%<adc2>,adc_rawvalue[1],5*2);
+%endfunction

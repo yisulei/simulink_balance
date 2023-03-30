@@ -1,0 +1,2526 @@
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccMmezXn.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"angle_motor.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.global	__aeabi_f2d
+  20              		.global	__aeabi_dmul
+  21              		.global	__aeabi_d2f
+  22              		.global	__aeabi_dadd
+  23              		.global	__aeabi_dcmpgt
+  24              		.global	__aeabi_dcmplt
+  25              		.global	__aeabi_d2uiz
+  26              		.global	__aeabi_d2iz
+  27              		.section	.text.angle_motor_step,"ax",%progbits
+  28              		.align	1
+  29              		.global	angle_motor_step
+  30              		.syntax unified
+  31              		.thumb
+  32              		.thumb_func
+  34              	angle_motor_step:
+  35              	.LFB238:
+  36              		.file 1 "angle_motor.c"
+   1:angle_motor.c **** /*
+   2:angle_motor.c ****  * File: angle_motor.c
+   3:angle_motor.c ****  *
+   4:angle_motor.c ****  * Code generated for Simulink model 'angle_motor'.
+   5:angle_motor.c ****  *
+   6:angle_motor.c ****  * Model version                  : 1.6
+   7:angle_motor.c ****  * Simulink Coder version         : 9.6 (R2021b) 14-May-2021
+   8:angle_motor.c ****  * C/C++ source code generated on : Tue Mar  7 19:23:13 2023
+   9:angle_motor.c ****  *
+  10:angle_motor.c ****  * Target selection: stacklite_dualdrive.tlc
+  11:angle_motor.c ****  * Embedded hardware selection: Intel->x86-64 (Windows64)
+  12:angle_motor.c ****  * Code generation objectives: Unspecified
+  13:angle_motor.c ****  * Validation result: Not run
+  14:angle_motor.c ****  */
+  15:angle_motor.c **** 
+  16:angle_motor.c **** #include "ifr-scope_device.h"
+  17:angle_motor.c **** #include "main.h"
+  18:angle_motor.c **** #include "tim.h"
+  19:angle_motor.c **** #include "gpio.h"
+  20:angle_motor.c **** #include "stdio.h"
+  21:angle_motor.c **** #include <string.h>
+  22:angle_motor.c **** #include "angle_motor.h"
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccMmezXn.s 			page 2
+
+
+  23:angle_motor.c **** #include "angle_motor_private.h"
+  24:angle_motor.c **** 
+  25:angle_motor.c **** const uint8_T angle_motor_U8GND = 0U;  /* uint8_T ground */
+  26:angle_motor.c **** 
+  27:angle_motor.c **** /* Block signals (default storage) */
+  28:angle_motor.c **** B_angle_motor_T angle_motor_B;
+  29:angle_motor.c **** 
+  30:angle_motor.c **** /* Block states (default storage) */
+  31:angle_motor.c **** DW_angle_motor_T angle_motor_DW;
+  32:angle_motor.c **** 
+  33:angle_motor.c **** /* Real-time model */
+  34:angle_motor.c **** static RT_MODEL_angle_motor_T angle_motor_M_;
+  35:angle_motor.c **** RT_MODEL_angle_motor_T *const angle_motor_M = &angle_motor_M_;
+  36:angle_motor.c **** extern union _floatchar DataLink_RevData[10];//data config from host
+  37:angle_motor.c **** extern struct _datalink_upframedata DataLink_UpFrameData;//data Up to Host
+  38:angle_motor.c **** extern int16_t HI226_Angle[3];
+  39:angle_motor.c **** extern int16_t HI226_AngleV[3];
+  40:angle_motor.c **** extern int16_t adc_rawvalue[2][5];
+  41:angle_motor.c **** extern int16_t motor1_PwmData;
+  42:angle_motor.c **** extern int16_t motor2_PwmData;
+  43:angle_motor.c **** extern uint8_t led_data;
+  44:angle_motor.c **** extern uint8_t ws2812_data[3];
+  45:angle_motor.c **** 
+  46:angle_motor.c **** /* Model step function */
+  47:angle_motor.c **** void angle_motor_step(void)
+  48:angle_motor.c **** {
+  37              		.loc 1 48 1 view -0
+  38              		.cfi_startproc
+  39              		@ args = 0, pretend = 0, frame = 0
+  40              		@ frame_needed = 0, uses_anonymous_args = 0
+  41 0000 2DE9F047 		push	{r4, r5, r6, r7, r8, r9, r10, lr}
+  42              	.LCFI0:
+  43              		.cfi_def_cfa_offset 32
+  44              		.cfi_offset 4, -32
+  45              		.cfi_offset 5, -28
+  46              		.cfi_offset 6, -24
+  47              		.cfi_offset 7, -20
+  48              		.cfi_offset 8, -16
+  49              		.cfi_offset 9, -12
+  50              		.cfi_offset 10, -8
+  51              		.cfi_offset 14, -4
+  52 0004 2DED048B 		vpush.64	{d8, d9}
+  53              	.LCFI1:
+  54              		.cfi_def_cfa_offset 48
+  55              		.cfi_offset 80, -48
+  56              		.cfi_offset 81, -44
+  57              		.cfi_offset 82, -40
+  58              		.cfi_offset 83, -36
+  49:angle_motor.c ****   real_T rtb_Add;
+  59              		.loc 1 49 3 view .LVU1
+  50:angle_motor.c ****   int_T idxDelay;
+  60              		.loc 1 50 3 view .LVU2
+  51:angle_motor.c ****   real32_T rtb_Add1_m5;
+  61              		.loc 1 51 3 view .LVU3
+  52:angle_motor.c ****   boolean_T rtb_Compare_o;
+  62              		.loc 1 52 3 view .LVU4
+  53:angle_motor.c **** 
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccMmezXn.s 			page 3
+
+
+  54:angle_motor.c ****   /* S-Function (StackLiteDualDrive_Input): '<Root>/Input1' */
+  55:angle_motor.c ****   /*Input Data*/
+  56:angle_motor.c ****   memcpy(&angle_motor_B.angle[0],HI226_Angle,3*2);
+  63              		.loc 1 56 3 view .LVU5
+  64 0008 B94B     		ldr	r3, .L109+32
+  65 000a BA4A     		ldr	r2, .L109+36
+  66 000c 1068     		ldr	r0, [r2]	@ unaligned
+  67 000e D864     		str	r0, [r3, #76]
+  68 0010 9288     		ldrh	r2, [r2, #4]	@ unaligned
+  69 0012 A3F85020 		strh	r2, [r3, #80]	@ unaligned
+  57:angle_motor.c ****   memcpy(&angle_motor_B.anglev[0],HI226_AngleV,3*2);
+  70              		.loc 1 57 3 view .LVU6
+  71 0016 B84A     		ldr	r2, .L109+40
+  72 0018 1168     		ldr	r1, [r2]	@ unaligned
+  73 001a C3F85210 		str	r1, [r3, #82]	@ unaligned
+  74 001e 9288     		ldrh	r2, [r2, #4]	@ unaligned
+  75 0020 A3F85620 		strh	r2, [r3, #86]	@ unaligned
+  58:angle_motor.c ****   angle_motor_B.encoder1= (int32_t)(__HAL_TIM_GetCounter(&htim5));
+  76              		.loc 1 58 3 view .LVU7
+  77              		.loc 1 58 37 is_stmt 0 view .LVU8
+  78 0024 B54A     		ldr	r2, .L109+44
+  79 0026 1268     		ldr	r2, [r2]
+  80 0028 526A     		ldr	r2, [r2, #36]
+  81              		.loc 1 58 25 view .LVU9
+  82 002a 5A64     		str	r2, [r3, #68]
+  59:angle_motor.c ****   angle_motor_B.encoder2= -(int32_t)(__HAL_TIM_GetCounter(&htim2));
+  83              		.loc 1 59 3 is_stmt 1 view .LVU10
+  84              		.loc 1 59 38 is_stmt 0 view .LVU11
+  85 002c B44A     		ldr	r2, .L109+48
+  86 002e 1268     		ldr	r2, [r2]
+  87 0030 526A     		ldr	r2, [r2, #36]
+  88              		.loc 1 59 27 view .LVU12
+  89 0032 5242     		rsbs	r2, r2, #0
+  90              		.loc 1 59 25 view .LVU13
+  91 0034 9A64     		str	r2, [r3, #72]
+  60:angle_motor.c ****   memcpy(&angle_motor_B.current1[0],adc_rawvalue[0],5*2);
+  92              		.loc 1 60 3 is_stmt 1 view .LVU14
+  93 0036 B34A     		ldr	r2, .L109+52
+  94 0038 03F15804 		add	r4, r3, #88
+  95 003c 1068     		ldr	r0, [r2]	@ unaligned
+  96 003e 5168     		ldr	r1, [r2, #4]	@ unaligned
+  97 0040 03C4     		stmia	r4!, {r0, r1}
+  98 0042 1189     		ldrh	r1, [r2, #8]	@ unaligned
+  99 0044 2180     		strh	r1, [r4]	@ unaligned
+  61:angle_motor.c ****   memcpy(&angle_motor_B.current1_j[0],adc_rawvalue[1],5*2);
+ 100              		.loc 1 61 3 view .LVU15
+ 101 0046 D2F80A00 		ldr	r0, [r2, #10]	@ unaligned
+ 102 004a D2F80E10 		ldr	r1, [r2, #14]	@ unaligned
+ 103 004e C3F86200 		str	r0, [r3, #98]	@ unaligned
+ 104 0052 C3F86610 		str	r1, [r3, #102]	@ unaligned
+ 105 0056 528A     		ldrh	r2, [r2, #18]	@ unaligned
+ 106 0058 A3F86A20 		strh	r2, [r3, #106]	@ unaligned
+  62:angle_motor.c **** 
+  63:angle_motor.c ****   /* S-Function (StackLiteDualDrive_DataLinkInput): '<Root>/DataLinkInput' */
+  64:angle_motor.c **** 
+  65:angle_motor.c ****   /*Input Data*/
+  66:angle_motor.c ****   angle_motor_B.DataLinkInput_o1= DataLink_RevData[0].point;
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccMmezXn.s 			page 4
+
+
+ 107              		.loc 1 66 3 view .LVU16
+ 108              		.loc 1 66 54 is_stmt 0 view .LVU17
+ 109 005c AA4A     		ldr	r2, .L109+56
+ 110 005e 1068     		ldr	r0, [r2]	@ unaligned
+ 111              		.loc 1 66 33 view .LVU18
+ 112 0060 1861     		str	r0, [r3, #16]	@ float
+  67:angle_motor.c ****   angle_motor_B.DataLinkInput_o2= DataLink_RevData[1].point;
+ 113              		.loc 1 67 3 is_stmt 1 view .LVU19
+ 114              		.loc 1 67 54 is_stmt 0 view .LVU20
+ 115 0062 5168     		ldr	r1, [r2, #4]	@ unaligned
+ 116              		.loc 1 67 33 view .LVU21
+ 117 0064 5961     		str	r1, [r3, #20]	@ float
+  68:angle_motor.c ****   angle_motor_B.DataLinkInput_o3= DataLink_RevData[2].point;
+ 118              		.loc 1 68 3 is_stmt 1 view .LVU22
+ 119              		.loc 1 68 54 is_stmt 0 view .LVU23
+ 120 0066 9168     		ldr	r1, [r2, #8]	@ unaligned
+ 121              		.loc 1 68 33 view .LVU24
+ 122 0068 9961     		str	r1, [r3, #24]	@ float
+  69:angle_motor.c ****   angle_motor_B.DataLinkInput_o4= DataLink_RevData[3].point;
+ 123              		.loc 1 69 3 is_stmt 1 view .LVU25
+ 124              		.loc 1 69 54 is_stmt 0 view .LVU26
+ 125 006a D168     		ldr	r1, [r2, #12]	@ unaligned
+ 126              		.loc 1 69 33 view .LVU27
+ 127 006c D961     		str	r1, [r3, #28]	@ float
+  70:angle_motor.c ****   angle_motor_B.DataLinkInput_o5= DataLink_RevData[4].point;
+ 128              		.loc 1 70 3 is_stmt 1 view .LVU28
+ 129              		.loc 1 70 54 is_stmt 0 view .LVU29
+ 130 006e 1169     		ldr	r1, [r2, #16]	@ unaligned
+ 131              		.loc 1 70 33 view .LVU30
+ 132 0070 1962     		str	r1, [r3, #32]	@ float
+  71:angle_motor.c ****   angle_motor_B.DataLinkInput_o6= DataLink_RevData[5].point;
+ 133              		.loc 1 71 3 is_stmt 1 view .LVU31
+ 134              		.loc 1 71 54 is_stmt 0 view .LVU32
+ 135 0072 5169     		ldr	r1, [r2, #20]	@ unaligned
+ 136              		.loc 1 71 33 view .LVU33
+ 137 0074 5962     		str	r1, [r3, #36]	@ float
+  72:angle_motor.c ****   angle_motor_B.DataLinkInput_o7= DataLink_RevData[6].point;
+ 138              		.loc 1 72 3 is_stmt 1 view .LVU34
+ 139              		.loc 1 72 54 is_stmt 0 view .LVU35
+ 140 0076 9169     		ldr	r1, [r2, #24]	@ unaligned
+ 141              		.loc 1 72 33 view .LVU36
+ 142 0078 9962     		str	r1, [r3, #40]	@ float
+  73:angle_motor.c ****   angle_motor_B.DataLinkInput_o8= DataLink_RevData[7].point;
+ 143              		.loc 1 73 3 is_stmt 1 view .LVU37
+ 144              		.loc 1 73 54 is_stmt 0 view .LVU38
+ 145 007a D169     		ldr	r1, [r2, #28]	@ unaligned
+ 146              		.loc 1 73 33 view .LVU39
+ 147 007c D962     		str	r1, [r3, #44]	@ float
+  74:angle_motor.c ****   angle_motor_B.DataLinkInput_o9= DataLink_RevData[8].point;
+ 148              		.loc 1 74 3 is_stmt 1 view .LVU40
+ 149              		.loc 1 74 54 is_stmt 0 view .LVU41
+ 150 007e 116A     		ldr	r1, [r2, #32]	@ unaligned
+ 151              		.loc 1 74 33 view .LVU42
+ 152 0080 1963     		str	r1, [r3, #48]	@ float
+  75:angle_motor.c ****   angle_motor_B.DataLinkInput_o10= DataLink_RevData[9].point;
+ 153              		.loc 1 75 3 is_stmt 1 view .LVU43
+ 154              		.loc 1 75 55 is_stmt 0 view .LVU44
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccMmezXn.s 			page 5
+
+
+ 155 0082 526A     		ldr	r2, [r2, #36]	@ unaligned
+ 156              		.loc 1 75 34 view .LVU45
+ 157 0084 5A63     		str	r2, [r3, #52]	@ float
+  76:angle_motor.c **** 
+  77:angle_motor.c ****   /* S-Function (StackLiteDualDrive_DataLinkOutput): '<Root>/DataLinkOutput' */
+  78:angle_motor.c ****   /*Output Data*/
+  79:angle_motor.c ****   DataLink_UpFrameData.data[0].point= angle_motor_B.DataLinkInput_o1;
+ 158              		.loc 1 79 3 is_stmt 1 view .LVU46
+ 159              		.loc 1 79 37 is_stmt 0 view .LVU47
+ 160 0086 A149     		ldr	r1, .L109+60
+ 161 0088 C1F80900 		str	r0, [r1, #9]	@ unaligned
+  80:angle_motor.c ****   DataLink_UpFrameData.data[1].point= angle_motor_B.Divide;
+ 162              		.loc 1 80 3 is_stmt 1 view .LVU48
+ 163              		.loc 1 80 37 is_stmt 0 view .LVU49
+ 164 008c DA6B     		ldr	r2, [r3, #60]	@ float
+ 165 008e C1F80D20 		str	r2, [r1, #13]	@ unaligned
+  81:angle_motor.c ****   DataLink_UpFrameData.data[2].point= angle_motor_B.Divide1;
+ 166              		.loc 1 81 3 is_stmt 1 view .LVU50
+ 167              		.loc 1 81 37 is_stmt 0 view .LVU51
+ 168 0092 1A6C     		ldr	r2, [r3, #64]	@ float
+ 169 0094 C1F81120 		str	r2, [r1, #17]	@ unaligned
+  82:angle_motor.c ****   DataLink_UpFrameData.data[3].point= angle_motor_B.Add_m;
+ 170              		.loc 1 82 3 is_stmt 1 view .LVU52
+ 171              		.loc 1 82 37 is_stmt 0 view .LVU53
+ 172 0098 9A6B     		ldr	r2, [r3, #56]	@ float
+ 173 009a C1F81520 		str	r2, [r1, #21]	@ unaligned
+  83:angle_motor.c ****   DataLink_UpFrameData.data[4].point= 0.0F;
+ 174              		.loc 1 83 3 is_stmt 1 view .LVU54
+ 175              		.loc 1 83 37 is_stmt 0 view .LVU55
+ 176 009e 0022     		movs	r2, #0
+ 177 00a0 C1F81920 		str	r2, [r1, #25]	@ unaligned
+  84:angle_motor.c ****   DataLink_UpFrameData.data[5].point= 0.0F;
+ 178              		.loc 1 84 3 is_stmt 1 view .LVU56
+ 179              		.loc 1 84 37 is_stmt 0 view .LVU57
+ 180 00a4 C1F81D20 		str	r2, [r1, #29]	@ unaligned
+  85:angle_motor.c ****   DataLink_UpFrameData.data[6].point= 0.0F;
+ 181              		.loc 1 85 3 is_stmt 1 view .LVU58
+ 182              		.loc 1 85 37 is_stmt 0 view .LVU59
+ 183 00a8 C1F82120 		str	r2, [r1, #33]	@ unaligned
+  86:angle_motor.c ****   DataLink_UpFrameData.data[7].point= 0.0F;
+ 184              		.loc 1 86 3 is_stmt 1 view .LVU60
+ 185              		.loc 1 86 37 is_stmt 0 view .LVU61
+ 186 00ac C1F82520 		str	r2, [r1, #37]	@ unaligned
+  87:angle_motor.c ****   DataLink_UpFrameData.data[8].point= 0.0F;
+ 187              		.loc 1 87 3 is_stmt 1 view .LVU62
+ 188              		.loc 1 87 37 is_stmt 0 view .LVU63
+ 189 00b0 C1F82920 		str	r2, [r1, #41]	@ unaligned
+  88:angle_motor.c ****   DataLink_UpFrameData.data[9].point= 0.0F;
+ 190              		.loc 1 88 3 is_stmt 1 view .LVU64
+ 191              		.loc 1 88 37 is_stmt 0 view .LVU65
+ 192 00b4 C1F82D20 		str	r2, [r1, #45]	@ unaligned
+  89:angle_motor.c ****   DataLink_UpFrameData.data[10].point= 0.0F;
+ 193              		.loc 1 89 3 is_stmt 1 view .LVU66
+ 194              		.loc 1 89 38 is_stmt 0 view .LVU67
+ 195 00b8 C1F83120 		str	r2, [r1, #49]	@ unaligned
+  90:angle_motor.c ****   DataLink_UpFrameData.data[11].point= 0.0F;
+ 196              		.loc 1 90 3 is_stmt 1 view .LVU68
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccMmezXn.s 			page 6
+
+
+ 197              		.loc 1 90 38 is_stmt 0 view .LVU69
+ 198 00bc C1F83520 		str	r2, [r1, #53]	@ unaligned
+  91:angle_motor.c ****   DataLink_UpFrameData.data[12].point= 0.0F;
+ 199              		.loc 1 91 3 is_stmt 1 view .LVU70
+ 200              		.loc 1 91 38 is_stmt 0 view .LVU71
+ 201 00c0 C1F83920 		str	r2, [r1, #57]	@ unaligned
+  92:angle_motor.c ****   DataLink_UpFrameData.data[13].point= 0.0F;
+ 202              		.loc 1 92 3 is_stmt 1 view .LVU72
+ 203              		.loc 1 92 38 is_stmt 0 view .LVU73
+ 204 00c4 C1F83D20 		str	r2, [r1, #61]	@ unaligned
+  93:angle_motor.c ****   DataLink_UpFrameData.data[14].point= 0.0F;
+ 205              		.loc 1 93 3 is_stmt 1 view .LVU74
+ 206              		.loc 1 93 38 is_stmt 0 view .LVU75
+ 207 00c8 C1F84120 		str	r2, [r1, #65]	@ unaligned
+  94:angle_motor.c ****   DataLink_UpFrameData.data[15].point= 0.0F;
+ 208              		.loc 1 94 3 is_stmt 1 view .LVU76
+ 209              		.loc 1 94 38 is_stmt 0 view .LVU77
+ 210 00cc C1F84520 		str	r2, [r1, #69]	@ unaligned
+  95:angle_motor.c ****   DataLink_UpFrameData.data[16].point= 0.0F;
+ 211              		.loc 1 95 3 is_stmt 1 view .LVU78
+ 212              		.loc 1 95 38 is_stmt 0 view .LVU79
+ 213 00d0 C1F84920 		str	r2, [r1, #73]	@ unaligned
+  96:angle_motor.c ****   DataLink_UpFrameData.data[17].point= 0.0F;
+ 214              		.loc 1 96 3 is_stmt 1 view .LVU80
+ 215              		.loc 1 96 38 is_stmt 0 view .LVU81
+ 216 00d4 C1F84D20 		str	r2, [r1, #77]	@ unaligned
+  97:angle_motor.c ****   DataLink_UpFrameData.data[18].point= 0.0F;
+ 217              		.loc 1 97 3 is_stmt 1 view .LVU82
+ 218              		.loc 1 97 38 is_stmt 0 view .LVU83
+ 219 00d8 C1F85120 		str	r2, [r1, #81]	@ unaligned
+  98:angle_motor.c ****   DataLink_UpFrameData.data[19].point= 0.0F;
+ 220              		.loc 1 98 3 is_stmt 1 view .LVU84
+ 221              		.loc 1 98 38 is_stmt 0 view .LVU85
+ 222 00dc C1F85520 		str	r2, [r1, #85]	@ unaligned
+  99:angle_motor.c **** 
+ 100:angle_motor.c ****   /* S-Function (StackLiteDualDrive_Output): '<Root>/Output' */
+ 101:angle_motor.c ****   /*Output Data*/
+ 102:angle_motor.c ****   motor1_PwmData= angle_motor_B.Saturation2;
+ 223              		.loc 1 102 3 is_stmt 1 view .LVU86
+ 224              		.loc 1 102 32 is_stmt 0 view .LVU87
+ 225 00e0 B3F96E00 		ldrsh	r0, [r3, #110]
+ 226              		.loc 1 102 17 view .LVU88
+ 227 00e4 8A49     		ldr	r1, .L109+64
+ 228 00e6 0880     		strh	r0, [r1]	@ movhi
+ 103:angle_motor.c ****   motor2_PwmData= angle_motor_B.Saturation1;
+ 229              		.loc 1 103 3 is_stmt 1 view .LVU89
+ 230              		.loc 1 103 32 is_stmt 0 view .LVU90
+ 231 00e8 B3F96C10 		ldrsh	r1, [r3, #108]
+ 232              		.loc 1 103 17 view .LVU91
+ 233 00ec 894B     		ldr	r3, .L109+68
+ 234 00ee 1980     		strh	r1, [r3]	@ movhi
+ 104:angle_motor.c ****   HAL_GPIO_WritePin(USER_LED_GPIO_Port,USER_LED_Pin,(GPIO_PinState)((uint8_T)0U));
+ 235              		.loc 1 104 3 is_stmt 1 view .LVU92
+ 236 00f0 4FF48041 		mov	r1, #16384
+ 237 00f4 8848     		ldr	r0, .L109+72
+ 238 00f6 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 239              	.LVL0:
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccMmezXn.s 			page 7
+
+
+ 105:angle_motor.c ****   memcpy(ws2812_data,((const uint8_T*) &angle_motor_U8GND),3);
+ 240              		.loc 1 105 3 view .LVU93
+ 241 00fa 884B     		ldr	r3, .L109+76
+ 242 00fc 884A     		ldr	r2, .L109+80
+ 243 00fe 1188     		ldrh	r1, [r2]	@ unaligned
+ 244 0100 9278     		ldrb	r2, [r2, #2]	@ zero_extendqisi2
+ 245 0102 1980     		strh	r1, [r3]	@ unaligned
+ 246 0104 9A70     		strb	r2, [r3, #2]
+ 106:angle_motor.c **** 
+ 107:angle_motor.c ****   /* Outputs for Enabled SubSystem: '<Root>/encoder to rpm' incorporates:
+ 108:angle_motor.c ****    *  EnablePort: '<S9>/Enable'
+ 109:angle_motor.c ****    */
+ 110:angle_motor.c ****   /* RelationalOperator: '<S3>/Compare' incorporates:
+ 111:angle_motor.c ****    *  Constant: '<S3>/Constant'
+ 112:angle_motor.c ****    *  UnitDelay: '<S6>/Output'
+ 113:angle_motor.c ****    */
+ 114:angle_motor.c ****   if (angle_motor_DW.Output_DSTATE == 1) {
+ 247              		.loc 1 114 3 view .LVU94
+ 248              		.loc 1 114 21 is_stmt 0 view .LVU95
+ 249 0106 874B     		ldr	r3, .L109+84
+ 250 0108 93F8C230 		ldrb	r3, [r3, #194]	@ zero_extendqisi2
+ 251              		.loc 1 114 6 view .LVU96
+ 252 010c 012B     		cmp	r3, #1
+ 253 010e 1CD0     		beq	.L95
+ 254              	.L2:
+ 115:angle_motor.c ****     /* Product: '<S9>/Divide' incorporates:
+ 116:angle_motor.c ****      *  Constant: '<S9>/Constant'
+ 117:angle_motor.c ****      *  Constant: '<S9>/Constant1'
+ 118:angle_motor.c ****      *  Constant: '<S9>/Constant2'
+ 119:angle_motor.c ****      *  Delay: '<S9>/Delay'
+ 120:angle_motor.c ****      *  Product: '<S9>/Product'
+ 121:angle_motor.c ****      *  Product: '<S9>/Product1'
+ 122:angle_motor.c ****      *  Sum: '<S9>/Add1'
+ 123:angle_motor.c ****      */
+ 124:angle_motor.c ****     angle_motor_B.Divide = (real32_T)(angle_motor_B.encoder1 -
+ 125:angle_motor.c ****       angle_motor_DW.Delay_DSTATE_f[0]) * 100.0F * 60.0F / 40000.0F;
+ 126:angle_motor.c **** 
+ 127:angle_motor.c ****     /* Product: '<S9>/Divide1' incorporates:
+ 128:angle_motor.c ****      *  Constant: '<S9>/Constant3'
+ 129:angle_motor.c ****      *  Constant: '<S9>/Constant4'
+ 130:angle_motor.c ****      *  Constant: '<S9>/Constant5'
+ 131:angle_motor.c ****      *  Delay: '<S9>/Delay1'
+ 132:angle_motor.c ****      *  Product: '<S9>/Product2'
+ 133:angle_motor.c ****      *  Product: '<S9>/Product3'
+ 134:angle_motor.c ****      *  Sum: '<S9>/Add2'
+ 135:angle_motor.c ****      */
+ 136:angle_motor.c ****     angle_motor_B.Divide1 = (real32_T)(angle_motor_B.encoder2 -
+ 137:angle_motor.c ****       angle_motor_DW.Delay1_DSTATE[0]) * 100.0F * 60.0F / 40000.0F;
+ 138:angle_motor.c ****     for (idxDelay = 0; idxDelay < 18; idxDelay++) {
+ 139:angle_motor.c ****       /* Update for Delay: '<S9>/Delay' */
+ 140:angle_motor.c ****       angle_motor_DW.Delay_DSTATE_f[idxDelay] =
+ 141:angle_motor.c ****         angle_motor_DW.Delay_DSTATE_f[idxDelay + 1];
+ 142:angle_motor.c **** 
+ 143:angle_motor.c ****       /* Update for Delay: '<S9>/Delay1' */
+ 144:angle_motor.c ****       angle_motor_DW.Delay1_DSTATE[idxDelay] =
+ 145:angle_motor.c ****         angle_motor_DW.Delay1_DSTATE[idxDelay + 1];
+ 146:angle_motor.c ****     }
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccMmezXn.s 			page 8
+
+
+ 147:angle_motor.c **** 
+ 148:angle_motor.c ****     /* Update for Delay: '<S9>/Delay' */
+ 149:angle_motor.c ****     angle_motor_DW.Delay_DSTATE_f[18] = angle_motor_B.encoder1;
+ 150:angle_motor.c **** 
+ 151:angle_motor.c ****     /* Update for Delay: '<S9>/Delay1' */
+ 152:angle_motor.c ****     angle_motor_DW.Delay1_DSTATE[18] = angle_motor_B.encoder2;
+ 153:angle_motor.c ****   }
+ 154:angle_motor.c **** 
+ 155:angle_motor.c ****   /* End of RelationalOperator: '<S3>/Compare' */
+ 156:angle_motor.c ****   /* End of Outputs for SubSystem: '<Root>/encoder to rpm' */
+ 157:angle_motor.c **** 
+ 158:angle_motor.c ****   /* Outputs for Enabled SubSystem: '<Root>/speedPID_motor2' incorporates:
+ 159:angle_motor.c ****    *  EnablePort: '<S11>/Enable'
+ 160:angle_motor.c ****    */
+ 161:angle_motor.c ****   /* RelationalOperator: '<S1>/Compare' incorporates:
+ 162:angle_motor.c ****    *  Constant: '<S1>/Constant'
+ 163:angle_motor.c ****    *  UnitDelay: '<S4>/Output'
+ 164:angle_motor.c ****    */
+ 165:angle_motor.c ****   if (angle_motor_DW.Output_DSTATE_d == 1) {
+ 255              		.loc 1 165 3 is_stmt 1 view .LVU97
+ 256              		.loc 1 165 21 is_stmt 0 view .LVU98
+ 257 0110 844B     		ldr	r3, .L109+84
+ 258 0112 93F8C330 		ldrb	r3, [r3, #195]	@ zero_extendqisi2
+ 259              		.loc 1 165 6 view .LVU99
+ 260 0116 012B     		cmp	r3, #1
+ 261 0118 5BD0     		beq	.L96
+ 262              	.L5:
+ 166:angle_motor.c ****     /* Sum: '<S11>/Add1' */
+ 167:angle_motor.c ****     rtb_Add1_m5 = angle_motor_B.DataLinkInput_o1 - angle_motor_B.Divide1;
+ 168:angle_motor.c **** 
+ 169:angle_motor.c ****     /* Gain: '<S28>/Gain1' incorporates:
+ 170:angle_motor.c ****      *  DataStoreWrite: '<Root>/Data Store Write2'
+ 171:angle_motor.c ****      *  Delay: '<S28>/Delay'
+ 172:angle_motor.c ****      *  Gain: '<S28>/Gain'
+ 173:angle_motor.c ****      *  ManualSwitch: '<S28>/Manual Switch1'
+ 174:angle_motor.c ****      *  Product: '<S28>/Product3'
+ 175:angle_motor.c ****      *  Sum: '<S28>/Add2'
+ 176:angle_motor.c ****      */
+ 177:angle_motor.c ****     angle_motor_DW.Delay_DSTATE_d = ((real32_T)(0.01 *
+ 178:angle_motor.c ****       angle_motor_B.DataLinkInput_o3 * rtb_Add1_m5) +
+ 179:angle_motor.c ****       angle_motor_DW.Delay_DSTATE_d) * 0.995;
+ 180:angle_motor.c **** 
+ 181:angle_motor.c ****     /* Saturate: '<S28>/Saturation2' */
+ 182:angle_motor.c ****     if (angle_motor_DW.Delay_DSTATE_d > 1500.0) {
+ 183:angle_motor.c ****       /* Gain: '<S28>/Gain1' */
+ 184:angle_motor.c ****       angle_motor_DW.Delay_DSTATE_d = 1500.0;
+ 185:angle_motor.c ****     } else if (angle_motor_DW.Delay_DSTATE_d < -1500.0) {
+ 186:angle_motor.c ****       /* Gain: '<S28>/Gain1' */
+ 187:angle_motor.c ****       angle_motor_DW.Delay_DSTATE_d = -1500.0;
+ 188:angle_motor.c ****     }
+ 189:angle_motor.c **** 
+ 190:angle_motor.c ****     /* End of Saturate: '<S28>/Saturation2' */
+ 191:angle_motor.c **** 
+ 192:angle_motor.c ****     /* Sum: '<S11>/Add' incorporates:
+ 193:angle_motor.c ****      *  DataStoreWrite: '<Root>/Data Store Write'
+ 194:angle_motor.c ****      *  DataStoreWrite: '<Root>/Data Store Write3'
+ 195:angle_motor.c ****      *  Delay: '<S28>/Delay'
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccMmezXn.s 			page 9
+
+
+ 196:angle_motor.c ****      *  ManualSwitch: '<S27>/Manual Switch2'
+ 197:angle_motor.c ****      *  ManualSwitch: '<S29>/Manual Switch'
+ 198:angle_motor.c ****      *  Product: '<S27>/Product2'
+ 199:angle_motor.c ****      *  Product: '<S29>/Product'
+ 200:angle_motor.c ****      *  Sum: '<S30>/Diff'
+ 201:angle_motor.c ****      *  UnitDelay: '<S30>/UD'
+ 202:angle_motor.c ****      *
+ 203:angle_motor.c ****      * Block description for '<S30>/Diff':
+ 204:angle_motor.c ****      *
+ 205:angle_motor.c ****      *  Add in CPU
+ 206:angle_motor.c ****      *
+ 207:angle_motor.c ****      * Block description for '<S30>/UD':
+ 208:angle_motor.c ****      *
+ 209:angle_motor.c ****      *  Store in Global RAM
+ 210:angle_motor.c ****      */
+ 211:angle_motor.c ****     angle_motor_B.Add = ((real_T)angle_motor_B.DataLinkInput_o2 * rtb_Add1_m5 +
+ 212:angle_motor.c ****                          angle_motor_DW.Delay_DSTATE_d) + (real_T)(rtb_Add1_m5 -
+ 213:angle_motor.c ****       angle_motor_DW.UD_DSTATE_i) * angle_motor_B.DataLinkInput_o4;
+ 214:angle_motor.c **** 
+ 215:angle_motor.c ****     /* Update for UnitDelay: '<S30>/UD'
+ 216:angle_motor.c ****      *
+ 217:angle_motor.c ****      * Block description for '<S30>/UD':
+ 218:angle_motor.c ****      *
+ 219:angle_motor.c ****      *  Store in Global RAM
+ 220:angle_motor.c ****      */
+ 221:angle_motor.c ****     angle_motor_DW.UD_DSTATE_i = rtb_Add1_m5;
+ 222:angle_motor.c ****   }
+ 223:angle_motor.c **** 
+ 224:angle_motor.c ****   /* End of RelationalOperator: '<S1>/Compare' */
+ 225:angle_motor.c ****   /* End of Outputs for SubSystem: '<Root>/speedPID_motor2' */
+ 226:angle_motor.c **** 
+ 227:angle_motor.c ****   /* Saturate: '<Root>/Saturation3' */
+ 228:angle_motor.c ****   if (angle_motor_B.Add > 2048.0) {
+ 263              		.loc 1 228 3 is_stmt 1 view .LVU100
+ 264              		.loc 1 228 20 is_stmt 0 view .LVU101
+ 265 011a 754B     		ldr	r3, .L109+32
+ 266 011c D3E90045 		ldrd	r4, [r3]
+ 267              		.loc 1 228 6 view .LVU102
+ 268 0120 0022     		movs	r2, #0
+ 269 0122 814B     		ldr	r3, .L109+88
+ 270 0124 2046     		mov	r0, r4
+ 271 0126 2946     		mov	r1, r5
+ 272 0128 FFF7FEFF 		bl	__aeabi_dcmpgt
+ 273              	.LVL1:
+ 274 012c 0028     		cmp	r0, #0
+ 275 012e 40F00581 		bne	.L59
+ 229:angle_motor.c ****     rtb_Add = 2048.0;
+ 230:angle_motor.c ****   } else if (angle_motor_B.Add < -2048.0) {
+ 276              		.loc 1 230 10 is_stmt 1 view .LVU103
+ 277              		.loc 1 230 13 is_stmt 0 view .LVU104
+ 278 0132 0022     		movs	r2, #0
+ 279 0134 7D4B     		ldr	r3, .L109+92
+ 280 0136 2046     		mov	r0, r4
+ 281 0138 2946     		mov	r1, r5
+ 282 013a FFF7FEFF 		bl	__aeabi_dcmplt
+ 283              	.LVL2:
+ 284 013e 0028     		cmp	r0, #0
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccMmezXn.s 			page 10
+
+
+ 285 0140 00F0FE80 		beq	.L10
+ 231:angle_motor.c ****     rtb_Add = -2048.0;
+ 286              		.loc 1 231 13 view .LVU105
+ 287 0144 0024     		movs	r4, #0
+ 288 0146 794D     		ldr	r5, .L109+92
+ 289 0148 FAE0     		b	.L10
+ 290              	.L95:
+ 124:angle_motor.c ****       angle_motor_DW.Delay_DSTATE_f[0]) * 100.0F * 60.0F / 40000.0F;
+ 291              		.loc 1 124 5 is_stmt 1 view .LVU106
+ 124:angle_motor.c ****       angle_motor_DW.Delay_DSTATE_f[0]) * 100.0F * 60.0F / 40000.0F;
+ 292              		.loc 1 124 52 is_stmt 0 view .LVU107
+ 293 014a A4F16002 		sub	r2, r4, #96
+ 294 014e 546C     		ldr	r4, [r2, #68]
+ 125:angle_motor.c **** 
+ 295              		.loc 1 125 36 view .LVU108
+ 296 0150 7449     		ldr	r1, .L109+84
+ 297 0152 8B6A     		ldr	r3, [r1, #40]
+ 124:angle_motor.c ****       angle_motor_DW.Delay_DSTATE_f[0]) * 100.0F * 60.0F / 40000.0F;
+ 298              		.loc 1 124 62 view .LVU109
+ 299 0154 E31A     		subs	r3, r4, r3
+ 300 0156 07EE903A 		vmov	s15, r3	@ int
+ 124:angle_motor.c ****       angle_motor_DW.Delay_DSTATE_f[0]) * 100.0F * 60.0F / 40000.0F;
+ 301              		.loc 1 124 28 view .LVU110
+ 302 015a F8EEE77A 		vcvt.f32.s32	s15, s15
+ 125:angle_motor.c **** 
+ 303              		.loc 1 125 41 view .LVU111
+ 304 015e 9FED746A 		vldr.32	s12, .L109+96
+ 305 0162 67EE867A 		vmul.f32	s15, s15, s12
+ 125:angle_motor.c **** 
+ 306              		.loc 1 125 50 view .LVU112
+ 307 0166 DFED736A 		vldr.32	s13, .L109+100
+ 308 016a 67EEA67A 		vmul.f32	s15, s15, s13
+ 125:angle_motor.c **** 
+ 309              		.loc 1 125 58 view .LVU113
+ 310 016e 9FED727A 		vldr.32	s14, .L109+104
+ 311 0172 C7EE875A 		vdiv.f32	s11, s15, s14
+ 124:angle_motor.c ****       angle_motor_DW.Delay_DSTATE_f[0]) * 100.0F * 60.0F / 40000.0F;
+ 312              		.loc 1 124 26 view .LVU114
+ 313 0176 C2ED0F5A 		vstr.32	s11, [r2, #60]
+ 136:angle_motor.c ****       angle_motor_DW.Delay1_DSTATE[0]) * 100.0F * 60.0F / 40000.0F;
+ 314              		.loc 1 136 5 is_stmt 1 view .LVU115
+ 136:angle_motor.c ****       angle_motor_DW.Delay1_DSTATE[0]) * 100.0F * 60.0F / 40000.0F;
+ 315              		.loc 1 136 53 is_stmt 0 view .LVU116
+ 316 017a 956C     		ldr	r5, [r2, #72]
+ 137:angle_motor.c ****     for (idxDelay = 0; idxDelay < 18; idxDelay++) {
+ 317              		.loc 1 137 35 view .LVU117
+ 318 017c 4B6F     		ldr	r3, [r1, #116]
+ 136:angle_motor.c ****       angle_motor_DW.Delay1_DSTATE[0]) * 100.0F * 60.0F / 40000.0F;
+ 319              		.loc 1 136 63 view .LVU118
+ 320 017e EB1A     		subs	r3, r5, r3
+ 321 0180 07EE903A 		vmov	s15, r3	@ int
+ 136:angle_motor.c ****       angle_motor_DW.Delay1_DSTATE[0]) * 100.0F * 60.0F / 40000.0F;
+ 322              		.loc 1 136 29 view .LVU119
+ 323 0184 F8EEE77A 		vcvt.f32.s32	s15, s15
+ 137:angle_motor.c ****     for (idxDelay = 0; idxDelay < 18; idxDelay++) {
+ 324              		.loc 1 137 40 view .LVU120
+ 325 0188 67EE867A 		vmul.f32	s15, s15, s12
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccMmezXn.s 			page 11
+
+
+ 137:angle_motor.c ****     for (idxDelay = 0; idxDelay < 18; idxDelay++) {
+ 326              		.loc 1 137 49 view .LVU121
+ 327 018c 67EEA67A 		vmul.f32	s15, s15, s13
+ 137:angle_motor.c ****     for (idxDelay = 0; idxDelay < 18; idxDelay++) {
+ 328              		.loc 1 137 57 view .LVU122
+ 329 0190 C7EE876A 		vdiv.f32	s13, s15, s14
+ 136:angle_motor.c ****       angle_motor_DW.Delay1_DSTATE[0]) * 100.0F * 60.0F / 40000.0F;
+ 330              		.loc 1 136 27 view .LVU123
+ 331 0194 C2ED106A 		vstr.32	s13, [r2, #64]
+ 138:angle_motor.c ****       /* Update for Delay: '<S9>/Delay' */
+ 332              		.loc 1 138 5 is_stmt 1 view .LVU124
+ 333              	.LVL3:
+ 138:angle_motor.c ****       /* Update for Delay: '<S9>/Delay' */
+ 334              		.loc 1 138 19 is_stmt 0 view .LVU125
+ 335 0198 0023     		movs	r3, #0
+ 138:angle_motor.c ****       /* Update for Delay: '<S9>/Delay' */
+ 336              		.loc 1 138 5 view .LVU126
+ 337 019a 13E0     		b	.L3
+ 338              	.LVL4:
+ 339              	.L4:
+ 140:angle_motor.c ****         angle_motor_DW.Delay_DSTATE_f[idxDelay + 1];
+ 340              		.loc 1 140 7 is_stmt 1 discriminator 3 view .LVU127
+ 141:angle_motor.c **** 
+ 341              		.loc 1 141 38 is_stmt 0 discriminator 3 view .LVU128
+ 342 019c 614A     		ldr	r2, .L109+84
+ 343 019e 03F10B01 		add	r1, r3, #11
+ 344 01a2 52F82100 		ldr	r0, [r2, r1, lsl #2]
+ 140:angle_motor.c ****         angle_motor_DW.Delay_DSTATE_f[idxDelay + 1];
+ 345              		.loc 1 140 47 discriminator 3 view .LVU129
+ 346 01a6 03F10A01 		add	r1, r3, #10
+ 347 01aa 42F82100 		str	r0, [r2, r1, lsl #2]
+ 144:angle_motor.c ****         angle_motor_DW.Delay1_DSTATE[idxDelay + 1];
+ 348              		.loc 1 144 7 is_stmt 1 discriminator 3 view .LVU130
+ 145:angle_motor.c ****     }
+ 349              		.loc 1 145 37 is_stmt 0 discriminator 3 view .LVU131
+ 350 01ae 03F11D01 		add	r1, r3, #29
+ 351 01b2 02EB8101 		add	r1, r2, r1, lsl #2
+ 352 01b6 4968     		ldr	r1, [r1, #4]
+ 144:angle_motor.c ****         angle_motor_DW.Delay1_DSTATE[idxDelay + 1];
+ 353              		.loc 1 144 46 discriminator 3 view .LVU132
+ 354 01b8 03F11C00 		add	r0, r3, #28
+ 355 01bc 02EB8002 		add	r2, r2, r0, lsl #2
+ 356 01c0 5160     		str	r1, [r2, #4]
+ 138:angle_motor.c ****       /* Update for Delay: '<S9>/Delay' */
+ 357              		.loc 1 138 47 is_stmt 1 discriminator 3 view .LVU133
+ 358              	.LVL5:
+ 138:angle_motor.c ****       /* Update for Delay: '<S9>/Delay' */
+ 359              		.loc 1 138 47 is_stmt 0 discriminator 3 view .LVU134
+ 360 01c2 0133     		adds	r3, r3, #1
+ 361              	.LVL6:
+ 362              	.L3:
+ 138:angle_motor.c ****       /* Update for Delay: '<S9>/Delay' */
+ 363              		.loc 1 138 33 is_stmt 1 discriminator 1 view .LVU135
+ 364 01c4 112B     		cmp	r3, #17
+ 365 01c6 E9DD     		ble	.L4
+ 149:angle_motor.c **** 
+ 366              		.loc 1 149 5 view .LVU136
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccMmezXn.s 			page 12
+
+
+ 149:angle_motor.c **** 
+ 367              		.loc 1 149 39 is_stmt 0 view .LVU137
+ 368 01c8 564B     		ldr	r3, .L109+84
+ 369              	.LVL7:
+ 149:angle_motor.c **** 
+ 370              		.loc 1 149 39 view .LVU138
+ 371 01ca 1C67     		str	r4, [r3, #112]
+ 152:angle_motor.c ****   }
+ 372              		.loc 1 152 5 is_stmt 1 view .LVU139
+ 152:angle_motor.c ****   }
+ 373              		.loc 1 152 38 is_stmt 0 view .LVU140
+ 374 01cc C3F8BC50 		str	r5, [r3, #188]
+ 375 01d0 9EE7     		b	.L2
+ 376              	.L96:
+ 167:angle_motor.c **** 
+ 377              		.loc 1 167 5 is_stmt 1 view .LVU141
+ 167:angle_motor.c **** 
+ 378              		.loc 1 167 32 is_stmt 0 view .LVU142
+ 379 01d2 474B     		ldr	r3, .L109+32
+ 380 01d4 93ED048A 		vldr.32	s16, [r3, #16]
+ 167:angle_motor.c **** 
+ 381              		.loc 1 167 65 view .LVU143
+ 382 01d8 D3ED107A 		vldr.32	s15, [r3, #64]
+ 167:angle_motor.c **** 
+ 383              		.loc 1 167 17 view .LVU144
+ 384 01dc 38EE678A 		vsub.f32	s16, s16, s15
+ 385              	.LVL8:
+ 177:angle_motor.c ****       angle_motor_B.DataLinkInput_o3 * rtb_Add1_m5) +
+ 386              		.loc 1 177 5 is_stmt 1 view .LVU145
+ 178:angle_motor.c ****       angle_motor_DW.Delay_DSTATE_d) * 0.995;
+ 387              		.loc 1 178 20 is_stmt 0 view .LVU146
+ 388 01e0 9869     		ldr	r0, [r3, #24]	@ float
+ 389 01e2 FFF7FEFF 		bl	__aeabi_f2d
+ 390              	.LVL9:
+ 177:angle_motor.c ****       angle_motor_B.DataLinkInput_o3 * rtb_Add1_m5) +
+ 391              		.loc 1 177 54 view .LVU147
+ 392 01e6 3AA3     		adr	r3, .L109
+ 393 01e8 D3E90023 		ldrd	r2, [r3]
+ 394 01ec FFF7FEFF 		bl	__aeabi_dmul
+ 395              	.LVL10:
+ 396 01f0 0646     		mov	r6, r0
+ 397 01f2 0F46     		mov	r7, r1
+ 178:angle_motor.c ****       angle_motor_DW.Delay_DSTATE_d) * 0.995;
+ 398              		.loc 1 178 38 view .LVU148
+ 399 01f4 18EE100A 		vmov	r0, s16
+ 400 01f8 FFF7FEFF 		bl	__aeabi_f2d
+ 401              	.LVL11:
+ 402 01fc 0446     		mov	r4, r0
+ 403 01fe 0D46     		mov	r5, r1
+ 404 0200 0246     		mov	r2, r0
+ 405 0202 0B46     		mov	r3, r1
+ 406 0204 3046     		mov	r0, r6
+ 407 0206 3946     		mov	r1, r7
+ 408 0208 FFF7FEFF 		bl	__aeabi_dmul
+ 409              	.LVL12:
+ 177:angle_motor.c ****       angle_motor_B.DataLinkInput_o3 * rtb_Add1_m5) +
+ 410              		.loc 1 177 38 view .LVU149
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccMmezXn.s 			page 13
+
+
+ 411 020c FFF7FEFF 		bl	__aeabi_d2f
+ 412              	.LVL13:
+ 413 0210 FFF7FEFF 		bl	__aeabi_f2d
+ 414              	.LVL14:
+ 179:angle_motor.c **** 
+ 415              		.loc 1 179 21 view .LVU150
+ 416 0214 DFF80C81 		ldr	r8, .L109+84
+ 178:angle_motor.c ****       angle_motor_DW.Delay_DSTATE_d) * 0.995;
+ 417              		.loc 1 178 53 view .LVU151
+ 418 0218 D8E90223 		ldrd	r2, [r8, #8]
+ 419 021c FFF7FEFF 		bl	__aeabi_dadd
+ 420              	.LVL15:
+ 179:angle_motor.c **** 
+ 421              		.loc 1 179 38 view .LVU152
+ 422 0220 2DA3     		adr	r3, .L109+8
+ 423 0222 D3E90023 		ldrd	r2, [r3]
+ 424 0226 FFF7FEFF 		bl	__aeabi_dmul
+ 425              	.LVL16:
+ 426 022a 0646     		mov	r6, r0
+ 427 022c 0F46     		mov	r7, r1
+ 177:angle_motor.c ****       angle_motor_B.DataLinkInput_o3 * rtb_Add1_m5) +
+ 428              		.loc 1 177 35 view .LVU153
+ 429 022e C8E90267 		strd	r6, [r8, #8]
+ 182:angle_motor.c ****       /* Gain: '<S28>/Gain1' */
+ 430              		.loc 1 182 5 is_stmt 1 view .LVU154
+ 182:angle_motor.c ****       /* Gain: '<S28>/Gain1' */
+ 431              		.loc 1 182 8 is_stmt 0 view .LVU155
+ 432 0232 2BA3     		adr	r3, .L109+16
+ 433 0234 D3E90023 		ldrd	r2, [r3]
+ 434 0238 FFF7FEFF 		bl	__aeabi_dcmpgt
+ 435              	.LVL17:
+ 436 023c B0B3     		cbz	r0, .L83
+ 184:angle_motor.c ****     } else if (angle_motor_DW.Delay_DSTATE_d < -1500.0) {
+ 437              		.loc 1 184 7 is_stmt 1 view .LVU156
+ 184:angle_motor.c ****     } else if (angle_motor_DW.Delay_DSTATE_d < -1500.0) {
+ 438              		.loc 1 184 37 is_stmt 0 view .LVU157
+ 439 023e 28A1     		adr	r1, .L109+16
+ 440 0240 D1E90001 		ldrd	r0, [r1]
+ 441 0244 C8E90201 		strd	r0, [r8, #8]
+ 442              	.L8:
+ 211:angle_motor.c ****                          angle_motor_DW.Delay_DSTATE_d) + (real_T)(rtb_Add1_m5 -
+ 443              		.loc 1 211 5 is_stmt 1 view .LVU158
+ 211:angle_motor.c ****                          angle_motor_DW.Delay_DSTATE_d) + (real_T)(rtb_Add1_m5 -
+ 444              		.loc 1 211 47 is_stmt 0 view .LVU159
+ 445 0248 DFF8A4A0 		ldr	r10, .L109+32
+ 211:angle_motor.c ****                          angle_motor_DW.Delay_DSTATE_d) + (real_T)(rtb_Add1_m5 -
+ 446              		.loc 1 211 26 view .LVU160
+ 447 024c DAF81400 		ldr	r0, [r10, #20]	@ float
+ 448 0250 FFF7FEFF 		bl	__aeabi_f2d
+ 449              	.LVL18:
+ 450 0254 0246     		mov	r2, r0
+ 451 0256 0B46     		mov	r3, r1
+ 211:angle_motor.c ****                          angle_motor_DW.Delay_DSTATE_d) + (real_T)(rtb_Add1_m5 -
+ 452              		.loc 1 211 65 view .LVU161
+ 453 0258 2046     		mov	r0, r4
+ 454 025a 2946     		mov	r1, r5
+ 455 025c FFF7FEFF 		bl	__aeabi_dmul
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccMmezXn.s 			page 14
+
+
+ 456              	.LVL19:
+ 212:angle_motor.c ****       angle_motor_DW.UD_DSTATE_i) * angle_motor_B.DataLinkInput_o4;
+ 457              		.loc 1 212 40 view .LVU162
+ 458 0260 304C     		ldr	r4, .L109+84
+ 211:angle_motor.c ****                          angle_motor_DW.Delay_DSTATE_d) + (real_T)(rtb_Add1_m5 -
+ 459              		.loc 1 211 79 view .LVU163
+ 460 0262 D4E90223 		ldrd	r2, [r4, #8]
+ 461 0266 FFF7FEFF 		bl	__aeabi_dadd
+ 462              	.LVL20:
+ 463 026a 0646     		mov	r6, r0
+ 464 026c 0F46     		mov	r7, r1
+ 213:angle_motor.c **** 
+ 465              		.loc 1 213 21 view .LVU164
+ 466 026e D4ED087A 		vldr.32	s15, [r4, #32]
+ 212:angle_motor.c ****       angle_motor_DW.UD_DSTATE_i) * angle_motor_B.DataLinkInput_o4;
+ 467              		.loc 1 212 59 view .LVU165
+ 468 0272 78EE677A 		vsub.f32	s15, s16, s15
+ 469 0276 17EE900A 		vmov	r0, s15
+ 470 027a FFF7FEFF 		bl	__aeabi_f2d
+ 471              	.LVL21:
+ 472 027e 8046     		mov	r8, r0
+ 473 0280 8946     		mov	r9, r1
+ 213:angle_motor.c **** 
+ 474              		.loc 1 213 50 view .LVU166
+ 475 0282 DAF81C00 		ldr	r0, [r10, #28]	@ float
+ 476 0286 FFF7FEFF 		bl	__aeabi_f2d
+ 477              	.LVL22:
+ 478 028a 0246     		mov	r2, r0
+ 479 028c 0B46     		mov	r3, r1
+ 213:angle_motor.c **** 
+ 480              		.loc 1 213 35 view .LVU167
+ 481 028e 4046     		mov	r0, r8
+ 482 0290 4946     		mov	r1, r9
+ 483 0292 FFF7FEFF 		bl	__aeabi_dmul
+ 484              	.LVL23:
+ 485 0296 0246     		mov	r2, r0
+ 486 0298 0B46     		mov	r3, r1
+ 212:angle_motor.c ****       angle_motor_DW.UD_DSTATE_i) * angle_motor_B.DataLinkInput_o4;
+ 487              		.loc 1 212 57 view .LVU168
+ 488 029a 3046     		mov	r0, r6
+ 489 029c 3946     		mov	r1, r7
+ 490 029e FFF7FEFF 		bl	__aeabi_dadd
+ 491              	.LVL24:
+ 211:angle_motor.c ****                          angle_motor_DW.Delay_DSTATE_d) + (real_T)(rtb_Add1_m5 -
+ 492              		.loc 1 211 23 view .LVU169
+ 493 02a2 CAE90001 		strd	r0, [r10]
+ 221:angle_motor.c ****   }
+ 494              		.loc 1 221 5 is_stmt 1 view .LVU170
+ 221:angle_motor.c ****   }
+ 495              		.loc 1 221 32 is_stmt 0 view .LVU171
+ 496 02a6 84ED088A 		vstr.32	s16, [r4, #32]
+ 497 02aa 36E7     		b	.L5
+ 498              	.L83:
+ 185:angle_motor.c ****       /* Gain: '<S28>/Gain1' */
+ 499              		.loc 1 185 12 is_stmt 1 view .LVU172
+ 185:angle_motor.c ****       /* Gain: '<S28>/Gain1' */
+ 500              		.loc 1 185 15 is_stmt 0 view .LVU173
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccMmezXn.s 			page 15
+
+
+ 501 02ac 0EA3     		adr	r3, .L109+24
+ 502 02ae D3E90023 		ldrd	r2, [r3]
+ 503 02b2 3046     		mov	r0, r6
+ 504 02b4 3946     		mov	r1, r7
+ 505 02b6 FFF7FEFF 		bl	__aeabi_dcmplt
+ 506              	.LVL25:
+ 507 02ba 0028     		cmp	r0, #0
+ 508 02bc C4D0     		beq	.L8
+ 187:angle_motor.c ****     }
+ 509              		.loc 1 187 7 is_stmt 1 view .LVU174
+ 187:angle_motor.c ****     }
+ 510              		.loc 1 187 37 is_stmt 0 view .LVU175
+ 511 02be 194B     		ldr	r3, .L109+84
+ 512 02c0 09A1     		adr	r1, .L109+24
+ 513 02c2 D1E90001 		ldrd	r0, [r1]
+ 514 02c6 C3E90201 		strd	r0, [r3, #8]
+ 515 02ca BDE7     		b	.L8
+ 516              	.L110:
+ 517 02cc AFF30080 		.align	3
+ 518              	.L109:
+ 519 02d0 7B14AE47 		.word	1202590843
+ 520 02d4 E17A843F 		.word	1065646817
+ 521 02d8 D7A3703D 		.word	1030792151
+ 522 02dc 0AD7EF3F 		.word	1072682762
+ 523 02e0 00000000 		.word	0
+ 524 02e4 00709740 		.word	1083666432
+ 525 02e8 00000000 		.word	0
+ 526 02ec 007097C0 		.word	-1063817216
+ 527 02f0 00000000 		.word	.LANCHOR0
+ 528 02f4 00000000 		.word	HI226_Angle
+ 529 02f8 00000000 		.word	HI226_AngleV
+ 530 02fc 00000000 		.word	htim5
+ 531 0300 00000000 		.word	htim2
+ 532 0304 00000000 		.word	adc_rawvalue
+ 533 0308 00000000 		.word	DataLink_RevData
+ 534 030c 00000000 		.word	DataLink_UpFrameData
+ 535 0310 00000000 		.word	motor1_PwmData
+ 536 0314 00000000 		.word	motor2_PwmData
+ 537 0318 00080240 		.word	1073874944
+ 538 031c 00000000 		.word	ws2812_data
+ 539 0320 00000000 		.word	.LANCHOR1
+ 540 0324 00000000 		.word	.LANCHOR2
+ 541 0328 0000A040 		.word	1084227584
+ 542 032c 0000A0C0 		.word	-1063256064
+ 543 0330 0000C842 		.word	1120403456
+ 544 0334 00007042 		.word	1114636288
+ 545 0338 00401C47 		.word	1193033728
+ 546              	.LVL26:
+ 547              	.L59:
+ 229:angle_motor.c ****   } else if (angle_motor_B.Add < -2048.0) {
+ 548              		.loc 1 229 13 view .LVU176
+ 549 033c 0024     		movs	r4, #0
+ 550 033e D24D     		ldr	r5, .L111+32
+ 551              	.L10:
+ 552              	.LVL27:
+ 232:angle_motor.c ****   } else {
+ 233:angle_motor.c ****     rtb_Add = angle_motor_B.Add;
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccMmezXn.s 			page 16
+
+
+ 234:angle_motor.c ****   }
+ 235:angle_motor.c **** 
+ 236:angle_motor.c ****   rtb_Add = floor(rtb_Add);
+ 553              		.loc 1 236 3 is_stmt 1 view .LVU177
+ 554              		.loc 1 236 13 is_stmt 0 view .LVU178
+ 555 0340 45EC104B 		vmov	d0, r4, r5
+ 556 0344 FFF7FEFF 		bl	floor
+ 557              	.LVL28:
+ 558 0348 B0EE408A 		vmov.f32	s16, s0
+ 559 034c F0EE608A 		vmov.f32	s17, s1
+ 560              	.LVL29:
+ 237:angle_motor.c ****   if (rtIsNaN(rtb_Add)) {
+ 561              		.loc 1 237 3 is_stmt 1 view .LVU179
+ 562              		.loc 1 237 7 is_stmt 0 view .LVU180
+ 563 0350 FFF7FEFF 		bl	rtIsNaN
+ 564              	.LVL30:
+ 565              		.loc 1 237 6 view .LVU181
+ 566 0354 0028     		cmp	r0, #0
+ 567 0356 00F01181 		beq	.L97
+ 238:angle_motor.c ****     rtb_Add = 0.0;
+ 568              		.loc 1 238 13 view .LVU182
+ 569 035a 0024     		movs	r4, #0
+ 570 035c 0025     		movs	r5, #0
+ 571              	.LVL31:
+ 572              	.L12:
+ 239:angle_motor.c ****   } else {
+ 240:angle_motor.c ****     rtb_Add = fmod(rtb_Add, 65536.0);
+ 241:angle_motor.c ****   }
+ 242:angle_motor.c **** 
+ 243:angle_motor.c ****   /* Switch: '<S12>/Switch1' incorporates:
+ 244:angle_motor.c ****    *  Saturate: '<Root>/Saturation3'
+ 245:angle_motor.c ****    */
+ 246:angle_motor.c ****   angle_motor_B.Saturation1 = (int16_T)(rtb_Add < 0.0 ? (int32_T)(int16_T)
+ 573              		.loc 1 246 3 is_stmt 1 view .LVU183
+ 574              		.loc 1 246 31 is_stmt 0 view .LVU184
+ 575 035e 0022     		movs	r2, #0
+ 576 0360 0023     		movs	r3, #0
+ 577 0362 2046     		mov	r0, r4
+ 578 0364 2946     		mov	r1, r5
+ 579 0366 FFF7FEFF 		bl	__aeabi_dcmplt
+ 580              	.LVL32:
+ 581 036a 0028     		cmp	r0, #0
+ 582 036c 40F01181 		bne	.L98
+ 247:angle_motor.c ****     -(int16_T)(uint16_T)-rtb_Add : (int32_T)(int16_T)(uint16_T)rtb_Add);
+ 583              		.loc 1 247 54 discriminator 2 view .LVU185
+ 584 0370 2046     		mov	r0, r4
+ 585 0372 2946     		mov	r1, r5
+ 586 0374 FFF7FEFF 		bl	__aeabi_d2uiz
+ 587              	.LVL33:
+ 246:angle_motor.c ****     -(int16_T)(uint16_T)-rtb_Add : (int32_T)(int16_T)(uint16_T)rtb_Add);
+ 588              		.loc 1 246 31 discriminator 2 view .LVU186
+ 589 0378 00B2     		sxth	r0, r0
+ 590              	.L15:
+ 246:angle_motor.c ****     -(int16_T)(uint16_T)-rtb_Add : (int32_T)(int16_T)(uint16_T)rtb_Add);
+ 591              		.loc 1 246 29 discriminator 4 view .LVU187
+ 592 037a C44B     		ldr	r3, .L111+36
+ 593 037c A3F86C00 		strh	r0, [r3, #108]	@ movhi
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccMmezXn.s 			page 17
+
+
+ 248:angle_motor.c **** 
+ 249:angle_motor.c ****   /* RateLimiter: '<Root>/Rate Limiter1' */
+ 250:angle_motor.c ****   if (angle_motor_B.Saturation1 - angle_motor_DW.PrevY > 5) {
+ 594              		.loc 1 250 3 is_stmt 1 discriminator 4 view .LVU188
+ 595              		.loc 1 250 49 is_stmt 0 discriminator 4 view .LVU189
+ 596 0380 C34B     		ldr	r3, .L111+40
+ 597 0382 B3F9C030 		ldrsh	r3, [r3, #192]
+ 598              		.loc 1 250 33 discriminator 4 view .LVU190
+ 599 0386 C01A     		subs	r0, r0, r3
+ 600              		.loc 1 250 6 discriminator 4 view .LVU191
+ 601 0388 0528     		cmp	r0, #5
+ 602 038a 40F30B81 		ble	.L16
+ 251:angle_motor.c ****     /* Switch: '<S12>/Switch1' */
+ 252:angle_motor.c ****     angle_motor_B.Saturation1 = (int16_T)(angle_motor_DW.PrevY + 5);
+ 603              		.loc 1 252 5 is_stmt 1 view .LVU192
+ 604              		.loc 1 252 57 is_stmt 0 view .LVU193
+ 605 038e 9BB2     		uxth	r3, r3
+ 606              		.loc 1 252 64 view .LVU194
+ 607 0390 0533     		adds	r3, r3, #5
+ 608              		.loc 1 252 31 view .LVU195
+ 609 0392 BE4A     		ldr	r2, .L111+36
+ 610 0394 A2F86C30 		strh	r3, [r2, #108]	@ movhi
+ 611              	.L17:
+ 253:angle_motor.c ****   } else if (angle_motor_B.Saturation1 - angle_motor_DW.PrevY < -5) {
+ 254:angle_motor.c ****     /* Switch: '<S12>/Switch1' */
+ 255:angle_motor.c ****     angle_motor_B.Saturation1 = (int16_T)(angle_motor_DW.PrevY + -5);
+ 256:angle_motor.c ****   }
+ 257:angle_motor.c **** 
+ 258:angle_motor.c ****   angle_motor_DW.PrevY = angle_motor_B.Saturation1;
+ 612              		.loc 1 258 3 is_stmt 1 view .LVU196
+ 613              		.loc 1 258 39 is_stmt 0 view .LVU197
+ 614 0398 BC49     		ldr	r1, .L111+36
+ 615 039a B1F96C30 		ldrsh	r3, [r1, #108]
+ 616              		.loc 1 258 24 view .LVU198
+ 617 039e BC4A     		ldr	r2, .L111+40
+ 618 03a0 A2F8C030 		strh	r3, [r2, #192]	@ movhi
+ 259:angle_motor.c **** 
+ 260:angle_motor.c ****   /* End of RateLimiter: '<Root>/Rate Limiter1' */
+ 261:angle_motor.c **** 
+ 262:angle_motor.c ****   /* Sum: '<Root>/Add' incorporates:
+ 263:angle_motor.c ****    *  DataStoreWrite: '<Root>/Data Store Write6'
+ 264:angle_motor.c ****    */
+ 265:angle_motor.c ****   angle_motor_B.Add_m = angle_motor_B.DataLinkInput_o8 + (real32_T)
+ 619              		.loc 1 265 3 is_stmt 1 view .LVU199
+ 620              		.loc 1 265 38 is_stmt 0 view .LVU200
+ 621 03a4 D1ED0B8A 		vldr.32	s17, [r1, #44]
+ 622              		.loc 1 265 58 view .LVU201
+ 623 03a8 07EE903A 		vmov	s15, r3	@ int
+ 624 03ac F8EEE77A 		vcvt.f32.s32	s15, s15
+ 625              		.loc 1 265 56 view .LVU202
+ 626 03b0 78EEA78A 		vadd.f32	s17, s17, s15
+ 627              		.loc 1 265 23 view .LVU203
+ 628 03b4 C1ED0E8A 		vstr.32	s17, [r1, #56]
+ 266:angle_motor.c ****     angle_motor_B.Saturation1;
+ 267:angle_motor.c **** 
+ 268:angle_motor.c ****   /* RelationalOperator: '<S2>/Compare' incorporates:
+ 269:angle_motor.c ****    *  Constant: '<S2>/Constant'
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccMmezXn.s 			page 18
+
+
+ 270:angle_motor.c ****    *  UnitDelay: '<S5>/Output'
+ 271:angle_motor.c ****    */
+ 272:angle_motor.c ****   rtb_Compare_o = (angle_motor_DW.Output_DSTATE_j == 1);
+ 629              		.loc 1 272 3 is_stmt 1 view .LVU204
+ 630              		.loc 1 272 34 is_stmt 0 view .LVU205
+ 631 03b8 92F8C440 		ldrb	r4, [r2, #196]	@ zero_extendqisi2
+ 632              	.LVL34:
+ 273:angle_motor.c **** 
+ 274:angle_motor.c ****   /* Switch: '<S14>/FixPt Switch' incorporates:
+ 275:angle_motor.c ****    *  Constant: '<S13>/FixPt Constant'
+ 276:angle_motor.c ****    *  Constant: '<S14>/Constant'
+ 277:angle_motor.c ****    *  Sum: '<S13>/FixPt Sum1'
+ 278:angle_motor.c ****    *  UnitDelay: '<S4>/Output'
+ 279:angle_motor.c ****    */
+ 280:angle_motor.c ****   if ((uint8_T)(angle_motor_DW.Output_DSTATE_d + 1) > 1) {
+ 633              		.loc 1 280 3 is_stmt 1 view .LVU206
+ 634              		.loc 1 280 31 is_stmt 0 view .LVU207
+ 635 03bc 92F8C330 		ldrb	r3, [r2, #195]	@ zero_extendqisi2
+ 636              		.loc 1 280 7 view .LVU208
+ 637 03c0 0133     		adds	r3, r3, #1
+ 638 03c2 DBB2     		uxtb	r3, r3
+ 639              		.loc 1 280 6 view .LVU209
+ 640 03c4 012B     		cmp	r3, #1
+ 641 03c6 40F2F780 		bls	.L18
+ 281:angle_motor.c ****     angle_motor_DW.Output_DSTATE_d = 0U;
+ 642              		.loc 1 281 5 is_stmt 1 view .LVU210
+ 643              		.loc 1 281 36 is_stmt 0 view .LVU211
+ 644 03ca 1346     		mov	r3, r2
+ 645 03cc 0022     		movs	r2, #0
+ 646 03ce 83F8C320 		strb	r2, [r3, #195]
+ 647              	.L19:
+ 282:angle_motor.c ****   } else {
+ 283:angle_motor.c ****     angle_motor_DW.Output_DSTATE_d++;
+ 284:angle_motor.c ****   }
+ 285:angle_motor.c **** 
+ 286:angle_motor.c ****   /* End of Switch: '<S14>/FixPt Switch' */
+ 287:angle_motor.c **** 
+ 288:angle_motor.c ****   /* Switch: '<S16>/FixPt Switch' incorporates:
+ 289:angle_motor.c ****    *  Constant: '<S15>/FixPt Constant'
+ 290:angle_motor.c ****    *  Constant: '<S16>/Constant'
+ 291:angle_motor.c ****    *  Sum: '<S15>/FixPt Sum1'
+ 292:angle_motor.c ****    *  UnitDelay: '<S5>/Output'
+ 293:angle_motor.c ****    */
+ 294:angle_motor.c ****   if ((uint8_T)(angle_motor_DW.Output_DSTATE_j + 1) > 1) {
+ 648              		.loc 1 294 3 is_stmt 1 view .LVU212
+ 649              		.loc 1 294 7 is_stmt 0 view .LVU213
+ 650 03d2 631C     		adds	r3, r4, #1
+ 651 03d4 DBB2     		uxtb	r3, r3
+ 652              		.loc 1 294 6 view .LVU214
+ 653 03d6 012B     		cmp	r3, #1
+ 654 03d8 40F2F280 		bls	.L20
+ 295:angle_motor.c ****     angle_motor_DW.Output_DSTATE_j = 0U;
+ 655              		.loc 1 295 5 is_stmt 1 view .LVU215
+ 656              		.loc 1 295 36 is_stmt 0 view .LVU216
+ 657 03dc AC4B     		ldr	r3, .L111+40
+ 658 03de 0022     		movs	r2, #0
+ 659 03e0 83F8C420 		strb	r2, [r3, #196]
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccMmezXn.s 			page 19
+
+
+ 660              	.L21:
+ 296:angle_motor.c ****   } else {
+ 297:angle_motor.c ****     angle_motor_DW.Output_DSTATE_j++;
+ 298:angle_motor.c ****   }
+ 299:angle_motor.c **** 
+ 300:angle_motor.c ****   /* End of Switch: '<S16>/FixPt Switch' */
+ 301:angle_motor.c **** 
+ 302:angle_motor.c ****   /* Switch: '<S18>/FixPt Switch' incorporates:
+ 303:angle_motor.c ****    *  Constant: '<S17>/FixPt Constant'
+ 304:angle_motor.c ****    *  Constant: '<S18>/Constant'
+ 305:angle_motor.c ****    *  Sum: '<S17>/FixPt Sum1'
+ 306:angle_motor.c ****    *  UnitDelay: '<S6>/Output'
+ 307:angle_motor.c ****    */
+ 308:angle_motor.c ****   if ((uint8_T)(angle_motor_DW.Output_DSTATE + 1) > 1) {
+ 661              		.loc 1 308 3 is_stmt 1 view .LVU217
+ 662              		.loc 1 308 31 is_stmt 0 view .LVU218
+ 663 03e4 AA4B     		ldr	r3, .L111+40
+ 664 03e6 93F8C230 		ldrb	r3, [r3, #194]	@ zero_extendqisi2
+ 665              		.loc 1 308 7 view .LVU219
+ 666 03ea 0133     		adds	r3, r3, #1
+ 667 03ec DBB2     		uxtb	r3, r3
+ 668              		.loc 1 308 6 view .LVU220
+ 669 03ee 012B     		cmp	r3, #1
+ 670 03f0 40F2EA80 		bls	.L22
+ 309:angle_motor.c ****     angle_motor_DW.Output_DSTATE = 0U;
+ 671              		.loc 1 309 5 is_stmt 1 view .LVU221
+ 672              		.loc 1 309 34 is_stmt 0 view .LVU222
+ 673 03f4 A64B     		ldr	r3, .L111+40
+ 674 03f6 0022     		movs	r2, #0
+ 675 03f8 83F8C220 		strb	r2, [r3, #194]
+ 676              	.L23:
+ 310:angle_motor.c ****   } else {
+ 311:angle_motor.c ****     angle_motor_DW.Output_DSTATE++;
+ 312:angle_motor.c ****   }
+ 313:angle_motor.c **** 
+ 314:angle_motor.c ****   /* End of Switch: '<S18>/FixPt Switch' */
+ 315:angle_motor.c **** 
+ 316:angle_motor.c ****   /* Sum: '<S7>/Add4' incorporates:
+ 317:angle_motor.c ****    *  Delay: '<S7>/Delay One Step'
+ 318:angle_motor.c ****    *  Gain: '<S7>/Gain'
+ 319:angle_motor.c ****    *  Gain: '<S7>/Gain1'
+ 320:angle_motor.c ****    *  Gain: '<S7>/Gain2'
+ 321:angle_motor.c ****    *  Gain: '<S7>/Gain3'
+ 322:angle_motor.c ****    *  Gain: '<S7>/Gain4'
+ 323:angle_motor.c ****    *  Gain: '<S7>/Gain5'
+ 324:angle_motor.c ****    *  Gain: '<S7>/Gain6'
+ 325:angle_motor.c ****    *  Gain: '<S7>/Gain7'
+ 326:angle_motor.c ****    *  Gain: '<S7>/Gain8'
+ 327:angle_motor.c ****    *  Gain: '<S7>/Gain9'
+ 328:angle_motor.c ****    *  Sum: '<S7>/Add'
+ 329:angle_motor.c ****    *  Sum: '<S7>/Add1'
+ 330:angle_motor.c ****    *  Sum: '<S7>/Add2'
+ 331:angle_motor.c ****    *  Sum: '<S7>/Add3'
+ 332:angle_motor.c ****    */
+ 333:angle_motor.c ****   angle_motor_DW.DelayOneStep_DSTATE = ((((0.95F *
+ 677              		.loc 1 333 3 is_stmt 1 view .LVU223
+ 334:angle_motor.c ****     angle_motor_DW.DelayOneStep_DSTATE + 0.0499992371F * (real32_T)
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccMmezXn.s 			page 20
+
+
+ 678              		.loc 1 334 19 is_stmt 0 view .LVU224
+ 679 03fc A44D     		ldr	r5, .L111+40
+ 680 03fe 95ED068A 		vldr.32	s16, [r5, #24]
+ 333:angle_motor.c ****     angle_motor_DW.DelayOneStep_DSTATE + 0.0499992371F * (real32_T)
+ 681              		.loc 1 333 50 view .LVU225
+ 682 0402 DFEDA47A 		vldr.32	s15, .L111+44
+ 683 0406 28EE278A 		vmul.f32	s16, s16, s15
+ 335:angle_motor.c ****     angle_motor_B.current1_j[0]) * 0.95F + 0.0499992371F * (real32_T)
+ 684              		.loc 1 335 29 view .LVU226
+ 685 040a A04B     		ldr	r3, .L111+36
+ 686 040c B3F96220 		ldrsh	r2, [r3, #98]
+ 687 0410 06EE902A 		vmov	s13, r2	@ int
+ 334:angle_motor.c ****     angle_motor_DW.DelayOneStep_DSTATE + 0.0499992371F * (real32_T)
+ 688              		.loc 1 334 58 view .LVU227
+ 689 0414 F8EEE66A 		vcvt.f32.s32	s13, s13
+ 334:angle_motor.c ****     angle_motor_DW.DelayOneStep_DSTATE + 0.0499992371F * (real32_T)
+ 690              		.loc 1 334 56 view .LVU228
+ 691 0418 9FED9F7A 		vldr.32	s14, .L111+48
+ 692 041c 66EE876A 		vmul.f32	s13, s13, s14
+ 334:angle_motor.c ****     angle_motor_DW.DelayOneStep_DSTATE + 0.0499992371F * (real32_T)
+ 693              		.loc 1 334 40 view .LVU229
+ 694 0420 38EE268A 		vadd.f32	s16, s16, s13
+ 695              		.loc 1 335 34 view .LVU230
+ 696 0424 28EE278A 		vmul.f32	s16, s16, s15
+ 336:angle_motor.c ****     angle_motor_B.current1_j[1]) * 0.95F + 0.0499992371F * (real32_T)
+ 697              		.loc 1 336 29 view .LVU231
+ 698 0428 B3F96420 		ldrsh	r2, [r3, #100]
+ 699 042c 06EE902A 		vmov	s13, r2	@ int
+ 335:angle_motor.c ****     angle_motor_B.current1_j[0]) * 0.95F + 0.0499992371F * (real32_T)
+ 700              		.loc 1 335 60 view .LVU232
+ 701 0430 F8EEE66A 		vcvt.f32.s32	s13, s13
+ 335:angle_motor.c ****     angle_motor_B.current1_j[0]) * 0.95F + 0.0499992371F * (real32_T)
+ 702              		.loc 1 335 58 view .LVU233
+ 703 0434 66EE876A 		vmul.f32	s13, s13, s14
+ 335:angle_motor.c ****     angle_motor_B.current1_j[0]) * 0.95F + 0.0499992371F * (real32_T)
+ 704              		.loc 1 335 42 view .LVU234
+ 705 0438 38EE268A 		vadd.f32	s16, s16, s13
+ 706              		.loc 1 336 34 view .LVU235
+ 707 043c 28EE278A 		vmul.f32	s16, s16, s15
+ 337:angle_motor.c ****     angle_motor_B.current1_j[2]) * 0.95F + 0.0499992371F * (real32_T)
+ 708              		.loc 1 337 29 view .LVU236
+ 709 0440 B3F96620 		ldrsh	r2, [r3, #102]
+ 710 0444 06EE902A 		vmov	s13, r2	@ int
+ 336:angle_motor.c ****     angle_motor_B.current1_j[1]) * 0.95F + 0.0499992371F * (real32_T)
+ 711              		.loc 1 336 60 view .LVU237
+ 712 0448 F8EEE66A 		vcvt.f32.s32	s13, s13
+ 336:angle_motor.c ****     angle_motor_B.current1_j[1]) * 0.95F + 0.0499992371F * (real32_T)
+ 713              		.loc 1 336 58 view .LVU238
+ 714 044c 66EE876A 		vmul.f32	s13, s13, s14
+ 336:angle_motor.c ****     angle_motor_B.current1_j[1]) * 0.95F + 0.0499992371F * (real32_T)
+ 715              		.loc 1 336 42 view .LVU239
+ 716 0450 38EE268A 		vadd.f32	s16, s16, s13
+ 717              		.loc 1 337 34 view .LVU240
+ 718 0454 28EE278A 		vmul.f32	s16, s16, s15
+ 338:angle_motor.c ****     angle_motor_B.current1_j[3]) * 0.95F + 0.0499992371F * (real32_T)
+ 719              		.loc 1 338 29 view .LVU241
+ 720 0458 B3F96820 		ldrsh	r2, [r3, #104]
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccMmezXn.s 			page 21
+
+
+ 721 045c 06EE902A 		vmov	s13, r2	@ int
+ 337:angle_motor.c ****     angle_motor_B.current1_j[2]) * 0.95F + 0.0499992371F * (real32_T)
+ 722              		.loc 1 337 60 view .LVU242
+ 723 0460 F8EEE66A 		vcvt.f32.s32	s13, s13
+ 337:angle_motor.c ****     angle_motor_B.current1_j[2]) * 0.95F + 0.0499992371F * (real32_T)
+ 724              		.loc 1 337 58 view .LVU243
+ 725 0464 66EE876A 		vmul.f32	s13, s13, s14
+ 337:angle_motor.c ****     angle_motor_B.current1_j[2]) * 0.95F + 0.0499992371F * (real32_T)
+ 726              		.loc 1 337 42 view .LVU244
+ 727 0468 38EE268A 		vadd.f32	s16, s16, s13
+ 728              		.loc 1 338 34 view .LVU245
+ 729 046c 28EE278A 		vmul.f32	s16, s16, s15
+ 339:angle_motor.c ****     angle_motor_B.current1_j[4];
+ 730              		.loc 1 339 29 view .LVU246
+ 731 0470 B3F96A20 		ldrsh	r2, [r3, #106]
+ 732 0474 07EE902A 		vmov	s15, r2	@ int
+ 338:angle_motor.c ****     angle_motor_B.current1_j[3]) * 0.95F + 0.0499992371F * (real32_T)
+ 733              		.loc 1 338 60 view .LVU247
+ 734 0478 F8EEE77A 		vcvt.f32.s32	s15, s15
+ 338:angle_motor.c ****     angle_motor_B.current1_j[3]) * 0.95F + 0.0499992371F * (real32_T)
+ 735              		.loc 1 338 58 view .LVU248
+ 736 047c 67EE877A 		vmul.f32	s15, s15, s14
+ 338:angle_motor.c ****     angle_motor_B.current1_j[3]) * 0.95F + 0.0499992371F * (real32_T)
+ 737              		.loc 1 338 42 view .LVU249
+ 738 0480 38EE278A 		vadd.f32	s16, s16, s15
+ 333:angle_motor.c ****     angle_motor_DW.DelayOneStep_DSTATE + 0.0499992371F * (real32_T)
+ 739              		.loc 1 333 38 view .LVU250
+ 740 0484 85ED068A 		vstr.32	s16, [r5, #24]
+ 340:angle_motor.c **** 
+ 341:angle_motor.c ****   /* Sum: '<S8>/Add1' incorporates:
+ 342:angle_motor.c ****    *  Delay: '<S7>/Delay One Step'
+ 343:angle_motor.c ****    */
+ 344:angle_motor.c ****   rtb_Add1_m5 = angle_motor_B.Add_m - angle_motor_DW.DelayOneStep_DSTATE;
+ 741              		.loc 1 344 3 is_stmt 1 view .LVU251
+ 742              		.loc 1 344 15 is_stmt 0 view .LVU252
+ 743 0488 78EEC88A 		vsub.f32	s17, s17, s16
+ 744              	.LVL35:
+ 345:angle_motor.c **** 
+ 346:angle_motor.c ****   /* Gain: '<S20>/Gain1' incorporates:
+ 347:angle_motor.c ****    *  DataStoreWrite: '<Root>/Data Store Write4'
+ 348:angle_motor.c ****    *  Delay: '<S20>/Delay'
+ 349:angle_motor.c ****    *  Gain: '<S20>/Gain'
+ 350:angle_motor.c ****    *  ManualSwitch: '<S20>/Manual Switch1'
+ 351:angle_motor.c ****    *  Product: '<S20>/Product3'
+ 352:angle_motor.c ****    *  Sum: '<S20>/Add2'
+ 353:angle_motor.c ****    */
+ 354:angle_motor.c ****   angle_motor_DW.Delay_DSTATE = ((real32_T)(0.01 *
+ 745              		.loc 1 354 3 is_stmt 1 view .LVU253
+ 355:angle_motor.c ****     angle_motor_B.DataLinkInput_o6 * rtb_Add1_m5) + angle_motor_DW.Delay_DSTATE)
+ 746              		.loc 1 355 18 is_stmt 0 view .LVU254
+ 747 048c 586A     		ldr	r0, [r3, #36]	@ float
+ 748 048e FFF7FEFF 		bl	__aeabi_f2d
+ 749              	.LVL36:
+ 354:angle_motor.c ****     angle_motor_B.DataLinkInput_o6 * rtb_Add1_m5) + angle_motor_DW.Delay_DSTATE)
+ 750              		.loc 1 354 50 view .LVU255
+ 751 0492 75A3     		adr	r3, .L111
+ 752 0494 D3E90023 		ldrd	r2, [r3]
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccMmezXn.s 			page 22
+
+
+ 753 0498 FFF7FEFF 		bl	__aeabi_dmul
+ 754              	.LVL37:
+ 755 049c 8046     		mov	r8, r0
+ 756 049e 8946     		mov	r9, r1
+ 757              		.loc 1 355 36 view .LVU256
+ 758 04a0 18EE900A 		vmov	r0, s17
+ 759 04a4 FFF7FEFF 		bl	__aeabi_f2d
+ 760              	.LVL38:
+ 761 04a8 0646     		mov	r6, r0
+ 762 04aa 0F46     		mov	r7, r1
+ 763 04ac 0246     		mov	r2, r0
+ 764 04ae 0B46     		mov	r3, r1
+ 765 04b0 4046     		mov	r0, r8
+ 766 04b2 4946     		mov	r1, r9
+ 767 04b4 FFF7FEFF 		bl	__aeabi_dmul
+ 768              	.LVL39:
+ 354:angle_motor.c ****     angle_motor_B.DataLinkInput_o6 * rtb_Add1_m5) + angle_motor_DW.Delay_DSTATE)
+ 769              		.loc 1 354 34 view .LVU257
+ 770 04b8 FFF7FEFF 		bl	__aeabi_d2f
+ 771              	.LVL40:
+ 772 04bc FFF7FEFF 		bl	__aeabi_f2d
+ 773              	.LVL41:
+ 774              		.loc 1 355 51 view .LVU258
+ 775 04c0 D5E90023 		ldrd	r2, [r5]
+ 776 04c4 FFF7FEFF 		bl	__aeabi_dadd
+ 777              	.LVL42:
+ 356:angle_motor.c ****     * 0.998;
+ 778              		.loc 1 356 5 view .LVU259
+ 779 04c8 69A3     		adr	r3, .L111+8
+ 780 04ca D3E90023 		ldrd	r2, [r3]
+ 781 04ce FFF7FEFF 		bl	__aeabi_dmul
+ 782              	.LVL43:
+ 783 04d2 8046     		mov	r8, r0
+ 784 04d4 8946     		mov	r9, r1
+ 354:angle_motor.c ****     angle_motor_B.DataLinkInput_o6 * rtb_Add1_m5) + angle_motor_DW.Delay_DSTATE)
+ 785              		.loc 1 354 31 view .LVU260
+ 786 04d6 C5E90089 		strd	r8, [r5]
+ 357:angle_motor.c **** 
+ 358:angle_motor.c ****   /* Saturate: '<S20>/Saturation' */
+ 359:angle_motor.c ****   if (angle_motor_DW.Delay_DSTATE > 2000.0) {
+ 787              		.loc 1 359 3 is_stmt 1 view .LVU261
+ 788              		.loc 1 359 6 is_stmt 0 view .LVU262
+ 789 04da 0022     		movs	r2, #0
+ 790 04dc 6F4B     		ldr	r3, .L111+52
+ 791 04de FFF7FEFF 		bl	__aeabi_dcmpgt
+ 792              	.LVL44:
+ 793 04e2 0028     		cmp	r0, #0
+ 794 04e4 74D0     		beq	.L85
+ 360:angle_motor.c ****     /* Gain: '<S20>/Gain1' */
+ 361:angle_motor.c ****     angle_motor_DW.Delay_DSTATE = 2000.0;
+ 795              		.loc 1 361 5 is_stmt 1 view .LVU263
+ 796              		.loc 1 361 33 is_stmt 0 view .LVU264
+ 797 04e6 0020     		movs	r0, #0
+ 798 04e8 6C49     		ldr	r1, .L111+52
+ 799 04ea C5E90001 		strd	r0, [r5]
+ 800              	.L26:
+ 362:angle_motor.c ****   } else if (angle_motor_DW.Delay_DSTATE < -2000.0) {
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccMmezXn.s 			page 23
+
+
+ 363:angle_motor.c ****     /* Gain: '<S20>/Gain1' */
+ 364:angle_motor.c ****     angle_motor_DW.Delay_DSTATE = -2000.0;
+ 365:angle_motor.c ****   }
+ 366:angle_motor.c **** 
+ 367:angle_motor.c ****   /* End of Saturate: '<S20>/Saturation' */
+ 368:angle_motor.c **** 
+ 369:angle_motor.c ****   /* Sum: '<S8>/Add' incorporates:
+ 370:angle_motor.c ****    *  DataStoreWrite: '<Root>/Data Store Write1'
+ 371:angle_motor.c ****    *  DataStoreWrite: '<Root>/Data Store Write5'
+ 372:angle_motor.c ****    *  Delay: '<S20>/Delay'
+ 373:angle_motor.c ****    *  ManualSwitch: '<S19>/Manual Switch2'
+ 374:angle_motor.c ****    *  ManualSwitch: '<S21>/Manual Switch'
+ 375:angle_motor.c ****    *  Product: '<S19>/Product2'
+ 376:angle_motor.c ****    *  Product: '<S21>/Product'
+ 377:angle_motor.c ****    *  Sum: '<S22>/Diff'
+ 378:angle_motor.c ****    *  UnitDelay: '<S22>/UD'
+ 379:angle_motor.c ****    *
+ 380:angle_motor.c ****    * Block description for '<S22>/Diff':
+ 381:angle_motor.c ****    *
+ 382:angle_motor.c ****    *  Add in CPU
+ 383:angle_motor.c ****    *
+ 384:angle_motor.c ****    * Block description for '<S22>/UD':
+ 385:angle_motor.c ****    *
+ 386:angle_motor.c ****    *  Store in Global RAM
+ 387:angle_motor.c ****    */
+ 388:angle_motor.c ****   rtb_Add = ((real_T)angle_motor_B.DataLinkInput_o5 * rtb_Add1_m5 +
+ 801              		.loc 1 388 3 is_stmt 1 view .LVU265
+ 802              		.loc 1 388 35 is_stmt 0 view .LVU266
+ 803 04ee 674D     		ldr	r5, .L111+36
+ 804              		.loc 1 388 14 view .LVU267
+ 805 04f0 286A     		ldr	r0, [r5, #32]	@ float
+ 806 04f2 FFF7FEFF 		bl	__aeabi_f2d
+ 807              	.LVL45:
+ 808 04f6 0246     		mov	r2, r0
+ 809 04f8 0B46     		mov	r3, r1
+ 810              		.loc 1 388 53 view .LVU268
+ 811 04fa 3046     		mov	r0, r6
+ 812 04fc 3946     		mov	r1, r7
+ 813 04fe FFF7FEFF 		bl	__aeabi_dmul
+ 814              	.LVL46:
+ 389:angle_motor.c ****              angle_motor_DW.Delay_DSTATE) + (real_T)(rtb_Add1_m5 -
+ 815              		.loc 1 389 28 view .LVU269
+ 816 0502 DFF88C81 		ldr	r8, .L111+40
+ 388:angle_motor.c ****              angle_motor_DW.Delay_DSTATE) + (real_T)(rtb_Add1_m5 -
+ 817              		.loc 1 388 67 view .LVU270
+ 818 0506 D8E90023 		ldrd	r2, [r8]
+ 819 050a FFF7FEFF 		bl	__aeabi_dadd
+ 820              	.LVL47:
+ 821 050e 0646     		mov	r6, r0
+ 822 0510 0F46     		mov	r7, r1
+ 390:angle_motor.c ****     angle_motor_DW.UD_DSTATE) * angle_motor_B.DataLinkInput_o7;
+ 823              		.loc 1 390 19 view .LVU271
+ 824 0512 D8ED077A 		vldr.32	s15, [r8, #28]
+ 389:angle_motor.c ****              angle_motor_DW.Delay_DSTATE) + (real_T)(rtb_Add1_m5 -
+ 825              		.loc 1 389 45 view .LVU272
+ 826 0516 78EEE77A 		vsub.f32	s15, s17, s15
+ 827 051a 17EE900A 		vmov	r0, s15
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccMmezXn.s 			page 24
+
+
+ 828 051e FFF7FEFF 		bl	__aeabi_f2d
+ 829              	.LVL48:
+ 830 0522 8046     		mov	r8, r0
+ 831 0524 8946     		mov	r9, r1
+ 832              		.loc 1 390 46 view .LVU273
+ 833 0526 A86A     		ldr	r0, [r5, #40]	@ float
+ 834 0528 FFF7FEFF 		bl	__aeabi_f2d
+ 835              	.LVL49:
+ 836 052c 0246     		mov	r2, r0
+ 837 052e 0B46     		mov	r3, r1
+ 838              		.loc 1 390 31 view .LVU274
+ 839 0530 4046     		mov	r0, r8
+ 840 0532 4946     		mov	r1, r9
+ 841 0534 FFF7FEFF 		bl	__aeabi_dmul
+ 842              	.LVL50:
+ 843 0538 0246     		mov	r2, r0
+ 844 053a 0B46     		mov	r3, r1
+ 388:angle_motor.c ****              angle_motor_DW.Delay_DSTATE) + (real_T)(rtb_Add1_m5 -
+ 845              		.loc 1 388 11 view .LVU275
+ 846 053c 3046     		mov	r0, r6
+ 847 053e 3946     		mov	r1, r7
+ 848 0540 FFF7FEFF 		bl	__aeabi_dadd
+ 849              	.LVL51:
+ 850 0544 0646     		mov	r6, r0
+ 851 0546 0F46     		mov	r7, r1
+ 852              	.LVL52:
+ 391:angle_motor.c **** 
+ 392:angle_motor.c ****   /* Switch: '<S12>/Switch1' incorporates:
+ 393:angle_motor.c ****    *  Delay: '<S7>/Delay One Step'
+ 394:angle_motor.c ****    *  Switch: '<S12>/Switch3'
+ 395:angle_motor.c ****    */
+ 396:angle_motor.c ****   if (angle_motor_DW.DelayOneStep_DSTATE > -30.0F) {
+ 853              		.loc 1 396 3 is_stmt 1 view .LVU276
+ 854              		.loc 1 396 6 is_stmt 0 view .LVU277
+ 855 0548 FBEE0E7A 		vmov.f32	s15, #-3.0e+1
+ 856 054c B4EEE78A 		vcmpe.f32	s16, s15
+ 857 0550 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 858 0554 40F3C280 		ble	.L86
+ 397:angle_motor.c ****     /* Switch: '<S12>/Switch' */
+ 398:angle_motor.c ****     if (angle_motor_DW.DelayOneStep_DSTATE > 30.0F) {
+ 859              		.loc 1 398 5 is_stmt 1 view .LVU278
+ 860              		.loc 1 398 8 is_stmt 0 view .LVU279
+ 861 0558 F3EE0E7A 		vmov.f32	s15, #3.0e+1
+ 862 055c B4EEE78A 		vcmpe.f32	s16, s15
+ 863 0560 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 864 0564 63DD     		ble	.L87
+ 399:angle_motor.c ****       /* Switch: '<S12>/Switch2' */
+ 400:angle_motor.c ****       if (rtb_Add > 0.0) {
+ 865              		.loc 1 400 7 is_stmt 1 view .LVU280
+ 866              		.loc 1 400 10 is_stmt 0 view .LVU281
+ 867 0566 0022     		movs	r2, #0
+ 868 0568 0023     		movs	r3, #0
+ 869 056a FFF7FEFF 		bl	__aeabi_dcmpgt
+ 870              	.LVL53:
+ 871 056e 0028     		cmp	r0, #0
+ 872 0570 3ED1     		bne	.L99
+ 401:angle_motor.c ****         rtb_Add = floor(rtb_Add);
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccMmezXn.s 			page 25
+
+
+ 402:angle_motor.c ****         if (rtIsInf(rtb_Add)) {
+ 403:angle_motor.c ****           /* Switch: '<S12>/Switch1' */
+ 404:angle_motor.c ****           angle_motor_B.Saturation1 = 0;
+ 405:angle_motor.c ****         } else {
+ 406:angle_motor.c ****           /* Switch: '<S12>/Switch1' */
+ 407:angle_motor.c ****           angle_motor_B.Saturation1 = (int16_T)(int32_T)fmod(rtb_Add, 65536.0);
+ 408:angle_motor.c ****         }
+ 409:angle_motor.c ****       } else {
+ 410:angle_motor.c ****         /* Switch: '<S12>/Switch1' incorporates:
+ 411:angle_motor.c ****          *  Constant: '<S12>/Constant'
+ 412:angle_motor.c ****          */
+ 413:angle_motor.c ****         angle_motor_B.Saturation1 = 10;
+ 873              		.loc 1 413 9 is_stmt 1 view .LVU282
+ 874              		.loc 1 413 35 is_stmt 0 view .LVU283
+ 875 0572 464B     		ldr	r3, .L111+36
+ 876 0574 0A22     		movs	r2, #10
+ 877 0576 A3F86C20 		strh	r2, [r3, #108]	@ movhi
+ 878 057a B9E0     		b	.L35
+ 879              	.LVL54:
+ 880              	.L97:
+ 240:angle_motor.c ****   }
+ 881              		.loc 1 240 5 is_stmt 1 view .LVU284
+ 240:angle_motor.c ****   }
+ 882              		.loc 1 240 15 is_stmt 0 view .LVU285
+ 883 057c 9FED3E1B 		vldr.64	d1, .L111+16
+ 884 0580 B0EE480A 		vmov.f32	s0, s16
+ 885 0584 F0EE680A 		vmov.f32	s1, s17
+ 886 0588 FFF7FEFF 		bl	fmod
+ 887              	.LVL55:
+ 888 058c 55EC104B 		vmov	r4, r5, d0
+ 889              	.LVL56:
+ 240:angle_motor.c ****   }
+ 890              		.loc 1 240 15 view .LVU286
+ 891 0590 E5E6     		b	.L12
+ 892              	.L98:
+ 247:angle_motor.c **** 
+ 893              		.loc 1 247 25 discriminator 1 view .LVU287
+ 894 0592 2046     		mov	r0, r4
+ 895 0594 05F10041 		add	r1, r5, #-2147483648
+ 247:angle_motor.c **** 
+ 896              		.loc 1 247 15 discriminator 1 view .LVU288
+ 897 0598 FFF7FEFF 		bl	__aeabi_d2uiz
+ 898              	.LVL57:
+ 899 059c 80B2     		uxth	r0, r0
+ 246:angle_motor.c ****     -(int16_T)(uint16_T)-rtb_Add : (int32_T)(int16_T)(uint16_T)rtb_Add);
+ 900              		.loc 1 246 66 discriminator 1 view .LVU289
+ 901 059e 4042     		rsbs	r0, r0, #0
+ 246:angle_motor.c ****     -(int16_T)(uint16_T)-rtb_Add : (int32_T)(int16_T)(uint16_T)rtb_Add);
+ 902              		.loc 1 246 31 discriminator 1 view .LVU290
+ 903 05a0 00B2     		sxth	r0, r0
+ 904 05a2 EAE6     		b	.L15
+ 905              	.L16:
+ 253:angle_motor.c ****     /* Switch: '<S12>/Switch1' */
+ 906              		.loc 1 253 10 is_stmt 1 view .LVU291
+ 253:angle_motor.c ****     /* Switch: '<S12>/Switch1' */
+ 907              		.loc 1 253 13 is_stmt 0 view .LVU292
+ 908 05a4 10F1050F 		cmn	r0, #5
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccMmezXn.s 			page 26
+
+
+ 909 05a8 BFF6F6AE 		bge	.L17
+ 255:angle_motor.c ****   }
+ 910              		.loc 1 255 5 is_stmt 1 view .LVU293
+ 255:angle_motor.c ****   }
+ 911              		.loc 1 255 57 is_stmt 0 view .LVU294
+ 912 05ac 9BB2     		uxth	r3, r3
+ 255:angle_motor.c ****   }
+ 913              		.loc 1 255 64 view .LVU295
+ 914 05ae 053B     		subs	r3, r3, #5
+ 255:angle_motor.c ****   }
+ 915              		.loc 1 255 31 view .LVU296
+ 916 05b0 364A     		ldr	r2, .L111+36
+ 917 05b2 A2F86C30 		strh	r3, [r2, #108]	@ movhi
+ 918 05b6 EFE6     		b	.L17
+ 919              	.LVL58:
+ 920              	.L18:
+ 283:angle_motor.c ****   }
+ 921              		.loc 1 283 5 is_stmt 1 view .LVU297
+ 283:angle_motor.c ****   }
+ 922              		.loc 1 283 35 is_stmt 0 view .LVU298
+ 923 05b8 354A     		ldr	r2, .L111+40
+ 924 05ba 82F8C330 		strb	r3, [r2, #195]
+ 925 05be 08E7     		b	.L19
+ 926              	.L20:
+ 297:angle_motor.c ****   }
+ 927              		.loc 1 297 5 is_stmt 1 view .LVU299
+ 297:angle_motor.c ****   }
+ 928              		.loc 1 297 35 is_stmt 0 view .LVU300
+ 929 05c0 334A     		ldr	r2, .L111+40
+ 930 05c2 82F8C430 		strb	r3, [r2, #196]
+ 931 05c6 0DE7     		b	.L21
+ 932              	.L22:
+ 311:angle_motor.c ****   }
+ 933              		.loc 1 311 5 is_stmt 1 view .LVU301
+ 311:angle_motor.c ****   }
+ 934              		.loc 1 311 33 is_stmt 0 view .LVU302
+ 935 05c8 314A     		ldr	r2, .L111+40
+ 936 05ca 82F8C230 		strb	r3, [r2, #194]
+ 937 05ce 15E7     		b	.L23
+ 938              	.LVL59:
+ 939              	.L85:
+ 362:angle_motor.c ****     /* Gain: '<S20>/Gain1' */
+ 940              		.loc 1 362 10 is_stmt 1 view .LVU303
+ 362:angle_motor.c ****     /* Gain: '<S20>/Gain1' */
+ 941              		.loc 1 362 13 is_stmt 0 view .LVU304
+ 942 05d0 2BA3     		adr	r3, .L111+24
+ 943 05d2 D3E90023 		ldrd	r2, [r3]
+ 944 05d6 4046     		mov	r0, r8
+ 945 05d8 4946     		mov	r1, r9
+ 946 05da FFF7FEFF 		bl	__aeabi_dcmplt
+ 947              	.LVL60:
+ 948 05de 0028     		cmp	r0, #0
+ 949 05e0 85D0     		beq	.L26
+ 364:angle_motor.c ****   }
+ 950              		.loc 1 364 5 is_stmt 1 view .LVU305
+ 364:angle_motor.c ****   }
+ 951              		.loc 1 364 33 is_stmt 0 view .LVU306
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccMmezXn.s 			page 27
+
+
+ 952 05e2 2B4B     		ldr	r3, .L111+40
+ 953 05e4 26A1     		adr	r1, .L111+24
+ 954 05e6 D1E90001 		ldrd	r0, [r1]
+ 955 05ea C3E90001 		strd	r0, [r3]
+ 956 05ee 7EE7     		b	.L26
+ 957              	.LVL61:
+ 958              	.L99:
+ 401:angle_motor.c ****         if (rtIsInf(rtb_Add)) {
+ 959              		.loc 1 401 9 is_stmt 1 view .LVU307
+ 401:angle_motor.c ****         if (rtIsInf(rtb_Add)) {
+ 960              		.loc 1 401 19 is_stmt 0 view .LVU308
+ 961 05f0 47EC106B 		vmov	d0, r6, r7
+ 962 05f4 FFF7FEFF 		bl	floor
+ 963              	.LVL62:
+ 964 05f8 B0EE409A 		vmov.f32	s18, s0
+ 965 05fc F0EE609A 		vmov.f32	s19, s1
+ 966              	.LVL63:
+ 402:angle_motor.c ****           /* Switch: '<S12>/Switch1' */
+ 967              		.loc 1 402 9 is_stmt 1 view .LVU309
+ 402:angle_motor.c ****           /* Switch: '<S12>/Switch1' */
+ 968              		.loc 1 402 13 is_stmt 0 view .LVU310
+ 969 0600 FFF7FEFF 		bl	rtIsInf
+ 970              	.LVL64:
+ 402:angle_motor.c ****           /* Switch: '<S12>/Switch1' */
+ 971              		.loc 1 402 12 view .LVU311
+ 972 0604 18B1     		cbz	r0, .L34
+ 404:angle_motor.c ****         } else {
+ 973              		.loc 1 404 11 is_stmt 1 view .LVU312
+ 404:angle_motor.c ****         } else {
+ 974              		.loc 1 404 37 is_stmt 0 view .LVU313
+ 975 0606 0022     		movs	r2, #0
+ 976 0608 A5F86C20 		strh	r2, [r5, #108]	@ movhi
+ 977 060c 70E0     		b	.L35
+ 978              	.L34:
+ 407:angle_motor.c ****         }
+ 979              		.loc 1 407 11 is_stmt 1 view .LVU314
+ 407:angle_motor.c ****         }
+ 980              		.loc 1 407 57 is_stmt 0 view .LVU315
+ 981 060e 9FED1A1B 		vldr.64	d1, .L111+16
+ 982 0612 B0EE490A 		vmov.f32	s0, s18
+ 983 0616 F0EE690A 		vmov.f32	s1, s19
+ 984 061a FFF7FEFF 		bl	fmod
+ 985              	.LVL65:
+ 986 061e 51EC100B 		vmov	r0, r1, d0
+ 407:angle_motor.c ****         }
+ 987              		.loc 1 407 48 view .LVU316
+ 988 0622 FFF7FEFF 		bl	__aeabi_d2iz
+ 989              	.LVL66:
+ 407:angle_motor.c ****         }
+ 990              		.loc 1 407 37 view .LVU317
+ 991 0626 194B     		ldr	r3, .L111+36
+ 992 0628 A3F86C00 		strh	r0, [r3, #108]	@ movhi
+ 993 062c 60E0     		b	.L35
+ 994              	.LVL67:
+ 995              	.L87:
+ 414:angle_motor.c ****       }
+ 415:angle_motor.c **** 
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccMmezXn.s 			page 28
+
+
+ 416:angle_motor.c ****       /* End of Switch: '<S12>/Switch2' */
+ 417:angle_motor.c ****     } else {
+ 418:angle_motor.c ****       rtb_Add = floor(rtb_Add);
+ 996              		.loc 1 418 7 is_stmt 1 view .LVU318
+ 997              		.loc 1 418 17 is_stmt 0 view .LVU319
+ 998 062e 47EC106B 		vmov	d0, r6, r7
+ 999 0632 FFF7FEFF 		bl	floor
+ 1000              	.LVL68:
+ 1001 0636 B0EE409A 		vmov.f32	s18, s0
+ 1002 063a F0EE609A 		vmov.f32	s19, s1
+ 1003              	.LVL69:
+ 419:angle_motor.c ****       if (rtIsNaN(rtb_Add) || rtIsInf(rtb_Add)) {
+ 1004              		.loc 1 419 7 is_stmt 1 view .LVU320
+ 1005              		.loc 1 419 11 is_stmt 0 view .LVU321
+ 1006 063e FFF7FEFF 		bl	rtIsNaN
+ 1007              	.LVL70:
+ 1008              		.loc 1 419 10 view .LVU322
+ 1009 0642 68B3     		cbz	r0, .L100
+ 420:angle_motor.c ****         rtb_Add = 0.0;
+ 1010              		.loc 1 420 17 view .LVU323
+ 1011 0644 0026     		movs	r6, #0
+ 1012 0646 0027     		movs	r7, #0
+ 1013              	.LVL71:
+ 1014              	.L36:
+ 421:angle_motor.c ****       } else {
+ 422:angle_motor.c ****         rtb_Add = fmod(rtb_Add, 65536.0);
+ 423:angle_motor.c ****       }
+ 424:angle_motor.c **** 
+ 425:angle_motor.c ****       /* Switch: '<S12>/Switch1' */
+ 426:angle_motor.c ****       angle_motor_B.Saturation1 = (int16_T)(rtb_Add < 0.0 ? (int32_T)(int16_T)
+ 1015              		.loc 1 426 7 is_stmt 1 view .LVU324
+ 1016              		.loc 1 426 35 is_stmt 0 view .LVU325
+ 1017 0648 0022     		movs	r2, #0
+ 1018 064a 0023     		movs	r3, #0
+ 1019 064c 3046     		mov	r0, r6
+ 1020 064e 3946     		mov	r1, r7
+ 1021 0650 FFF7FEFF 		bl	__aeabi_dcmplt
+ 1022              	.LVL72:
+ 1023 0654 C8BB     		cbnz	r0, .L101
+ 427:angle_motor.c ****         -(int16_T)(uint16_T)-rtb_Add : (int32_T)(int16_T)(uint16_T)rtb_Add);
+ 1024              		.loc 1 427 58 discriminator 2 view .LVU326
+ 1025 0656 3046     		mov	r0, r6
+ 1026 0658 3946     		mov	r1, r7
+ 1027 065a FFF7FEFF 		bl	__aeabi_d2uiz
+ 1028              	.LVL73:
+ 426:angle_motor.c ****         -(int16_T)(uint16_T)-rtb_Add : (int32_T)(int16_T)(uint16_T)rtb_Add);
+ 1029              		.loc 1 426 35 discriminator 2 view .LVU327
+ 1030 065e 03B2     		sxth	r3, r0
+ 1031              	.L39:
+ 426:angle_motor.c ****         -(int16_T)(uint16_T)-rtb_Add : (int32_T)(int16_T)(uint16_T)rtb_Add);
+ 1032              		.loc 1 426 33 discriminator 4 view .LVU328
+ 1033 0660 0A4A     		ldr	r2, .L111+36
+ 1034 0662 A2F86C30 		strh	r3, [r2, #108]	@ movhi
+ 1035 0666 43E0     		b	.L35
+ 1036              	.L112:
+ 1037              		.align	3
+ 1038              	.L111:
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccMmezXn.s 			page 29
+
+
+ 1039 0668 7B14AE47 		.word	1202590843
+ 1040 066c E17A843F 		.word	1065646817
+ 1041 0670 560E2DB2 		.word	-1305670058
+ 1042 0674 9DEFEF3F 		.word	1072689053
+ 1043 0678 00000000 		.word	0
+ 1044 067c 0000F040 		.word	1089470464
+ 1045 0680 00000000 		.word	0
+ 1046 0684 00409FC0 		.word	-1063305216
+ 1047 0688 0000A040 		.word	1084227584
+ 1048 068c 00000000 		.word	.LANCHOR0
+ 1049 0690 00000000 		.word	.LANCHOR2
+ 1050 0694 3333733F 		.word	1064514355
+ 1051 0698 00CC4C3D 		.word	1028443136
+ 1052 069c 00409F40 		.word	1084178432
+ 1053              	.LVL74:
+ 1054              	.L100:
+ 419:angle_motor.c ****         rtb_Add = 0.0;
+ 1055              		.loc 1 419 31 discriminator 1 view .LVU329
+ 1056 06a0 B0EE490A 		vmov.f32	s0, s18
+ 1057 06a4 F0EE690A 		vmov.f32	s1, s19
+ 1058 06a8 FFF7FEFF 		bl	rtIsInf
+ 1059              	.LVL75:
+ 419:angle_motor.c ****         rtb_Add = 0.0;
+ 1060              		.loc 1 419 28 discriminator 1 view .LVU330
+ 1061 06ac 10B1     		cbz	r0, .L102
+ 420:angle_motor.c ****       } else {
+ 1062              		.loc 1 420 17 view .LVU331
+ 1063 06ae 0026     		movs	r6, #0
+ 1064 06b0 0027     		movs	r7, #0
+ 1065 06b2 C9E7     		b	.L36
+ 1066              	.L102:
+ 422:angle_motor.c ****       }
+ 1067              		.loc 1 422 9 is_stmt 1 view .LVU332
+ 422:angle_motor.c ****       }
+ 1068              		.loc 1 422 19 is_stmt 0 view .LVU333
+ 1069 06b4 9FED921B 		vldr.64	d1, .L113
+ 1070 06b8 B0EE490A 		vmov.f32	s0, s18
+ 1071 06bc F0EE690A 		vmov.f32	s1, s19
+ 1072 06c0 FFF7FEFF 		bl	fmod
+ 1073              	.LVL76:
+ 1074 06c4 57EC106B 		vmov	r6, r7, d0
+ 1075              	.LVL77:
+ 422:angle_motor.c ****       }
+ 1076              		.loc 1 422 19 view .LVU334
+ 1077 06c8 BEE7     		b	.L36
+ 1078              	.L101:
+ 1079              		.loc 1 427 29 discriminator 1 view .LVU335
+ 1080 06ca 3046     		mov	r0, r6
+ 1081 06cc 07F10041 		add	r1, r7, #-2147483648
+ 1082              		.loc 1 427 19 discriminator 1 view .LVU336
+ 1083 06d0 FFF7FEFF 		bl	__aeabi_d2uiz
+ 1084              	.LVL78:
+ 1085 06d4 83B2     		uxth	r3, r0
+ 426:angle_motor.c ****         -(int16_T)(uint16_T)-rtb_Add : (int32_T)(int16_T)(uint16_T)rtb_Add);
+ 1086              		.loc 1 426 70 discriminator 1 view .LVU337
+ 1087 06d6 5B42     		rsbs	r3, r3, #0
+ 426:angle_motor.c ****         -(int16_T)(uint16_T)-rtb_Add : (int32_T)(int16_T)(uint16_T)rtb_Add);
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccMmezXn.s 			page 30
+
+
+ 1088              		.loc 1 426 35 discriminator 1 view .LVU338
+ 1089 06d8 1BB2     		sxth	r3, r3
+ 1090 06da C1E7     		b	.L39
+ 1091              	.L86:
+ 428:angle_motor.c ****     }
+ 429:angle_motor.c **** 
+ 430:angle_motor.c ****     /* End of Switch: '<S12>/Switch' */
+ 431:angle_motor.c ****   } else if (rtb_Add > 0.0) {
+ 1092              		.loc 1 431 10 is_stmt 1 view .LVU339
+ 1093              		.loc 1 431 13 is_stmt 0 view .LVU340
+ 1094 06dc 0022     		movs	r2, #0
+ 1095 06de 0023     		movs	r3, #0
+ 1096 06e0 FFF7FEFF 		bl	__aeabi_dcmpgt
+ 1097              	.LVL79:
+ 1098 06e4 58B3     		cbz	r0, .L90
+ 432:angle_motor.c ****     /* Switch: '<S12>/Switch1' incorporates:
+ 433:angle_motor.c ****      *  Constant: '<S12>/Constant1'
+ 434:angle_motor.c ****      *  Switch: '<S12>/Switch3'
+ 435:angle_motor.c ****      */
+ 436:angle_motor.c ****     angle_motor_B.Saturation1 = -10;
+ 1099              		.loc 1 436 5 is_stmt 1 view .LVU341
+ 1100              		.loc 1 436 31 is_stmt 0 view .LVU342
+ 1101 06e6 904B     		ldr	r3, .L113+40
+ 1102 06e8 4FF6F672 		movw	r2, #65526
+ 1103 06ec A3F86C20 		strh	r2, [r3, #108]	@ movhi
+ 1104              	.LVL80:
+ 1105              	.L35:
+ 437:angle_motor.c ****   } else {
+ 438:angle_motor.c ****     /* Switch: '<S12>/Switch3' */
+ 439:angle_motor.c ****     rtb_Add = floor(rtb_Add);
+ 440:angle_motor.c ****     if (rtIsNaN(rtb_Add) || rtIsInf(rtb_Add)) {
+ 441:angle_motor.c ****       rtb_Add = 0.0;
+ 442:angle_motor.c ****     } else {
+ 443:angle_motor.c ****       rtb_Add = fmod(rtb_Add, 65536.0);
+ 444:angle_motor.c ****     }
+ 445:angle_motor.c **** 
+ 446:angle_motor.c ****     /* Switch: '<S12>/Switch1' incorporates:
+ 447:angle_motor.c ****      *  Switch: '<S12>/Switch3'
+ 448:angle_motor.c ****      */
+ 449:angle_motor.c ****     angle_motor_B.Saturation1 = (int16_T)(rtb_Add < 0.0 ? (int32_T)(int16_T)
+ 450:angle_motor.c ****       -(int16_T)(uint16_T)-rtb_Add : (int32_T)(int16_T)(uint16_T)rtb_Add);
+ 451:angle_motor.c ****   }
+ 452:angle_motor.c **** 
+ 453:angle_motor.c ****   /* End of Switch: '<S12>/Switch1' */
+ 454:angle_motor.c **** 
+ 455:angle_motor.c ****   /* Saturate: '<Root>/Saturation1' */
+ 456:angle_motor.c ****   if (angle_motor_B.Saturation1 > 4200) {
+ 1106              		.loc 1 456 3 is_stmt 1 view .LVU343
+ 1107              		.loc 1 456 20 is_stmt 0 view .LVU344
+ 1108 06f0 8D4B     		ldr	r3, .L113+40
+ 1109 06f2 B3F96C30 		ldrsh	r3, [r3, #108]
+ 1110              		.loc 1 456 6 view .LVU345
+ 1111 06f6 41F26802 		movw	r2, #4200
+ 1112 06fa 9342     		cmp	r3, r2
+ 1113 06fc 5ADD     		ble	.L46
+ 457:angle_motor.c ****     /* Switch: '<S12>/Switch1' incorporates:
+ 458:angle_motor.c ****      *  Saturate: '<Root>/Saturation1'
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccMmezXn.s 			page 31
+
+
+ 459:angle_motor.c ****      */
+ 460:angle_motor.c ****     angle_motor_B.Saturation1 = 4200;
+ 1114              		.loc 1 460 5 is_stmt 1 view .LVU346
+ 1115              		.loc 1 460 31 is_stmt 0 view .LVU347
+ 1116 06fe 8A4B     		ldr	r3, .L113+40
+ 1117 0700 A3F86C20 		strh	r2, [r3, #108]	@ movhi
+ 1118              	.L47:
+ 461:angle_motor.c ****   } else if (angle_motor_B.Saturation1 < -4200) {
+ 462:angle_motor.c ****     /* Switch: '<S12>/Switch1' incorporates:
+ 463:angle_motor.c ****      *  Saturate: '<Root>/Saturation1'
+ 464:angle_motor.c ****      */
+ 465:angle_motor.c ****     angle_motor_B.Saturation1 = -4200;
+ 466:angle_motor.c ****   }
+ 467:angle_motor.c **** 
+ 468:angle_motor.c ****   /* End of Saturate: '<Root>/Saturation1' */
+ 469:angle_motor.c **** 
+ 470:angle_motor.c ****   /* Outputs for Enabled SubSystem: '<Root>/speedPID_motor1' incorporates:
+ 471:angle_motor.c ****    *  EnablePort: '<S10>/Enable'
+ 472:angle_motor.c ****    */
+ 473:angle_motor.c ****   if (rtb_Compare_o) {
+ 1119              		.loc 1 473 3 is_stmt 1 view .LVU348
+ 1120              		.loc 1 473 6 is_stmt 0 view .LVU349
+ 1121 0704 012C     		cmp	r4, #1
+ 1122 0706 5ED0     		beq	.L103
+ 1123              	.LVL81:
+ 1124              	.L48:
+ 474:angle_motor.c ****     real32_T rtb_Add1_n;
+ 475:angle_motor.c **** 
+ 476:angle_motor.c ****     /* Sum: '<S10>/Add1' */
+ 477:angle_motor.c ****     rtb_Add1_n = angle_motor_B.DataLinkInput_o1 - angle_motor_B.Divide;
+ 478:angle_motor.c **** 
+ 479:angle_motor.c ****     /* Gain: '<S24>/Gain1' incorporates:
+ 480:angle_motor.c ****      *  Constant: '<S24>/Constant1'
+ 481:angle_motor.c ****      *  Delay: '<S24>/Delay'
+ 482:angle_motor.c ****      *  Gain: '<S24>/Gain'
+ 483:angle_motor.c ****      *  Product: '<S24>/Product3'
+ 484:angle_motor.c ****      *  Sum: '<S24>/Add2'
+ 485:angle_motor.c ****      */
+ 486:angle_motor.c ****     angle_motor_DW.Delay_DSTATE_c = ((real32_T)(-1.6 * rtb_Add1_n) +
+ 487:angle_motor.c ****       angle_motor_DW.Delay_DSTATE_c) * 0.99;
+ 488:angle_motor.c **** 
+ 489:angle_motor.c ****     /* Saturate: '<S24>/Saturation' */
+ 490:angle_motor.c ****     if (angle_motor_DW.Delay_DSTATE_c > 600.0) {
+ 491:angle_motor.c ****       /* Gain: '<S24>/Gain1' */
+ 492:angle_motor.c ****       angle_motor_DW.Delay_DSTATE_c = 600.0;
+ 493:angle_motor.c ****     } else if (angle_motor_DW.Delay_DSTATE_c < -600.0) {
+ 494:angle_motor.c ****       /* Gain: '<S24>/Gain1' */
+ 495:angle_motor.c ****       angle_motor_DW.Delay_DSTATE_c = -600.0;
+ 496:angle_motor.c ****     }
+ 497:angle_motor.c **** 
+ 498:angle_motor.c ****     /* End of Saturate: '<S24>/Saturation' */
+ 499:angle_motor.c **** 
+ 500:angle_motor.c ****     /* Sum: '<S10>/Add' incorporates:
+ 501:angle_motor.c ****      *  Constant: '<S23>/Constant2'
+ 502:angle_motor.c ****      *  Constant: '<S25>/Constant'
+ 503:angle_motor.c ****      *  Delay: '<S24>/Delay'
+ 504:angle_motor.c ****      *  Product: '<S23>/Product2'
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccMmezXn.s 			page 32
+
+
+ 505:angle_motor.c ****      *  Product: '<S25>/Product'
+ 506:angle_motor.c ****      *  Sum: '<S26>/Diff'
+ 507:angle_motor.c ****      *  UnitDelay: '<S26>/UD'
+ 508:angle_motor.c ****      *
+ 509:angle_motor.c ****      * Block description for '<S26>/Diff':
+ 510:angle_motor.c ****      *
+ 511:angle_motor.c ****      *  Add in CPU
+ 512:angle_motor.c ****      *
+ 513:angle_motor.c ****      * Block description for '<S26>/UD':
+ 514:angle_motor.c ****      *
+ 515:angle_motor.c ****      *  Store in Global RAM
+ 516:angle_motor.c ****      */
+ 517:angle_motor.c ****     angle_motor_B.Add_o = (-40.0 * rtb_Add1_n + angle_motor_DW.Delay_DSTATE_c) +
+ 518:angle_motor.c ****       (rtb_Add1_n - angle_motor_DW.UD_DSTATE_j) * -150.0;
+ 519:angle_motor.c **** 
+ 520:angle_motor.c ****     /* Update for UnitDelay: '<S26>/UD'
+ 521:angle_motor.c ****      *
+ 522:angle_motor.c ****      * Block description for '<S26>/UD':
+ 523:angle_motor.c ****      *
+ 524:angle_motor.c ****      *  Store in Global RAM
+ 525:angle_motor.c ****      */
+ 526:angle_motor.c ****     angle_motor_DW.UD_DSTATE_j = rtb_Add1_n;
+ 527:angle_motor.c ****   }
+ 528:angle_motor.c **** 
+ 529:angle_motor.c ****   /* End of Outputs for SubSystem: '<Root>/speedPID_motor1' */
+ 530:angle_motor.c **** 
+ 531:angle_motor.c ****   /* Saturate: '<Root>/Saturation2' */
+ 532:angle_motor.c ****   if (angle_motor_B.Add_o > 4200.0) {
+ 1125              		.loc 1 532 3 is_stmt 1 view .LVU350
+ 1126              		.loc 1 532 20 is_stmt 0 view .LVU351
+ 1127 0708 874B     		ldr	r3, .L113+40
+ 1128 070a D3E90245 		ldrd	r4, [r3, #8]
+ 1129              		.loc 1 532 6 view .LVU352
+ 1130 070e 7EA3     		adr	r3, .L113+8
+ 1131 0710 D3E90023 		ldrd	r2, [r3]
+ 1132 0714 2046     		mov	r0, r4
+ 1133 0716 2946     		mov	r1, r5
+ 1134 0718 FFF7FEFF 		bl	__aeabi_dcmpgt
+ 1135              	.LVL82:
+ 1136 071c 0028     		cmp	r0, #0
+ 1137 071e 40F0B380 		bne	.L65
+ 533:angle_motor.c ****     rtb_Add = 4200.0;
+ 534:angle_motor.c ****   } else if (angle_motor_B.Add_o < -4200.0) {
+ 1138              		.loc 1 534 10 is_stmt 1 view .LVU353
+ 1139              		.loc 1 534 13 is_stmt 0 view .LVU354
+ 1140 0722 7BA3     		adr	r3, .L113+16
+ 1141 0724 D3E90023 		ldrd	r2, [r3]
+ 1142 0728 2046     		mov	r0, r4
+ 1143 072a 2946     		mov	r1, r5
+ 1144 072c FFF7FEFF 		bl	__aeabi_dcmplt
+ 1145              	.LVL83:
+ 1146 0730 0028     		cmp	r0, #0
+ 1147 0732 00F0AC80 		beq	.L53
+ 535:angle_motor.c ****     rtb_Add = -4200.0;
+ 1148              		.loc 1 535 13 view .LVU355
+ 1149 0736 76A5     		adr	r5, .L113+16
+ 1150 0738 D5E90045 		ldrd	r4, [r5]
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccMmezXn.s 			page 33
+
+
+ 1151 073c A7E0     		b	.L53
+ 1152              	.LVL84:
+ 1153              	.L90:
+ 439:angle_motor.c ****     if (rtIsNaN(rtb_Add) || rtIsInf(rtb_Add)) {
+ 1154              		.loc 1 439 5 is_stmt 1 view .LVU356
+ 439:angle_motor.c ****     if (rtIsNaN(rtb_Add) || rtIsInf(rtb_Add)) {
+ 1155              		.loc 1 439 15 is_stmt 0 view .LVU357
+ 1156 073e 47EC106B 		vmov	d0, r6, r7
+ 1157 0742 FFF7FEFF 		bl	floor
+ 1158              	.LVL85:
+ 1159 0746 B0EE409A 		vmov.f32	s18, s0
+ 1160 074a F0EE609A 		vmov.f32	s19, s1
+ 1161              	.LVL86:
+ 440:angle_motor.c ****       rtb_Add = 0.0;
+ 1162              		.loc 1 440 5 is_stmt 1 view .LVU358
+ 440:angle_motor.c ****       rtb_Add = 0.0;
+ 1163              		.loc 1 440 9 is_stmt 0 view .LVU359
+ 1164 074e FFF7FEFF 		bl	rtIsNaN
+ 1165              	.LVL87:
+ 440:angle_motor.c ****       rtb_Add = 0.0;
+ 1166              		.loc 1 440 8 view .LVU360
+ 1167 0752 88B1     		cbz	r0, .L104
+ 441:angle_motor.c ****     } else {
+ 1168              		.loc 1 441 15 view .LVU361
+ 1169 0754 0026     		movs	r6, #0
+ 1170 0756 0027     		movs	r7, #0
+ 1171              	.LVL88:
+ 1172              	.L42:
+ 449:angle_motor.c ****       -(int16_T)(uint16_T)-rtb_Add : (int32_T)(int16_T)(uint16_T)rtb_Add);
+ 1173              		.loc 1 449 5 is_stmt 1 view .LVU362
+ 449:angle_motor.c ****       -(int16_T)(uint16_T)-rtb_Add : (int32_T)(int16_T)(uint16_T)rtb_Add);
+ 1174              		.loc 1 449 33 is_stmt 0 view .LVU363
+ 1175 0758 0022     		movs	r2, #0
+ 1176 075a 0023     		movs	r3, #0
+ 1177 075c 3046     		mov	r0, r6
+ 1178 075e 3946     		mov	r1, r7
+ 1179 0760 FFF7FEFF 		bl	__aeabi_dcmplt
+ 1180              	.LVL89:
+ 1181 0764 E8B9     		cbnz	r0, .L105
+ 450:angle_motor.c ****   }
+ 1182              		.loc 1 450 56 discriminator 2 view .LVU364
+ 1183 0766 3046     		mov	r0, r6
+ 1184 0768 3946     		mov	r1, r7
+ 1185 076a FFF7FEFF 		bl	__aeabi_d2uiz
+ 1186              	.LVL90:
+ 449:angle_motor.c ****       -(int16_T)(uint16_T)-rtb_Add : (int32_T)(int16_T)(uint16_T)rtb_Add);
+ 1187              		.loc 1 449 33 discriminator 2 view .LVU365
+ 1188 076e 03B2     		sxth	r3, r0
+ 1189              	.L45:
+ 449:angle_motor.c ****       -(int16_T)(uint16_T)-rtb_Add : (int32_T)(int16_T)(uint16_T)rtb_Add);
+ 1190              		.loc 1 449 31 discriminator 4 view .LVU366
+ 1191 0770 6D4A     		ldr	r2, .L113+40
+ 1192 0772 A2F86C30 		strh	r3, [r2, #108]	@ movhi
+ 1193 0776 BBE7     		b	.L35
+ 1194              	.LVL91:
+ 1195              	.L104:
+ 440:angle_motor.c ****       rtb_Add = 0.0;
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccMmezXn.s 			page 34
+
+
+ 1196              		.loc 1 440 29 discriminator 1 view .LVU367
+ 1197 0778 B0EE490A 		vmov.f32	s0, s18
+ 1198 077c F0EE690A 		vmov.f32	s1, s19
+ 1199 0780 FFF7FEFF 		bl	rtIsInf
+ 1200              	.LVL92:
+ 440:angle_motor.c ****       rtb_Add = 0.0;
+ 1201              		.loc 1 440 26 discriminator 1 view .LVU368
+ 1202 0784 10B1     		cbz	r0, .L106
+ 441:angle_motor.c ****     } else {
+ 1203              		.loc 1 441 15 view .LVU369
+ 1204 0786 0026     		movs	r6, #0
+ 1205 0788 0027     		movs	r7, #0
+ 1206 078a E5E7     		b	.L42
+ 1207              	.L106:
+ 443:angle_motor.c ****     }
+ 1208              		.loc 1 443 7 is_stmt 1 view .LVU370
+ 443:angle_motor.c ****     }
+ 1209              		.loc 1 443 17 is_stmt 0 view .LVU371
+ 1210 078c 9FED5C1B 		vldr.64	d1, .L113
+ 1211 0790 B0EE490A 		vmov.f32	s0, s18
+ 1212 0794 F0EE690A 		vmov.f32	s1, s19
+ 1213 0798 FFF7FEFF 		bl	fmod
+ 1214              	.LVL93:
+ 1215 079c 57EC106B 		vmov	r6, r7, d0
+ 1216              	.LVL94:
+ 443:angle_motor.c ****     }
+ 1217              		.loc 1 443 17 view .LVU372
+ 1218 07a0 DAE7     		b	.L42
+ 1219              	.L105:
+ 450:angle_motor.c ****   }
+ 1220              		.loc 1 450 27 discriminator 1 view .LVU373
+ 1221 07a2 3046     		mov	r0, r6
+ 1222 07a4 07F10041 		add	r1, r7, #-2147483648
+ 450:angle_motor.c ****   }
+ 1223              		.loc 1 450 17 discriminator 1 view .LVU374
+ 1224 07a8 FFF7FEFF 		bl	__aeabi_d2uiz
+ 1225              	.LVL95:
+ 1226 07ac 83B2     		uxth	r3, r0
+ 449:angle_motor.c ****       -(int16_T)(uint16_T)-rtb_Add : (int32_T)(int16_T)(uint16_T)rtb_Add);
+ 1227              		.loc 1 449 68 discriminator 1 view .LVU375
+ 1228 07ae 5B42     		rsbs	r3, r3, #0
+ 449:angle_motor.c ****       -(int16_T)(uint16_T)-rtb_Add : (int32_T)(int16_T)(uint16_T)rtb_Add);
+ 1229              		.loc 1 449 33 discriminator 1 view .LVU376
+ 1230 07b0 1BB2     		sxth	r3, r3
+ 1231 07b2 DDE7     		b	.L45
+ 1232              	.LVL96:
+ 1233              	.L46:
+ 461:angle_motor.c ****     /* Switch: '<S12>/Switch1' incorporates:
+ 1234              		.loc 1 461 10 is_stmt 1 view .LVU377
+ 461:angle_motor.c ****     /* Switch: '<S12>/Switch1' incorporates:
+ 1235              		.loc 1 461 13 is_stmt 0 view .LVU378
+ 1236 07b4 5D4A     		ldr	r2, .L113+44
+ 1237 07b6 9342     		cmp	r3, r2
+ 1238 07b8 A4DA     		bge	.L47
+ 465:angle_motor.c ****   }
+ 1239              		.loc 1 465 5 is_stmt 1 view .LVU379
+ 465:angle_motor.c ****   }
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccMmezXn.s 			page 35
+
+
+ 1240              		.loc 1 465 31 is_stmt 0 view .LVU380
+ 1241 07ba 5B4B     		ldr	r3, .L113+40
+ 1242 07bc 4EF69872 		movw	r2, #61336
+ 1243 07c0 A3F86C20 		strh	r2, [r3, #108]	@ movhi
+ 1244 07c4 9EE7     		b	.L47
+ 1245              	.L103:
+ 1246              	.LBB2:
+ 474:angle_motor.c **** 
+ 1247              		.loc 1 474 5 is_stmt 1 view .LVU381
+ 477:angle_motor.c **** 
+ 1248              		.loc 1 477 5 view .LVU382
+ 477:angle_motor.c **** 
+ 1249              		.loc 1 477 31 is_stmt 0 view .LVU383
+ 1250 07c6 584B     		ldr	r3, .L113+40
+ 1251 07c8 93ED048A 		vldr.32	s16, [r3, #16]
+ 477:angle_motor.c **** 
+ 1252              		.loc 1 477 64 view .LVU384
+ 1253 07cc D3ED0F7A 		vldr.32	s15, [r3, #60]
+ 477:angle_motor.c **** 
+ 1254              		.loc 1 477 16 view .LVU385
+ 1255 07d0 38EE678A 		vsub.f32	s16, s16, s15
+ 1256              	.LVL97:
+ 486:angle_motor.c ****       angle_motor_DW.Delay_DSTATE_c) * 0.99;
+ 1257              		.loc 1 486 5 is_stmt 1 view .LVU386
+ 486:angle_motor.c ****       angle_motor_DW.Delay_DSTATE_c) * 0.99;
+ 1258              		.loc 1 486 54 is_stmt 0 view .LVU387
+ 1259 07d4 18EE100A 		vmov	r0, s16
+ 1260 07d8 FFF7FEFF 		bl	__aeabi_f2d
+ 1261              	.LVL98:
+ 1262 07dc 0646     		mov	r6, r0
+ 1263 07de 0F46     		mov	r7, r1
+ 1264 07e0 4DA3     		adr	r3, .L113+24
+ 1265 07e2 D3E90023 		ldrd	r2, [r3]
+ 1266 07e6 FFF7FEFF 		bl	__aeabi_dmul
+ 1267              	.LVL99:
+ 486:angle_motor.c ****       angle_motor_DW.Delay_DSTATE_c) * 0.99;
+ 1268              		.loc 1 486 38 view .LVU388
+ 1269 07ea FFF7FEFF 		bl	__aeabi_d2f
+ 1270              	.LVL100:
+ 1271 07ee FFF7FEFF 		bl	__aeabi_f2d
+ 1272              	.LVL101:
+ 487:angle_motor.c **** 
+ 1273              		.loc 1 487 21 view .LVU389
+ 1274 07f2 DFF84481 		ldr	r8, .L113+56
+ 486:angle_motor.c ****       angle_motor_DW.Delay_DSTATE_c) * 0.99;
+ 1275              		.loc 1 486 68 view .LVU390
+ 1276 07f6 D8E90423 		ldrd	r2, [r8, #16]
+ 1277 07fa FFF7FEFF 		bl	__aeabi_dadd
+ 1278              	.LVL102:
+ 487:angle_motor.c **** 
+ 1279              		.loc 1 487 38 view .LVU391
+ 1280 07fe 48A3     		adr	r3, .L113+32
+ 1281 0800 D3E90023 		ldrd	r2, [r3]
+ 1282 0804 FFF7FEFF 		bl	__aeabi_dmul
+ 1283              	.LVL103:
+ 1284 0808 0446     		mov	r4, r0
+ 1285              	.LVL104:
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccMmezXn.s 			page 36
+
+
+ 487:angle_motor.c **** 
+ 1286              		.loc 1 487 38 view .LVU392
+ 1287 080a 0D46     		mov	r5, r1
+ 486:angle_motor.c ****       angle_motor_DW.Delay_DSTATE_c) * 0.99;
+ 1288              		.loc 1 486 35 view .LVU393
+ 1289 080c C8E90445 		strd	r4, [r8, #16]
+ 490:angle_motor.c ****       /* Gain: '<S24>/Gain1' */
+ 1290              		.loc 1 490 5 is_stmt 1 view .LVU394
+ 490:angle_motor.c ****       /* Gain: '<S24>/Gain1' */
+ 1291              		.loc 1 490 8 is_stmt 0 view .LVU395
+ 1292 0810 0022     		movs	r2, #0
+ 1293 0812 474B     		ldr	r3, .L113+48
+ 1294 0814 FFF7FEFF 		bl	__aeabi_dcmpgt
+ 1295              	.LVL105:
+ 1296 0818 40B3     		cbz	r0, .L92
+ 492:angle_motor.c ****     } else if (angle_motor_DW.Delay_DSTATE_c < -600.0) {
+ 1297              		.loc 1 492 7 is_stmt 1 view .LVU396
+ 492:angle_motor.c ****     } else if (angle_motor_DW.Delay_DSTATE_c < -600.0) {
+ 1298              		.loc 1 492 37 is_stmt 0 view .LVU397
+ 1299 081a 0020     		movs	r0, #0
+ 1300 081c 4449     		ldr	r1, .L113+48
+ 1301 081e C8E90401 		strd	r0, [r8, #16]
+ 1302              	.L51:
+ 517:angle_motor.c ****       (rtb_Add1_n - angle_motor_DW.UD_DSTATE_j) * -150.0;
+ 1303              		.loc 1 517 5 is_stmt 1 view .LVU398
+ 517:angle_motor.c ****       (rtb_Add1_n - angle_motor_DW.UD_DSTATE_j) * -150.0;
+ 1304              		.loc 1 517 34 is_stmt 0 view .LVU399
+ 1305 0822 0022     		movs	r2, #0
+ 1306 0824 434B     		ldr	r3, .L113+52
+ 1307 0826 3046     		mov	r0, r6
+ 1308 0828 3946     		mov	r1, r7
+ 1309 082a FFF7FEFF 		bl	__aeabi_dmul
+ 1310              	.LVL106:
+ 517:angle_motor.c ****       (rtb_Add1_n - angle_motor_DW.UD_DSTATE_j) * -150.0;
+ 1311              		.loc 1 517 63 view .LVU400
+ 1312 082e 424C     		ldr	r4, .L113+56
+ 517:angle_motor.c ****       (rtb_Add1_n - angle_motor_DW.UD_DSTATE_j) * -150.0;
+ 1313              		.loc 1 517 47 view .LVU401
+ 1314 0830 D4E90423 		ldrd	r2, [r4, #16]
+ 1315 0834 FFF7FEFF 		bl	__aeabi_dadd
+ 1316              	.LVL107:
+ 1317 0838 0646     		mov	r6, r0
+ 1318 083a 0F46     		mov	r7, r1
+ 518:angle_motor.c **** 
+ 1319              		.loc 1 518 35 view .LVU402
+ 1320 083c D4ED097A 		vldr.32	s15, [r4, #36]
+ 518:angle_motor.c **** 
+ 1321              		.loc 1 518 19 view .LVU403
+ 1322 0840 78EE677A 		vsub.f32	s15, s16, s15
+ 1323 0844 17EE900A 		vmov	r0, s15
+ 1324 0848 FFF7FEFF 		bl	__aeabi_f2d
+ 1325              	.LVL108:
+ 518:angle_motor.c **** 
+ 1326              		.loc 1 518 49 view .LVU404
+ 1327 084c 0022     		movs	r2, #0
+ 1328 084e 3B4B     		ldr	r3, .L113+60
+ 1329 0850 FFF7FEFF 		bl	__aeabi_dmul
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccMmezXn.s 			page 37
+
+
+ 1330              	.LVL109:
+ 1331 0854 0246     		mov	r2, r0
+ 1332 0856 0B46     		mov	r3, r1
+ 517:angle_motor.c ****       (rtb_Add1_n - angle_motor_DW.UD_DSTATE_j) * -150.0;
+ 1333              		.loc 1 517 80 view .LVU405
+ 1334 0858 3046     		mov	r0, r6
+ 1335 085a 3946     		mov	r1, r7
+ 1336 085c FFF7FEFF 		bl	__aeabi_dadd
+ 1337              	.LVL110:
+ 517:angle_motor.c ****       (rtb_Add1_n - angle_motor_DW.UD_DSTATE_j) * -150.0;
+ 1338              		.loc 1 517 25 view .LVU406
+ 1339 0860 314B     		ldr	r3, .L113+40
+ 1340 0862 C3E90201 		strd	r0, [r3, #8]
+ 526:angle_motor.c ****   }
+ 1341              		.loc 1 526 5 is_stmt 1 view .LVU407
+ 526:angle_motor.c ****   }
+ 1342              		.loc 1 526 32 is_stmt 0 view .LVU408
+ 1343 0866 84ED098A 		vstr.32	s16, [r4, #36]
+ 1344 086a 4DE7     		b	.L48
+ 1345              	.L92:
+ 493:angle_motor.c ****       /* Gain: '<S24>/Gain1' */
+ 1346              		.loc 1 493 12 is_stmt 1 view .LVU409
+ 493:angle_motor.c ****       /* Gain: '<S24>/Gain1' */
+ 1347              		.loc 1 493 15 is_stmt 0 view .LVU410
+ 1348 086c 0022     		movs	r2, #0
+ 1349 086e 344B     		ldr	r3, .L113+64
+ 1350 0870 2046     		mov	r0, r4
+ 1351 0872 2946     		mov	r1, r5
+ 1352 0874 FFF7FEFF 		bl	__aeabi_dcmplt
+ 1353              	.LVL111:
+ 1354 0878 0028     		cmp	r0, #0
+ 1355 087a D2D0     		beq	.L51
+ 495:angle_motor.c ****     }
+ 1356              		.loc 1 495 7 is_stmt 1 view .LVU411
+ 495:angle_motor.c ****     }
+ 1357              		.loc 1 495 37 is_stmt 0 view .LVU412
+ 1358 087c 2E4B     		ldr	r3, .L113+56
+ 1359 087e 0020     		movs	r0, #0
+ 1360 0880 2F49     		ldr	r1, .L113+64
+ 1361 0882 C3E90401 		strd	r0, [r3, #16]
+ 1362 0886 CCE7     		b	.L51
+ 1363              	.LVL112:
+ 1364              	.L65:
+ 495:angle_motor.c ****     }
+ 1365              		.loc 1 495 37 view .LVU413
+ 1366              	.LBE2:
+ 533:angle_motor.c ****   } else if (angle_motor_B.Add_o < -4200.0) {
+ 1367              		.loc 1 533 13 view .LVU414
+ 1368 0888 1FA5     		adr	r5, .L113+8
+ 1369 088a D5E90045 		ldrd	r4, [r5]
+ 1370              	.L53:
+ 1371              	.LVL113:
+ 536:angle_motor.c ****   } else {
+ 537:angle_motor.c ****     rtb_Add = angle_motor_B.Add_o;
+ 538:angle_motor.c ****   }
+ 539:angle_motor.c **** 
+ 540:angle_motor.c ****   rtb_Add = floor(rtb_Add);
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccMmezXn.s 			page 38
+
+
+ 1372              		.loc 1 540 3 is_stmt 1 view .LVU415
+ 1373              		.loc 1 540 13 is_stmt 0 view .LVU416
+ 1374 088e 45EC104B 		vmov	d0, r4, r5
+ 1375 0892 FFF7FEFF 		bl	floor
+ 1376              	.LVL114:
+ 1377 0896 B0EE409A 		vmov.f32	s18, s0
+ 1378 089a F0EE609A 		vmov.f32	s19, s1
+ 1379              	.LVL115:
+ 541:angle_motor.c ****   if (rtIsNaN(rtb_Add)) {
+ 1380              		.loc 1 541 3 is_stmt 1 view .LVU417
+ 1381              		.loc 1 541 7 is_stmt 0 view .LVU418
+ 1382 089e FFF7FEFF 		bl	rtIsNaN
+ 1383              	.LVL116:
+ 1384              		.loc 1 541 6 view .LVU419
+ 1385 08a2 B8B1     		cbz	r0, .L107
+ 542:angle_motor.c ****     rtb_Add = 0.0;
+ 1386              		.loc 1 542 13 view .LVU420
+ 1387 08a4 0024     		movs	r4, #0
+ 1388 08a6 0025     		movs	r5, #0
+ 1389              	.LVL117:
+ 1390              	.L55:
+ 543:angle_motor.c ****   } else {
+ 544:angle_motor.c ****     rtb_Add = fmod(rtb_Add, 65536.0);
+ 545:angle_motor.c ****   }
+ 546:angle_motor.c **** 
+ 547:angle_motor.c ****   /* Saturate: '<Root>/Saturation2' */
+ 548:angle_motor.c ****   angle_motor_B.Saturation2 = (int16_T)(rtb_Add < 0.0 ? (int32_T)(int16_T)
+ 1391              		.loc 1 548 3 is_stmt 1 view .LVU421
+ 1392              		.loc 1 548 31 is_stmt 0 view .LVU422
+ 1393 08a8 0022     		movs	r2, #0
+ 1394 08aa 0023     		movs	r3, #0
+ 1395 08ac 2046     		mov	r0, r4
+ 1396 08ae 2946     		mov	r1, r5
+ 1397 08b0 FFF7FEFF 		bl	__aeabi_dcmplt
+ 1398              	.LVL118:
+ 1399 08b4 C8B9     		cbnz	r0, .L108
+ 549:angle_motor.c ****     -(int16_T)(uint16_T)-rtb_Add : (int32_T)(int16_T)(uint16_T)rtb_Add);
+ 1400              		.loc 1 549 54 discriminator 2 view .LVU423
+ 1401 08b6 2046     		mov	r0, r4
+ 1402 08b8 2946     		mov	r1, r5
+ 1403 08ba FFF7FEFF 		bl	__aeabi_d2uiz
+ 1404              	.LVL119:
+ 548:angle_motor.c ****     -(int16_T)(uint16_T)-rtb_Add : (int32_T)(int16_T)(uint16_T)rtb_Add);
+ 1405              		.loc 1 548 31 discriminator 2 view .LVU424
+ 1406 08be 00B2     		sxth	r0, r0
+ 1407              	.L58:
+ 548:angle_motor.c ****     -(int16_T)(uint16_T)-rtb_Add : (int32_T)(int16_T)(uint16_T)rtb_Add);
+ 1408              		.loc 1 548 29 discriminator 4 view .LVU425
+ 1409 08c0 194B     		ldr	r3, .L113+40
+ 1410 08c2 A3F86E00 		strh	r0, [r3, #110]	@ movhi
+ 550:angle_motor.c **** 
+ 551:angle_motor.c ****   /* Update for UnitDelay: '<S22>/UD'
+ 552:angle_motor.c ****    *
+ 553:angle_motor.c ****    * Block description for '<S22>/UD':
+ 554:angle_motor.c ****    *
+ 555:angle_motor.c ****    *  Store in Global RAM
+ 556:angle_motor.c ****    */
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccMmezXn.s 			page 39
+
+
+ 557:angle_motor.c ****   angle_motor_DW.UD_DSTATE = rtb_Add1_m5;
+ 1411              		.loc 1 557 3 is_stmt 1 discriminator 4 view .LVU426
+ 1412              		.loc 1 557 28 is_stmt 0 discriminator 4 view .LVU427
+ 1413 08c6 1C4B     		ldr	r3, .L113+56
+ 1414 08c8 C3ED078A 		vstr.32	s17, [r3, #28]
+ 558:angle_motor.c **** }
+ 1415              		.loc 1 558 1 discriminator 4 view .LVU428
+ 1416 08cc BDEC048B 		vldm	sp!, {d8-d9}
+ 1417              	.LCFI2:
+ 1418              		.cfi_remember_state
+ 1419              		.cfi_restore 82
+ 1420              		.cfi_restore 83
+ 1421              		.cfi_restore 80
+ 1422              		.cfi_restore 81
+ 1423              		.cfi_def_cfa_offset 32
+ 1424 08d0 BDE8F087 		pop	{r4, r5, r6, r7, r8, r9, r10, pc}
+ 1425              	.LVL120:
+ 1426              	.L107:
+ 1427              	.LCFI3:
+ 1428              		.cfi_restore_state
+ 544:angle_motor.c ****   }
+ 1429              		.loc 1 544 5 is_stmt 1 view .LVU429
+ 544:angle_motor.c ****   }
+ 1430              		.loc 1 544 15 is_stmt 0 view .LVU430
+ 1431 08d4 9FED0A1B 		vldr.64	d1, .L113
+ 1432 08d8 B0EE490A 		vmov.f32	s0, s18
+ 1433 08dc F0EE690A 		vmov.f32	s1, s19
+ 1434 08e0 FFF7FEFF 		bl	fmod
+ 1435              	.LVL121:
+ 1436 08e4 55EC104B 		vmov	r4, r5, d0
+ 1437              	.LVL122:
+ 544:angle_motor.c ****   }
+ 1438              		.loc 1 544 15 view .LVU431
+ 1439 08e8 DEE7     		b	.L55
+ 1440              	.L108:
+ 549:angle_motor.c **** 
+ 1441              		.loc 1 549 25 discriminator 1 view .LVU432
+ 1442 08ea 2046     		mov	r0, r4
+ 1443 08ec 05F10041 		add	r1, r5, #-2147483648
+ 549:angle_motor.c **** 
+ 1444              		.loc 1 549 15 discriminator 1 view .LVU433
+ 1445 08f0 FFF7FEFF 		bl	__aeabi_d2uiz
+ 1446              	.LVL123:
+ 1447 08f4 80B2     		uxth	r0, r0
+ 548:angle_motor.c ****     -(int16_T)(uint16_T)-rtb_Add : (int32_T)(int16_T)(uint16_T)rtb_Add);
+ 1448              		.loc 1 548 66 discriminator 1 view .LVU434
+ 1449 08f6 4042     		rsbs	r0, r0, #0
+ 548:angle_motor.c ****     -(int16_T)(uint16_T)-rtb_Add : (int32_T)(int16_T)(uint16_T)rtb_Add);
+ 1450              		.loc 1 548 31 discriminator 1 view .LVU435
+ 1451 08f8 00B2     		sxth	r0, r0
+ 1452 08fa E1E7     		b	.L58
+ 1453              	.L114:
+ 1454 08fc AFF30080 		.align	3
+ 1455              	.L113:
+ 1456 0900 00000000 		.word	0
+ 1457 0904 0000F040 		.word	1089470464
+ 1458 0908 00000000 		.word	0
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccMmezXn.s 			page 40
+
+
+ 1459 090c 0068B040 		.word	1085302784
+ 1460 0910 00000000 		.word	0
+ 1461 0914 0068B0C0 		.word	-1062180864
+ 1462 0918 9A999999 		.word	-1717986918
+ 1463 091c 9999F9BF 		.word	-1074161255
+ 1464 0920 AE47E17A 		.word	2061584302
+ 1465 0924 14AEEF3F 		.word	1072672276
+ 1466 0928 00000000 		.word	.LANCHOR0
+ 1467 092c 98EFFFFF 		.word	-4200
+ 1468 0930 00C08240 		.word	1082310656
+ 1469 0934 000044C0 		.word	-1069285376
+ 1470 0938 00000000 		.word	.LANCHOR2
+ 1471 093c 00C062C0 		.word	-1067270144
+ 1472 0940 00C082C0 		.word	-1065172992
+ 1473              		.cfi_endproc
+ 1474              	.LFE238:
+ 1476              		.section	.text.angle_motor_initialize,"ax",%progbits
+ 1477              		.align	1
+ 1478              		.global	angle_motor_initialize
+ 1479              		.syntax unified
+ 1480              		.thumb
+ 1481              		.thumb_func
+ 1483              	angle_motor_initialize:
+ 1484              	.LFB239:
+ 559:angle_motor.c **** 
+ 560:angle_motor.c **** /* Model initialize function */
+ 561:angle_motor.c **** void angle_motor_initialize(void)
+ 562:angle_motor.c **** {
+ 1485              		.loc 1 562 1 is_stmt 1 view -0
+ 1486              		.cfi_startproc
+ 1487              		@ args = 0, pretend = 0, frame = 0
+ 1488              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1489 0000 08B5     		push	{r3, lr}
+ 1490              	.LCFI4:
+ 1491              		.cfi_def_cfa_offset 8
+ 1492              		.cfi_offset 3, -8
+ 1493              		.cfi_offset 14, -4
+ 563:angle_motor.c ****   /* Registration code */
+ 564:angle_motor.c **** 
+ 565:angle_motor.c ****   /* initialize non-finites */
+ 566:angle_motor.c ****   rt_InitInfAndNaN(sizeof(real_T));
+ 1494              		.loc 1 566 3 view .LVU437
+ 1495 0002 0820     		movs	r0, #8
+ 1496 0004 FFF7FEFF 		bl	rt_InitInfAndNaN
+ 1497              	.LVL124:
+ 567:angle_motor.c **** }
+ 1498              		.loc 1 567 1 is_stmt 0 view .LVU438
+ 1499 0008 08BD     		pop	{r3, pc}
+ 1500              		.cfi_endproc
+ 1501              	.LFE239:
+ 1503              		.section	.text.angle_motor_terminate,"ax",%progbits
+ 1504              		.align	1
+ 1505              		.global	angle_motor_terminate
+ 1506              		.syntax unified
+ 1507              		.thumb
+ 1508              		.thumb_func
+ 1510              	angle_motor_terminate:
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccMmezXn.s 			page 41
+
+
+ 1511              	.LFB240:
+ 568:angle_motor.c **** 
+ 569:angle_motor.c **** /* Model terminate function */
+ 570:angle_motor.c **** void angle_motor_terminate(void)
+ 571:angle_motor.c **** {
+ 1512              		.loc 1 571 1 is_stmt 1 view -0
+ 1513              		.cfi_startproc
+ 1514              		@ args = 0, pretend = 0, frame = 0
+ 1515              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1516              		@ link register save eliminated.
+ 572:angle_motor.c ****   /* (no terminate code required) */
+ 573:angle_motor.c **** }
+ 1517              		.loc 1 573 1 view .LVU440
+ 1518 0000 7047     		bx	lr
+ 1519              		.cfi_endproc
+ 1520              	.LFE240:
+ 1522              		.global	angle_motor_M
+ 1523              		.global	angle_motor_DW
+ 1524              		.global	angle_motor_B
+ 1525              		.global	angle_motor_U8GND
+ 1526              		.section	.bss.angle_motor_B,"aw",%nobits
+ 1527              		.align	3
+ 1528              		.set	.LANCHOR0,. + 0
+ 1531              	angle_motor_B:
+ 1532 0000 00000000 		.space	112
+ 1532      00000000 
+ 1532      00000000 
+ 1532      00000000 
+ 1532      00000000 
+ 1533              		.section	.bss.angle_motor_DW,"aw",%nobits
+ 1534              		.align	3
+ 1535              		.set	.LANCHOR2,. + 0
+ 1538              	angle_motor_DW:
+ 1539 0000 00000000 		.space	200
+ 1539      00000000 
+ 1539      00000000 
+ 1539      00000000 
+ 1539      00000000 
+ 1540              		.section	.bss.angle_motor_M_,"aw",%nobits
+ 1541              		.align	2
+ 1544              	angle_motor_M_:
+ 1545 0000 00000000 		.space	4
+ 1546              		.section	.rodata.angle_motor_M,"a"
+ 1547              		.align	2
+ 1550              	angle_motor_M:
+ 1551 0000 00000000 		.word	angle_motor_M_
+ 1552              		.section	.rodata.angle_motor_U8GND,"a"
+ 1553              		.set	.LANCHOR1,. + 0
+ 1556              	angle_motor_U8GND:
+ 1557 0000 00       		.space	1
+ 1558              		.text
+ 1559              	.Letext0:
+ 1560              		.file 2 "c:\\program files (x86)\\arm gnu toolchain arm-none-eabi\\11.2 2022.02\\arm-none-eabi\\in
+ 1561              		.file 3 "c:\\program files (x86)\\arm gnu toolchain arm-none-eabi\\11.2 2022.02\\arm-none-eabi\\in
+ 1562              		.file 4 "../STM32CUBEMX/Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f405xx.h"
+ 1563              		.file 5 "c:\\program files (x86)\\arm gnu toolchain arm-none-eabi\\11.2 2022.02\\lib\\gcc\\arm-non
+ 1564              		.file 6 "../STM32CUBEMX/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h"
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccMmezXn.s 			page 42
+
+
+ 1565              		.file 7 "../STM32CUBEMX/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h"
+ 1566              		.file 8 "../STM32CUBEMX/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h"
+ 1567              		.file 9 "../STM32CUBEMX/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h"
+ 1568              		.file 10 "../STM32CUBEMX/Core/Inc/ifr-scope_device.h"
+ 1569              		.file 11 "../STM32CUBEMX/Core/Inc/tim.h"
+ 1570              		.file 12 "rtwtypes.h"
+ 1571              		.file 13 "angle_motor_types.h"
+ 1572              		.file 14 "angle_motor.h"
+ 1573              		.file 15 "rt_nonfinite.h"
+ 1574              		.file 16 "c:\\program files (x86)\\arm gnu toolchain arm-none-eabi\\11.2 2022.02\\arm-none-eabi\\i
+ 1575              		.file 17 "c:\\program files (x86)\\arm gnu toolchain arm-none-eabi\\11.2 2022.02\\arm-none-eabi\\i
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccMmezXn.s 			page 43
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 angle_motor.c
+C:\Users\ysl\AppData\Local\Temp\ccMmezXn.s:28     .text.angle_motor_step:00000000 $t
+C:\Users\ysl\AppData\Local\Temp\ccMmezXn.s:34     .text.angle_motor_step:00000000 angle_motor_step
+C:\Users\ysl\AppData\Local\Temp\ccMmezXn.s:519    .text.angle_motor_step:000002d0 $d
+C:\Users\ysl\AppData\Local\Temp\ccMmezXn.s:549    .text.angle_motor_step:0000033c $t
+C:\Users\ysl\AppData\Local\Temp\ccMmezXn.s:1039   .text.angle_motor_step:00000668 $d
+C:\Users\ysl\AppData\Local\Temp\ccMmezXn.s:1056   .text.angle_motor_step:000006a0 $t
+C:\Users\ysl\AppData\Local\Temp\ccMmezXn.s:1456   .text.angle_motor_step:00000900 $d
+C:\Users\ysl\AppData\Local\Temp\ccMmezXn.s:1477   .text.angle_motor_initialize:00000000 $t
+C:\Users\ysl\AppData\Local\Temp\ccMmezXn.s:1483   .text.angle_motor_initialize:00000000 angle_motor_initialize
+C:\Users\ysl\AppData\Local\Temp\ccMmezXn.s:1504   .text.angle_motor_terminate:00000000 $t
+C:\Users\ysl\AppData\Local\Temp\ccMmezXn.s:1510   .text.angle_motor_terminate:00000000 angle_motor_terminate
+C:\Users\ysl\AppData\Local\Temp\ccMmezXn.s:1550   .rodata.angle_motor_M:00000000 angle_motor_M
+C:\Users\ysl\AppData\Local\Temp\ccMmezXn.s:1538   .bss.angle_motor_DW:00000000 angle_motor_DW
+C:\Users\ysl\AppData\Local\Temp\ccMmezXn.s:1531   .bss.angle_motor_B:00000000 angle_motor_B
+C:\Users\ysl\AppData\Local\Temp\ccMmezXn.s:1556   .rodata.angle_motor_U8GND:00000000 angle_motor_U8GND
+C:\Users\ysl\AppData\Local\Temp\ccMmezXn.s:1527   .bss.angle_motor_B:00000000 $d
+C:\Users\ysl\AppData\Local\Temp\ccMmezXn.s:1534   .bss.angle_motor_DW:00000000 $d
+C:\Users\ysl\AppData\Local\Temp\ccMmezXn.s:1541   .bss.angle_motor_M_:00000000 $d
+C:\Users\ysl\AppData\Local\Temp\ccMmezXn.s:1544   .bss.angle_motor_M_:00000000 angle_motor_M_
+C:\Users\ysl\AppData\Local\Temp\ccMmezXn.s:1547   .rodata.angle_motor_M:00000000 $d
+C:\Users\ysl\AppData\Local\Temp\ccMmezXn.s:1557   .rodata.angle_motor_U8GND:00000000 $d
+
+UNDEFINED SYMBOLS
+__aeabi_f2d
+__aeabi_dmul
+__aeabi_d2f
+__aeabi_dadd
+__aeabi_dcmpgt
+__aeabi_dcmplt
+__aeabi_d2uiz
+__aeabi_d2iz
+HAL_GPIO_WritePin
+HI226_Angle
+HI226_AngleV
+htim5
+htim2
+adc_rawvalue
+DataLink_RevData
+DataLink_UpFrameData
+motor1_PwmData
+motor2_PwmData
+ws2812_data
+floor
+rtIsNaN
+fmod
+rtIsInf
+rt_InitInfAndNaN

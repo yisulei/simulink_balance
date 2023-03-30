@@ -1,0 +1,28 @@
+%implements  StackLiteDualDrive_RPiDataOutput "C"
+
+%function BlockTypeSetup(block, system) void
+%assign SrcBaseName = LibGetMdlSrcBaseName()
+%assign modelCFile = LibCreateSourceFile("Source","Simulink",SrcBaseName)
+%openfile datalinkdeclarationbuf
+extern int32_t RPi_SendData[4];//data Up to RPi
+%closefile datalinkdeclarationbuf
+%<LibSetSourceFileSection(modelCFile,"Declarations",datalinkdeclarationbuf)>
+
+%openfile RPiDataOutput = "StackLiteDualDrive_RPiDataOutput.c" %%兼容simulink不怎么智能的MODULES tocken
+/* dummy by simulink */
+%closefile RPiDataOutput
+
+%endfunction
+
+%function Outputs(block, system) Output
+%assign data0 = LibBlockInputSignal(0, "", "",0)
+%assign data1 = LibBlockInputSignal(1, "", "",0)
+%assign data2 = LibBlockInputSignal(2, "", "",0)
+%assign data3 = LibBlockInputSignal(3, "", "",0)
+
+/*Output Data*/
+RPi_SendData[0]=%<data0>;
+RPi_SendData[1]=%<data1>;
+RPi_SendData[2]=%<data2>;
+RPi_SendData[3]=%<data3>;
+%endfunction

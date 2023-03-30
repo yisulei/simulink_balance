@@ -1,0 +1,6 @@
+h 
+r 
+Sleep 1 
+loadfile build/Follow_Balance.hex 
+r 
+qc 

@@ -1,0 +1,3422 @@
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccmTahDp.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"StandSpeed_Balance.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.global	__aeabi_f2d
+  20              		.global	__aeabi_dmul
+  21              		.global	__aeabi_d2f
+  22              		.global	__aeabi_dadd
+  23              		.global	__aeabi_dcmpgt
+  24              		.global	__aeabi_dcmplt
+  25              		.global	__aeabi_i2d
+  26              		.global	__aeabi_dsub
+  27              		.global	__aeabi_d2uiz
+  28              		.global	__aeabi_d2iz
+  29              		.section	.text.StandSpeed_Balance_step,"ax",%progbits
+  30              		.align	1
+  31              		.global	StandSpeed_Balance_step
+  32              		.syntax unified
+  33              		.thumb
+  34              		.thumb_func
+  36              	StandSpeed_Balance_step:
+  37              	.LFB238:
+  38              		.file 1 "StandSpeed_Balance.c"
+   1:StandSpeed_Balance.c **** /*
+   2:StandSpeed_Balance.c ****  * File: StandSpeed_Balance.c
+   3:StandSpeed_Balance.c ****  *
+   4:StandSpeed_Balance.c ****  * Code generated for Simulink model 'StandSpeed_Balance'.
+   5:StandSpeed_Balance.c ****  *
+   6:StandSpeed_Balance.c ****  * Model version                  : 1.5
+   7:StandSpeed_Balance.c ****  * Simulink Coder version         : 9.6 (R2021b) 14-May-2021
+   8:StandSpeed_Balance.c ****  * C/C++ source code generated on : Fri Feb 24 14:50:35 2023
+   9:StandSpeed_Balance.c ****  *
+  10:StandSpeed_Balance.c ****  * Target selection: stacklite_dualdrive.tlc
+  11:StandSpeed_Balance.c ****  * Embedded hardware selection: Intel->x86-64 (Windows64)
+  12:StandSpeed_Balance.c ****  * Code generation objectives: Unspecified
+  13:StandSpeed_Balance.c ****  * Validation result: Not run
+  14:StandSpeed_Balance.c ****  */
+  15:StandSpeed_Balance.c **** 
+  16:StandSpeed_Balance.c **** #include "ifr-scope_device.h"
+  17:StandSpeed_Balance.c **** #include "main.h"
+  18:StandSpeed_Balance.c **** #include "tim.h"
+  19:StandSpeed_Balance.c **** #include "gpio.h"
+  20:StandSpeed_Balance.c **** #include "stdio.h"
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccmTahDp.s 			page 2
+
+
+  21:StandSpeed_Balance.c **** #include <string.h>
+  22:StandSpeed_Balance.c **** #include "StandSpeed_Balance.h"
+  23:StandSpeed_Balance.c **** #include "StandSpeed_Balance_private.h"
+  24:StandSpeed_Balance.c **** 
+  25:StandSpeed_Balance.c **** const uint8_T StandSpeed_Balance_U8GND = 0U;/* uint8_T ground */
+  26:StandSpeed_Balance.c **** 
+  27:StandSpeed_Balance.c **** /* Block signals (default storage) */
+  28:StandSpeed_Balance.c **** B_StandSpeed_Balance_T StandSpeed_Balance_B;
+  29:StandSpeed_Balance.c **** 
+  30:StandSpeed_Balance.c **** /* Block states (default storage) */
+  31:StandSpeed_Balance.c **** DW_StandSpeed_Balance_T StandSpeed_Balance_DW;
+  32:StandSpeed_Balance.c **** 
+  33:StandSpeed_Balance.c **** /* Real-time model */
+  34:StandSpeed_Balance.c **** static RT_MODEL_StandSpeed_Balance_T StandSpeed_Balance_M_;
+  35:StandSpeed_Balance.c **** RT_MODEL_StandSpeed_Balance_T *const StandSpeed_Balance_M =
+  36:StandSpeed_Balance.c ****   &StandSpeed_Balance_M_;
+  37:StandSpeed_Balance.c **** extern struct _datalink_upframedata DataLink_UpFrameData;//data Up to Host
+  38:StandSpeed_Balance.c **** extern int16_t HI226_Angle[3];
+  39:StandSpeed_Balance.c **** extern int16_t HI226_AngleV[3];
+  40:StandSpeed_Balance.c **** extern int16_t adc_rawvalue[2][5];
+  41:StandSpeed_Balance.c **** extern int16_t motor1_PwmData;
+  42:StandSpeed_Balance.c **** extern int16_t motor2_PwmData;
+  43:StandSpeed_Balance.c **** extern uint8_t led_data;
+  44:StandSpeed_Balance.c **** extern uint8_t ws2812_data[3];
+  45:StandSpeed_Balance.c **** extern union _floatchar DataLink_RevData[10];//data config from host
+  46:StandSpeed_Balance.c **** 
+  47:StandSpeed_Balance.c **** /* Model step function */
+  48:StandSpeed_Balance.c **** void StandSpeed_Balance_step(void)
+  49:StandSpeed_Balance.c **** {
+  39              		.loc 1 49 1 view -0
+  40              		.cfi_startproc
+  41              		@ args = 0, pretend = 0, frame = 0
+  42              		@ frame_needed = 0, uses_anonymous_args = 0
+  43 0000 2DE9F84F 		push	{r3, r4, r5, r6, r7, r8, r9, r10, fp, lr}
+  44              	.LCFI0:
+  45              		.cfi_def_cfa_offset 40
+  46              		.cfi_offset 3, -40
+  47              		.cfi_offset 4, -36
+  48              		.cfi_offset 5, -32
+  49              		.cfi_offset 6, -28
+  50              		.cfi_offset 7, -24
+  51              		.cfi_offset 8, -20
+  52              		.cfi_offset 9, -16
+  53              		.cfi_offset 10, -12
+  54              		.cfi_offset 11, -8
+  55              		.cfi_offset 14, -4
+  56 0004 2DED048B 		vpush.64	{d8, d9}
+  57              	.LCFI1:
+  58              		.cfi_def_cfa_offset 56
+  59              		.cfi_offset 80, -56
+  60              		.cfi_offset 81, -52
+  61              		.cfi_offset 82, -48
+  62              		.cfi_offset 83, -44
+  50:StandSpeed_Balance.c ****   real_T rtb_Add_g3;
+  63              		.loc 1 50 3 view .LVU1
+  51:StandSpeed_Balance.c ****   int_T idxDelay;
+  64              		.loc 1 51 3 view .LVU2
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccmTahDp.s 			page 3
+
+
+  52:StandSpeed_Balance.c ****   real32_T rtb_Add1_d;
+  65              		.loc 1 52 3 view .LVU3
+  53:StandSpeed_Balance.c ****   real32_T rtb_Add1_h;
+  66              		.loc 1 53 3 view .LVU4
+  54:StandSpeed_Balance.c ****   boolean_T rtb_Compare_g;
+  67              		.loc 1 54 3 view .LVU5
+  55:StandSpeed_Balance.c **** 
+  56:StandSpeed_Balance.c ****   /* S-Function (StackLiteDualDrive_Input): '<Root>/Input' */
+  57:StandSpeed_Balance.c ****   /*Input Data*/
+  58:StandSpeed_Balance.c ****   memcpy(&StandSpeed_Balance_B.angle[0],HI226_Angle,3*2);
+  68              		.loc 1 58 3 view .LVU6
+  69 0008 C14C     		ldr	r4, .L159
+  70 000a C24B     		ldr	r3, .L159+4
+  71 000c 1868     		ldr	r0, [r3]	@ unaligned
+  72 000e A065     		str	r0, [r4, #88]
+  73 0010 9B88     		ldrh	r3, [r3, #4]	@ unaligned
+  74 0012 A4F85C30 		strh	r3, [r4, #92]	@ unaligned
+  59:StandSpeed_Balance.c ****   memcpy(&StandSpeed_Balance_B.anglev[0],HI226_AngleV,3*2);
+  75              		.loc 1 59 3 view .LVU7
+  76 0016 C04B     		ldr	r3, .L159+8
+  77 0018 1A68     		ldr	r2, [r3]	@ unaligned
+  78 001a C4F85E20 		str	r2, [r4, #94]	@ unaligned
+  79 001e 9B88     		ldrh	r3, [r3, #4]	@ unaligned
+  80 0020 A4F86230 		strh	r3, [r4, #98]	@ unaligned
+  60:StandSpeed_Balance.c ****   StandSpeed_Balance_B.encoder1= (int32_t)(__HAL_TIM_GetCounter(&htim5));
+  81              		.loc 1 60 3 view .LVU8
+  82              		.loc 1 60 44 is_stmt 0 view .LVU9
+  83 0024 BD4B     		ldr	r3, .L159+12
+  84 0026 1B68     		ldr	r3, [r3]
+  85 0028 5B6A     		ldr	r3, [r3, #36]
+  86              		.loc 1 60 32 view .LVU10
+  87 002a 2365     		str	r3, [r4, #80]
+  61:StandSpeed_Balance.c ****   StandSpeed_Balance_B.encoder2= -(int32_t)(__HAL_TIM_GetCounter(&htim2));
+  88              		.loc 1 61 3 is_stmt 1 view .LVU11
+  89              		.loc 1 61 45 is_stmt 0 view .LVU12
+  90 002c BC4B     		ldr	r3, .L159+16
+  91 002e 1B68     		ldr	r3, [r3]
+  92 0030 5B6A     		ldr	r3, [r3, #36]
+  93              		.loc 1 61 34 view .LVU13
+  94 0032 5B42     		rsbs	r3, r3, #0
+  95              		.loc 1 61 32 view .LVU14
+  96 0034 6365     		str	r3, [r4, #84]
+  62:StandSpeed_Balance.c ****   memcpy(&StandSpeed_Balance_B.current1[0],adc_rawvalue[0],5*2);
+  97              		.loc 1 62 3 is_stmt 1 view .LVU15
+  98 0036 BB4B     		ldr	r3, .L159+20
+  99 0038 04F16402 		add	r2, r4, #100
+ 100 003c 1868     		ldr	r0, [r3]	@ unaligned
+ 101 003e 5968     		ldr	r1, [r3, #4]	@ unaligned
+ 102 0040 03C2     		stmia	r2!, {r0, r1}
+ 103 0042 1989     		ldrh	r1, [r3, #8]	@ unaligned
+ 104 0044 1180     		strh	r1, [r2]	@ unaligned
+  63:StandSpeed_Balance.c ****   memcpy(&StandSpeed_Balance_B.current2[0],adc_rawvalue[1],5*2);
+ 105              		.loc 1 63 3 view .LVU16
+ 106 0046 D3F80A10 		ldr	r1, [r3, #10]	@ unaligned
+ 107 004a D3F80E20 		ldr	r2, [r3, #14]	@ unaligned
+ 108 004e C4F86E10 		str	r1, [r4, #110]	@ unaligned
+ 109 0052 C4F87220 		str	r2, [r4, #114]	@ unaligned
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccmTahDp.s 			page 4
+
+
+ 110 0056 5B8A     		ldrh	r3, [r3, #18]	@ unaligned
+ 111 0058 A4F87630 		strh	r3, [r4, #118]	@ unaligned
+  64:StandSpeed_Balance.c **** 
+  65:StandSpeed_Balance.c ****   /* Sum: '<S8>/Add4' incorporates:
+  66:StandSpeed_Balance.c ****    *  Delay: '<S8>/Delay One Step'
+  67:StandSpeed_Balance.c ****    *  Gain: '<S8>/Gain'
+  68:StandSpeed_Balance.c ****    *  Gain: '<S8>/Gain1'
+  69:StandSpeed_Balance.c ****    *  Gain: '<S8>/Gain2'
+  70:StandSpeed_Balance.c ****    *  Gain: '<S8>/Gain3'
+  71:StandSpeed_Balance.c ****    *  Gain: '<S8>/Gain4'
+  72:StandSpeed_Balance.c ****    *  Gain: '<S8>/Gain5'
+  73:StandSpeed_Balance.c ****    *  Gain: '<S8>/Gain6'
+  74:StandSpeed_Balance.c ****    *  Gain: '<S8>/Gain7'
+  75:StandSpeed_Balance.c ****    *  Gain: '<S8>/Gain8'
+  76:StandSpeed_Balance.c ****    *  Gain: '<S8>/Gain9'
+  77:StandSpeed_Balance.c ****    *  Sum: '<S8>/Add'
+  78:StandSpeed_Balance.c ****    *  Sum: '<S8>/Add1'
+  79:StandSpeed_Balance.c ****    *  Sum: '<S8>/Add2'
+  80:StandSpeed_Balance.c ****    *  Sum: '<S8>/Add3'
+  81:StandSpeed_Balance.c ****    */
+  82:StandSpeed_Balance.c ****   StandSpeed_Balance_DW.DelayOneStep_DSTATE = ((((0.95F *
+ 112              		.loc 1 82 3 view .LVU17
+  83:StandSpeed_Balance.c ****     StandSpeed_Balance_DW.DelayOneStep_DSTATE + 0.0499992371F * (real32_T)
+ 113              		.loc 1 83 26 is_stmt 0 view .LVU18
+ 114 005c B24D     		ldr	r5, .L159+24
+ 115 005e D5ED087A 		vldr.32	s15, [r5, #32]
+  82:StandSpeed_Balance.c ****     StandSpeed_Balance_DW.DelayOneStep_DSTATE + 0.0499992371F * (real32_T)
+ 116              		.loc 1 82 57 view .LVU19
+ 117 0062 DFEDB26A 		vldr.32	s13, .L159+28
+ 118 0066 67EEA67A 		vmul.f32	s15, s15, s13
+  84:StandSpeed_Balance.c ****     StandSpeed_Balance_B.current1[0]) * 0.95F + 0.0499992371F * (real32_T)
+ 119              		.loc 1 84 34 view .LVU20
+ 120 006a B4F96430 		ldrsh	r3, [r4, #100]
+ 121 006e 06EE103A 		vmov	s12, r3	@ int
+  83:StandSpeed_Balance.c ****     StandSpeed_Balance_DW.DelayOneStep_DSTATE + 0.0499992371F * (real32_T)
+ 122              		.loc 1 83 65 view .LVU21
+ 123 0072 B8EEC66A 		vcvt.f32.s32	s12, s12
+  83:StandSpeed_Balance.c ****     StandSpeed_Balance_DW.DelayOneStep_DSTATE + 0.0499992371F * (real32_T)
+ 124              		.loc 1 83 63 view .LVU22
+ 125 0076 9FEDAE7A 		vldr.32	s14, .L159+32
+ 126 007a 26EE076A 		vmul.f32	s12, s12, s14
+  83:StandSpeed_Balance.c ****     StandSpeed_Balance_DW.DelayOneStep_DSTATE + 0.0499992371F * (real32_T)
+ 127              		.loc 1 83 47 view .LVU23
+ 128 007e 77EE867A 		vadd.f32	s15, s15, s12
+ 129              		.loc 1 84 39 view .LVU24
+ 130 0082 67EEA67A 		vmul.f32	s15, s15, s13
+  85:StandSpeed_Balance.c ****     StandSpeed_Balance_B.current1[1]) * 0.95F + 0.0499992371F * (real32_T)
+ 131              		.loc 1 85 34 view .LVU25
+ 132 0086 B4F96630 		ldrsh	r3, [r4, #102]
+ 133 008a 06EE103A 		vmov	s12, r3	@ int
+  84:StandSpeed_Balance.c ****     StandSpeed_Balance_B.current1[0]) * 0.95F + 0.0499992371F * (real32_T)
+ 134              		.loc 1 84 65 view .LVU26
+ 135 008e B8EEC66A 		vcvt.f32.s32	s12, s12
+  84:StandSpeed_Balance.c ****     StandSpeed_Balance_B.current1[0]) * 0.95F + 0.0499992371F * (real32_T)
+ 136              		.loc 1 84 63 view .LVU27
+ 137 0092 26EE076A 		vmul.f32	s12, s12, s14
+  84:StandSpeed_Balance.c ****     StandSpeed_Balance_B.current1[0]) * 0.95F + 0.0499992371F * (real32_T)
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccmTahDp.s 			page 5
+
+
+ 138              		.loc 1 84 47 view .LVU28
+ 139 0096 77EE867A 		vadd.f32	s15, s15, s12
+ 140              		.loc 1 85 39 view .LVU29
+ 141 009a 67EEA67A 		vmul.f32	s15, s15, s13
+  86:StandSpeed_Balance.c ****     StandSpeed_Balance_B.current1[2]) * 0.95F + 0.0499992371F * (real32_T)
+ 142              		.loc 1 86 34 view .LVU30
+ 143 009e B4F96830 		ldrsh	r3, [r4, #104]
+ 144 00a2 06EE103A 		vmov	s12, r3	@ int
+  85:StandSpeed_Balance.c ****     StandSpeed_Balance_B.current1[1]) * 0.95F + 0.0499992371F * (real32_T)
+ 145              		.loc 1 85 65 view .LVU31
+ 146 00a6 B8EEC66A 		vcvt.f32.s32	s12, s12
+  85:StandSpeed_Balance.c ****     StandSpeed_Balance_B.current1[1]) * 0.95F + 0.0499992371F * (real32_T)
+ 147              		.loc 1 85 63 view .LVU32
+ 148 00aa 26EE076A 		vmul.f32	s12, s12, s14
+  85:StandSpeed_Balance.c ****     StandSpeed_Balance_B.current1[1]) * 0.95F + 0.0499992371F * (real32_T)
+ 149              		.loc 1 85 47 view .LVU33
+ 150 00ae 77EE867A 		vadd.f32	s15, s15, s12
+ 151              		.loc 1 86 39 view .LVU34
+ 152 00b2 67EEA67A 		vmul.f32	s15, s15, s13
+  87:StandSpeed_Balance.c ****     StandSpeed_Balance_B.current1[3]) * 0.95F + 0.0499992371F * (real32_T)
+ 153              		.loc 1 87 34 view .LVU35
+ 154 00b6 B4F96A30 		ldrsh	r3, [r4, #106]
+ 155 00ba 06EE103A 		vmov	s12, r3	@ int
+  86:StandSpeed_Balance.c ****     StandSpeed_Balance_B.current1[2]) * 0.95F + 0.0499992371F * (real32_T)
+ 156              		.loc 1 86 65 view .LVU36
+ 157 00be B8EEC66A 		vcvt.f32.s32	s12, s12
+  86:StandSpeed_Balance.c ****     StandSpeed_Balance_B.current1[2]) * 0.95F + 0.0499992371F * (real32_T)
+ 158              		.loc 1 86 63 view .LVU37
+ 159 00c2 26EE076A 		vmul.f32	s12, s12, s14
+  86:StandSpeed_Balance.c ****     StandSpeed_Balance_B.current1[2]) * 0.95F + 0.0499992371F * (real32_T)
+ 160              		.loc 1 86 47 view .LVU38
+ 161 00c6 77EE867A 		vadd.f32	s15, s15, s12
+ 162              		.loc 1 87 39 view .LVU39
+ 163 00ca 67EEA67A 		vmul.f32	s15, s15, s13
+  88:StandSpeed_Balance.c ****     StandSpeed_Balance_B.current1[4];
+ 164              		.loc 1 88 34 view .LVU40
+ 165 00ce B4F96C30 		ldrsh	r3, [r4, #108]
+ 166 00d2 06EE103A 		vmov	s12, r3	@ int
+  87:StandSpeed_Balance.c ****     StandSpeed_Balance_B.current1[3]) * 0.95F + 0.0499992371F * (real32_T)
+ 167              		.loc 1 87 65 view .LVU41
+ 168 00d6 B8EEC66A 		vcvt.f32.s32	s12, s12
+  87:StandSpeed_Balance.c ****     StandSpeed_Balance_B.current1[3]) * 0.95F + 0.0499992371F * (real32_T)
+ 169              		.loc 1 87 63 view .LVU42
+ 170 00da 26EE076A 		vmul.f32	s12, s12, s14
+  87:StandSpeed_Balance.c ****     StandSpeed_Balance_B.current1[3]) * 0.95F + 0.0499992371F * (real32_T)
+ 171              		.loc 1 87 47 view .LVU43
+ 172 00de 77EE867A 		vadd.f32	s15, s15, s12
+  82:StandSpeed_Balance.c ****     StandSpeed_Balance_DW.DelayOneStep_DSTATE + 0.0499992371F * (real32_T)
+ 173              		.loc 1 82 45 view .LVU44
+ 174 00e2 C5ED087A 		vstr.32	s15, [r5, #32]
+  89:StandSpeed_Balance.c **** 
+  90:StandSpeed_Balance.c ****   /* Sum: '<S9>/Add4' incorporates:
+  91:StandSpeed_Balance.c ****    *  Delay: '<S9>/Delay One Step'
+  92:StandSpeed_Balance.c ****    *  Gain: '<S9>/Gain'
+  93:StandSpeed_Balance.c ****    *  Gain: '<S9>/Gain1'
+  94:StandSpeed_Balance.c ****    *  Gain: '<S9>/Gain2'
+  95:StandSpeed_Balance.c ****    *  Gain: '<S9>/Gain3'
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccmTahDp.s 			page 6
+
+
+  96:StandSpeed_Balance.c ****    *  Gain: '<S9>/Gain4'
+  97:StandSpeed_Balance.c ****    *  Gain: '<S9>/Gain5'
+  98:StandSpeed_Balance.c ****    *  Gain: '<S9>/Gain6'
+  99:StandSpeed_Balance.c ****    *  Gain: '<S9>/Gain7'
+ 100:StandSpeed_Balance.c ****    *  Gain: '<S9>/Gain8'
+ 101:StandSpeed_Balance.c ****    *  Gain: '<S9>/Gain9'
+ 102:StandSpeed_Balance.c ****    *  Sum: '<S9>/Add'
+ 103:StandSpeed_Balance.c ****    *  Sum: '<S9>/Add1'
+ 104:StandSpeed_Balance.c ****    *  Sum: '<S9>/Add2'
+ 105:StandSpeed_Balance.c ****    *  Sum: '<S9>/Add3'
+ 106:StandSpeed_Balance.c ****    */
+ 107:StandSpeed_Balance.c ****   StandSpeed_Balance_DW.DelayOneStep_DSTATE_b = ((((0.95F *
+ 175              		.loc 1 107 3 is_stmt 1 view .LVU45
+ 108:StandSpeed_Balance.c ****     StandSpeed_Balance_DW.DelayOneStep_DSTATE_b + 0.0499992371F * (real32_T)
+ 176              		.loc 1 108 26 is_stmt 0 view .LVU46
+ 177 00e6 D5ED097A 		vldr.32	s15, [r5, #36]
+ 107:StandSpeed_Balance.c ****     StandSpeed_Balance_DW.DelayOneStep_DSTATE_b + 0.0499992371F * (real32_T)
+ 178              		.loc 1 107 59 view .LVU47
+ 179 00ea 67EEA67A 		vmul.f32	s15, s15, s13
+ 109:StandSpeed_Balance.c ****     StandSpeed_Balance_B.current2[0]) * 0.95F + 0.0499992371F * (real32_T)
+ 180              		.loc 1 109 34 view .LVU48
+ 181 00ee B4F96E30 		ldrsh	r3, [r4, #110]
+ 182 00f2 06EE103A 		vmov	s12, r3	@ int
+ 108:StandSpeed_Balance.c ****     StandSpeed_Balance_DW.DelayOneStep_DSTATE_b + 0.0499992371F * (real32_T)
+ 183              		.loc 1 108 67 view .LVU49
+ 184 00f6 B8EEC66A 		vcvt.f32.s32	s12, s12
+ 108:StandSpeed_Balance.c ****     StandSpeed_Balance_DW.DelayOneStep_DSTATE_b + 0.0499992371F * (real32_T)
+ 185              		.loc 1 108 65 view .LVU50
+ 186 00fa 26EE076A 		vmul.f32	s12, s12, s14
+ 108:StandSpeed_Balance.c ****     StandSpeed_Balance_DW.DelayOneStep_DSTATE_b + 0.0499992371F * (real32_T)
+ 187              		.loc 1 108 49 view .LVU51
+ 188 00fe 77EE867A 		vadd.f32	s15, s15, s12
+ 189              		.loc 1 109 39 view .LVU52
+ 190 0102 67EEA67A 		vmul.f32	s15, s15, s13
+ 110:StandSpeed_Balance.c ****     StandSpeed_Balance_B.current2[1]) * 0.95F + 0.0499992371F * (real32_T)
+ 191              		.loc 1 110 34 view .LVU53
+ 192 0106 B4F97030 		ldrsh	r3, [r4, #112]
+ 193 010a 06EE103A 		vmov	s12, r3	@ int
+ 109:StandSpeed_Balance.c ****     StandSpeed_Balance_B.current2[0]) * 0.95F + 0.0499992371F * (real32_T)
+ 194              		.loc 1 109 65 view .LVU54
+ 195 010e B8EEC66A 		vcvt.f32.s32	s12, s12
+ 109:StandSpeed_Balance.c ****     StandSpeed_Balance_B.current2[0]) * 0.95F + 0.0499992371F * (real32_T)
+ 196              		.loc 1 109 63 view .LVU55
+ 197 0112 26EE076A 		vmul.f32	s12, s12, s14
+ 109:StandSpeed_Balance.c ****     StandSpeed_Balance_B.current2[0]) * 0.95F + 0.0499992371F * (real32_T)
+ 198              		.loc 1 109 47 view .LVU56
+ 199 0116 77EE867A 		vadd.f32	s15, s15, s12
+ 200              		.loc 1 110 39 view .LVU57
+ 201 011a 67EEA67A 		vmul.f32	s15, s15, s13
+ 111:StandSpeed_Balance.c ****     StandSpeed_Balance_B.current2[2]) * 0.95F + 0.0499992371F * (real32_T)
+ 202              		.loc 1 111 34 view .LVU58
+ 203 011e B4F97230 		ldrsh	r3, [r4, #114]
+ 204 0122 06EE103A 		vmov	s12, r3	@ int
+ 110:StandSpeed_Balance.c ****     StandSpeed_Balance_B.current2[1]) * 0.95F + 0.0499992371F * (real32_T)
+ 205              		.loc 1 110 65 view .LVU59
+ 206 0126 B8EEC66A 		vcvt.f32.s32	s12, s12
+ 110:StandSpeed_Balance.c ****     StandSpeed_Balance_B.current2[1]) * 0.95F + 0.0499992371F * (real32_T)
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccmTahDp.s 			page 7
+
+
+ 207              		.loc 1 110 63 view .LVU60
+ 208 012a 26EE076A 		vmul.f32	s12, s12, s14
+ 110:StandSpeed_Balance.c ****     StandSpeed_Balance_B.current2[1]) * 0.95F + 0.0499992371F * (real32_T)
+ 209              		.loc 1 110 47 view .LVU61
+ 210 012e 77EE867A 		vadd.f32	s15, s15, s12
+ 211              		.loc 1 111 39 view .LVU62
+ 212 0132 67EEA67A 		vmul.f32	s15, s15, s13
+ 112:StandSpeed_Balance.c ****     StandSpeed_Balance_B.current2[3]) * 0.95F + 0.0499992371F * (real32_T)
+ 213              		.loc 1 112 34 view .LVU63
+ 214 0136 B4F97430 		ldrsh	r3, [r4, #116]
+ 215 013a 06EE103A 		vmov	s12, r3	@ int
+ 111:StandSpeed_Balance.c ****     StandSpeed_Balance_B.current2[2]) * 0.95F + 0.0499992371F * (real32_T)
+ 216              		.loc 1 111 65 view .LVU64
+ 217 013e B8EEC66A 		vcvt.f32.s32	s12, s12
+ 111:StandSpeed_Balance.c ****     StandSpeed_Balance_B.current2[2]) * 0.95F + 0.0499992371F * (real32_T)
+ 218              		.loc 1 111 63 view .LVU65
+ 219 0142 26EE076A 		vmul.f32	s12, s12, s14
+ 111:StandSpeed_Balance.c ****     StandSpeed_Balance_B.current2[2]) * 0.95F + 0.0499992371F * (real32_T)
+ 220              		.loc 1 111 47 view .LVU66
+ 221 0146 77EE867A 		vadd.f32	s15, s15, s12
+ 222              		.loc 1 112 39 view .LVU67
+ 223 014a 67EEA67A 		vmul.f32	s15, s15, s13
+ 113:StandSpeed_Balance.c ****     StandSpeed_Balance_B.current2[4];
+ 224              		.loc 1 113 34 view .LVU68
+ 225 014e B4F97630 		ldrsh	r3, [r4, #118]
+ 226 0152 06EE903A 		vmov	s13, r3	@ int
+ 112:StandSpeed_Balance.c ****     StandSpeed_Balance_B.current2[3]) * 0.95F + 0.0499992371F * (real32_T)
+ 227              		.loc 1 112 65 view .LVU69
+ 228 0156 F8EEE66A 		vcvt.f32.s32	s13, s13
+ 112:StandSpeed_Balance.c ****     StandSpeed_Balance_B.current2[3]) * 0.95F + 0.0499992371F * (real32_T)
+ 229              		.loc 1 112 63 view .LVU70
+ 230 015a 26EE877A 		vmul.f32	s14, s13, s14
+ 112:StandSpeed_Balance.c ****     StandSpeed_Balance_B.current2[3]) * 0.95F + 0.0499992371F * (real32_T)
+ 231              		.loc 1 112 47 view .LVU71
+ 232 015e 77EE877A 		vadd.f32	s15, s15, s14
+ 107:StandSpeed_Balance.c ****     StandSpeed_Balance_DW.DelayOneStep_DSTATE_b + 0.0499992371F * (real32_T)
+ 233              		.loc 1 107 47 view .LVU72
+ 234 0162 C5ED097A 		vstr.32	s15, [r5, #36]
+ 114:StandSpeed_Balance.c **** 
+ 115:StandSpeed_Balance.c ****   /* S-Function (StackLiteDualDrive_DataLinkOutput): '<Root>/DataLinkOutput' */
+ 116:StandSpeed_Balance.c ****   /*Output Data*/
+ 117:StandSpeed_Balance.c ****   DataLink_UpFrameData.data[0].point= StandSpeed_Balance_B.DataStoreRead4;
+ 235              		.loc 1 117 3 is_stmt 1 view .LVU73
+ 236              		.loc 1 117 37 is_stmt 0 view .LVU74
+ 237 0166 734B     		ldr	r3, .L159+36
+ 238 0168 2269     		ldr	r2, [r4, #16]	@ float
+ 239 016a C3F80920 		str	r2, [r3, #9]	@ unaligned
+ 118:StandSpeed_Balance.c ****   DataLink_UpFrameData.data[1].point= StandSpeed_Balance_B.Divide;
+ 240              		.loc 1 118 3 is_stmt 1 view .LVU75
+ 241              		.loc 1 118 37 is_stmt 0 view .LVU76
+ 242 016e A26C     		ldr	r2, [r4, #72]	@ float
+ 243 0170 C3F80D20 		str	r2, [r3, #13]	@ unaligned
+ 119:StandSpeed_Balance.c ****   DataLink_UpFrameData.data[2].point= StandSpeed_Balance_B.Divide1;
+ 244              		.loc 1 119 3 is_stmt 1 view .LVU77
+ 245              		.loc 1 119 37 is_stmt 0 view .LVU78
+ 246 0174 E26C     		ldr	r2, [r4, #76]	@ float
+ 247 0176 C3F81120 		str	r2, [r3, #17]	@ unaligned
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccmTahDp.s 			page 8
+
+
+ 120:StandSpeed_Balance.c ****   DataLink_UpFrameData.data[3].point= 0.0F;
+ 248              		.loc 1 120 3 is_stmt 1 view .LVU79
+ 249              		.loc 1 120 37 is_stmt 0 view .LVU80
+ 250 017a 0022     		movs	r2, #0
+ 251 017c C3F81520 		str	r2, [r3, #21]	@ unaligned
+ 121:StandSpeed_Balance.c ****   DataLink_UpFrameData.data[4].point= 0.0F;
+ 252              		.loc 1 121 3 is_stmt 1 view .LVU81
+ 253              		.loc 1 121 37 is_stmt 0 view .LVU82
+ 254 0180 C3F81920 		str	r2, [r3, #25]	@ unaligned
+ 122:StandSpeed_Balance.c ****   DataLink_UpFrameData.data[5].point= StandSpeed_Balance_B.DataStoreRead8;
+ 255              		.loc 1 122 3 is_stmt 1 view .LVU83
+ 256              		.loc 1 122 37 is_stmt 0 view .LVU84
+ 257 0184 A169     		ldr	r1, [r4, #24]	@ float
+ 258 0186 C3F81D10 		str	r1, [r3, #29]	@ unaligned
+ 123:StandSpeed_Balance.c ****   DataLink_UpFrameData.data[6].point= StandSpeed_Balance_B.DataStoreRead10;
+ 259              		.loc 1 123 3 is_stmt 1 view .LVU85
+ 260              		.loc 1 123 37 is_stmt 0 view .LVU86
+ 261 018a 6169     		ldr	r1, [r4, #20]	@ float
+ 262 018c C3F82110 		str	r1, [r3, #33]	@ unaligned
+ 124:StandSpeed_Balance.c ****   DataLink_UpFrameData.data[7].point= StandSpeed_Balance_B.DataTypeConversion4;
+ 263              		.loc 1 124 3 is_stmt 1 view .LVU87
+ 264              		.loc 1 124 37 is_stmt 0 view .LVU88
+ 265 0190 E169     		ldr	r1, [r4, #28]	@ float
+ 266 0192 C3F82510 		str	r1, [r3, #37]	@ unaligned
+ 125:StandSpeed_Balance.c ****   DataLink_UpFrameData.data[8].point= 0.0F;
+ 267              		.loc 1 125 3 is_stmt 1 view .LVU89
+ 268              		.loc 1 125 37 is_stmt 0 view .LVU90
+ 269 0196 C3F82920 		str	r2, [r3, #41]	@ unaligned
+ 126:StandSpeed_Balance.c ****   DataLink_UpFrameData.data[9].point= 0.0F;
+ 270              		.loc 1 126 3 is_stmt 1 view .LVU91
+ 271              		.loc 1 126 37 is_stmt 0 view .LVU92
+ 272 019a C3F82D20 		str	r2, [r3, #45]	@ unaligned
+ 127:StandSpeed_Balance.c ****   DataLink_UpFrameData.data[10].point= 0.0F;
+ 273              		.loc 1 127 3 is_stmt 1 view .LVU93
+ 274              		.loc 1 127 38 is_stmt 0 view .LVU94
+ 275 019e C3F83120 		str	r2, [r3, #49]	@ unaligned
+ 128:StandSpeed_Balance.c ****   DataLink_UpFrameData.data[11].point= 0.0F;
+ 276              		.loc 1 128 3 is_stmt 1 view .LVU95
+ 277              		.loc 1 128 38 is_stmt 0 view .LVU96
+ 278 01a2 C3F83520 		str	r2, [r3, #53]	@ unaligned
+ 129:StandSpeed_Balance.c ****   DataLink_UpFrameData.data[12].point= 0.0F;
+ 279              		.loc 1 129 3 is_stmt 1 view .LVU97
+ 280              		.loc 1 129 38 is_stmt 0 view .LVU98
+ 281 01a6 C3F83920 		str	r2, [r3, #57]	@ unaligned
+ 130:StandSpeed_Balance.c ****   DataLink_UpFrameData.data[13].point= 0.0F;
+ 282              		.loc 1 130 3 is_stmt 1 view .LVU99
+ 283              		.loc 1 130 38 is_stmt 0 view .LVU100
+ 284 01aa C3F83D20 		str	r2, [r3, #61]	@ unaligned
+ 131:StandSpeed_Balance.c ****   DataLink_UpFrameData.data[14].point= 0.0F;
+ 285              		.loc 1 131 3 is_stmt 1 view .LVU101
+ 286              		.loc 1 131 38 is_stmt 0 view .LVU102
+ 287 01ae C3F84120 		str	r2, [r3, #65]	@ unaligned
+ 132:StandSpeed_Balance.c ****   DataLink_UpFrameData.data[15].point= 0.0F;
+ 288              		.loc 1 132 3 is_stmt 1 view .LVU103
+ 289              		.loc 1 132 38 is_stmt 0 view .LVU104
+ 290 01b2 C3F84520 		str	r2, [r3, #69]	@ unaligned
+ 133:StandSpeed_Balance.c ****   DataLink_UpFrameData.data[16].point= 0.0F;
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccmTahDp.s 			page 9
+
+
+ 291              		.loc 1 133 3 is_stmt 1 view .LVU105
+ 292              		.loc 1 133 38 is_stmt 0 view .LVU106
+ 293 01b6 C3F84920 		str	r2, [r3, #73]	@ unaligned
+ 134:StandSpeed_Balance.c ****   DataLink_UpFrameData.data[17].point= 0.0F;
+ 294              		.loc 1 134 3 is_stmt 1 view .LVU107
+ 295              		.loc 1 134 38 is_stmt 0 view .LVU108
+ 296 01ba C3F84D20 		str	r2, [r3, #77]	@ unaligned
+ 135:StandSpeed_Balance.c ****   DataLink_UpFrameData.data[18].point= 0.0F;
+ 297              		.loc 1 135 3 is_stmt 1 view .LVU109
+ 298              		.loc 1 135 38 is_stmt 0 view .LVU110
+ 299 01be C3F85120 		str	r2, [r3, #81]	@ unaligned
+ 136:StandSpeed_Balance.c ****   DataLink_UpFrameData.data[19].point= 0.0F;
+ 300              		.loc 1 136 3 is_stmt 1 view .LVU111
+ 301              		.loc 1 136 38 is_stmt 0 view .LVU112
+ 302 01c2 C3F85520 		str	r2, [r3, #85]	@ unaligned
+ 137:StandSpeed_Balance.c **** 
+ 138:StandSpeed_Balance.c ****   /* S-Function (StackLiteDualDrive_Output): '<Root>/Output' */
+ 139:StandSpeed_Balance.c ****   /*Output Data*/
+ 140:StandSpeed_Balance.c ****   motor1_PwmData= StandSpeed_Balance_B.Saturation;
+ 303              		.loc 1 140 3 is_stmt 1 view .LVU113
+ 304              		.loc 1 140 39 is_stmt 0 view .LVU114
+ 305 01c6 B4F97810 		ldrsh	r1, [r4, #120]
+ 306              		.loc 1 140 17 view .LVU115
+ 307 01ca 5B4B     		ldr	r3, .L159+40
+ 308 01cc 1980     		strh	r1, [r3]	@ movhi
+ 141:StandSpeed_Balance.c ****   motor2_PwmData= StandSpeed_Balance_B.Saturation1;
+ 309              		.loc 1 141 3 is_stmt 1 view .LVU116
+ 310              		.loc 1 141 39 is_stmt 0 view .LVU117
+ 311 01ce B4F97A10 		ldrsh	r1, [r4, #122]
+ 312              		.loc 1 141 17 view .LVU118
+ 313 01d2 5A4B     		ldr	r3, .L159+44
+ 314 01d4 1980     		strh	r1, [r3]	@ movhi
+ 142:StandSpeed_Balance.c ****   HAL_GPIO_WritePin(USER_LED_GPIO_Port,USER_LED_Pin,(GPIO_PinState)((uint8_T)0U));
+ 315              		.loc 1 142 3 is_stmt 1 view .LVU119
+ 316 01d6 4FF48041 		mov	r1, #16384
+ 317 01da 5948     		ldr	r0, .L159+48
+ 318 01dc FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 319              	.LVL0:
+ 143:StandSpeed_Balance.c ****   memcpy(ws2812_data,((const uint8_T*) &StandSpeed_Balance_U8GND),3);
+ 320              		.loc 1 143 3 view .LVU120
+ 321 01e0 584B     		ldr	r3, .L159+52
+ 322 01e2 594A     		ldr	r2, .L159+56
+ 323 01e4 1188     		ldrh	r1, [r2]	@ unaligned
+ 324 01e6 9278     		ldrb	r2, [r2, #2]	@ zero_extendqisi2
+ 325 01e8 1980     		strh	r1, [r3]	@ unaligned
+ 326 01ea 9A70     		strb	r2, [r3, #2]
+ 144:StandSpeed_Balance.c **** 
+ 145:StandSpeed_Balance.c ****   /* DataStoreRead: '<Root>/Data Store Read4' */
+ 146:StandSpeed_Balance.c ****   StandSpeed_Balance_B.DataStoreRead4 = StandSpeed_Balance_DW.tar_speed;
+ 327              		.loc 1 146 3 view .LVU121
+ 328              		.loc 1 146 62 is_stmt 0 view .LVU122
+ 329 01ec D5ED367A 		vldr.32	s15, [r5, #216]
+ 330              		.loc 1 146 39 view .LVU123
+ 331 01f0 C4ED047A 		vstr.32	s15, [r4, #16]
+ 147:StandSpeed_Balance.c **** 
+ 148:StandSpeed_Balance.c ****   /* Outputs for Enabled SubSystem: '<Root>/encoder to rpm' incorporates:
+ 149:StandSpeed_Balance.c ****    *  EnablePort: '<S11>/Enable'
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccmTahDp.s 			page 10
+
+
+ 150:StandSpeed_Balance.c ****    */
+ 151:StandSpeed_Balance.c ****   /* RelationalOperator: '<S2>/Compare' incorporates:
+ 152:StandSpeed_Balance.c ****    *  Constant: '<S2>/Constant'
+ 153:StandSpeed_Balance.c ****    *  UnitDelay: '<S5>/Output'
+ 154:StandSpeed_Balance.c ****    */
+ 155:StandSpeed_Balance.c ****   if (StandSpeed_Balance_DW.Output_DSTATE == 1) {
+ 332              		.loc 1 155 3 is_stmt 1 view .LVU124
+ 333              		.loc 1 155 28 is_stmt 0 view .LVU125
+ 334 01f4 95F8F450 		ldrb	r5, [r5, #244]	@ zero_extendqisi2
+ 335              		.loc 1 155 6 view .LVU126
+ 336 01f8 012D     		cmp	r5, #1
+ 337 01fa 44D0     		beq	.L137
+ 338              	.L2:
+ 156:StandSpeed_Balance.c ****     /* Product: '<S11>/Divide' incorporates:
+ 157:StandSpeed_Balance.c ****      *  Constant: '<S11>/Constant'
+ 158:StandSpeed_Balance.c ****      *  Constant: '<S11>/Constant1'
+ 159:StandSpeed_Balance.c ****      *  Constant: '<S11>/Constant2'
+ 160:StandSpeed_Balance.c ****      *  Delay: '<S11>/Delay'
+ 161:StandSpeed_Balance.c ****      *  Product: '<S11>/Product'
+ 162:StandSpeed_Balance.c ****      *  Product: '<S11>/Product1'
+ 163:StandSpeed_Balance.c ****      *  Sum: '<S11>/Add1'
+ 164:StandSpeed_Balance.c ****      */
+ 165:StandSpeed_Balance.c ****     StandSpeed_Balance_B.Divide = (real32_T)(StandSpeed_Balance_B.encoder1 -
+ 166:StandSpeed_Balance.c ****       StandSpeed_Balance_DW.Delay_DSTATE_e[0]) * 100.0F * 60.0F / 40000.0F;
+ 167:StandSpeed_Balance.c **** 
+ 168:StandSpeed_Balance.c ****     /* Product: '<S11>/Divide1' incorporates:
+ 169:StandSpeed_Balance.c ****      *  Constant: '<S11>/Constant3'
+ 170:StandSpeed_Balance.c ****      *  Constant: '<S11>/Constant4'
+ 171:StandSpeed_Balance.c ****      *  Constant: '<S11>/Constant5'
+ 172:StandSpeed_Balance.c ****      *  Delay: '<S11>/Delay1'
+ 173:StandSpeed_Balance.c ****      *  Product: '<S11>/Product2'
+ 174:StandSpeed_Balance.c ****      *  Product: '<S11>/Product3'
+ 175:StandSpeed_Balance.c ****      *  Sum: '<S11>/Add2'
+ 176:StandSpeed_Balance.c ****      */
+ 177:StandSpeed_Balance.c ****     StandSpeed_Balance_B.Divide1 = (real32_T)(StandSpeed_Balance_B.encoder2 -
+ 178:StandSpeed_Balance.c ****       StandSpeed_Balance_DW.Delay1_DSTATE[0]) * 100.0F * 60.0F / 40000.0F;
+ 179:StandSpeed_Balance.c ****     for (idxDelay = 0; idxDelay < 18; idxDelay++) {
+ 180:StandSpeed_Balance.c ****       /* Update for Delay: '<S11>/Delay' */
+ 181:StandSpeed_Balance.c ****       StandSpeed_Balance_DW.Delay_DSTATE_e[idxDelay] =
+ 182:StandSpeed_Balance.c ****         StandSpeed_Balance_DW.Delay_DSTATE_e[idxDelay + 1];
+ 183:StandSpeed_Balance.c **** 
+ 184:StandSpeed_Balance.c ****       /* Update for Delay: '<S11>/Delay1' */
+ 185:StandSpeed_Balance.c ****       StandSpeed_Balance_DW.Delay1_DSTATE[idxDelay] =
+ 186:StandSpeed_Balance.c ****         StandSpeed_Balance_DW.Delay1_DSTATE[idxDelay + 1];
+ 187:StandSpeed_Balance.c ****     }
+ 188:StandSpeed_Balance.c **** 
+ 189:StandSpeed_Balance.c ****     /* Update for Delay: '<S11>/Delay' */
+ 190:StandSpeed_Balance.c ****     StandSpeed_Balance_DW.Delay_DSTATE_e[18] = StandSpeed_Balance_B.encoder1;
+ 191:StandSpeed_Balance.c **** 
+ 192:StandSpeed_Balance.c ****     /* Update for Delay: '<S11>/Delay1' */
+ 193:StandSpeed_Balance.c ****     StandSpeed_Balance_DW.Delay1_DSTATE[18] = StandSpeed_Balance_B.encoder2;
+ 194:StandSpeed_Balance.c ****   }
+ 195:StandSpeed_Balance.c **** 
+ 196:StandSpeed_Balance.c ****   /* End of RelationalOperator: '<S2>/Compare' */
+ 197:StandSpeed_Balance.c ****   /* End of Outputs for SubSystem: '<Root>/encoder to rpm' */
+ 198:StandSpeed_Balance.c **** 
+ 199:StandSpeed_Balance.c ****   /* Outputs for Enabled SubSystem: '<Root>/speedPID_motor' incorporates:
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccmTahDp.s 			page 11
+
+
+ 200:StandSpeed_Balance.c ****    *  EnablePort: '<S12>/Enable'
+ 201:StandSpeed_Balance.c ****    */
+ 202:StandSpeed_Balance.c ****   /* RelationalOperator: '<S3>/Compare' incorporates:
+ 203:StandSpeed_Balance.c ****    *  Constant: '<S3>/Constant'
+ 204:StandSpeed_Balance.c ****    *  UnitDelay: '<S6>/Output'
+ 205:StandSpeed_Balance.c ****    */
+ 206:StandSpeed_Balance.c ****   if (StandSpeed_Balance_DW.Output_DSTATE_a == 1) {
+ 339              		.loc 1 206 3 is_stmt 1 view .LVU127
+ 340              		.loc 1 206 28 is_stmt 0 view .LVU128
+ 341 01fc 4A4B     		ldr	r3, .L159+24
+ 342 01fe 93F8F540 		ldrb	r4, [r3, #245]	@ zero_extendqisi2
+ 343              		.loc 1 206 6 view .LVU129
+ 344 0202 012C     		cmp	r4, #1
+ 345 0204 00F0AC80 		beq	.L138
+ 346              	.L5:
+ 207:StandSpeed_Balance.c ****     /* Sum: '<S36>/Add' incorporates:
+ 208:StandSpeed_Balance.c ****      *  Delay: '<S36>/Delay'
+ 209:StandSpeed_Balance.c ****      *  Gain: '<S36>/Gain'
+ 210:StandSpeed_Balance.c ****      *  Gain: '<S36>/Gain1'
+ 211:StandSpeed_Balance.c ****      *  Sum: '<S33>/Add1'
+ 212:StandSpeed_Balance.c ****      *  Sum: '<S33>/Add2'
+ 213:StandSpeed_Balance.c ****      */
+ 214:StandSpeed_Balance.c ****     StandSpeed_Balance_DW.Delay_DSTATE_f = (StandSpeed_Balance_B.DataStoreRead4
+ 215:StandSpeed_Balance.c ****       - (StandSpeed_Balance_B.Divide + StandSpeed_Balance_B.Divide1)) * 0.3F +
+ 216:StandSpeed_Balance.c ****       0.7F * StandSpeed_Balance_DW.Delay_DSTATE_f;
+ 217:StandSpeed_Balance.c **** 
+ 218:StandSpeed_Balance.c ****     /* Gain: '<S35>/Gain1' incorporates:
+ 219:StandSpeed_Balance.c ****      *  DataStoreRead: '<S35>/Data Store Read1'
+ 220:StandSpeed_Balance.c ****      *  Delay: '<S35>/Delay'
+ 221:StandSpeed_Balance.c ****      *  Delay: '<S36>/Delay'
+ 222:StandSpeed_Balance.c ****      *  Gain: '<S35>/Gain'
+ 223:StandSpeed_Balance.c ****      *  ManualSwitch: '<S35>/Manual Switch1'
+ 224:StandSpeed_Balance.c ****      *  Product: '<S35>/Product3'
+ 225:StandSpeed_Balance.c ****      *  Sum: '<S35>/Add2'
+ 226:StandSpeed_Balance.c ****      */
+ 227:StandSpeed_Balance.c ****     StandSpeed_Balance_DW.Delay_DSTATE_j = ((real32_T)(0.001 *
+ 228:StandSpeed_Balance.c ****       StandSpeed_Balance_DW.Ki_speed * StandSpeed_Balance_DW.Delay_DSTATE_f) +
+ 229:StandSpeed_Balance.c ****       StandSpeed_Balance_DW.Delay_DSTATE_j) * 0.995;
+ 230:StandSpeed_Balance.c **** 
+ 231:StandSpeed_Balance.c ****     /* Saturate: '<S35>/Saturation2' */
+ 232:StandSpeed_Balance.c ****     if (StandSpeed_Balance_DW.Delay_DSTATE_j > 20.0) {
+ 233:StandSpeed_Balance.c ****       /* Gain: '<S35>/Gain1' */
+ 234:StandSpeed_Balance.c ****       StandSpeed_Balance_DW.Delay_DSTATE_j = 20.0;
+ 235:StandSpeed_Balance.c ****     } else if (StandSpeed_Balance_DW.Delay_DSTATE_j < -20.0) {
+ 236:StandSpeed_Balance.c ****       /* Gain: '<S35>/Gain1' */
+ 237:StandSpeed_Balance.c ****       StandSpeed_Balance_DW.Delay_DSTATE_j = -20.0;
+ 238:StandSpeed_Balance.c ****     }
+ 239:StandSpeed_Balance.c **** 
+ 240:StandSpeed_Balance.c ****     /* End of Saturate: '<S35>/Saturation2' */
+ 241:StandSpeed_Balance.c **** 
+ 242:StandSpeed_Balance.c ****     /* Sum: '<S33>/Add' incorporates:
+ 243:StandSpeed_Balance.c ****      *  DataStoreRead: '<S34>/Data Store Read2'
+ 244:StandSpeed_Balance.c ****      *  DataStoreRead: '<S37>/Data Store Read'
+ 245:StandSpeed_Balance.c ****      *  Delay: '<S35>/Delay'
+ 246:StandSpeed_Balance.c ****      *  Delay: '<S36>/Delay'
+ 247:StandSpeed_Balance.c ****      *  Gain: '<S34>/Gain'
+ 248:StandSpeed_Balance.c ****      *  Gain: '<S37>/Gain'
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccmTahDp.s 			page 12
+
+
+ 249:StandSpeed_Balance.c ****      *  ManualSwitch: '<S34>/Manual Switch2'
+ 250:StandSpeed_Balance.c ****      *  ManualSwitch: '<S37>/Manual Switch'
+ 251:StandSpeed_Balance.c ****      *  Product: '<S34>/Product2'
+ 252:StandSpeed_Balance.c ****      *  Product: '<S37>/Product'
+ 253:StandSpeed_Balance.c ****      *  Sum: '<S38>/Diff'
+ 254:StandSpeed_Balance.c ****      *  UnitDelay: '<S38>/UD'
+ 255:StandSpeed_Balance.c ****      *
+ 256:StandSpeed_Balance.c ****      * Block description for '<S38>/Diff':
+ 257:StandSpeed_Balance.c ****      *
+ 258:StandSpeed_Balance.c ****      *  Add in CPU
+ 259:StandSpeed_Balance.c ****      *
+ 260:StandSpeed_Balance.c ****      * Block description for '<S38>/UD':
+ 261:StandSpeed_Balance.c ****      *
+ 262:StandSpeed_Balance.c ****      *  Store in Global RAM
+ 263:StandSpeed_Balance.c ****      */
+ 264:StandSpeed_Balance.c ****     StandSpeed_Balance_B.Add = (0.001 * StandSpeed_Balance_DW.Kp_speed *
+ 265:StandSpeed_Balance.c ****       StandSpeed_Balance_DW.Delay_DSTATE_f +
+ 266:StandSpeed_Balance.c ****       StandSpeed_Balance_DW.Delay_DSTATE_j) + 0.001 *
+ 267:StandSpeed_Balance.c ****       StandSpeed_Balance_DW.Kd_speed * (StandSpeed_Balance_DW.Delay_DSTATE_f -
+ 268:StandSpeed_Balance.c ****       StandSpeed_Balance_DW.UD_DSTATE_c);
+ 269:StandSpeed_Balance.c **** 
+ 270:StandSpeed_Balance.c ****     /* Update for UnitDelay: '<S38>/UD' incorporates:
+ 271:StandSpeed_Balance.c ****      *  Delay: '<S36>/Delay'
+ 272:StandSpeed_Balance.c ****      *
+ 273:StandSpeed_Balance.c ****      * Block description for '<S38>/UD':
+ 274:StandSpeed_Balance.c ****      *
+ 275:StandSpeed_Balance.c ****      *  Store in Global RAM
+ 276:StandSpeed_Balance.c ****      */
+ 277:StandSpeed_Balance.c ****     StandSpeed_Balance_DW.UD_DSTATE_c = StandSpeed_Balance_DW.Delay_DSTATE_f;
+ 278:StandSpeed_Balance.c ****   }
+ 279:StandSpeed_Balance.c **** 
+ 280:StandSpeed_Balance.c ****   /* End of RelationalOperator: '<S3>/Compare' */
+ 281:StandSpeed_Balance.c ****   /* End of Outputs for SubSystem: '<Root>/speedPID_motor' */
+ 282:StandSpeed_Balance.c **** 
+ 283:StandSpeed_Balance.c ****   /* RelationalOperator: '<S1>/Compare' incorporates:
+ 284:StandSpeed_Balance.c ****    *  Constant: '<S1>/Constant'
+ 285:StandSpeed_Balance.c ****    *  UnitDelay: '<S4>/Output'
+ 286:StandSpeed_Balance.c ****    */
+ 287:StandSpeed_Balance.c ****   rtb_Compare_g = (StandSpeed_Balance_DW.Output_DSTATE_l == 1);
+ 347              		.loc 1 287 3 is_stmt 1 view .LVU130
+ 348              		.loc 1 287 41 is_stmt 0 view .LVU131
+ 349 0208 474B     		ldr	r3, .L159+24
+ 350 020a 93F8F610 		ldrb	r1, [r3, #246]	@ zero_extendqisi2
+ 351              	.LVL1:
+ 288:StandSpeed_Balance.c **** 
+ 289:StandSpeed_Balance.c ****   /* Switch: '<S16>/FixPt Switch' incorporates:
+ 290:StandSpeed_Balance.c ****    *  Constant: '<S15>/FixPt Constant'
+ 291:StandSpeed_Balance.c ****    *  Constant: '<S16>/Constant'
+ 292:StandSpeed_Balance.c ****    *  Sum: '<S15>/FixPt Sum1'
+ 293:StandSpeed_Balance.c ****    *  UnitDelay: '<S4>/Output'
+ 294:StandSpeed_Balance.c ****    */
+ 295:StandSpeed_Balance.c ****   if ((uint8_T)(StandSpeed_Balance_DW.Output_DSTATE_l + 1) > 1) {
+ 352              		.loc 1 295 3 is_stmt 1 view .LVU132
+ 353              		.loc 1 295 7 is_stmt 0 view .LVU133
+ 354 020e 4B1C     		adds	r3, r1, #1
+ 355 0210 DBB2     		uxtb	r3, r3
+ 356              		.loc 1 295 6 view .LVU134
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccmTahDp.s 			page 13
+
+
+ 357 0212 012B     		cmp	r3, #1
+ 358 0214 40F23981 		bls	.L10
+ 296:StandSpeed_Balance.c ****     StandSpeed_Balance_DW.Output_DSTATE_l = 0U;
+ 359              		.loc 1 296 5 is_stmt 1 view .LVU135
+ 360              		.loc 1 296 43 is_stmt 0 view .LVU136
+ 361 0218 434B     		ldr	r3, .L159+24
+ 362 021a 0022     		movs	r2, #0
+ 363 021c 83F8F620 		strb	r2, [r3, #246]
+ 364              	.L11:
+ 297:StandSpeed_Balance.c ****   } else {
+ 298:StandSpeed_Balance.c ****     StandSpeed_Balance_DW.Output_DSTATE_l++;
+ 299:StandSpeed_Balance.c ****   }
+ 300:StandSpeed_Balance.c **** 
+ 301:StandSpeed_Balance.c ****   /* End of Switch: '<S16>/FixPt Switch' */
+ 302:StandSpeed_Balance.c **** 
+ 303:StandSpeed_Balance.c ****   /* Switch: '<S18>/FixPt Switch' incorporates:
+ 304:StandSpeed_Balance.c ****    *  Constant: '<S17>/FixPt Constant'
+ 305:StandSpeed_Balance.c ****    *  Constant: '<S18>/Constant'
+ 306:StandSpeed_Balance.c ****    *  Sum: '<S17>/FixPt Sum1'
+ 307:StandSpeed_Balance.c ****    *  UnitDelay: '<S5>/Output'
+ 308:StandSpeed_Balance.c ****    */
+ 309:StandSpeed_Balance.c ****   if ((uint8_T)(StandSpeed_Balance_DW.Output_DSTATE + 1) > 1) {
+ 365              		.loc 1 309 3 is_stmt 1 view .LVU137
+ 366              		.loc 1 309 7 is_stmt 0 view .LVU138
+ 367 0220 0135     		adds	r5, r5, #1
+ 368 0222 EDB2     		uxtb	r5, r5
+ 369              		.loc 1 309 6 view .LVU139
+ 370 0224 012D     		cmp	r5, #1
+ 371 0226 40F23481 		bls	.L12
+ 310:StandSpeed_Balance.c ****     StandSpeed_Balance_DW.Output_DSTATE = 0U;
+ 372              		.loc 1 310 5 is_stmt 1 view .LVU140
+ 373              		.loc 1 310 41 is_stmt 0 view .LVU141
+ 374 022a 3F4B     		ldr	r3, .L159+24
+ 375 022c 0022     		movs	r2, #0
+ 376 022e 83F8F420 		strb	r2, [r3, #244]
+ 377              	.L13:
+ 311:StandSpeed_Balance.c ****   } else {
+ 312:StandSpeed_Balance.c ****     StandSpeed_Balance_DW.Output_DSTATE++;
+ 313:StandSpeed_Balance.c ****   }
+ 314:StandSpeed_Balance.c **** 
+ 315:StandSpeed_Balance.c ****   /* End of Switch: '<S18>/FixPt Switch' */
+ 316:StandSpeed_Balance.c **** 
+ 317:StandSpeed_Balance.c ****   /* Switch: '<S20>/FixPt Switch' incorporates:
+ 318:StandSpeed_Balance.c ****    *  Constant: '<S19>/FixPt Constant'
+ 319:StandSpeed_Balance.c ****    *  Constant: '<S20>/Constant'
+ 320:StandSpeed_Balance.c ****    *  Sum: '<S19>/FixPt Sum1'
+ 321:StandSpeed_Balance.c ****    *  UnitDelay: '<S6>/Output'
+ 322:StandSpeed_Balance.c ****    */
+ 323:StandSpeed_Balance.c ****   if ((uint8_T)(StandSpeed_Balance_DW.Output_DSTATE_a + 1) > 1) {
+ 378              		.loc 1 323 3 is_stmt 1 view .LVU142
+ 379              		.loc 1 323 7 is_stmt 0 view .LVU143
+ 380 0232 0134     		adds	r4, r4, #1
+ 381 0234 E4B2     		uxtb	r4, r4
+ 382              		.loc 1 323 6 view .LVU144
+ 383 0236 012C     		cmp	r4, #1
+ 384 0238 40F22F81 		bls	.L14
+ 324:StandSpeed_Balance.c ****     StandSpeed_Balance_DW.Output_DSTATE_a = 0U;
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccmTahDp.s 			page 14
+
+
+ 385              		.loc 1 324 5 is_stmt 1 view .LVU145
+ 386              		.loc 1 324 43 is_stmt 0 view .LVU146
+ 387 023c 3A4B     		ldr	r3, .L159+24
+ 388 023e 0022     		movs	r2, #0
+ 389 0240 83F8F520 		strb	r2, [r3, #245]
+ 390              	.L15:
+ 325:StandSpeed_Balance.c ****   } else {
+ 326:StandSpeed_Balance.c ****     StandSpeed_Balance_DW.Output_DSTATE_a++;
+ 327:StandSpeed_Balance.c ****   }
+ 328:StandSpeed_Balance.c **** 
+ 329:StandSpeed_Balance.c ****   /* End of Switch: '<S20>/FixPt Switch' */
+ 330:StandSpeed_Balance.c **** 
+ 331:StandSpeed_Balance.c ****   /* DataStoreRead: '<Root>/Data Store Read10' incorporates:
+ 332:StandSpeed_Balance.c ****    *  DataStoreWrite: '<Root>/Data Store Write7'
+ 333:StandSpeed_Balance.c ****    *  Delay: '<S9>/Delay One Step'
+ 334:StandSpeed_Balance.c ****    */
+ 335:StandSpeed_Balance.c ****   StandSpeed_Balance_B.DataStoreRead10 =
+ 391              		.loc 1 335 3 is_stmt 1 view .LVU147
+ 336:StandSpeed_Balance.c ****     StandSpeed_Balance_DW.DelayOneStep_DSTATE_b;
+ 392              		.loc 1 336 26 is_stmt 0 view .LVU148
+ 393 0244 384A     		ldr	r2, .L159+24
+ 394 0246 506A     		ldr	r0, [r2, #36]	@ float
+ 335:StandSpeed_Balance.c ****     StandSpeed_Balance_DW.DelayOneStep_DSTATE_b;
+ 395              		.loc 1 335 40 view .LVU149
+ 396 0248 314B     		ldr	r3, .L159
+ 397 024a 5861     		str	r0, [r3, #20]	@ float
+ 337:StandSpeed_Balance.c **** 
+ 338:StandSpeed_Balance.c ****   /* DataStoreRead: '<Root>/Data Store Read8' incorporates:
+ 339:StandSpeed_Balance.c ****    *  DataStoreWrite: '<Root>/Data Store Write6'
+ 340:StandSpeed_Balance.c ****    *  Delay: '<S8>/Delay One Step'
+ 341:StandSpeed_Balance.c ****    */
+ 342:StandSpeed_Balance.c ****   StandSpeed_Balance_B.DataStoreRead8 =
+ 398              		.loc 1 342 3 is_stmt 1 view .LVU150
+ 343:StandSpeed_Balance.c ****     StandSpeed_Balance_DW.DelayOneStep_DSTATE;
+ 399              		.loc 1 343 26 is_stmt 0 view .LVU151
+ 400 024c 126A     		ldr	r2, [r2, #32]	@ float
+ 342:StandSpeed_Balance.c ****     StandSpeed_Balance_DW.DelayOneStep_DSTATE;
+ 401              		.loc 1 342 39 view .LVU152
+ 402 024e 9A61     		str	r2, [r3, #24]	@ float
+ 344:StandSpeed_Balance.c **** 
+ 345:StandSpeed_Balance.c ****   /* Outputs for Enabled SubSystem: '<Root>/anglePID' incorporates:
+ 346:StandSpeed_Balance.c ****    *  EnablePort: '<S7>/Enable'
+ 347:StandSpeed_Balance.c ****    */
+ 348:StandSpeed_Balance.c ****   if (rtb_Compare_g) {
+ 403              		.loc 1 348 3 is_stmt 1 view .LVU153
+ 404              		.loc 1 348 6 is_stmt 0 view .LVU154
+ 405 0250 0129     		cmp	r1, #1
+ 406 0252 00F02681 		beq	.L139
+ 407              	.LVL2:
+ 408              	.L16:
+ 349:StandSpeed_Balance.c ****     int16_T tmp;
+ 350:StandSpeed_Balance.c **** 
+ 351:StandSpeed_Balance.c ****     /* Abs: '<Root>/Abs' */
+ 352:StandSpeed_Balance.c ****     if (StandSpeed_Balance_B.angle[1] < 0) {
+ 353:StandSpeed_Balance.c ****       tmp = (int16_T)-StandSpeed_Balance_B.angle[1];
+ 354:StandSpeed_Balance.c ****     } else {
+ 355:StandSpeed_Balance.c ****       tmp = StandSpeed_Balance_B.angle[1];
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccmTahDp.s 			page 15
+
+
+ 356:StandSpeed_Balance.c ****     }
+ 357:StandSpeed_Balance.c **** 
+ 358:StandSpeed_Balance.c ****     /* End of Abs: '<Root>/Abs' */
+ 359:StandSpeed_Balance.c **** 
+ 360:StandSpeed_Balance.c ****     /* Switch: '<Root>/Switch' incorporates:
+ 361:StandSpeed_Balance.c ****      *  Constant: '<Root>/Constant'
+ 362:StandSpeed_Balance.c ****      *  Gain: '<Root>/Gain'
+ 363:StandSpeed_Balance.c ****      */
+ 364:StandSpeed_Balance.c ****     if (tmp > 4000) {
+ 365:StandSpeed_Balance.c ****       rtb_Add_g3 = 0.0;
+ 366:StandSpeed_Balance.c ****     } else {
+ 367:StandSpeed_Balance.c ****       rtb_Add_g3 = 20972.0 * (real_T)StandSpeed_Balance_B.angle[1] *
+ 368:StandSpeed_Balance.c ****         4.76837158203125E-7;
+ 369:StandSpeed_Balance.c ****     }
+ 370:StandSpeed_Balance.c **** 
+ 371:StandSpeed_Balance.c ****     /* End of Switch: '<Root>/Switch' */
+ 372:StandSpeed_Balance.c **** 
+ 373:StandSpeed_Balance.c ****     /* Sum: '<S7>/Add' incorporates:
+ 374:StandSpeed_Balance.c ****      *  DataStoreRead: '<Root>/Data Store Read1'
+ 375:StandSpeed_Balance.c ****      *  DataStoreRead: '<S21>/Data Store Read2'
+ 376:StandSpeed_Balance.c ****      *  DataStoreRead: '<S22>/Data Store Read'
+ 377:StandSpeed_Balance.c ****      *  Gain: '<Root>/Gain1'
+ 378:StandSpeed_Balance.c ****      *  ManualSwitch: '<S21>/Manual Switch2'
+ 379:StandSpeed_Balance.c ****      *  ManualSwitch: '<S22>/Manual Switch'
+ 380:StandSpeed_Balance.c ****      *  Product: '<S21>/Product2'
+ 381:StandSpeed_Balance.c ****      *  Product: '<S22>/Product'
+ 382:StandSpeed_Balance.c ****      *  Sum: '<Root>/Add'
+ 383:StandSpeed_Balance.c ****      *  Sum: '<S7>/Add1'
+ 384:StandSpeed_Balance.c ****      */
+ 385:StandSpeed_Balance.c ****     StandSpeed_Balance_B.Add_h = ((StandSpeed_Balance_B.Add +
+ 386:StandSpeed_Balance.c ****       StandSpeed_Balance_DW.machine_mid) - rtb_Add_g3) *
+ 387:StandSpeed_Balance.c ****       StandSpeed_Balance_DW.Kp_angle + 26214.0 * (real_T)
+ 388:StandSpeed_Balance.c ****       StandSpeed_Balance_B.anglev[0] * 3.814697265625E-6 *
+ 389:StandSpeed_Balance.c ****       StandSpeed_Balance_DW.Kd_angle;
+ 390:StandSpeed_Balance.c ****   }
+ 391:StandSpeed_Balance.c **** 
+ 392:StandSpeed_Balance.c ****   /* End of Outputs for SubSystem: '<Root>/anglePID' */
+ 393:StandSpeed_Balance.c **** 
+ 394:StandSpeed_Balance.c ****   /* Saturate: '<Root>/Saturation3' */
+ 395:StandSpeed_Balance.c ****   if (StandSpeed_Balance_B.Add_h > 2048.0) {
+ 409              		.loc 1 395 3 is_stmt 1 view .LVU155
+ 410              		.loc 1 395 27 is_stmt 0 view .LVU156
+ 411 0256 2E4B     		ldr	r3, .L159
+ 412 0258 D3E90245 		ldrd	r4, [r3, #8]
+ 413              		.loc 1 395 6 view .LVU157
+ 414 025c 0022     		movs	r2, #0
+ 415 025e 3B4B     		ldr	r3, .L159+60
+ 416 0260 2046     		mov	r0, r4
+ 417 0262 2946     		mov	r1, r5
+ 418 0264 FFF7FEFF 		bl	__aeabi_dcmpgt
+ 419              	.LVL3:
+ 420 0268 0028     		cmp	r0, #0
+ 421 026a 40F07881 		bne	.L85
+ 396:StandSpeed_Balance.c ****     rtb_Add_g3 = 2048.0;
+ 397:StandSpeed_Balance.c ****   } else if (StandSpeed_Balance_B.Add_h < -2048.0) {
+ 422              		.loc 1 397 10 is_stmt 1 view .LVU158
+ 423              		.loc 1 397 13 is_stmt 0 view .LVU159
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccmTahDp.s 			page 16
+
+
+ 424 026e 0022     		movs	r2, #0
+ 425 0270 374B     		ldr	r3, .L159+64
+ 426 0272 2046     		mov	r0, r4
+ 427 0274 2946     		mov	r1, r5
+ 428 0276 FFF7FEFF 		bl	__aeabi_dcmplt
+ 429              	.LVL4:
+ 430 027a 0028     		cmp	r0, #0
+ 431 027c 00F07181 		beq	.L19
+ 398:StandSpeed_Balance.c ****     rtb_Add_g3 = -2048.0;
+ 432              		.loc 1 398 16 view .LVU160
+ 433 0280 0024     		movs	r4, #0
+ 434 0282 334D     		ldr	r5, .L159+64
+ 435 0284 6DE1     		b	.L19
+ 436              	.L137:
+ 165:StandSpeed_Balance.c ****       StandSpeed_Balance_DW.Delay_DSTATE_e[0]) * 100.0F * 60.0F / 40000.0F;
+ 437              		.loc 1 165 5 is_stmt 1 view .LVU161
+ 165:StandSpeed_Balance.c ****       StandSpeed_Balance_DW.Delay_DSTATE_e[0]) * 100.0F * 60.0F / 40000.0F;
+ 438              		.loc 1 165 66 is_stmt 0 view .LVU162
+ 439 0286 2246     		mov	r2, r4
+ 440 0288 266D     		ldr	r6, [r4, #80]
+ 166:StandSpeed_Balance.c **** 
+ 441              		.loc 1 166 43 view .LVU163
+ 442 028a 2749     		ldr	r1, .L159+24
+ 443 028c CB6B     		ldr	r3, [r1, #60]
+ 165:StandSpeed_Balance.c ****       StandSpeed_Balance_DW.Delay_DSTATE_e[0]) * 100.0F * 60.0F / 40000.0F;
+ 444              		.loc 1 165 76 view .LVU164
+ 445 028e F31A     		subs	r3, r6, r3
+ 446 0290 07EE103A 		vmov	s14, r3	@ int
+ 165:StandSpeed_Balance.c ****       StandSpeed_Balance_DW.Delay_DSTATE_e[0]) * 100.0F * 60.0F / 40000.0F;
+ 447              		.loc 1 165 35 view .LVU165
+ 448 0294 B8EEC77A 		vcvt.f32.s32	s14, s14
+ 166:StandSpeed_Balance.c **** 
+ 449              		.loc 1 166 48 view .LVU166
+ 450 0298 DFED2E5A 		vldr.32	s11, .L159+68
+ 451 029c 27EE257A 		vmul.f32	s14, s14, s11
+ 166:StandSpeed_Balance.c **** 
+ 452              		.loc 1 166 57 view .LVU167
+ 453 02a0 9FED2D6A 		vldr.32	s12, .L159+72
+ 454 02a4 27EE067A 		vmul.f32	s14, s14, s12
+ 166:StandSpeed_Balance.c **** 
+ 455              		.loc 1 166 65 view .LVU168
+ 456 02a8 DFED2C6A 		vldr.32	s13, .L159+76
+ 457 02ac 87EE265A 		vdiv.f32	s10, s14, s13
+ 165:StandSpeed_Balance.c ****       StandSpeed_Balance_DW.Delay_DSTATE_e[0]) * 100.0F * 60.0F / 40000.0F;
+ 458              		.loc 1 165 33 view .LVU169
+ 459 02b0 84ED125A 		vstr.32	s10, [r4, #72]
+ 177:StandSpeed_Balance.c ****       StandSpeed_Balance_DW.Delay1_DSTATE[0]) * 100.0F * 60.0F / 40000.0F;
+ 460              		.loc 1 177 5 is_stmt 1 view .LVU170
+ 177:StandSpeed_Balance.c ****       StandSpeed_Balance_DW.Delay1_DSTATE[0]) * 100.0F * 60.0F / 40000.0F;
+ 461              		.loc 1 177 67 is_stmt 0 view .LVU171
+ 462 02b4 646D     		ldr	r4, [r4, #84]
+ 178:StandSpeed_Balance.c ****     for (idxDelay = 0; idxDelay < 18; idxDelay++) {
+ 463              		.loc 1 178 42 view .LVU172
+ 464 02b6 D1F88830 		ldr	r3, [r1, #136]
+ 177:StandSpeed_Balance.c ****       StandSpeed_Balance_DW.Delay1_DSTATE[0]) * 100.0F * 60.0F / 40000.0F;
+ 465              		.loc 1 177 77 view .LVU173
+ 466 02ba E31A     		subs	r3, r4, r3
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccmTahDp.s 			page 17
+
+
+ 467 02bc 07EE103A 		vmov	s14, r3	@ int
+ 177:StandSpeed_Balance.c ****       StandSpeed_Balance_DW.Delay1_DSTATE[0]) * 100.0F * 60.0F / 40000.0F;
+ 468              		.loc 1 177 36 view .LVU174
+ 469 02c0 B8EEC77A 		vcvt.f32.s32	s14, s14
+ 178:StandSpeed_Balance.c ****     for (idxDelay = 0; idxDelay < 18; idxDelay++) {
+ 470              		.loc 1 178 47 view .LVU175
+ 471 02c4 27EE257A 		vmul.f32	s14, s14, s11
+ 178:StandSpeed_Balance.c ****     for (idxDelay = 0; idxDelay < 18; idxDelay++) {
+ 472              		.loc 1 178 56 view .LVU176
+ 473 02c8 27EE067A 		vmul.f32	s14, s14, s12
+ 178:StandSpeed_Balance.c ****     for (idxDelay = 0; idxDelay < 18; idxDelay++) {
+ 474              		.loc 1 178 64 view .LVU177
+ 475 02cc 87EE266A 		vdiv.f32	s12, s14, s13
+ 177:StandSpeed_Balance.c ****       StandSpeed_Balance_DW.Delay1_DSTATE[0]) * 100.0F * 60.0F / 40000.0F;
+ 476              		.loc 1 177 34 view .LVU178
+ 477 02d0 82ED136A 		vstr.32	s12, [r2, #76]
+ 179:StandSpeed_Balance.c ****       /* Update for Delay: '<S11>/Delay' */
+ 478              		.loc 1 179 5 is_stmt 1 view .LVU179
+ 479              	.LVL5:
+ 179:StandSpeed_Balance.c ****       /* Update for Delay: '<S11>/Delay' */
+ 480              		.loc 1 179 19 is_stmt 0 view .LVU180
+ 481 02d4 0023     		movs	r3, #0
+ 179:StandSpeed_Balance.c ****       /* Update for Delay: '<S11>/Delay' */
+ 482              		.loc 1 179 5 view .LVU181
+ 483 02d6 13E0     		b	.L3
+ 484              	.LVL6:
+ 485              	.L4:
+ 181:StandSpeed_Balance.c ****         StandSpeed_Balance_DW.Delay_DSTATE_e[idxDelay + 1];
+ 486              		.loc 1 181 7 is_stmt 1 discriminator 3 view .LVU182
+ 182:StandSpeed_Balance.c **** 
+ 487              		.loc 1 182 45 is_stmt 0 discriminator 3 view .LVU183
+ 488 02d8 134A     		ldr	r2, .L159+24
+ 489 02da 03F10F01 		add	r1, r3, #15
+ 490 02de 02EB8101 		add	r1, r2, r1, lsl #2
+ 491 02e2 4868     		ldr	r0, [r1, #4]
+ 181:StandSpeed_Balance.c ****         StandSpeed_Balance_DW.Delay_DSTATE_e[idxDelay + 1];
+ 492              		.loc 1 181 54 discriminator 3 view .LVU184
+ 493 02e4 03F10E01 		add	r1, r3, #14
+ 494 02e8 02EB8101 		add	r1, r2, r1, lsl #2
+ 495 02ec 4860     		str	r0, [r1, #4]
+ 185:StandSpeed_Balance.c ****         StandSpeed_Balance_DW.Delay1_DSTATE[idxDelay + 1];
+ 496              		.loc 1 185 7 is_stmt 1 discriminator 3 view .LVU185
+ 186:StandSpeed_Balance.c ****     }
+ 497              		.loc 1 186 44 is_stmt 0 discriminator 3 view .LVU186
+ 498 02ee 03F12301 		add	r1, r3, #35
+ 499 02f2 52F82100 		ldr	r0, [r2, r1, lsl #2]
+ 185:StandSpeed_Balance.c ****         StandSpeed_Balance_DW.Delay1_DSTATE[idxDelay + 1];
+ 500              		.loc 1 185 53 discriminator 3 view .LVU187
+ 501 02f6 03F12201 		add	r1, r3, #34
+ 502 02fa 42F82100 		str	r0, [r2, r1, lsl #2]
+ 179:StandSpeed_Balance.c ****       /* Update for Delay: '<S11>/Delay' */
+ 503              		.loc 1 179 47 is_stmt 1 discriminator 3 view .LVU188
+ 504              	.LVL7:
+ 179:StandSpeed_Balance.c ****       /* Update for Delay: '<S11>/Delay' */
+ 505              		.loc 1 179 47 is_stmt 0 discriminator 3 view .LVU189
+ 506 02fe 0133     		adds	r3, r3, #1
+ 507              	.LVL8:
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccmTahDp.s 			page 18
+
+
+ 508              	.L3:
+ 179:StandSpeed_Balance.c ****       /* Update for Delay: '<S11>/Delay' */
+ 509              		.loc 1 179 33 is_stmt 1 discriminator 1 view .LVU190
+ 510 0300 112B     		cmp	r3, #17
+ 511 0302 E9DD     		ble	.L4
+ 190:StandSpeed_Balance.c **** 
+ 512              		.loc 1 190 5 view .LVU191
+ 190:StandSpeed_Balance.c **** 
+ 513              		.loc 1 190 46 is_stmt 0 view .LVU192
+ 514 0304 084B     		ldr	r3, .L159+24
+ 515              	.LVL9:
+ 190:StandSpeed_Balance.c **** 
+ 516              		.loc 1 190 46 view .LVU193
+ 517 0306 C3F88460 		str	r6, [r3, #132]
+ 193:StandSpeed_Balance.c ****   }
+ 518              		.loc 1 193 5 is_stmt 1 view .LVU194
+ 193:StandSpeed_Balance.c ****   }
+ 519              		.loc 1 193 45 is_stmt 0 view .LVU195
+ 520 030a C3F8D040 		str	r4, [r3, #208]
+ 521 030e 75E7     		b	.L2
+ 522              	.L160:
+ 523              		.align	2
+ 524              	.L159:
+ 525 0310 00000000 		.word	.LANCHOR0
+ 526 0314 00000000 		.word	HI226_Angle
+ 527 0318 00000000 		.word	HI226_AngleV
+ 528 031c 00000000 		.word	htim5
+ 529 0320 00000000 		.word	htim2
+ 530 0324 00000000 		.word	adc_rawvalue
+ 531 0328 00000000 		.word	.LANCHOR1
+ 532 032c 3333733F 		.word	1064514355
+ 533 0330 00CC4C3D 		.word	1028443136
+ 534 0334 00000000 		.word	DataLink_UpFrameData
+ 535 0338 00000000 		.word	motor1_PwmData
+ 536 033c 00000000 		.word	motor2_PwmData
+ 537 0340 00080240 		.word	1073874944
+ 538 0344 00000000 		.word	ws2812_data
+ 539 0348 00000000 		.word	.LANCHOR2
+ 540 034c 0000A040 		.word	1084227584
+ 541 0350 0000A0C0 		.word	-1063256064
+ 542 0354 0000C842 		.word	1120403456
+ 543 0358 00007042 		.word	1114636288
+ 544 035c 00401C47 		.word	1193033728
+ 545              	.L138:
+ 214:StandSpeed_Balance.c ****       - (StandSpeed_Balance_B.Divide + StandSpeed_Balance_B.Divide1)) * 0.3F +
+ 546              		.loc 1 214 5 is_stmt 1 view .LVU196
+ 215:StandSpeed_Balance.c ****       0.7F * StandSpeed_Balance_DW.Delay_DSTATE_f;
+ 547              		.loc 1 215 30 is_stmt 0 view .LVU197
+ 548 0360 BD4B     		ldr	r3, .L161+40
+ 549 0362 93ED127A 		vldr.32	s14, [r3, #72]
+ 215:StandSpeed_Balance.c ****       0.7F * StandSpeed_Balance_DW.Delay_DSTATE_f;
+ 550              		.loc 1 215 60 view .LVU198
+ 551 0366 D3ED136A 		vldr.32	s13, [r3, #76]
+ 215:StandSpeed_Balance.c ****       0.7F * StandSpeed_Balance_DW.Delay_DSTATE_f;
+ 552              		.loc 1 215 38 view .LVU199
+ 553 036a 37EE267A 		vadd.f32	s14, s14, s13
+ 215:StandSpeed_Balance.c ****       0.7F * StandSpeed_Balance_DW.Delay_DSTATE_f;
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccmTahDp.s 			page 19
+
+
+ 554              		.loc 1 215 7 view .LVU200
+ 555 036e 37EEC78A 		vsub.f32	s16, s15, s14
+ 215:StandSpeed_Balance.c ****       0.7F * StandSpeed_Balance_DW.Delay_DSTATE_f;
+ 556              		.loc 1 215 71 view .LVU201
+ 557 0372 DFEDBA7A 		vldr.32	s15, .L161+44
+ 558 0376 28EE278A 		vmul.f32	s16, s16, s15
+ 216:StandSpeed_Balance.c **** 
+ 559              		.loc 1 216 35 view .LVU202
+ 560 037a DFF8F0A2 		ldr	r10, .L161+60
+ 561 037e DAED0D7A 		vldr.32	s15, [r10, #52]
+ 216:StandSpeed_Balance.c **** 
+ 562              		.loc 1 216 12 view .LVU203
+ 563 0382 9FEDB77A 		vldr.32	s14, .L161+48
+ 564 0386 67EE877A 		vmul.f32	s15, s15, s14
+ 215:StandSpeed_Balance.c ****       0.7F * StandSpeed_Balance_DW.Delay_DSTATE_f;
+ 565              		.loc 1 215 78 view .LVU204
+ 566 038a 38EE278A 		vadd.f32	s16, s16, s15
+ 214:StandSpeed_Balance.c ****       - (StandSpeed_Balance_B.Divide + StandSpeed_Balance_B.Divide1)) * 0.3F +
+ 567              		.loc 1 214 42 view .LVU205
+ 568 038e 8AED0D8A 		vstr.32	s16, [r10, #52]
+ 227:StandSpeed_Balance.c ****       StandSpeed_Balance_DW.Ki_speed * StandSpeed_Balance_DW.Delay_DSTATE_f) +
+ 569              		.loc 1 227 5 is_stmt 1 view .LVU206
+ 228:StandSpeed_Balance.c ****       StandSpeed_Balance_DW.Delay_DSTATE_j) * 0.995;
+ 570              		.loc 1 228 28 is_stmt 0 view .LVU207
+ 571 0392 DAF8E000 		ldr	r0, [r10, #224]	@ float
+ 572 0396 FFF7FEFF 		bl	__aeabi_f2d
+ 573              	.LVL10:
+ 227:StandSpeed_Balance.c ****       StandSpeed_Balance_DW.Ki_speed * StandSpeed_Balance_DW.Delay_DSTATE_f) +
+ 574              		.loc 1 227 62 view .LVU208
+ 575 039a A5A3     		adr	r3, .L161
+ 576 039c D3E90023 		ldrd	r2, [r3]
+ 577 03a0 FFF7FEFF 		bl	__aeabi_dmul
+ 578              	.LVL11:
+ 579 03a4 8046     		mov	r8, r0
+ 580 03a6 8946     		mov	r9, r1
+ 228:StandSpeed_Balance.c ****       StandSpeed_Balance_DW.Delay_DSTATE_j) * 0.995;
+ 581              		.loc 1 228 61 view .LVU209
+ 582 03a8 18EE100A 		vmov	r0, s16
+ 583 03ac FFF7FEFF 		bl	__aeabi_f2d
+ 584              	.LVL12:
+ 585 03b0 0646     		mov	r6, r0
+ 586 03b2 0F46     		mov	r7, r1
+ 228:StandSpeed_Balance.c ****       StandSpeed_Balance_DW.Delay_DSTATE_j) * 0.995;
+ 587              		.loc 1 228 38 view .LVU210
+ 588 03b4 0246     		mov	r2, r0
+ 589 03b6 0B46     		mov	r3, r1
+ 590 03b8 4046     		mov	r0, r8
+ 591 03ba 4946     		mov	r1, r9
+ 592 03bc FFF7FEFF 		bl	__aeabi_dmul
+ 593              	.LVL13:
+ 227:StandSpeed_Balance.c ****       StandSpeed_Balance_DW.Ki_speed * StandSpeed_Balance_DW.Delay_DSTATE_f) +
+ 594              		.loc 1 227 45 view .LVU211
+ 595 03c0 FFF7FEFF 		bl	__aeabi_d2f
+ 596              	.LVL14:
+ 597 03c4 FFF7FEFF 		bl	__aeabi_f2d
+ 598              	.LVL15:
+ 228:StandSpeed_Balance.c ****       StandSpeed_Balance_DW.Delay_DSTATE_j) * 0.995;
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccmTahDp.s 			page 20
+
+
+ 599              		.loc 1 228 78 view .LVU212
+ 600 03c8 DAE90223 		ldrd	r2, [r10, #8]
+ 601 03cc FFF7FEFF 		bl	__aeabi_dadd
+ 602              	.LVL16:
+ 229:StandSpeed_Balance.c **** 
+ 603              		.loc 1 229 45 view .LVU213
+ 604 03d0 99A3     		adr	r3, .L161+8
+ 605 03d2 D3E90023 		ldrd	r2, [r3]
+ 606 03d6 FFF7FEFF 		bl	__aeabi_dmul
+ 607              	.LVL17:
+ 608 03da 8046     		mov	r8, r0
+ 609 03dc 8946     		mov	r9, r1
+ 227:StandSpeed_Balance.c ****       StandSpeed_Balance_DW.Ki_speed * StandSpeed_Balance_DW.Delay_DSTATE_f) +
+ 610              		.loc 1 227 42 view .LVU214
+ 611 03de CAE90289 		strd	r8, [r10, #8]
+ 232:StandSpeed_Balance.c ****       /* Gain: '<S35>/Gain1' */
+ 612              		.loc 1 232 5 is_stmt 1 view .LVU215
+ 232:StandSpeed_Balance.c ****       /* Gain: '<S35>/Gain1' */
+ 613              		.loc 1 232 8 is_stmt 0 view .LVU216
+ 614 03e2 0022     		movs	r2, #0
+ 615 03e4 9F4B     		ldr	r3, .L161+52
+ 616 03e6 FFF7FEFF 		bl	__aeabi_dcmpgt
+ 617              	.LVL18:
+ 618 03ea 0028     		cmp	r0, #0
+ 619 03ec 3FD0     		beq	.L119
+ 234:StandSpeed_Balance.c ****     } else if (StandSpeed_Balance_DW.Delay_DSTATE_j < -20.0) {
+ 620              		.loc 1 234 7 is_stmt 1 view .LVU217
+ 234:StandSpeed_Balance.c ****     } else if (StandSpeed_Balance_DW.Delay_DSTATE_j < -20.0) {
+ 621              		.loc 1 234 44 is_stmt 0 view .LVU218
+ 622 03ee 0020     		movs	r0, #0
+ 623 03f0 9C49     		ldr	r1, .L161+52
+ 624 03f2 CAE90201 		strd	r0, [r10, #8]
+ 625              	.L8:
+ 264:StandSpeed_Balance.c ****       StandSpeed_Balance_DW.Delay_DSTATE_f +
+ 626              		.loc 1 264 5 is_stmt 1 view .LVU219
+ 264:StandSpeed_Balance.c ****       StandSpeed_Balance_DW.Delay_DSTATE_f +
+ 627              		.loc 1 264 62 is_stmt 0 view .LVU220
+ 628 03f6 DFF87482 		ldr	r8, .L161+60
+ 629 03fa D8F8DC00 		ldr	r0, [r8, #220]	@ float
+ 630 03fe FFF7FEFF 		bl	__aeabi_f2d
+ 631              	.LVL19:
+ 264:StandSpeed_Balance.c ****       StandSpeed_Balance_DW.Delay_DSTATE_f +
+ 632              		.loc 1 264 39 view .LVU221
+ 633 0402 8BA3     		adr	r3, .L161
+ 634 0404 D3E90023 		ldrd	r2, [r3]
+ 635 0408 FFF7FEFF 		bl	__aeabi_dmul
+ 636              	.LVL20:
+ 637 040c 0246     		mov	r2, r0
+ 638 040e 0B46     		mov	r3, r1
+ 264:StandSpeed_Balance.c ****       StandSpeed_Balance_DW.Delay_DSTATE_f +
+ 639              		.loc 1 264 72 view .LVU222
+ 640 0410 3046     		mov	r0, r6
+ 641 0412 3946     		mov	r1, r7
+ 642 0414 FFF7FEFF 		bl	__aeabi_dmul
+ 643              	.LVL21:
+ 265:StandSpeed_Balance.c ****       StandSpeed_Balance_DW.Delay_DSTATE_j) + 0.001 *
+ 644              		.loc 1 265 44 view .LVU223
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccmTahDp.s 			page 21
+
+
+ 645 0418 D8E90223 		ldrd	r2, [r8, #8]
+ 646 041c FFF7FEFF 		bl	__aeabi_dadd
+ 647              	.LVL22:
+ 648 0420 8246     		mov	r10, r0
+ 649 0422 8B46     		mov	fp, r1
+ 267:StandSpeed_Balance.c ****       StandSpeed_Balance_DW.UD_DSTATE_c);
+ 650              		.loc 1 267 28 view .LVU224
+ 651 0424 D8F8E400 		ldr	r0, [r8, #228]	@ float
+ 652 0428 FFF7FEFF 		bl	__aeabi_f2d
+ 653              	.LVL23:
+ 266:StandSpeed_Balance.c ****       StandSpeed_Balance_DW.Kd_speed * (StandSpeed_Balance_DW.Delay_DSTATE_f -
+ 654              		.loc 1 266 53 view .LVU225
+ 655 042c 80A3     		adr	r3, .L161
+ 656 042e D3E90023 		ldrd	r2, [r3]
+ 657 0432 FFF7FEFF 		bl	__aeabi_dmul
+ 658              	.LVL24:
+ 659 0436 0646     		mov	r6, r0
+ 660 0438 0F46     		mov	r7, r1
+ 268:StandSpeed_Balance.c **** 
+ 661              		.loc 1 268 28 view .LVU226
+ 662 043a D8ED0E7A 		vldr.32	s15, [r8, #56]
+ 267:StandSpeed_Balance.c ****       StandSpeed_Balance_DW.UD_DSTATE_c);
+ 663              		.loc 1 267 78 view .LVU227
+ 664 043e 78EE677A 		vsub.f32	s15, s16, s15
+ 665 0442 17EE900A 		vmov	r0, s15
+ 666 0446 FFF7FEFF 		bl	__aeabi_f2d
+ 667              	.LVL25:
+ 668 044a 0246     		mov	r2, r0
+ 669 044c 0B46     		mov	r3, r1
+ 267:StandSpeed_Balance.c ****       StandSpeed_Balance_DW.UD_DSTATE_c);
+ 670              		.loc 1 267 38 view .LVU228
+ 671 044e 3046     		mov	r0, r6
+ 672 0450 3946     		mov	r1, r7
+ 673 0452 FFF7FEFF 		bl	__aeabi_dmul
+ 674              	.LVL26:
+ 675 0456 0246     		mov	r2, r0
+ 676 0458 0B46     		mov	r3, r1
+ 266:StandSpeed_Balance.c ****       StandSpeed_Balance_DW.Kd_speed * (StandSpeed_Balance_DW.Delay_DSTATE_f -
+ 677              		.loc 1 266 45 view .LVU229
+ 678 045a 5046     		mov	r0, r10
+ 679 045c 5946     		mov	r1, fp
+ 680 045e FFF7FEFF 		bl	__aeabi_dadd
+ 681              	.LVL27:
+ 264:StandSpeed_Balance.c ****       StandSpeed_Balance_DW.Delay_DSTATE_f +
+ 682              		.loc 1 264 30 view .LVU230
+ 683 0462 7D4B     		ldr	r3, .L161+40
+ 684 0464 C3E90001 		strd	r0, [r3]
+ 277:StandSpeed_Balance.c ****   }
+ 685              		.loc 1 277 5 is_stmt 1 view .LVU231
+ 277:StandSpeed_Balance.c ****   }
+ 686              		.loc 1 277 39 is_stmt 0 view .LVU232
+ 687 0468 88ED0E8A 		vstr.32	s16, [r8, #56]
+ 688 046c CCE6     		b	.L5
+ 689              	.L119:
+ 235:StandSpeed_Balance.c ****       /* Gain: '<S35>/Gain1' */
+ 690              		.loc 1 235 12 is_stmt 1 view .LVU233
+ 235:StandSpeed_Balance.c ****       /* Gain: '<S35>/Gain1' */
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccmTahDp.s 			page 22
+
+
+ 691              		.loc 1 235 15 is_stmt 0 view .LVU234
+ 692 046e 0022     		movs	r2, #0
+ 693 0470 7D4B     		ldr	r3, .L161+56
+ 694 0472 4046     		mov	r0, r8
+ 695 0474 4946     		mov	r1, r9
+ 696 0476 FFF7FEFF 		bl	__aeabi_dcmplt
+ 697              	.LVL28:
+ 698 047a 0028     		cmp	r0, #0
+ 699 047c BBD0     		beq	.L8
+ 237:StandSpeed_Balance.c ****     }
+ 700              		.loc 1 237 7 is_stmt 1 view .LVU235
+ 237:StandSpeed_Balance.c ****     }
+ 701              		.loc 1 237 44 is_stmt 0 view .LVU236
+ 702 047e 7B4B     		ldr	r3, .L161+60
+ 703 0480 0020     		movs	r0, #0
+ 704 0482 7949     		ldr	r1, .L161+56
+ 705 0484 C3E90201 		strd	r0, [r3, #8]
+ 706 0488 B5E7     		b	.L8
+ 707              	.LVL29:
+ 708              	.L10:
+ 298:StandSpeed_Balance.c ****   }
+ 709              		.loc 1 298 5 is_stmt 1 view .LVU237
+ 298:StandSpeed_Balance.c ****   }
+ 710              		.loc 1 298 42 is_stmt 0 view .LVU238
+ 711 048a 784A     		ldr	r2, .L161+60
+ 712 048c 82F8F630 		strb	r3, [r2, #246]
+ 713 0490 C6E6     		b	.L11
+ 714              	.L12:
+ 312:StandSpeed_Balance.c ****   }
+ 715              		.loc 1 312 5 is_stmt 1 view .LVU239
+ 312:StandSpeed_Balance.c ****   }
+ 716              		.loc 1 312 40 is_stmt 0 view .LVU240
+ 717 0492 764B     		ldr	r3, .L161+60
+ 718 0494 83F8F450 		strb	r5, [r3, #244]
+ 719 0498 CBE6     		b	.L13
+ 720              	.L14:
+ 326:StandSpeed_Balance.c ****   }
+ 721              		.loc 1 326 5 is_stmt 1 view .LVU241
+ 326:StandSpeed_Balance.c ****   }
+ 722              		.loc 1 326 42 is_stmt 0 view .LVU242
+ 723 049a 744B     		ldr	r3, .L161+60
+ 724 049c 83F8F540 		strb	r4, [r3, #245]
+ 725 04a0 D0E6     		b	.L15
+ 726              	.L139:
+ 727              	.LBB2:
+ 349:StandSpeed_Balance.c **** 
+ 728              		.loc 1 349 5 is_stmt 1 view .LVU243
+ 352:StandSpeed_Balance.c ****       tmp = (int16_T)-StandSpeed_Balance_B.angle[1];
+ 729              		.loc 1 352 5 view .LVU244
+ 352:StandSpeed_Balance.c ****       tmp = (int16_T)-StandSpeed_Balance_B.angle[1];
+ 730              		.loc 1 352 35 is_stmt 0 view .LVU245
+ 731 04a2 B3F95A00 		ldrsh	r0, [r3, #90]
+ 352:StandSpeed_Balance.c ****       tmp = (int16_T)-StandSpeed_Balance_B.angle[1];
+ 732              		.loc 1 352 8 view .LVU246
+ 733 04a6 0028     		cmp	r0, #0
+ 734 04a8 52DB     		blt	.L140
+ 355:StandSpeed_Balance.c ****     }
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccmTahDp.s 			page 23
+
+
+ 735              		.loc 1 355 11 view .LVU247
+ 736 04aa 0346     		mov	r3, r0
+ 737              	.L17:
+ 738              	.LVL30:
+ 364:StandSpeed_Balance.c ****       rtb_Add_g3 = 0.0;
+ 739              		.loc 1 364 5 is_stmt 1 view .LVU248
+ 364:StandSpeed_Balance.c ****       rtb_Add_g3 = 0.0;
+ 740              		.loc 1 364 8 is_stmt 0 view .LVU249
+ 741 04ac B3F57A6F 		cmp	r3, #4000
+ 742 04b0 52DC     		bgt	.L84
+ 367:StandSpeed_Balance.c ****         4.76837158203125E-7;
+ 743              		.loc 1 367 7 is_stmt 1 view .LVU250
+ 367:StandSpeed_Balance.c ****         4.76837158203125E-7;
+ 744              		.loc 1 367 30 is_stmt 0 view .LVU251
+ 745 04b2 FFF7FEFF 		bl	__aeabi_i2d
+ 746              	.LVL31:
+ 367:StandSpeed_Balance.c ****         4.76837158203125E-7;
+ 747              		.loc 1 367 28 view .LVU252
+ 748 04b6 62A3     		adr	r3, .L161+16
+ 749 04b8 D3E90023 		ldrd	r2, [r3]
+ 750 04bc FFF7FEFF 		bl	__aeabi_dmul
+ 751              	.LVL32:
+ 367:StandSpeed_Balance.c ****         4.76837158203125E-7;
+ 752              		.loc 1 367 18 view .LVU253
+ 753 04c0 0022     		movs	r2, #0
+ 754 04c2 6B4B     		ldr	r3, .L161+64
+ 755 04c4 FFF7FEFF 		bl	__aeabi_dmul
+ 756              	.LVL33:
+ 757 04c8 0646     		mov	r6, r0
+ 758 04ca 0F46     		mov	r7, r1
+ 759              	.LVL34:
+ 760              	.L18:
+ 385:StandSpeed_Balance.c ****       StandSpeed_Balance_DW.machine_mid) - rtb_Add_g3) *
+ 761              		.loc 1 385 5 is_stmt 1 view .LVU254
+ 385:StandSpeed_Balance.c ****       StandSpeed_Balance_DW.machine_mid) - rtb_Add_g3) *
+ 762              		.loc 1 385 56 is_stmt 0 view .LVU255
+ 763 04cc 624C     		ldr	r4, .L161+40
+ 764 04ce D4E90089 		ldrd	r8, [r4]
+ 386:StandSpeed_Balance.c ****       StandSpeed_Balance_DW.Kp_angle + 26214.0 * (real_T)
+ 765              		.loc 1 386 28 view .LVU256
+ 766 04d2 664D     		ldr	r5, .L161+60
+ 767 04d4 D5F8EC00 		ldr	r0, [r5, #236]	@ float
+ 768 04d8 FFF7FEFF 		bl	__aeabi_f2d
+ 769              	.LVL35:
+ 770 04dc 0246     		mov	r2, r0
+ 771 04de 0B46     		mov	r3, r1
+ 385:StandSpeed_Balance.c ****       StandSpeed_Balance_DW.machine_mid) - rtb_Add_g3) *
+ 772              		.loc 1 385 61 view .LVU257
+ 773 04e0 4046     		mov	r0, r8
+ 774 04e2 4946     		mov	r1, r9
+ 775 04e4 FFF7FEFF 		bl	__aeabi_dadd
+ 776              	.LVL36:
+ 386:StandSpeed_Balance.c ****       StandSpeed_Balance_DW.Kp_angle + 26214.0 * (real_T)
+ 777              		.loc 1 386 42 view .LVU258
+ 778 04e8 3246     		mov	r2, r6
+ 779 04ea 3B46     		mov	r3, r7
+ 780 04ec FFF7FEFF 		bl	__aeabi_dsub
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccmTahDp.s 			page 24
+
+
+ 781              	.LVL37:
+ 782 04f0 0646     		mov	r6, r0
+ 783              	.LVL38:
+ 386:StandSpeed_Balance.c ****       StandSpeed_Balance_DW.Kp_angle + 26214.0 * (real_T)
+ 784              		.loc 1 386 42 view .LVU259
+ 785 04f2 0F46     		mov	r7, r1
+ 387:StandSpeed_Balance.c ****       StandSpeed_Balance_B.anglev[0] * 3.814697265625E-6 *
+ 786              		.loc 1 387 28 view .LVU260
+ 787 04f4 D5F8D400 		ldr	r0, [r5, #212]	@ float
+ 788 04f8 FFF7FEFF 		bl	__aeabi_f2d
+ 789              	.LVL39:
+ 790 04fc 0246     		mov	r2, r0
+ 791 04fe 0B46     		mov	r3, r1
+ 386:StandSpeed_Balance.c ****       StandSpeed_Balance_DW.Kp_angle + 26214.0 * (real_T)
+ 792              		.loc 1 386 56 view .LVU261
+ 793 0500 3046     		mov	r0, r6
+ 794 0502 3946     		mov	r1, r7
+ 795 0504 FFF7FEFF 		bl	__aeabi_dmul
+ 796              	.LVL40:
+ 797 0508 0646     		mov	r6, r0
+ 798 050a 0F46     		mov	r7, r1
+ 387:StandSpeed_Balance.c ****       StandSpeed_Balance_B.anglev[0] * 3.814697265625E-6 *
+ 799              		.loc 1 387 50 view .LVU262
+ 800 050c B4F95E00 		ldrsh	r0, [r4, #94]
+ 801 0510 FFF7FEFF 		bl	__aeabi_i2d
+ 802              	.LVL41:
+ 387:StandSpeed_Balance.c ****       StandSpeed_Balance_B.anglev[0] * 3.814697265625E-6 *
+ 803              		.loc 1 387 48 view .LVU263
+ 804 0514 4CA3     		adr	r3, .L161+24
+ 805 0516 D3E90023 		ldrd	r2, [r3]
+ 806 051a FFF7FEFF 		bl	__aeabi_dmul
+ 807              	.LVL42:
+ 388:StandSpeed_Balance.c ****       StandSpeed_Balance_DW.Kd_angle;
+ 808              		.loc 1 388 38 view .LVU264
+ 809 051e 0022     		movs	r2, #0
+ 810 0520 544B     		ldr	r3, .L161+68
+ 811 0522 FFF7FEFF 		bl	__aeabi_dmul
+ 812              	.LVL43:
+ 813 0526 8046     		mov	r8, r0
+ 814 0528 8946     		mov	r9, r1
+ 389:StandSpeed_Balance.c ****   }
+ 815              		.loc 1 389 28 view .LVU265
+ 816 052a D5F8E800 		ldr	r0, [r5, #232]	@ float
+ 817 052e FFF7FEFF 		bl	__aeabi_f2d
+ 818              	.LVL44:
+ 819 0532 0246     		mov	r2, r0
+ 820 0534 0B46     		mov	r3, r1
+ 388:StandSpeed_Balance.c ****       StandSpeed_Balance_DW.Kd_angle;
+ 821              		.loc 1 388 58 view .LVU266
+ 822 0536 4046     		mov	r0, r8
+ 823 0538 4946     		mov	r1, r9
+ 824 053a FFF7FEFF 		bl	__aeabi_dmul
+ 825              	.LVL45:
+ 826 053e 0246     		mov	r2, r0
+ 827 0540 0B46     		mov	r3, r1
+ 387:StandSpeed_Balance.c ****       StandSpeed_Balance_B.anglev[0] * 3.814697265625E-6 *
+ 828              		.loc 1 387 38 view .LVU267
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccmTahDp.s 			page 25
+
+
+ 829 0542 3046     		mov	r0, r6
+ 830 0544 3946     		mov	r1, r7
+ 831 0546 FFF7FEFF 		bl	__aeabi_dadd
+ 832              	.LVL46:
+ 385:StandSpeed_Balance.c ****       StandSpeed_Balance_DW.machine_mid) - rtb_Add_g3) *
+ 833              		.loc 1 385 32 view .LVU268
+ 834 054a C4E90201 		strd	r0, [r4, #8]
+ 835 054e 82E6     		b	.L16
+ 836              	.LVL47:
+ 837              	.L140:
+ 353:StandSpeed_Balance.c ****     } else {
+ 838              		.loc 1 353 7 is_stmt 1 view .LVU269
+ 353:StandSpeed_Balance.c ****     } else {
+ 839              		.loc 1 353 49 is_stmt 0 view .LVU270
+ 840 0550 83B2     		uxth	r3, r0
+ 353:StandSpeed_Balance.c ****     } else {
+ 841              		.loc 1 353 13 view .LVU271
+ 842 0552 5B42     		rsbs	r3, r3, #0
+ 353:StandSpeed_Balance.c ****     } else {
+ 843              		.loc 1 353 11 view .LVU272
+ 844 0554 1BB2     		sxth	r3, r3
+ 845              	.LVL48:
+ 353:StandSpeed_Balance.c ****     } else {
+ 846              		.loc 1 353 11 view .LVU273
+ 847 0556 A9E7     		b	.L17
+ 848              	.L84:
+ 365:StandSpeed_Balance.c ****     } else {
+ 849              		.loc 1 365 18 view .LVU274
+ 850 0558 0026     		movs	r6, #0
+ 851 055a 0027     		movs	r7, #0
+ 852 055c B6E7     		b	.L18
+ 853              	.LVL49:
+ 854              	.L85:
+ 365:StandSpeed_Balance.c ****     } else {
+ 855              		.loc 1 365 18 view .LVU275
+ 856              	.LBE2:
+ 396:StandSpeed_Balance.c ****   } else if (StandSpeed_Balance_B.Add_h < -2048.0) {
+ 857              		.loc 1 396 16 view .LVU276
+ 858 055e 0024     		movs	r4, #0
+ 859 0560 454D     		ldr	r5, .L161+72
+ 860              	.L19:
+ 861              	.LVL50:
+ 399:StandSpeed_Balance.c ****   } else {
+ 400:StandSpeed_Balance.c ****     rtb_Add_g3 = StandSpeed_Balance_B.Add_h;
+ 401:StandSpeed_Balance.c ****   }
+ 402:StandSpeed_Balance.c **** 
+ 403:StandSpeed_Balance.c ****   rtb_Add_g3 = floor(rtb_Add_g3);
+ 862              		.loc 1 403 3 is_stmt 1 view .LVU277
+ 863              		.loc 1 403 16 is_stmt 0 view .LVU278
+ 864 0562 45EC104B 		vmov	d0, r4, r5
+ 865 0566 FFF7FEFF 		bl	floor
+ 866              	.LVL51:
+ 867 056a B0EE408A 		vmov.f32	s16, s0
+ 868 056e F0EE608A 		vmov.f32	s17, s1
+ 869              	.LVL52:
+ 404:StandSpeed_Balance.c ****   if (rtIsNaN(rtb_Add_g3)) {
+ 870              		.loc 1 404 3 is_stmt 1 view .LVU279
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccmTahDp.s 			page 26
+
+
+ 871              		.loc 1 404 7 is_stmt 0 view .LVU280
+ 872 0572 FFF7FEFF 		bl	rtIsNaN
+ 873              	.LVL53:
+ 874              		.loc 1 404 6 view .LVU281
+ 875 0576 0028     		cmp	r0, #0
+ 876 0578 3DD0     		beq	.L141
+ 405:StandSpeed_Balance.c ****     rtb_Add_g3 = 0.0;
+ 877              		.loc 1 405 16 view .LVU282
+ 878 057a 0024     		movs	r4, #0
+ 879 057c 0025     		movs	r5, #0
+ 880              	.LVL54:
+ 881              	.L21:
+ 406:StandSpeed_Balance.c ****   } else {
+ 407:StandSpeed_Balance.c ****     rtb_Add_g3 = fmod(rtb_Add_g3, 65536.0);
+ 408:StandSpeed_Balance.c ****   }
+ 409:StandSpeed_Balance.c **** 
+ 410:StandSpeed_Balance.c ****   /* Switch: '<S13>/Switch1' incorporates:
+ 411:StandSpeed_Balance.c ****    *  Saturate: '<Root>/Saturation3'
+ 412:StandSpeed_Balance.c ****    */
+ 413:StandSpeed_Balance.c ****   StandSpeed_Balance_B.Saturation = (int16_T)(rtb_Add_g3 < 0.0 ? (int32_T)
+ 882              		.loc 1 413 3 is_stmt 1 view .LVU283
+ 883              		.loc 1 413 37 is_stmt 0 view .LVU284
+ 884 057e 0022     		movs	r2, #0
+ 885 0580 0023     		movs	r3, #0
+ 886 0582 2046     		mov	r0, r4
+ 887 0584 2946     		mov	r1, r5
+ 888 0586 FFF7FEFF 		bl	__aeabi_dcmplt
+ 889              	.LVL55:
+ 890 058a 0028     		cmp	r0, #0
+ 891 058c 3ED1     		bne	.L142
+ 414:StandSpeed_Balance.c ****     (int16_T)-(int16_T)(uint16_T)-rtb_Add_g3 : (int32_T)(int16_T)(uint16_T)
+ 892              		.loc 1 414 66 discriminator 2 view .LVU285
+ 893 058e 2046     		mov	r0, r4
+ 894 0590 2946     		mov	r1, r5
+ 895 0592 FFF7FEFF 		bl	__aeabi_d2uiz
+ 896              	.LVL56:
+ 413:StandSpeed_Balance.c ****     (int16_T)-(int16_T)(uint16_T)-rtb_Add_g3 : (int32_T)(int16_T)(uint16_T)
+ 897              		.loc 1 413 37 discriminator 2 view .LVU286
+ 898 0596 00B2     		sxth	r0, r0
+ 899              	.L24:
+ 413:StandSpeed_Balance.c ****     (int16_T)-(int16_T)(uint16_T)-rtb_Add_g3 : (int32_T)(int16_T)(uint16_T)
+ 900              		.loc 1 413 35 discriminator 4 view .LVU287
+ 901 0598 2F4B     		ldr	r3, .L161+40
+ 902 059a A3F87800 		strh	r0, [r3, #120]	@ movhi
+ 415:StandSpeed_Balance.c ****     rtb_Add_g3);
+ 416:StandSpeed_Balance.c **** 
+ 417:StandSpeed_Balance.c ****   /* RateLimiter: '<Root>/Rate Limiter1' */
+ 418:StandSpeed_Balance.c ****   idxDelay = StandSpeed_Balance_B.Saturation - StandSpeed_Balance_DW.PrevY;
+ 903              		.loc 1 418 3 is_stmt 1 discriminator 4 view .LVU288
+ 904              		.loc 1 418 69 is_stmt 0 discriminator 4 view .LVU289
+ 905 059e 334B     		ldr	r3, .L161+60
+ 906 05a0 B3F9F030 		ldrsh	r3, [r3, #240]
+ 907              		.loc 1 418 12 discriminator 4 view .LVU290
+ 908 05a4 C01A     		subs	r0, r0, r3
+ 909              	.LVL57:
+ 419:StandSpeed_Balance.c ****   if (idxDelay > 5) {
+ 910              		.loc 1 419 3 is_stmt 1 discriminator 4 view .LVU291
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccmTahDp.s 			page 27
+
+
+ 911              		.loc 1 419 6 is_stmt 0 discriminator 4 view .LVU292
+ 912 05a6 0528     		cmp	r0, #5
+ 913 05a8 39DD     		ble	.L25
+ 420:StandSpeed_Balance.c ****     /* Switch: '<S13>/Switch1' */
+ 421:StandSpeed_Balance.c ****     StandSpeed_Balance_B.Saturation = (int16_T)(StandSpeed_Balance_DW.PrevY + 5);
+ 914              		.loc 1 421 5 is_stmt 1 view .LVU293
+ 915              		.loc 1 421 70 is_stmt 0 view .LVU294
+ 916 05aa 9BB2     		uxth	r3, r3
+ 917              		.loc 1 421 77 view .LVU295
+ 918 05ac 0533     		adds	r3, r3, #5
+ 919              		.loc 1 421 37 view .LVU296
+ 920 05ae 2A4A     		ldr	r2, .L161+40
+ 921 05b0 A2F87830 		strh	r3, [r2, #120]	@ movhi
+ 922              	.L26:
+ 422:StandSpeed_Balance.c ****   } else if (idxDelay < -5) {
+ 423:StandSpeed_Balance.c ****     /* Switch: '<S13>/Switch1' */
+ 424:StandSpeed_Balance.c ****     StandSpeed_Balance_B.Saturation = (int16_T)(StandSpeed_Balance_DW.PrevY + -5);
+ 425:StandSpeed_Balance.c ****   }
+ 426:StandSpeed_Balance.c **** 
+ 427:StandSpeed_Balance.c ****   StandSpeed_Balance_DW.PrevY = StandSpeed_Balance_B.Saturation;
+ 923              		.loc 1 427 3 is_stmt 1 view .LVU297
+ 924              		.loc 1 427 53 is_stmt 0 view .LVU298
+ 925 05b4 284A     		ldr	r2, .L161+40
+ 926 05b6 B2F97830 		ldrsh	r3, [r2, #120]
+ 927              		.loc 1 427 31 view .LVU299
+ 928 05ba 2C49     		ldr	r1, .L161+60
+ 929 05bc A1F8F030 		strh	r3, [r1, #240]	@ movhi
+ 428:StandSpeed_Balance.c **** 
+ 429:StandSpeed_Balance.c ****   /* End of RateLimiter: '<Root>/Rate Limiter1' */
+ 430:StandSpeed_Balance.c **** 
+ 431:StandSpeed_Balance.c ****   /* DataTypeConversion: '<Root>/Data Type Conversion4' */
+ 432:StandSpeed_Balance.c ****   StandSpeed_Balance_B.DataTypeConversion4 = StandSpeed_Balance_B.Saturation;
+ 930              		.loc 1 432 3 is_stmt 1 view .LVU300
+ 931              		.loc 1 432 44 is_stmt 0 view .LVU301
+ 932 05c0 07EE903A 		vmov	s15, r3	@ int
+ 933 05c4 F8EEE77A 		vcvt.f32.s32	s15, s15
+ 934 05c8 C2ED077A 		vstr.32	s15, [r2, #28]
+ 433:StandSpeed_Balance.c **** 
+ 434:StandSpeed_Balance.c ****   /* Saturate: '<Root>/Saturation2' */
+ 435:StandSpeed_Balance.c ****   if (StandSpeed_Balance_B.Add_h > 2048.0) {
+ 935              		.loc 1 435 3 is_stmt 1 view .LVU302
+ 936              		.loc 1 435 27 is_stmt 0 view .LVU303
+ 937 05cc D2E90245 		ldrd	r4, [r2, #8]
+ 938              	.LVL58:
+ 939              		.loc 1 435 6 view .LVU304
+ 940 05d0 0022     		movs	r2, #0
+ 941 05d2 294B     		ldr	r3, .L161+72
+ 942 05d4 2046     		mov	r0, r4
+ 943              	.LVL59:
+ 944              		.loc 1 435 6 view .LVU305
+ 945 05d6 2946     		mov	r1, r5
+ 946 05d8 FFF7FEFF 		bl	__aeabi_dcmpgt
+ 947              	.LVL60:
+ 948 05dc 0028     		cmp	r0, #0
+ 949 05de 4FD1     		bne	.L87
+ 436:StandSpeed_Balance.c ****     rtb_Add_g3 = 2048.0;
+ 437:StandSpeed_Balance.c ****   } else if (StandSpeed_Balance_B.Add_h < -2048.0) {
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccmTahDp.s 			page 28
+
+
+ 950              		.loc 1 437 10 is_stmt 1 view .LVU306
+ 951              		.loc 1 437 13 is_stmt 0 view .LVU307
+ 952 05e0 0022     		movs	r2, #0
+ 953 05e2 264B     		ldr	r3, .L161+76
+ 954 05e4 2046     		mov	r0, r4
+ 955 05e6 2946     		mov	r1, r5
+ 956 05e8 FFF7FEFF 		bl	__aeabi_dcmplt
+ 957              	.LVL61:
+ 958 05ec 0028     		cmp	r0, #0
+ 959 05ee 49D0     		beq	.L27
+ 438:StandSpeed_Balance.c ****     rtb_Add_g3 = -2048.0;
+ 960              		.loc 1 438 16 view .LVU308
+ 961 05f0 0024     		movs	r4, #0
+ 962 05f2 224D     		ldr	r5, .L161+76
+ 963 05f4 46E0     		b	.L27
+ 964              	.LVL62:
+ 965              	.L141:
+ 407:StandSpeed_Balance.c ****   }
+ 966              		.loc 1 407 5 is_stmt 1 view .LVU309
+ 407:StandSpeed_Balance.c ****   }
+ 967              		.loc 1 407 18 is_stmt 0 view .LVU310
+ 968 05f6 9FED161B 		vldr.64	d1, .L161+32
+ 969 05fa B0EE480A 		vmov.f32	s0, s16
+ 970 05fe F0EE680A 		vmov.f32	s1, s17
+ 971 0602 FFF7FEFF 		bl	fmod
+ 972              	.LVL63:
+ 973 0606 55EC104B 		vmov	r4, r5, d0
+ 974              	.LVL64:
+ 407:StandSpeed_Balance.c ****   }
+ 975              		.loc 1 407 18 view .LVU311
+ 976 060a B8E7     		b	.L21
+ 977              	.L142:
+ 414:StandSpeed_Balance.c ****     rtb_Add_g3);
+ 978              		.loc 1 414 34 discriminator 1 view .LVU312
+ 979 060c 2046     		mov	r0, r4
+ 980 060e 05F10041 		add	r1, r5, #-2147483648
+ 414:StandSpeed_Balance.c ****     rtb_Add_g3);
+ 981              		.loc 1 414 24 discriminator 1 view .LVU313
+ 982 0612 FFF7FEFF 		bl	__aeabi_d2uiz
+ 983              	.LVL65:
+ 984 0616 80B2     		uxth	r0, r0
+ 414:StandSpeed_Balance.c ****     rtb_Add_g3);
+ 985              		.loc 1 414 5 discriminator 1 view .LVU314
+ 986 0618 4042     		rsbs	r0, r0, #0
+ 413:StandSpeed_Balance.c ****     (int16_T)-(int16_T)(uint16_T)-rtb_Add_g3 : (int32_T)(int16_T)(uint16_T)
+ 987              		.loc 1 413 37 discriminator 1 view .LVU315
+ 988 061a 00B2     		sxth	r0, r0
+ 989 061c BCE7     		b	.L24
+ 990              	.LVL66:
+ 991              	.L25:
+ 422:StandSpeed_Balance.c ****     /* Switch: '<S13>/Switch1' */
+ 992              		.loc 1 422 10 is_stmt 1 view .LVU316
+ 422:StandSpeed_Balance.c ****     /* Switch: '<S13>/Switch1' */
+ 993              		.loc 1 422 13 is_stmt 0 view .LVU317
+ 994 061e 10F1050F 		cmn	r0, #5
+ 995 0622 C7DA     		bge	.L26
+ 424:StandSpeed_Balance.c ****   }
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccmTahDp.s 			page 29
+
+
+ 996              		.loc 1 424 5 is_stmt 1 view .LVU318
+ 424:StandSpeed_Balance.c ****   }
+ 997              		.loc 1 424 70 is_stmt 0 view .LVU319
+ 998 0624 9BB2     		uxth	r3, r3
+ 424:StandSpeed_Balance.c ****   }
+ 999              		.loc 1 424 77 view .LVU320
+ 1000 0626 053B     		subs	r3, r3, #5
+ 424:StandSpeed_Balance.c ****   }
+ 1001              		.loc 1 424 37 view .LVU321
+ 1002 0628 0B4A     		ldr	r2, .L161+40
+ 1003 062a A2F87830 		strh	r3, [r2, #120]	@ movhi
+ 1004 062e C1E7     		b	.L26
+ 1005              	.L162:
+ 1006              		.align	3
+ 1007              	.L161:
+ 1008 0630 FCA9F1D2 		.word	-755914244
+ 1009 0634 4D62503F 		.word	1062232653
+ 1010 0638 D7A3703D 		.word	1030792151
+ 1011 063c 0AD7EF3F 		.word	1072682762
+ 1012 0640 00000000 		.word	0
+ 1013 0644 007BD440 		.word	1087666944
+ 1014 0648 00000000 		.word	0
+ 1015 064c 8099D940 		.word	1088002432
+ 1016 0650 00000000 		.word	0
+ 1017 0654 0000F040 		.word	1089470464
+ 1018 0658 00000000 		.word	.LANCHOR0
+ 1019 065c 9A99993E 		.word	1050253722
+ 1020 0660 3333333F 		.word	1060320051
+ 1021 0664 00003440 		.word	1077149696
+ 1022 0668 000034C0 		.word	-1070333952
+ 1023 066c 00000000 		.word	.LANCHOR1
+ 1024 0670 0000A03E 		.word	1050673152
+ 1025 0674 0000D03E 		.word	1053818880
+ 1026 0678 0000A040 		.word	1084227584
+ 1027 067c 0000A0C0 		.word	-1063256064
+ 1028              	.LVL67:
+ 1029              	.L87:
+ 436:StandSpeed_Balance.c ****   } else if (StandSpeed_Balance_B.Add_h < -2048.0) {
+ 1030              		.loc 1 436 16 view .LVU322
+ 1031 0680 0024     		movs	r4, #0
+ 1032 0682 954D     		ldr	r5, .L163+16
+ 1033              	.L27:
+ 1034              	.LVL68:
+ 439:StandSpeed_Balance.c ****   } else {
+ 440:StandSpeed_Balance.c ****     rtb_Add_g3 = StandSpeed_Balance_B.Add_h;
+ 441:StandSpeed_Balance.c ****   }
+ 442:StandSpeed_Balance.c **** 
+ 443:StandSpeed_Balance.c ****   rtb_Add_g3 = floor(rtb_Add_g3);
+ 1035              		.loc 1 443 3 is_stmt 1 view .LVU323
+ 1036              		.loc 1 443 16 is_stmt 0 view .LVU324
+ 1037 0684 45EC104B 		vmov	d0, r4, r5
+ 1038 0688 FFF7FEFF 		bl	floor
+ 1039              	.LVL69:
+ 1040 068c B0EE408A 		vmov.f32	s16, s0
+ 1041 0690 F0EE608A 		vmov.f32	s17, s1
+ 1042              	.LVL70:
+ 444:StandSpeed_Balance.c ****   if (rtIsNaN(rtb_Add_g3)) {
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccmTahDp.s 			page 30
+
+
+ 1043              		.loc 1 444 3 is_stmt 1 view .LVU325
+ 1044              		.loc 1 444 7 is_stmt 0 view .LVU326
+ 1045 0694 FFF7FEFF 		bl	rtIsNaN
+ 1046              	.LVL71:
+ 1047              		.loc 1 444 6 view .LVU327
+ 1048 0698 0028     		cmp	r0, #0
+ 1049 069a 00F08E80 		beq	.L143
+ 445:StandSpeed_Balance.c ****     rtb_Add_g3 = 0.0;
+ 1050              		.loc 1 445 16 view .LVU328
+ 1051 069e 0024     		movs	r4, #0
+ 1052 06a0 0025     		movs	r5, #0
+ 1053              	.LVL72:
+ 1054              	.L29:
+ 446:StandSpeed_Balance.c ****   } else {
+ 447:StandSpeed_Balance.c ****     rtb_Add_g3 = fmod(rtb_Add_g3, 65536.0);
+ 448:StandSpeed_Balance.c ****   }
+ 449:StandSpeed_Balance.c **** 
+ 450:StandSpeed_Balance.c ****   /* Switch: '<S14>/Switch1' incorporates:
+ 451:StandSpeed_Balance.c ****    *  Saturate: '<Root>/Saturation2'
+ 452:StandSpeed_Balance.c ****    */
+ 453:StandSpeed_Balance.c ****   StandSpeed_Balance_B.Saturation1 = (int16_T)(rtb_Add_g3 < 0.0 ? (int32_T)
+ 1055              		.loc 1 453 3 is_stmt 1 view .LVU329
+ 1056              		.loc 1 453 38 is_stmt 0 view .LVU330
+ 1057 06a2 0022     		movs	r2, #0
+ 1058 06a4 0023     		movs	r3, #0
+ 1059 06a6 2046     		mov	r0, r4
+ 1060 06a8 2946     		mov	r1, r5
+ 1061 06aa FFF7FEFF 		bl	__aeabi_dcmplt
+ 1062              	.LVL73:
+ 1063 06ae 0028     		cmp	r0, #0
+ 1064 06b0 40F08E80 		bne	.L144
+ 454:StandSpeed_Balance.c ****     (int16_T)-(int16_T)(uint16_T)-rtb_Add_g3 : (int32_T)(int16_T)(uint16_T)
+ 1065              		.loc 1 454 66 discriminator 2 view .LVU331
+ 1066 06b4 2046     		mov	r0, r4
+ 1067 06b6 2946     		mov	r1, r5
+ 1068 06b8 FFF7FEFF 		bl	__aeabi_d2uiz
+ 1069              	.LVL74:
+ 453:StandSpeed_Balance.c ****     (int16_T)-(int16_T)(uint16_T)-rtb_Add_g3 : (int32_T)(int16_T)(uint16_T)
+ 1070              		.loc 1 453 38 discriminator 2 view .LVU332
+ 1071 06bc 00B2     		sxth	r0, r0
+ 1072              	.L32:
+ 453:StandSpeed_Balance.c ****     (int16_T)-(int16_T)(uint16_T)-rtb_Add_g3 : (int32_T)(int16_T)(uint16_T)
+ 1073              		.loc 1 453 36 discriminator 4 view .LVU333
+ 1074 06be 874B     		ldr	r3, .L163+20
+ 1075 06c0 A3F87A00 		strh	r0, [r3, #122]	@ movhi
+ 455:StandSpeed_Balance.c ****     rtb_Add_g3);
+ 456:StandSpeed_Balance.c **** 
+ 457:StandSpeed_Balance.c ****   /* RateLimiter: '<Root>/Rate Limiter2' */
+ 458:StandSpeed_Balance.c ****   idxDelay = StandSpeed_Balance_B.Saturation1 - StandSpeed_Balance_DW.PrevY_h;
+ 1076              		.loc 1 458 3 is_stmt 1 discriminator 4 view .LVU334
+ 1077              		.loc 1 458 70 is_stmt 0 discriminator 4 view .LVU335
+ 1078 06c4 864B     		ldr	r3, .L163+24
+ 1079 06c6 B3F9F230 		ldrsh	r3, [r3, #242]
+ 1080              		.loc 1 458 12 discriminator 4 view .LVU336
+ 1081 06ca C01A     		subs	r0, r0, r3
+ 1082              	.LVL75:
+ 459:StandSpeed_Balance.c ****   if (idxDelay > 5) {
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccmTahDp.s 			page 31
+
+
+ 1083              		.loc 1 459 3 is_stmt 1 discriminator 4 view .LVU337
+ 1084              		.loc 1 459 6 is_stmt 0 discriminator 4 view .LVU338
+ 1085 06cc 0528     		cmp	r0, #5
+ 1086 06ce 40F38880 		ble	.L33
+ 460:StandSpeed_Balance.c ****     /* Switch: '<S14>/Switch1' */
+ 461:StandSpeed_Balance.c ****     StandSpeed_Balance_B.Saturation1 = (int16_T)(StandSpeed_Balance_DW.PrevY_h +
+ 1087              		.loc 1 461 5 is_stmt 1 view .LVU339
+ 1088              		.loc 1 461 71 is_stmt 0 view .LVU340
+ 1089 06d2 9BB2     		uxth	r3, r3
+ 1090              		.loc 1 461 80 view .LVU341
+ 1091 06d4 0533     		adds	r3, r3, #5
+ 1092              		.loc 1 461 38 view .LVU342
+ 1093 06d6 814A     		ldr	r2, .L163+20
+ 1094 06d8 A2F87A30 		strh	r3, [r2, #122]	@ movhi
+ 1095              	.L34:
+ 462:StandSpeed_Balance.c ****       5);
+ 463:StandSpeed_Balance.c ****   } else if (idxDelay < -5) {
+ 464:StandSpeed_Balance.c ****     /* Switch: '<S14>/Switch1' */
+ 465:StandSpeed_Balance.c ****     StandSpeed_Balance_B.Saturation1 = (int16_T)(StandSpeed_Balance_DW.PrevY_h +
+ 466:StandSpeed_Balance.c ****       -5);
+ 467:StandSpeed_Balance.c ****   }
+ 468:StandSpeed_Balance.c **** 
+ 469:StandSpeed_Balance.c ****   StandSpeed_Balance_DW.PrevY_h = StandSpeed_Balance_B.Saturation1;
+ 1096              		.loc 1 469 3 is_stmt 1 view .LVU343
+ 1097              		.loc 1 469 55 is_stmt 0 view .LVU344
+ 1098 06dc 7F4B     		ldr	r3, .L163+20
+ 1099 06de B3F97A20 		ldrsh	r2, [r3, #122]
+ 1100              		.loc 1 469 33 view .LVU345
+ 1101 06e2 7F4C     		ldr	r4, .L163+24
+ 1102              	.LVL76:
+ 1103              		.loc 1 469 33 view .LVU346
+ 1104 06e4 A4F8F220 		strh	r2, [r4, #242]	@ movhi
+ 470:StandSpeed_Balance.c **** 
+ 471:StandSpeed_Balance.c ****   /* End of RateLimiter: '<Root>/Rate Limiter2' */
+ 472:StandSpeed_Balance.c **** 
+ 473:StandSpeed_Balance.c ****   /* Sum: '<S23>/Add1' incorporates:
+ 474:StandSpeed_Balance.c ****    *  DataStoreWrite: '<Root>/Data Store Write6'
+ 475:StandSpeed_Balance.c ****    *  DataTypeConversion: '<Root>/Data Type Conversion4'
+ 476:StandSpeed_Balance.c ****    *  Delay: '<S8>/Delay One Step'
+ 477:StandSpeed_Balance.c ****    */
+ 478:StandSpeed_Balance.c ****   rtb_Add1_h = (real32_T)StandSpeed_Balance_B.Saturation -
+ 1105              		.loc 1 478 3 is_stmt 1 view .LVU347
+ 1106              		.loc 1 478 46 is_stmt 0 view .LVU348
+ 1107 06e8 B3F97830 		ldrsh	r3, [r3, #120]
+ 1108 06ec 08EE903A 		vmov	s17, r3	@ int
+ 1109              		.loc 1 478 16 view .LVU349
+ 1110 06f0 F8EEE88A 		vcvt.f32.s32	s17, s17
+ 479:StandSpeed_Balance.c ****     StandSpeed_Balance_DW.DelayOneStep_DSTATE;
+ 1111              		.loc 1 479 26 view .LVU350
+ 1112 06f4 94ED088A 		vldr.32	s16, [r4, #32]
+ 478:StandSpeed_Balance.c ****     StandSpeed_Balance_DW.DelayOneStep_DSTATE;
+ 1113              		.loc 1 478 14 view .LVU351
+ 1114 06f8 78EEC88A 		vsub.f32	s17, s17, s16
+ 1115              	.LVL77:
+ 480:StandSpeed_Balance.c **** 
+ 481:StandSpeed_Balance.c ****   /* Sum: '<S26>/Add2' incorporates:
+ 482:StandSpeed_Balance.c ****    *  Constant: '<S26>/Constant1'
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccmTahDp.s 			page 32
+
+
+ 483:StandSpeed_Balance.c ****    *  Delay: '<S26>/Delay'
+ 484:StandSpeed_Balance.c ****    *  Gain: '<S26>/Gain'
+ 485:StandSpeed_Balance.c ****    *  Product: '<S26>/Product3'
+ 486:StandSpeed_Balance.c ****    */
+ 487:StandSpeed_Balance.c ****   StandSpeed_Balance_DW.Delay_DSTATE_a += (real32_T)(0.03 * rtb_Add1_h);
+ 1116              		.loc 1 487 3 is_stmt 1 view .LVU352
+ 1117              		.loc 1 487 59 is_stmt 0 view .LVU353
+ 1118 06fc 18EE900A 		vmov	r0, s17
+ 1119              	.LVL78:
+ 1120              		.loc 1 487 59 view .LVU354
+ 1121 0700 FFF7FEFF 		bl	__aeabi_f2d
+ 1122              	.LVL79:
+ 1123 0704 0646     		mov	r6, r0
+ 1124 0706 0F46     		mov	r7, r1
+ 1125 0708 6FA3     		adr	r3, .L163
+ 1126 070a D3E90023 		ldrd	r2, [r3]
+ 1127 070e FFF7FEFF 		bl	__aeabi_dmul
+ 1128              	.LVL80:
+ 1129              		.loc 1 487 43 view .LVU355
+ 1130 0712 FFF7FEFF 		bl	__aeabi_d2f
+ 1131              	.LVL81:
+ 1132 0716 07EE900A 		vmov	s15, r0
+ 1133              		.loc 1 487 40 view .LVU356
+ 1134 071a 94ED0A7A 		vldr.32	s14, [r4, #40]
+ 1135 071e 77EE877A 		vadd.f32	s15, s15, s14
+ 1136 0722 C4ED0A7A 		vstr.32	s15, [r4, #40]
+ 488:StandSpeed_Balance.c **** 
+ 489:StandSpeed_Balance.c ****   /* Saturate: '<S26>/Saturation' */
+ 490:StandSpeed_Balance.c ****   if (StandSpeed_Balance_DW.Delay_DSTATE_a > 2000.0F) {
+ 1137              		.loc 1 490 3 is_stmt 1 view .LVU357
+ 1138              		.loc 1 490 6 is_stmt 0 view .LVU358
+ 1139 0726 9FED6F7A 		vldr.32	s14, .L163+28
+ 1140 072a F4EEC77A 		vcmpe.f32	s15, s14
+ 1141 072e F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 1142 0732 60DD     		ble	.L122
+ 491:StandSpeed_Balance.c ****     /* Sum: '<S26>/Add2' */
+ 492:StandSpeed_Balance.c ****     StandSpeed_Balance_DW.Delay_DSTATE_a = 2000.0F;
+ 1143              		.loc 1 492 5 is_stmt 1 view .LVU359
+ 1144              		.loc 1 492 42 is_stmt 0 view .LVU360
+ 1145 0734 84ED0A7A 		vstr.32	s14, [r4, #40]
+ 1146              	.L37:
+ 493:StandSpeed_Balance.c ****   } else if (StandSpeed_Balance_DW.Delay_DSTATE_a < -2000.0F) {
+ 494:StandSpeed_Balance.c ****     /* Sum: '<S26>/Add2' */
+ 495:StandSpeed_Balance.c ****     StandSpeed_Balance_DW.Delay_DSTATE_a = -2000.0F;
+ 496:StandSpeed_Balance.c ****   }
+ 497:StandSpeed_Balance.c **** 
+ 498:StandSpeed_Balance.c ****   /* End of Saturate: '<S26>/Saturation' */
+ 499:StandSpeed_Balance.c **** 
+ 500:StandSpeed_Balance.c ****   /* Sum: '<S23>/Add' incorporates:
+ 501:StandSpeed_Balance.c ****    *  Constant: '<S25>/Constant2'
+ 502:StandSpeed_Balance.c ****    *  Constant: '<S27>/Constant'
+ 503:StandSpeed_Balance.c ****    *  Delay: '<S26>/Delay'
+ 504:StandSpeed_Balance.c ****    *  Product: '<S25>/Product2'
+ 505:StandSpeed_Balance.c ****    *  Product: '<S27>/Product'
+ 506:StandSpeed_Balance.c ****    *  Sum: '<S28>/Diff'
+ 507:StandSpeed_Balance.c ****    *  UnitDelay: '<S28>/UD'
+ 508:StandSpeed_Balance.c ****    *
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccmTahDp.s 			page 33
+
+
+ 509:StandSpeed_Balance.c ****    * Block description for '<S28>/Diff':
+ 510:StandSpeed_Balance.c ****    *
+ 511:StandSpeed_Balance.c ****    *  Add in CPU
+ 512:StandSpeed_Balance.c ****    *
+ 513:StandSpeed_Balance.c ****    * Block description for '<S28>/UD':
+ 514:StandSpeed_Balance.c ****    *
+ 515:StandSpeed_Balance.c ****    *  Store in Global RAM
+ 516:StandSpeed_Balance.c ****    */
+ 517:StandSpeed_Balance.c ****   rtb_Add_g3 = (7.0 * rtb_Add1_h + StandSpeed_Balance_DW.Delay_DSTATE_a) +
+ 1147              		.loc 1 517 3 is_stmt 1 view .LVU361
+ 1148              		.loc 1 517 21 is_stmt 0 view .LVU362
+ 1149 0738 0022     		movs	r2, #0
+ 1150 073a 6B4B     		ldr	r3, .L163+32
+ 1151 073c 3046     		mov	r0, r6
+ 1152 073e 3946     		mov	r1, r7
+ 1153 0740 FFF7FEFF 		bl	__aeabi_dmul
+ 1154              	.LVL82:
+ 1155 0744 0446     		mov	r4, r0
+ 1156 0746 0D46     		mov	r5, r1
+ 1157              		.loc 1 517 57 view .LVU363
+ 1158 0748 654E     		ldr	r6, .L163+24
+ 1159 074a B06A     		ldr	r0, [r6, #40]	@ float
+ 1160 074c FFF7FEFF 		bl	__aeabi_f2d
+ 1161              	.LVL83:
+ 1162 0750 0246     		mov	r2, r0
+ 1163 0752 0B46     		mov	r3, r1
+ 1164              		.loc 1 517 34 view .LVU364
+ 1165 0754 2046     		mov	r0, r4
+ 1166 0756 2946     		mov	r1, r5
+ 1167 0758 FFF7FEFF 		bl	__aeabi_dadd
+ 1168              	.LVL84:
+ 1169 075c 0446     		mov	r4, r0
+ 1170 075e 0D46     		mov	r5, r1
+ 518:StandSpeed_Balance.c ****     (rtb_Add1_h - StandSpeed_Balance_DW.UD_DSTATE) * 5.0;
+ 1171              		.loc 1 518 40 view .LVU365
+ 1172 0760 D6ED0B7A 		vldr.32	s15, [r6, #44]
+ 1173              		.loc 1 518 17 view .LVU366
+ 1174 0764 78EEE77A 		vsub.f32	s15, s17, s15
+ 1175 0768 17EE900A 		vmov	r0, s15
+ 1176 076c FFF7FEFF 		bl	__aeabi_f2d
+ 1177              	.LVL85:
+ 1178              		.loc 1 518 52 view .LVU367
+ 1179 0770 0022     		movs	r2, #0
+ 1180 0772 5E4B     		ldr	r3, .L163+36
+ 1181 0774 FFF7FEFF 		bl	__aeabi_dmul
+ 1182              	.LVL86:
+ 1183 0778 0246     		mov	r2, r0
+ 1184 077a 0B46     		mov	r3, r1
+ 517:StandSpeed_Balance.c ****     (rtb_Add1_h - StandSpeed_Balance_DW.UD_DSTATE) * 5.0;
+ 1185              		.loc 1 517 14 view .LVU368
+ 1186 077c 2046     		mov	r0, r4
+ 1187 077e 2946     		mov	r1, r5
+ 1188 0780 FFF7FEFF 		bl	__aeabi_dadd
+ 1189              	.LVL87:
+ 1190 0784 0446     		mov	r4, r0
+ 1191 0786 0D46     		mov	r5, r1
+ 1192              	.LVL88:
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccmTahDp.s 			page 34
+
+
+ 519:StandSpeed_Balance.c **** 
+ 520:StandSpeed_Balance.c ****   /* Switch: '<S13>/Switch1' incorporates:
+ 521:StandSpeed_Balance.c ****    *  DataStoreWrite: '<Root>/Data Store Write6'
+ 522:StandSpeed_Balance.c ****    *  Delay: '<S8>/Delay One Step'
+ 523:StandSpeed_Balance.c ****    *  Switch: '<S13>/Switch3'
+ 524:StandSpeed_Balance.c ****    */
+ 525:StandSpeed_Balance.c ****   if (StandSpeed_Balance_DW.DelayOneStep_DSTATE > -30.0F) {
+ 1193              		.loc 1 525 3 is_stmt 1 view .LVU369
+ 1194              		.loc 1 525 6 is_stmt 0 view .LVU370
+ 1195 0788 FBEE0E7A 		vmov.f32	s15, #-3.0e+1
+ 1196 078c B4EEE78A 		vcmpe.f32	s16, s15
+ 1197 0790 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 1198 0794 40F3AE80 		ble	.L123
+ 526:StandSpeed_Balance.c ****     /* Switch: '<S13>/Switch' */
+ 527:StandSpeed_Balance.c ****     if (StandSpeed_Balance_DW.DelayOneStep_DSTATE > 30.0F) {
+ 1199              		.loc 1 527 5 is_stmt 1 view .LVU371
+ 1200              		.loc 1 527 8 is_stmt 0 view .LVU372
+ 1201 0798 F3EE0E7A 		vmov.f32	s15, #3.0e+1
+ 1202 079c B4EEE78A 		vcmpe.f32	s16, s15
+ 1203 07a0 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 1204 07a4 52DD     		ble	.L124
+ 528:StandSpeed_Balance.c ****       /* Switch: '<S13>/Switch2' */
+ 529:StandSpeed_Balance.c ****       if (rtb_Add_g3 > 0.0) {
+ 1205              		.loc 1 529 7 is_stmt 1 view .LVU373
+ 1206              		.loc 1 529 10 is_stmt 0 view .LVU374
+ 1207 07a6 0022     		movs	r2, #0
+ 1208 07a8 0023     		movs	r3, #0
+ 1209 07aa FFF7FEFF 		bl	__aeabi_dcmpgt
+ 1210              	.LVL89:
+ 1211 07ae 68BB     		cbnz	r0, .L145
+ 530:StandSpeed_Balance.c ****         rtb_Add_g3 = floor(rtb_Add_g3);
+ 531:StandSpeed_Balance.c ****         if (rtIsInf(rtb_Add_g3)) {
+ 532:StandSpeed_Balance.c ****           /* Switch: '<S13>/Switch1' */
+ 533:StandSpeed_Balance.c ****           StandSpeed_Balance_B.Saturation = 0;
+ 534:StandSpeed_Balance.c ****         } else {
+ 535:StandSpeed_Balance.c ****           /* Switch: '<S13>/Switch1' */
+ 536:StandSpeed_Balance.c ****           StandSpeed_Balance_B.Saturation = (int16_T)(int32_T)fmod(rtb_Add_g3,
+ 537:StandSpeed_Balance.c ****             65536.0);
+ 538:StandSpeed_Balance.c ****         }
+ 539:StandSpeed_Balance.c ****       } else {
+ 540:StandSpeed_Balance.c ****         /* Switch: '<S13>/Switch1' incorporates:
+ 541:StandSpeed_Balance.c ****          *  Constant: '<S13>/Constant'
+ 542:StandSpeed_Balance.c ****          */
+ 543:StandSpeed_Balance.c ****         StandSpeed_Balance_B.Saturation = 10;
+ 1212              		.loc 1 543 9 is_stmt 1 view .LVU375
+ 1213              		.loc 1 543 41 is_stmt 0 view .LVU376
+ 1214 07b0 4A4B     		ldr	r3, .L163+20
+ 1215 07b2 0A22     		movs	r2, #10
+ 1216 07b4 A3F87820 		strh	r2, [r3, #120]	@ movhi
+ 1217 07b8 A7E0     		b	.L46
+ 1218              	.LVL90:
+ 1219              	.L143:
+ 447:StandSpeed_Balance.c ****   }
+ 1220              		.loc 1 447 5 is_stmt 1 view .LVU377
+ 447:StandSpeed_Balance.c ****   }
+ 1221              		.loc 1 447 18 is_stmt 0 view .LVU378
+ 1222 07ba 9FED451B 		vldr.64	d1, .L163+8
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccmTahDp.s 			page 35
+
+
+ 1223 07be B0EE480A 		vmov.f32	s0, s16
+ 1224 07c2 F0EE680A 		vmov.f32	s1, s17
+ 1225 07c6 FFF7FEFF 		bl	fmod
+ 1226              	.LVL91:
+ 1227 07ca 55EC104B 		vmov	r4, r5, d0
+ 1228              	.LVL92:
+ 447:StandSpeed_Balance.c ****   }
+ 1229              		.loc 1 447 18 view .LVU379
+ 1230 07ce 68E7     		b	.L29
+ 1231              	.L144:
+ 454:StandSpeed_Balance.c ****     rtb_Add_g3);
+ 1232              		.loc 1 454 34 discriminator 1 view .LVU380
+ 1233 07d0 2046     		mov	r0, r4
+ 1234 07d2 05F10041 		add	r1, r5, #-2147483648
+ 454:StandSpeed_Balance.c ****     rtb_Add_g3);
+ 1235              		.loc 1 454 24 discriminator 1 view .LVU381
+ 1236 07d6 FFF7FEFF 		bl	__aeabi_d2uiz
+ 1237              	.LVL93:
+ 1238 07da 80B2     		uxth	r0, r0
+ 454:StandSpeed_Balance.c ****     rtb_Add_g3);
+ 1239              		.loc 1 454 5 discriminator 1 view .LVU382
+ 1240 07dc 4042     		rsbs	r0, r0, #0
+ 453:StandSpeed_Balance.c ****     (int16_T)-(int16_T)(uint16_T)-rtb_Add_g3 : (int32_T)(int16_T)(uint16_T)
+ 1241              		.loc 1 453 38 discriminator 1 view .LVU383
+ 1242 07de 00B2     		sxth	r0, r0
+ 1243 07e0 6DE7     		b	.L32
+ 1244              	.LVL94:
+ 1245              	.L33:
+ 463:StandSpeed_Balance.c ****     /* Switch: '<S14>/Switch1' */
+ 1246              		.loc 1 463 10 is_stmt 1 view .LVU384
+ 463:StandSpeed_Balance.c ****     /* Switch: '<S14>/Switch1' */
+ 1247              		.loc 1 463 13 is_stmt 0 view .LVU385
+ 1248 07e2 10F1050F 		cmn	r0, #5
+ 1249 07e6 BFF679AF 		bge	.L34
+ 465:StandSpeed_Balance.c ****       -5);
+ 1250              		.loc 1 465 5 is_stmt 1 view .LVU386
+ 465:StandSpeed_Balance.c ****       -5);
+ 1251              		.loc 1 465 71 is_stmt 0 view .LVU387
+ 1252 07ea 9BB2     		uxth	r3, r3
+ 465:StandSpeed_Balance.c ****       -5);
+ 1253              		.loc 1 465 80 view .LVU388
+ 1254 07ec 053B     		subs	r3, r3, #5
+ 465:StandSpeed_Balance.c ****       -5);
+ 1255              		.loc 1 465 38 view .LVU389
+ 1256 07ee 3B4A     		ldr	r2, .L163+20
+ 1257 07f0 A2F87A30 		strh	r3, [r2, #122]	@ movhi
+ 1258 07f4 72E7     		b	.L34
+ 1259              	.LVL95:
+ 1260              	.L122:
+ 493:StandSpeed_Balance.c ****     /* Sum: '<S26>/Add2' */
+ 1261              		.loc 1 493 10 is_stmt 1 view .LVU390
+ 493:StandSpeed_Balance.c ****     /* Sum: '<S26>/Add2' */
+ 1262              		.loc 1 493 13 is_stmt 0 view .LVU391
+ 1263 07f6 9FED3E7A 		vldr.32	s14, .L163+40
+ 1264 07fa F4EEC77A 		vcmpe.f32	s15, s14
+ 1265 07fe F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 1266 0802 99D5     		bpl	.L37
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccmTahDp.s 			page 36
+
+
+ 495:StandSpeed_Balance.c ****   }
+ 1267              		.loc 1 495 5 is_stmt 1 view .LVU392
+ 495:StandSpeed_Balance.c ****   }
+ 1268              		.loc 1 495 42 is_stmt 0 view .LVU393
+ 1269 0804 364B     		ldr	r3, .L163+24
+ 1270 0806 83ED0A7A 		vstr.32	s14, [r3, #40]
+ 1271 080a 95E7     		b	.L37
+ 1272              	.LVL96:
+ 1273              	.L145:
+ 530:StandSpeed_Balance.c ****         if (rtIsInf(rtb_Add_g3)) {
+ 1274              		.loc 1 530 9 is_stmt 1 view .LVU394
+ 530:StandSpeed_Balance.c ****         if (rtIsInf(rtb_Add_g3)) {
+ 1275              		.loc 1 530 22 is_stmt 0 view .LVU395
+ 1276 080c 45EC104B 		vmov	d0, r4, r5
+ 1277 0810 FFF7FEFF 		bl	floor
+ 1278              	.LVL97:
+ 1279 0814 B0EE409A 		vmov.f32	s18, s0
+ 1280 0818 F0EE609A 		vmov.f32	s19, s1
+ 1281              	.LVL98:
+ 531:StandSpeed_Balance.c ****           /* Switch: '<S13>/Switch1' */
+ 1282              		.loc 1 531 9 is_stmt 1 view .LVU396
+ 531:StandSpeed_Balance.c ****           /* Switch: '<S13>/Switch1' */
+ 1283              		.loc 1 531 13 is_stmt 0 view .LVU397
+ 1284 081c FFF7FEFF 		bl	rtIsInf
+ 1285              	.LVL99:
+ 531:StandSpeed_Balance.c ****           /* Switch: '<S13>/Switch1' */
+ 1286              		.loc 1 531 12 view .LVU398
+ 1287 0820 20B1     		cbz	r0, .L45
+ 533:StandSpeed_Balance.c ****         } else {
+ 1288              		.loc 1 533 11 is_stmt 1 view .LVU399
+ 533:StandSpeed_Balance.c ****         } else {
+ 1289              		.loc 1 533 43 is_stmt 0 view .LVU400
+ 1290 0822 2E4B     		ldr	r3, .L163+20
+ 1291 0824 0022     		movs	r2, #0
+ 1292 0826 A3F87820 		strh	r2, [r3, #120]	@ movhi
+ 1293 082a 6EE0     		b	.L46
+ 1294              	.L45:
+ 536:StandSpeed_Balance.c ****             65536.0);
+ 1295              		.loc 1 536 11 is_stmt 1 view .LVU401
+ 536:StandSpeed_Balance.c ****             65536.0);
+ 1296              		.loc 1 536 63 is_stmt 0 view .LVU402
+ 1297 082c 9FED281B 		vldr.64	d1, .L163+8
+ 1298 0830 B0EE490A 		vmov.f32	s0, s18
+ 1299 0834 F0EE690A 		vmov.f32	s1, s19
+ 1300 0838 FFF7FEFF 		bl	fmod
+ 1301              	.LVL100:
+ 1302 083c 51EC100B 		vmov	r0, r1, d0
+ 536:StandSpeed_Balance.c ****             65536.0);
+ 1303              		.loc 1 536 54 view .LVU403
+ 1304 0840 FFF7FEFF 		bl	__aeabi_d2iz
+ 1305              	.LVL101:
+ 536:StandSpeed_Balance.c ****             65536.0);
+ 1306              		.loc 1 536 43 view .LVU404
+ 1307 0844 254B     		ldr	r3, .L163+20
+ 1308 0846 A3F87800 		strh	r0, [r3, #120]	@ movhi
+ 1309 084a 5EE0     		b	.L46
+ 1310              	.LVL102:
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccmTahDp.s 			page 37
+
+
+ 1311              	.L124:
+ 544:StandSpeed_Balance.c ****       }
+ 545:StandSpeed_Balance.c **** 
+ 546:StandSpeed_Balance.c ****       /* End of Switch: '<S13>/Switch2' */
+ 547:StandSpeed_Balance.c ****     } else {
+ 548:StandSpeed_Balance.c ****       rtb_Add_g3 = floor(rtb_Add_g3);
+ 1312              		.loc 1 548 7 is_stmt 1 view .LVU405
+ 1313              		.loc 1 548 20 is_stmt 0 view .LVU406
+ 1314 084c 45EC104B 		vmov	d0, r4, r5
+ 1315 0850 FFF7FEFF 		bl	floor
+ 1316              	.LVL103:
+ 1317 0854 B0EE409A 		vmov.f32	s18, s0
+ 1318 0858 F0EE609A 		vmov.f32	s19, s1
+ 1319              	.LVL104:
+ 549:StandSpeed_Balance.c ****       if (rtIsNaN(rtb_Add_g3) || rtIsInf(rtb_Add_g3)) {
+ 1320              		.loc 1 549 7 is_stmt 1 view .LVU407
+ 1321              		.loc 1 549 11 is_stmt 0 view .LVU408
+ 1322 085c FFF7FEFF 		bl	rtIsNaN
+ 1323              	.LVL105:
+ 1324              		.loc 1 549 10 view .LVU409
+ 1325 0860 88B1     		cbz	r0, .L146
+ 550:StandSpeed_Balance.c ****         rtb_Add_g3 = 0.0;
+ 1326              		.loc 1 550 20 view .LVU410
+ 1327 0862 0024     		movs	r4, #0
+ 1328 0864 0025     		movs	r5, #0
+ 1329              	.LVL106:
+ 1330              	.L47:
+ 551:StandSpeed_Balance.c ****       } else {
+ 552:StandSpeed_Balance.c ****         rtb_Add_g3 = fmod(rtb_Add_g3, 65536.0);
+ 553:StandSpeed_Balance.c ****       }
+ 554:StandSpeed_Balance.c **** 
+ 555:StandSpeed_Balance.c ****       /* Switch: '<S13>/Switch1' */
+ 556:StandSpeed_Balance.c ****       StandSpeed_Balance_B.Saturation = (int16_T)(rtb_Add_g3 < 0.0 ? (int32_T)
+ 1331              		.loc 1 556 7 is_stmt 1 view .LVU411
+ 1332              		.loc 1 556 41 is_stmt 0 view .LVU412
+ 1333 0866 0022     		movs	r2, #0
+ 1334 0868 0023     		movs	r3, #0
+ 1335 086a 2046     		mov	r0, r4
+ 1336 086c 2946     		mov	r1, r5
+ 1337 086e FFF7FEFF 		bl	__aeabi_dcmplt
+ 1338              	.LVL107:
+ 1339 0872 E8B9     		cbnz	r0, .L147
+ 557:StandSpeed_Balance.c ****         (int16_T)-(int16_T)(uint16_T)-rtb_Add_g3 : (int32_T)(int16_T)(uint16_T)
+ 1340              		.loc 1 557 70 discriminator 2 view .LVU413
+ 1341 0874 2046     		mov	r0, r4
+ 1342 0876 2946     		mov	r1, r5
+ 1343 0878 FFF7FEFF 		bl	__aeabi_d2uiz
+ 1344              	.LVL108:
+ 556:StandSpeed_Balance.c ****         (int16_T)-(int16_T)(uint16_T)-rtb_Add_g3 : (int32_T)(int16_T)(uint16_T)
+ 1345              		.loc 1 556 41 discriminator 2 view .LVU414
+ 1346 087c 03B2     		sxth	r3, r0
+ 1347              	.L50:
+ 556:StandSpeed_Balance.c ****         (int16_T)-(int16_T)(uint16_T)-rtb_Add_g3 : (int32_T)(int16_T)(uint16_T)
+ 1348              		.loc 1 556 39 discriminator 4 view .LVU415
+ 1349 087e 174A     		ldr	r2, .L163+20
+ 1350 0880 A2F87830 		strh	r3, [r2, #120]	@ movhi
+ 1351 0884 41E0     		b	.L46
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccmTahDp.s 			page 38
+
+
+ 1352              	.LVL109:
+ 1353              	.L146:
+ 549:StandSpeed_Balance.c ****         rtb_Add_g3 = 0.0;
+ 1354              		.loc 1 549 34 discriminator 1 view .LVU416
+ 1355 0886 B0EE490A 		vmov.f32	s0, s18
+ 1356 088a F0EE690A 		vmov.f32	s1, s19
+ 1357 088e FFF7FEFF 		bl	rtIsInf
+ 1358              	.LVL110:
+ 549:StandSpeed_Balance.c ****         rtb_Add_g3 = 0.0;
+ 1359              		.loc 1 549 31 discriminator 1 view .LVU417
+ 1360 0892 10B1     		cbz	r0, .L148
+ 550:StandSpeed_Balance.c ****       } else {
+ 1361              		.loc 1 550 20 view .LVU418
+ 1362 0894 0024     		movs	r4, #0
+ 1363 0896 0025     		movs	r5, #0
+ 1364 0898 E5E7     		b	.L47
+ 1365              	.L148:
+ 552:StandSpeed_Balance.c ****       }
+ 1366              		.loc 1 552 9 is_stmt 1 view .LVU419
+ 552:StandSpeed_Balance.c ****       }
+ 1367              		.loc 1 552 22 is_stmt 0 view .LVU420
+ 1368 089a 9FED0D1B 		vldr.64	d1, .L163+8
+ 1369 089e B0EE490A 		vmov.f32	s0, s18
+ 1370 08a2 F0EE690A 		vmov.f32	s1, s19
+ 1371 08a6 FFF7FEFF 		bl	fmod
+ 1372              	.LVL111:
+ 1373 08aa 55EC104B 		vmov	r4, r5, d0
+ 1374              	.LVL112:
+ 552:StandSpeed_Balance.c ****       }
+ 1375              		.loc 1 552 22 view .LVU421
+ 1376 08ae DAE7     		b	.L47
+ 1377              	.L147:
+ 1378              		.loc 1 557 38 discriminator 1 view .LVU422
+ 1379 08b0 2046     		mov	r0, r4
+ 1380 08b2 05F10041 		add	r1, r5, #-2147483648
+ 1381              		.loc 1 557 28 discriminator 1 view .LVU423
+ 1382 08b6 FFF7FEFF 		bl	__aeabi_d2uiz
+ 1383              	.LVL113:
+ 1384 08ba 83B2     		uxth	r3, r0
+ 1385              		.loc 1 557 9 discriminator 1 view .LVU424
+ 1386 08bc 5B42     		rsbs	r3, r3, #0
+ 556:StandSpeed_Balance.c ****         (int16_T)-(int16_T)(uint16_T)-rtb_Add_g3 : (int32_T)(int16_T)(uint16_T)
+ 1387              		.loc 1 556 41 discriminator 1 view .LVU425
+ 1388 08be 1BB2     		sxth	r3, r3
+ 1389 08c0 DDE7     		b	.L50
+ 1390              	.L164:
+ 1391 08c2 00BFAFF3 		.align	3
+ 1391      0080
+ 1392              	.L163:
+ 1393 08c8 B81E85EB 		.word	-343597384
+ 1394 08cc 51B89E3F 		.word	1067366481
+ 1395 08d0 00000000 		.word	0
+ 1396 08d4 0000F040 		.word	1089470464
+ 1397 08d8 0000A040 		.word	1084227584
+ 1398 08dc 00000000 		.word	.LANCHOR0
+ 1399 08e0 00000000 		.word	.LANCHOR1
+ 1400 08e4 0000FA44 		.word	1157234688
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccmTahDp.s 			page 39
+
+
+ 1401 08e8 00001C40 		.word	1075576832
+ 1402 08ec 00001440 		.word	1075052544
+ 1403 08f0 0000FAC4 		.word	-990248960
+ 1404              	.L123:
+ 558:StandSpeed_Balance.c ****         rtb_Add_g3);
+ 559:StandSpeed_Balance.c ****     }
+ 560:StandSpeed_Balance.c **** 
+ 561:StandSpeed_Balance.c ****     /* End of Switch: '<S13>/Switch' */
+ 562:StandSpeed_Balance.c ****   } else if (rtb_Add_g3 > 0.0) {
+ 1405              		.loc 1 562 10 is_stmt 1 view .LVU426
+ 1406              		.loc 1 562 13 is_stmt 0 view .LVU427
+ 1407 08f4 0022     		movs	r2, #0
+ 1408 08f6 0023     		movs	r3, #0
+ 1409 08f8 FFF7FEFF 		bl	__aeabi_dcmpgt
+ 1410              	.LVL114:
+ 1411 08fc 0028     		cmp	r0, #0
+ 1412 08fe 7AD0     		beq	.L127
+ 563:StandSpeed_Balance.c ****     /* Switch: '<S13>/Switch1' incorporates:
+ 564:StandSpeed_Balance.c ****      *  Constant: '<S13>/Constant1'
+ 565:StandSpeed_Balance.c ****      *  Switch: '<S13>/Switch3'
+ 566:StandSpeed_Balance.c ****      */
+ 567:StandSpeed_Balance.c ****     StandSpeed_Balance_B.Saturation = -10;
+ 1413              		.loc 1 567 5 is_stmt 1 view .LVU428
+ 1414              		.loc 1 567 37 is_stmt 0 view .LVU429
+ 1415 0900 C14B     		ldr	r3, .L165+24
+ 1416 0902 4FF6F672 		movw	r2, #65526
+ 1417 0906 A3F87820 		strh	r2, [r3, #120]	@ movhi
+ 1418              	.LVL115:
+ 1419              	.L46:
+ 568:StandSpeed_Balance.c ****   } else {
+ 569:StandSpeed_Balance.c ****     /* Switch: '<S13>/Switch3' */
+ 570:StandSpeed_Balance.c ****     rtb_Add_g3 = floor(rtb_Add_g3);
+ 571:StandSpeed_Balance.c ****     if (rtIsNaN(rtb_Add_g3) || rtIsInf(rtb_Add_g3)) {
+ 572:StandSpeed_Balance.c ****       rtb_Add_g3 = 0.0;
+ 573:StandSpeed_Balance.c ****     } else {
+ 574:StandSpeed_Balance.c ****       rtb_Add_g3 = fmod(rtb_Add_g3, 65536.0);
+ 575:StandSpeed_Balance.c ****     }
+ 576:StandSpeed_Balance.c **** 
+ 577:StandSpeed_Balance.c ****     /* Switch: '<S13>/Switch1' incorporates:
+ 578:StandSpeed_Balance.c ****      *  Switch: '<S13>/Switch3'
+ 579:StandSpeed_Balance.c ****      */
+ 580:StandSpeed_Balance.c ****     StandSpeed_Balance_B.Saturation = (int16_T)(rtb_Add_g3 < 0.0 ? (int32_T)
+ 581:StandSpeed_Balance.c ****       (int16_T)-(int16_T)(uint16_T)-rtb_Add_g3 : (int32_T)(int16_T)(uint16_T)
+ 582:StandSpeed_Balance.c ****       rtb_Add_g3);
+ 583:StandSpeed_Balance.c ****   }
+ 584:StandSpeed_Balance.c **** 
+ 585:StandSpeed_Balance.c ****   /* End of Switch: '<S13>/Switch1' */
+ 586:StandSpeed_Balance.c **** 
+ 587:StandSpeed_Balance.c ****   /* Saturate: '<Root>/Saturation' */
+ 588:StandSpeed_Balance.c ****   if (StandSpeed_Balance_B.Saturation > 4200) {
+ 1420              		.loc 1 588 3 is_stmt 1 view .LVU430
+ 1421              		.loc 1 588 27 is_stmt 0 view .LVU431
+ 1422 090a BF4B     		ldr	r3, .L165+24
+ 1423 090c B3F97830 		ldrsh	r3, [r3, #120]
+ 1424              		.loc 1 588 6 view .LVU432
+ 1425 0910 41F26802 		movw	r2, #4200
+ 1426 0914 9342     		cmp	r3, r2
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccmTahDp.s 			page 40
+
+
+ 1427 0916 40F3A980 		ble	.L57
+ 589:StandSpeed_Balance.c ****     /* Switch: '<S13>/Switch1' incorporates:
+ 590:StandSpeed_Balance.c ****      *  Saturate: '<Root>/Saturation'
+ 591:StandSpeed_Balance.c ****      */
+ 592:StandSpeed_Balance.c ****     StandSpeed_Balance_B.Saturation = 4200;
+ 1428              		.loc 1 592 5 is_stmt 1 view .LVU433
+ 1429              		.loc 1 592 37 is_stmt 0 view .LVU434
+ 1430 091a BB4B     		ldr	r3, .L165+24
+ 1431 091c A3F87820 		strh	r2, [r3, #120]	@ movhi
+ 1432              	.L58:
+ 593:StandSpeed_Balance.c ****   } else if (StandSpeed_Balance_B.Saturation < -4200) {
+ 594:StandSpeed_Balance.c ****     /* Switch: '<S13>/Switch1' incorporates:
+ 595:StandSpeed_Balance.c ****      *  Saturate: '<Root>/Saturation'
+ 596:StandSpeed_Balance.c ****      */
+ 597:StandSpeed_Balance.c ****     StandSpeed_Balance_B.Saturation = -4200;
+ 598:StandSpeed_Balance.c ****   }
+ 599:StandSpeed_Balance.c **** 
+ 600:StandSpeed_Balance.c ****   /* End of Saturate: '<Root>/Saturation' */
+ 601:StandSpeed_Balance.c **** 
+ 602:StandSpeed_Balance.c ****   /* Sum: '<S24>/Add1' incorporates:
+ 603:StandSpeed_Balance.c ****    *  DataStoreWrite: '<Root>/Data Store Write7'
+ 604:StandSpeed_Balance.c ****    *  Delay: '<S9>/Delay One Step'
+ 605:StandSpeed_Balance.c ****    */
+ 606:StandSpeed_Balance.c ****   rtb_Add1_d = (real32_T)StandSpeed_Balance_B.Saturation1 -
+ 1433              		.loc 1 606 3 is_stmt 1 view .LVU435
+ 1434              		.loc 1 606 46 is_stmt 0 view .LVU436
+ 1435 0920 B94B     		ldr	r3, .L165+24
+ 1436 0922 B3F97A30 		ldrsh	r3, [r3, #122]
+ 1437 0926 08EE103A 		vmov	s16, r3	@ int
+ 1438              		.loc 1 606 16 view .LVU437
+ 1439 092a B8EEC88A 		vcvt.f32.s32	s16, s16
+ 607:StandSpeed_Balance.c ****     StandSpeed_Balance_DW.DelayOneStep_DSTATE_b;
+ 1440              		.loc 1 607 26 view .LVU438
+ 1441 092e DFF8E482 		ldr	r8, .L165+36
+ 1442 0932 98ED099A 		vldr.32	s18, [r8, #36]
+ 606:StandSpeed_Balance.c ****     StandSpeed_Balance_DW.DelayOneStep_DSTATE_b;
+ 1443              		.loc 1 606 14 view .LVU439
+ 1444 0936 38EE498A 		vsub.f32	s16, s16, s18
+ 1445              	.LVL116:
+ 608:StandSpeed_Balance.c **** 
+ 609:StandSpeed_Balance.c ****   /* Sum: '<S30>/Add2' incorporates:
+ 610:StandSpeed_Balance.c ****    *  Constant: '<S30>/Constant1'
+ 611:StandSpeed_Balance.c ****    *  Delay: '<S30>/Delay'
+ 612:StandSpeed_Balance.c ****    *  Gain: '<S30>/Gain'
+ 613:StandSpeed_Balance.c ****    *  Product: '<S30>/Product3'
+ 614:StandSpeed_Balance.c ****    */
+ 615:StandSpeed_Balance.c ****   StandSpeed_Balance_DW.Delay_DSTATE += (real32_T)(0.03 * rtb_Add1_d);
+ 1446              		.loc 1 615 3 is_stmt 1 view .LVU440
+ 1447              		.loc 1 615 57 is_stmt 0 view .LVU441
+ 1448 093a 18EE100A 		vmov	r0, s16
+ 1449 093e FFF7FEFF 		bl	__aeabi_f2d
+ 1450              	.LVL117:
+ 1451 0942 0646     		mov	r6, r0
+ 1452 0944 0F46     		mov	r7, r1
+ 1453 0946 AAA3     		adr	r3, .L165
+ 1454 0948 D3E90023 		ldrd	r2, [r3]
+ 1455 094c FFF7FEFF 		bl	__aeabi_dmul
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccmTahDp.s 			page 41
+
+
+ 1456              	.LVL118:
+ 1457              		.loc 1 615 41 view .LVU442
+ 1458 0950 FFF7FEFF 		bl	__aeabi_d2f
+ 1459              	.LVL119:
+ 1460 0954 FFF7FEFF 		bl	__aeabi_f2d
+ 1461              	.LVL120:
+ 1462              		.loc 1 615 38 view .LVU443
+ 1463 0958 D8E90023 		ldrd	r2, [r8]
+ 1464 095c FFF7FEFF 		bl	__aeabi_dadd
+ 1465              	.LVL121:
+ 1466 0960 0446     		mov	r4, r0
+ 1467 0962 0D46     		mov	r5, r1
+ 1468 0964 C8E90045 		strd	r4, [r8]
+ 616:StandSpeed_Balance.c **** 
+ 617:StandSpeed_Balance.c ****   /* Saturate: '<S30>/Saturation' */
+ 618:StandSpeed_Balance.c ****   if (StandSpeed_Balance_DW.Delay_DSTATE > 2000.0) {
+ 1469              		.loc 1 618 3 is_stmt 1 view .LVU444
+ 1470              		.loc 1 618 6 is_stmt 0 view .LVU445
+ 1471 0968 0022     		movs	r2, #0
+ 1472 096a A84B     		ldr	r3, .L165+28
+ 1473 096c FFF7FEFF 		bl	__aeabi_dcmpgt
+ 1474              	.LVL122:
+ 1475 0970 0028     		cmp	r0, #0
+ 1476 0972 00F08580 		beq	.L129
+ 619:StandSpeed_Balance.c ****     /* Sum: '<S30>/Add2' */
+ 620:StandSpeed_Balance.c ****     StandSpeed_Balance_DW.Delay_DSTATE = 2000.0;
+ 1477              		.loc 1 620 5 is_stmt 1 view .LVU446
+ 1478              		.loc 1 620 40 is_stmt 0 view .LVU447
+ 1479 0976 0020     		movs	r0, #0
+ 1480 0978 A449     		ldr	r1, .L165+28
+ 1481 097a C8E90001 		strd	r0, [r8]
+ 1482              	.L61:
+ 621:StandSpeed_Balance.c ****   } else if (StandSpeed_Balance_DW.Delay_DSTATE < -2000.0) {
+ 622:StandSpeed_Balance.c ****     /* Sum: '<S30>/Add2' */
+ 623:StandSpeed_Balance.c ****     StandSpeed_Balance_DW.Delay_DSTATE = -2000.0;
+ 624:StandSpeed_Balance.c ****   }
+ 625:StandSpeed_Balance.c **** 
+ 626:StandSpeed_Balance.c ****   /* End of Saturate: '<S30>/Saturation' */
+ 627:StandSpeed_Balance.c **** 
+ 628:StandSpeed_Balance.c ****   /* Sum: '<S24>/Add' incorporates:
+ 629:StandSpeed_Balance.c ****    *  Constant: '<S29>/Constant2'
+ 630:StandSpeed_Balance.c ****    *  Constant: '<S31>/Constant'
+ 631:StandSpeed_Balance.c ****    *  Delay: '<S30>/Delay'
+ 632:StandSpeed_Balance.c ****    *  Product: '<S29>/Product2'
+ 633:StandSpeed_Balance.c ****    *  Product: '<S31>/Product'
+ 634:StandSpeed_Balance.c ****    *  Sum: '<S32>/Diff'
+ 635:StandSpeed_Balance.c ****    *  UnitDelay: '<S32>/UD'
+ 636:StandSpeed_Balance.c ****    *
+ 637:StandSpeed_Balance.c ****    * Block description for '<S32>/Diff':
+ 638:StandSpeed_Balance.c ****    *
+ 639:StandSpeed_Balance.c ****    *  Add in CPU
+ 640:StandSpeed_Balance.c ****    *
+ 641:StandSpeed_Balance.c ****    * Block description for '<S32>/UD':
+ 642:StandSpeed_Balance.c ****    *
+ 643:StandSpeed_Balance.c ****    *  Store in Global RAM
+ 644:StandSpeed_Balance.c ****    */
+ 645:StandSpeed_Balance.c ****   rtb_Add_g3 = (7.0 * rtb_Add1_d + StandSpeed_Balance_DW.Delay_DSTATE) +
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccmTahDp.s 			page 42
+
+
+ 1483              		.loc 1 645 3 is_stmt 1 view .LVU448
+ 1484              		.loc 1 645 21 is_stmt 0 view .LVU449
+ 1485 097e 0022     		movs	r2, #0
+ 1486 0980 A34B     		ldr	r3, .L165+32
+ 1487 0982 3046     		mov	r0, r6
+ 1488 0984 3946     		mov	r1, r7
+ 1489 0986 FFF7FEFF 		bl	__aeabi_dmul
+ 1490              	.LVL123:
+ 1491              		.loc 1 645 57 view .LVU450
+ 1492 098a A24E     		ldr	r6, .L165+36
+ 1493              		.loc 1 645 34 view .LVU451
+ 1494 098c D6E90023 		ldrd	r2, [r6]
+ 1495 0990 FFF7FEFF 		bl	__aeabi_dadd
+ 1496              	.LVL124:
+ 1497 0994 0446     		mov	r4, r0
+ 1498 0996 0D46     		mov	r5, r1
+ 646:StandSpeed_Balance.c ****     (rtb_Add1_d - StandSpeed_Balance_DW.UD_DSTATE_o) * 4.0;
+ 1499              		.loc 1 646 40 view .LVU452
+ 1500 0998 D6ED0C7A 		vldr.32	s15, [r6, #48]
+ 1501              		.loc 1 646 17 view .LVU453
+ 1502 099c 78EE677A 		vsub.f32	s15, s16, s15
+ 1503 09a0 17EE900A 		vmov	r0, s15
+ 1504 09a4 FFF7FEFF 		bl	__aeabi_f2d
+ 1505              	.LVL125:
+ 1506              		.loc 1 646 54 view .LVU454
+ 1507 09a8 0022     		movs	r2, #0
+ 1508 09aa 9B4B     		ldr	r3, .L165+40
+ 1509 09ac FFF7FEFF 		bl	__aeabi_dmul
+ 1510              	.LVL126:
+ 1511 09b0 0246     		mov	r2, r0
+ 1512 09b2 0B46     		mov	r3, r1
+ 645:StandSpeed_Balance.c ****     (rtb_Add1_d - StandSpeed_Balance_DW.UD_DSTATE_o) * 4.0;
+ 1513              		.loc 1 645 14 view .LVU455
+ 1514 09b4 2046     		mov	r0, r4
+ 1515 09b6 2946     		mov	r1, r5
+ 1516 09b8 FFF7FEFF 		bl	__aeabi_dadd
+ 1517              	.LVL127:
+ 1518 09bc 0446     		mov	r4, r0
+ 1519 09be 0D46     		mov	r5, r1
+ 1520              	.LVL128:
+ 647:StandSpeed_Balance.c **** 
+ 648:StandSpeed_Balance.c ****   /* Switch: '<S14>/Switch1' incorporates:
+ 649:StandSpeed_Balance.c ****    *  DataStoreWrite: '<Root>/Data Store Write7'
+ 650:StandSpeed_Balance.c ****    *  Delay: '<S9>/Delay One Step'
+ 651:StandSpeed_Balance.c ****    *  Switch: '<S14>/Switch3'
+ 652:StandSpeed_Balance.c ****    */
+ 653:StandSpeed_Balance.c ****   if (StandSpeed_Balance_DW.DelayOneStep_DSTATE_b > -30.0F) {
+ 1521              		.loc 1 653 3 is_stmt 1 view .LVU456
+ 1522              		.loc 1 653 6 is_stmt 0 view .LVU457
+ 1523 09c0 FBEE0E7A 		vmov.f32	s15, #-3.0e+1
+ 1524 09c4 B4EEE79A 		vcmpe.f32	s18, s15
+ 1525 09c8 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 1526 09cc 40F3C480 		ble	.L130
+ 654:StandSpeed_Balance.c ****     /* Switch: '<S14>/Switch' */
+ 655:StandSpeed_Balance.c ****     if (StandSpeed_Balance_DW.DelayOneStep_DSTATE_b > 30.0F) {
+ 1527              		.loc 1 655 5 is_stmt 1 view .LVU458
+ 1528              		.loc 1 655 8 is_stmt 0 view .LVU459
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccmTahDp.s 			page 43
+
+
+ 1529 09d0 F3EE0E7A 		vmov.f32	s15, #3.0e+1
+ 1530 09d4 B4EEE79A 		vcmpe.f32	s18, s15
+ 1531 09d8 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 1532 09dc 40F38180 		ble	.L131
+ 656:StandSpeed_Balance.c ****       /* Switch: '<S14>/Switch2' */
+ 657:StandSpeed_Balance.c ****       if (rtb_Add_g3 > 0.0) {
+ 1533              		.loc 1 657 7 is_stmt 1 view .LVU460
+ 1534              		.loc 1 657 10 is_stmt 0 view .LVU461
+ 1535 09e0 0022     		movs	r2, #0
+ 1536 09e2 0023     		movs	r3, #0
+ 1537 09e4 FFF7FEFF 		bl	__aeabi_dcmpgt
+ 1538              	.LVL129:
+ 1539 09e8 0028     		cmp	r0, #0
+ 1540 09ea 5AD1     		bne	.L149
+ 658:StandSpeed_Balance.c ****         rtb_Add_g3 = floor(rtb_Add_g3);
+ 659:StandSpeed_Balance.c ****         if (rtIsInf(rtb_Add_g3)) {
+ 660:StandSpeed_Balance.c ****           /* Switch: '<S14>/Switch1' */
+ 661:StandSpeed_Balance.c ****           StandSpeed_Balance_B.Saturation1 = 0;
+ 662:StandSpeed_Balance.c ****         } else {
+ 663:StandSpeed_Balance.c ****           /* Switch: '<S14>/Switch1' */
+ 664:StandSpeed_Balance.c ****           StandSpeed_Balance_B.Saturation1 = (int16_T)(int32_T)fmod(rtb_Add_g3,
+ 665:StandSpeed_Balance.c ****             65536.0);
+ 666:StandSpeed_Balance.c ****         }
+ 667:StandSpeed_Balance.c ****       } else {
+ 668:StandSpeed_Balance.c ****         /* Switch: '<S14>/Switch1' incorporates:
+ 669:StandSpeed_Balance.c ****          *  Constant: '<S14>/Constant'
+ 670:StandSpeed_Balance.c ****          */
+ 671:StandSpeed_Balance.c ****         StandSpeed_Balance_B.Saturation1 = 10;
+ 1541              		.loc 1 671 9 is_stmt 1 view .LVU462
+ 1542              		.loc 1 671 42 is_stmt 0 view .LVU463
+ 1543 09ec 864B     		ldr	r3, .L165+24
+ 1544 09ee 0A22     		movs	r2, #10
+ 1545 09f0 A3F87A20 		strh	r2, [r3, #122]	@ movhi
+ 1546 09f4 BBE0     		b	.L70
+ 1547              	.LVL130:
+ 1548              	.L127:
+ 570:StandSpeed_Balance.c ****     if (rtIsNaN(rtb_Add_g3) || rtIsInf(rtb_Add_g3)) {
+ 1549              		.loc 1 570 5 is_stmt 1 view .LVU464
+ 570:StandSpeed_Balance.c ****     if (rtIsNaN(rtb_Add_g3) || rtIsInf(rtb_Add_g3)) {
+ 1550              		.loc 1 570 18 is_stmt 0 view .LVU465
+ 1551 09f6 45EC104B 		vmov	d0, r4, r5
+ 1552 09fa FFF7FEFF 		bl	floor
+ 1553              	.LVL131:
+ 1554 09fe B0EE409A 		vmov.f32	s18, s0
+ 1555 0a02 F0EE609A 		vmov.f32	s19, s1
+ 1556              	.LVL132:
+ 571:StandSpeed_Balance.c ****       rtb_Add_g3 = 0.0;
+ 1557              		.loc 1 571 5 is_stmt 1 view .LVU466
+ 571:StandSpeed_Balance.c ****       rtb_Add_g3 = 0.0;
+ 1558              		.loc 1 571 9 is_stmt 0 view .LVU467
+ 1559 0a06 FFF7FEFF 		bl	rtIsNaN
+ 1560              	.LVL133:
+ 571:StandSpeed_Balance.c ****       rtb_Add_g3 = 0.0;
+ 1561              		.loc 1 571 8 view .LVU468
+ 1562 0a0a 88B1     		cbz	r0, .L150
+ 572:StandSpeed_Balance.c ****     } else {
+ 1563              		.loc 1 572 18 view .LVU469
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccmTahDp.s 			page 44
+
+
+ 1564 0a0c 0024     		movs	r4, #0
+ 1565 0a0e 0025     		movs	r5, #0
+ 1566              	.LVL134:
+ 1567              	.L53:
+ 580:StandSpeed_Balance.c ****       (int16_T)-(int16_T)(uint16_T)-rtb_Add_g3 : (int32_T)(int16_T)(uint16_T)
+ 1568              		.loc 1 580 5 is_stmt 1 view .LVU470
+ 580:StandSpeed_Balance.c ****       (int16_T)-(int16_T)(uint16_T)-rtb_Add_g3 : (int32_T)(int16_T)(uint16_T)
+ 1569              		.loc 1 580 39 is_stmt 0 view .LVU471
+ 1570 0a10 0022     		movs	r2, #0
+ 1571 0a12 0023     		movs	r3, #0
+ 1572 0a14 2046     		mov	r0, r4
+ 1573 0a16 2946     		mov	r1, r5
+ 1574 0a18 FFF7FEFF 		bl	__aeabi_dcmplt
+ 1575              	.LVL135:
+ 1576 0a1c E8B9     		cbnz	r0, .L151
+ 581:StandSpeed_Balance.c ****       rtb_Add_g3);
+ 1577              		.loc 1 581 68 discriminator 2 view .LVU472
+ 1578 0a1e 2046     		mov	r0, r4
+ 1579 0a20 2946     		mov	r1, r5
+ 1580 0a22 FFF7FEFF 		bl	__aeabi_d2uiz
+ 1581              	.LVL136:
+ 580:StandSpeed_Balance.c ****       (int16_T)-(int16_T)(uint16_T)-rtb_Add_g3 : (int32_T)(int16_T)(uint16_T)
+ 1582              		.loc 1 580 39 discriminator 2 view .LVU473
+ 1583 0a26 03B2     		sxth	r3, r0
+ 1584              	.L56:
+ 580:StandSpeed_Balance.c ****       (int16_T)-(int16_T)(uint16_T)-rtb_Add_g3 : (int32_T)(int16_T)(uint16_T)
+ 1585              		.loc 1 580 37 discriminator 4 view .LVU474
+ 1586 0a28 774A     		ldr	r2, .L165+24
+ 1587 0a2a A2F87830 		strh	r3, [r2, #120]	@ movhi
+ 1588 0a2e 6CE7     		b	.L46
+ 1589              	.LVL137:
+ 1590              	.L150:
+ 571:StandSpeed_Balance.c ****       rtb_Add_g3 = 0.0;
+ 1591              		.loc 1 571 32 discriminator 1 view .LVU475
+ 1592 0a30 B0EE490A 		vmov.f32	s0, s18
+ 1593 0a34 F0EE690A 		vmov.f32	s1, s19
+ 1594 0a38 FFF7FEFF 		bl	rtIsInf
+ 1595              	.LVL138:
+ 571:StandSpeed_Balance.c ****       rtb_Add_g3 = 0.0;
+ 1596              		.loc 1 571 29 discriminator 1 view .LVU476
+ 1597 0a3c 10B1     		cbz	r0, .L152
+ 572:StandSpeed_Balance.c ****     } else {
+ 1598              		.loc 1 572 18 view .LVU477
+ 1599 0a3e 0024     		movs	r4, #0
+ 1600 0a40 0025     		movs	r5, #0
+ 1601 0a42 E5E7     		b	.L53
+ 1602              	.L152:
+ 574:StandSpeed_Balance.c ****     }
+ 1603              		.loc 1 574 7 is_stmt 1 view .LVU478
+ 574:StandSpeed_Balance.c ****     }
+ 1604              		.loc 1 574 20 is_stmt 0 view .LVU479
+ 1605 0a44 9FED6C1B 		vldr.64	d1, .L165+8
+ 1606 0a48 B0EE490A 		vmov.f32	s0, s18
+ 1607 0a4c F0EE690A 		vmov.f32	s1, s19
+ 1608 0a50 FFF7FEFF 		bl	fmod
+ 1609              	.LVL139:
+ 1610 0a54 55EC104B 		vmov	r4, r5, d0
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccmTahDp.s 			page 45
+
+
+ 1611              	.LVL140:
+ 574:StandSpeed_Balance.c ****     }
+ 1612              		.loc 1 574 20 view .LVU480
+ 1613 0a58 DAE7     		b	.L53
+ 1614              	.L151:
+ 581:StandSpeed_Balance.c ****       rtb_Add_g3);
+ 1615              		.loc 1 581 36 discriminator 1 view .LVU481
+ 1616 0a5a 2046     		mov	r0, r4
+ 1617 0a5c 05F10041 		add	r1, r5, #-2147483648
+ 581:StandSpeed_Balance.c ****       rtb_Add_g3);
+ 1618              		.loc 1 581 26 discriminator 1 view .LVU482
+ 1619 0a60 FFF7FEFF 		bl	__aeabi_d2uiz
+ 1620              	.LVL141:
+ 1621 0a64 83B2     		uxth	r3, r0
+ 581:StandSpeed_Balance.c ****       rtb_Add_g3);
+ 1622              		.loc 1 581 7 discriminator 1 view .LVU483
+ 1623 0a66 5B42     		rsbs	r3, r3, #0
+ 580:StandSpeed_Balance.c ****       (int16_T)-(int16_T)(uint16_T)-rtb_Add_g3 : (int32_T)(int16_T)(uint16_T)
+ 1624              		.loc 1 580 39 discriminator 1 view .LVU484
+ 1625 0a68 1BB2     		sxth	r3, r3
+ 1626 0a6a DDE7     		b	.L56
+ 1627              	.LVL142:
+ 1628              	.L57:
+ 593:StandSpeed_Balance.c ****     /* Switch: '<S13>/Switch1' incorporates:
+ 1629              		.loc 1 593 10 is_stmt 1 view .LVU485
+ 593:StandSpeed_Balance.c ****     /* Switch: '<S13>/Switch1' incorporates:
+ 1630              		.loc 1 593 13 is_stmt 0 view .LVU486
+ 1631 0a6c 6B4A     		ldr	r2, .L165+44
+ 1632 0a6e 9342     		cmp	r3, r2
+ 1633 0a70 BFF656AF 		bge	.L58
+ 597:StandSpeed_Balance.c ****   }
+ 1634              		.loc 1 597 5 is_stmt 1 view .LVU487
+ 597:StandSpeed_Balance.c ****   }
+ 1635              		.loc 1 597 37 is_stmt 0 view .LVU488
+ 1636 0a74 644B     		ldr	r3, .L165+24
+ 1637 0a76 4EF69872 		movw	r2, #61336
+ 1638 0a7a A3F87820 		strh	r2, [r3, #120]	@ movhi
+ 1639 0a7e 4FE7     		b	.L58
+ 1640              	.LVL143:
+ 1641              	.L129:
+ 621:StandSpeed_Balance.c ****     /* Sum: '<S30>/Add2' */
+ 1642              		.loc 1 621 10 is_stmt 1 view .LVU489
+ 621:StandSpeed_Balance.c ****     /* Sum: '<S30>/Add2' */
+ 1643              		.loc 1 621 13 is_stmt 0 view .LVU490
+ 1644 0a80 5FA3     		adr	r3, .L165+16
+ 1645 0a82 D3E90023 		ldrd	r2, [r3]
+ 1646 0a86 2046     		mov	r0, r4
+ 1647 0a88 2946     		mov	r1, r5
+ 1648 0a8a FFF7FEFF 		bl	__aeabi_dcmplt
+ 1649              	.LVL144:
+ 1650 0a8e 0028     		cmp	r0, #0
+ 1651 0a90 3FF475AF 		beq	.L61
+ 623:StandSpeed_Balance.c ****   }
+ 1652              		.loc 1 623 5 is_stmt 1 view .LVU491
+ 623:StandSpeed_Balance.c ****   }
+ 1653              		.loc 1 623 40 is_stmt 0 view .LVU492
+ 1654 0a94 5F4B     		ldr	r3, .L165+36
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccmTahDp.s 			page 46
+
+
+ 1655 0a96 5AA1     		adr	r1, .L165+16
+ 1656 0a98 D1E90001 		ldrd	r0, [r1]
+ 1657 0a9c C3E90001 		strd	r0, [r3]
+ 1658 0aa0 6DE7     		b	.L61
+ 1659              	.LVL145:
+ 1660              	.L149:
+ 658:StandSpeed_Balance.c ****         if (rtIsInf(rtb_Add_g3)) {
+ 1661              		.loc 1 658 9 is_stmt 1 view .LVU493
+ 658:StandSpeed_Balance.c ****         if (rtIsInf(rtb_Add_g3)) {
+ 1662              		.loc 1 658 22 is_stmt 0 view .LVU494
+ 1663 0aa2 45EC104B 		vmov	d0, r4, r5
+ 1664 0aa6 FFF7FEFF 		bl	floor
+ 1665              	.LVL146:
+ 1666 0aaa B0EE409A 		vmov.f32	s18, s0
+ 1667 0aae F0EE609A 		vmov.f32	s19, s1
+ 1668              	.LVL147:
+ 659:StandSpeed_Balance.c ****           /* Switch: '<S14>/Switch1' */
+ 1669              		.loc 1 659 9 is_stmt 1 view .LVU495
+ 659:StandSpeed_Balance.c ****           /* Switch: '<S14>/Switch1' */
+ 1670              		.loc 1 659 13 is_stmt 0 view .LVU496
+ 1671 0ab2 FFF7FEFF 		bl	rtIsInf
+ 1672              	.LVL148:
+ 659:StandSpeed_Balance.c ****           /* Switch: '<S14>/Switch1' */
+ 1673              		.loc 1 659 12 view .LVU497
+ 1674 0ab6 20B1     		cbz	r0, .L69
+ 661:StandSpeed_Balance.c ****         } else {
+ 1675              		.loc 1 661 11 is_stmt 1 view .LVU498
+ 661:StandSpeed_Balance.c ****         } else {
+ 1676              		.loc 1 661 44 is_stmt 0 view .LVU499
+ 1677 0ab8 534B     		ldr	r3, .L165+24
+ 1678 0aba 0022     		movs	r2, #0
+ 1679 0abc A3F87A20 		strh	r2, [r3, #122]	@ movhi
+ 1680 0ac0 55E0     		b	.L70
+ 1681              	.L69:
+ 664:StandSpeed_Balance.c ****             65536.0);
+ 1682              		.loc 1 664 11 is_stmt 1 view .LVU500
+ 664:StandSpeed_Balance.c ****             65536.0);
+ 1683              		.loc 1 664 64 is_stmt 0 view .LVU501
+ 1684 0ac2 9FED4D1B 		vldr.64	d1, .L165+8
+ 1685 0ac6 B0EE490A 		vmov.f32	s0, s18
+ 1686 0aca F0EE690A 		vmov.f32	s1, s19
+ 1687 0ace FFF7FEFF 		bl	fmod
+ 1688              	.LVL149:
+ 1689 0ad2 51EC100B 		vmov	r0, r1, d0
+ 664:StandSpeed_Balance.c ****             65536.0);
+ 1690              		.loc 1 664 55 view .LVU502
+ 1691 0ad6 FFF7FEFF 		bl	__aeabi_d2iz
+ 1692              	.LVL150:
+ 664:StandSpeed_Balance.c ****             65536.0);
+ 1693              		.loc 1 664 44 view .LVU503
+ 1694 0ada 4B4B     		ldr	r3, .L165+24
+ 1695 0adc A3F87A00 		strh	r0, [r3, #122]	@ movhi
+ 1696 0ae0 45E0     		b	.L70
+ 1697              	.LVL151:
+ 1698              	.L131:
+ 672:StandSpeed_Balance.c ****       }
+ 673:StandSpeed_Balance.c **** 
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccmTahDp.s 			page 47
+
+
+ 674:StandSpeed_Balance.c ****       /* End of Switch: '<S14>/Switch2' */
+ 675:StandSpeed_Balance.c ****     } else {
+ 676:StandSpeed_Balance.c ****       rtb_Add_g3 = floor(rtb_Add_g3);
+ 1699              		.loc 1 676 7 is_stmt 1 view .LVU504
+ 1700              		.loc 1 676 20 is_stmt 0 view .LVU505
+ 1701 0ae2 45EC104B 		vmov	d0, r4, r5
+ 1702 0ae6 FFF7FEFF 		bl	floor
+ 1703              	.LVL152:
+ 1704 0aea B0EE409A 		vmov.f32	s18, s0
+ 1705 0aee F0EE609A 		vmov.f32	s19, s1
+ 1706              	.LVL153:
+ 677:StandSpeed_Balance.c ****       if (rtIsNaN(rtb_Add_g3) || rtIsInf(rtb_Add_g3)) {
+ 1707              		.loc 1 677 7 is_stmt 1 view .LVU506
+ 1708              		.loc 1 677 11 is_stmt 0 view .LVU507
+ 1709 0af2 FFF7FEFF 		bl	rtIsNaN
+ 1710              	.LVL154:
+ 1711              		.loc 1 677 10 view .LVU508
+ 1712 0af6 88B1     		cbz	r0, .L153
+ 678:StandSpeed_Balance.c ****         rtb_Add_g3 = 0.0;
+ 1713              		.loc 1 678 20 view .LVU509
+ 1714 0af8 0024     		movs	r4, #0
+ 1715 0afa 0025     		movs	r5, #0
+ 1716              	.LVL155:
+ 1717              	.L71:
+ 679:StandSpeed_Balance.c ****       } else {
+ 680:StandSpeed_Balance.c ****         rtb_Add_g3 = fmod(rtb_Add_g3, 65536.0);
+ 681:StandSpeed_Balance.c ****       }
+ 682:StandSpeed_Balance.c **** 
+ 683:StandSpeed_Balance.c ****       /* Switch: '<S14>/Switch1' */
+ 684:StandSpeed_Balance.c ****       StandSpeed_Balance_B.Saturation1 = (int16_T)(rtb_Add_g3 < 0.0 ? (int32_T)
+ 1718              		.loc 1 684 7 is_stmt 1 view .LVU510
+ 1719              		.loc 1 684 42 is_stmt 0 view .LVU511
+ 1720 0afc 0022     		movs	r2, #0
+ 1721 0afe 0023     		movs	r3, #0
+ 1722 0b00 2046     		mov	r0, r4
+ 1723 0b02 2946     		mov	r1, r5
+ 1724 0b04 FFF7FEFF 		bl	__aeabi_dcmplt
+ 1725              	.LVL156:
+ 1726 0b08 E8B9     		cbnz	r0, .L154
+ 685:StandSpeed_Balance.c ****         (int16_T)-(int16_T)(uint16_T)-rtb_Add_g3 : (int32_T)(int16_T)(uint16_T)
+ 1727              		.loc 1 685 70 discriminator 2 view .LVU512
+ 1728 0b0a 2046     		mov	r0, r4
+ 1729 0b0c 2946     		mov	r1, r5
+ 1730 0b0e FFF7FEFF 		bl	__aeabi_d2uiz
+ 1731              	.LVL157:
+ 684:StandSpeed_Balance.c ****         (int16_T)-(int16_T)(uint16_T)-rtb_Add_g3 : (int32_T)(int16_T)(uint16_T)
+ 1732              		.loc 1 684 42 discriminator 2 view .LVU513
+ 1733 0b12 03B2     		sxth	r3, r0
+ 1734              	.L74:
+ 684:StandSpeed_Balance.c ****         (int16_T)-(int16_T)(uint16_T)-rtb_Add_g3 : (int32_T)(int16_T)(uint16_T)
+ 1735              		.loc 1 684 40 discriminator 4 view .LVU514
+ 1736 0b14 3C4A     		ldr	r2, .L165+24
+ 1737 0b16 A2F87A30 		strh	r3, [r2, #122]	@ movhi
+ 1738 0b1a 28E0     		b	.L70
+ 1739              	.LVL158:
+ 1740              	.L153:
+ 677:StandSpeed_Balance.c ****         rtb_Add_g3 = 0.0;
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccmTahDp.s 			page 48
+
+
+ 1741              		.loc 1 677 34 discriminator 1 view .LVU515
+ 1742 0b1c B0EE490A 		vmov.f32	s0, s18
+ 1743 0b20 F0EE690A 		vmov.f32	s1, s19
+ 1744 0b24 FFF7FEFF 		bl	rtIsInf
+ 1745              	.LVL159:
+ 677:StandSpeed_Balance.c ****         rtb_Add_g3 = 0.0;
+ 1746              		.loc 1 677 31 discriminator 1 view .LVU516
+ 1747 0b28 10B1     		cbz	r0, .L155
+ 678:StandSpeed_Balance.c ****       } else {
+ 1748              		.loc 1 678 20 view .LVU517
+ 1749 0b2a 0024     		movs	r4, #0
+ 1750 0b2c 0025     		movs	r5, #0
+ 1751 0b2e E5E7     		b	.L71
+ 1752              	.L155:
+ 680:StandSpeed_Balance.c ****       }
+ 1753              		.loc 1 680 9 is_stmt 1 view .LVU518
+ 680:StandSpeed_Balance.c ****       }
+ 1754              		.loc 1 680 22 is_stmt 0 view .LVU519
+ 1755 0b30 9FED311B 		vldr.64	d1, .L165+8
+ 1756 0b34 B0EE490A 		vmov.f32	s0, s18
+ 1757 0b38 F0EE690A 		vmov.f32	s1, s19
+ 1758 0b3c FFF7FEFF 		bl	fmod
+ 1759              	.LVL160:
+ 1760 0b40 55EC104B 		vmov	r4, r5, d0
+ 1761              	.LVL161:
+ 680:StandSpeed_Balance.c ****       }
+ 1762              		.loc 1 680 22 view .LVU520
+ 1763 0b44 DAE7     		b	.L71
+ 1764              	.L154:
+ 1765              		.loc 1 685 38 discriminator 1 view .LVU521
+ 1766 0b46 2046     		mov	r0, r4
+ 1767 0b48 05F10041 		add	r1, r5, #-2147483648
+ 1768              		.loc 1 685 28 discriminator 1 view .LVU522
+ 1769 0b4c FFF7FEFF 		bl	__aeabi_d2uiz
+ 1770              	.LVL162:
+ 1771 0b50 83B2     		uxth	r3, r0
+ 1772              		.loc 1 685 9 discriminator 1 view .LVU523
+ 1773 0b52 5B42     		rsbs	r3, r3, #0
+ 684:StandSpeed_Balance.c ****         (int16_T)-(int16_T)(uint16_T)-rtb_Add_g3 : (int32_T)(int16_T)(uint16_T)
+ 1774              		.loc 1 684 42 discriminator 1 view .LVU524
+ 1775 0b54 1BB2     		sxth	r3, r3
+ 1776 0b56 DDE7     		b	.L74
+ 1777              	.L130:
+ 686:StandSpeed_Balance.c ****         rtb_Add_g3);
+ 687:StandSpeed_Balance.c ****     }
+ 688:StandSpeed_Balance.c **** 
+ 689:StandSpeed_Balance.c ****     /* End of Switch: '<S14>/Switch' */
+ 690:StandSpeed_Balance.c ****   } else if (rtb_Add_g3 > 0.0) {
+ 1778              		.loc 1 690 10 is_stmt 1 view .LVU525
+ 1779              		.loc 1 690 13 is_stmt 0 view .LVU526
+ 1780 0b58 0022     		movs	r2, #0
+ 1781 0b5a 0023     		movs	r3, #0
+ 1782 0b5c FFF7FEFF 		bl	__aeabi_dcmpgt
+ 1783              	.LVL163:
+ 1784 0b60 0028     		cmp	r0, #0
+ 1785 0b62 5FD0     		beq	.L134
+ 691:StandSpeed_Balance.c ****     /* Switch: '<S14>/Switch1' incorporates:
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccmTahDp.s 			page 49
+
+
+ 692:StandSpeed_Balance.c ****      *  Constant: '<S14>/Constant1'
+ 693:StandSpeed_Balance.c ****      *  Switch: '<S14>/Switch3'
+ 694:StandSpeed_Balance.c ****      */
+ 695:StandSpeed_Balance.c ****     StandSpeed_Balance_B.Saturation1 = -10;
+ 1786              		.loc 1 695 5 is_stmt 1 view .LVU527
+ 1787              		.loc 1 695 38 is_stmt 0 view .LVU528
+ 1788 0b64 284B     		ldr	r3, .L165+24
+ 1789 0b66 4FF6F672 		movw	r2, #65526
+ 1790 0b6a A3F87A20 		strh	r2, [r3, #122]	@ movhi
+ 1791              	.LVL164:
+ 1792              	.L70:
+ 696:StandSpeed_Balance.c ****   } else {
+ 697:StandSpeed_Balance.c ****     /* Switch: '<S14>/Switch3' */
+ 698:StandSpeed_Balance.c ****     rtb_Add_g3 = floor(rtb_Add_g3);
+ 699:StandSpeed_Balance.c ****     if (rtIsNaN(rtb_Add_g3) || rtIsInf(rtb_Add_g3)) {
+ 700:StandSpeed_Balance.c ****       rtb_Add_g3 = 0.0;
+ 701:StandSpeed_Balance.c ****     } else {
+ 702:StandSpeed_Balance.c ****       rtb_Add_g3 = fmod(rtb_Add_g3, 65536.0);
+ 703:StandSpeed_Balance.c ****     }
+ 704:StandSpeed_Balance.c **** 
+ 705:StandSpeed_Balance.c ****     /* Switch: '<S14>/Switch1' incorporates:
+ 706:StandSpeed_Balance.c ****      *  Switch: '<S14>/Switch3'
+ 707:StandSpeed_Balance.c ****      */
+ 708:StandSpeed_Balance.c ****     StandSpeed_Balance_B.Saturation1 = (int16_T)(rtb_Add_g3 < 0.0 ? (int32_T)
+ 709:StandSpeed_Balance.c ****       (int16_T)-(int16_T)(uint16_T)-rtb_Add_g3 : (int32_T)(int16_T)(uint16_T)
+ 710:StandSpeed_Balance.c ****       rtb_Add_g3);
+ 711:StandSpeed_Balance.c ****   }
+ 712:StandSpeed_Balance.c **** 
+ 713:StandSpeed_Balance.c ****   /* End of Switch: '<S14>/Switch1' */
+ 714:StandSpeed_Balance.c **** 
+ 715:StandSpeed_Balance.c ****   /* Saturate: '<Root>/Saturation1' */
+ 716:StandSpeed_Balance.c ****   if (StandSpeed_Balance_B.Saturation1 > 4200) {
+ 1793              		.loc 1 716 3 is_stmt 1 view .LVU529
+ 1794              		.loc 1 716 27 is_stmt 0 view .LVU530
+ 1795 0b6e 264B     		ldr	r3, .L165+24
+ 1796 0b70 B3F97A30 		ldrsh	r3, [r3, #122]
+ 1797              		.loc 1 716 6 view .LVU531
+ 1798 0b74 41F26802 		movw	r2, #4200
+ 1799 0b78 9342     		cmp	r3, r2
+ 1800 0b7a 40F38E80 		ble	.L81
+ 717:StandSpeed_Balance.c ****     /* Switch: '<S14>/Switch1' incorporates:
+ 718:StandSpeed_Balance.c ****      *  Saturate: '<Root>/Saturation1'
+ 719:StandSpeed_Balance.c ****      */
+ 720:StandSpeed_Balance.c ****     StandSpeed_Balance_B.Saturation1 = 4200;
+ 1801              		.loc 1 720 5 is_stmt 1 view .LVU532
+ 1802              		.loc 1 720 38 is_stmt 0 view .LVU533
+ 1803 0b7e 224B     		ldr	r3, .L165+24
+ 1804 0b80 A3F87A20 		strh	r2, [r3, #122]	@ movhi
+ 1805              	.L82:
+ 721:StandSpeed_Balance.c ****   } else if (StandSpeed_Balance_B.Saturation1 < -4200) {
+ 722:StandSpeed_Balance.c ****     /* Switch: '<S14>/Switch1' incorporates:
+ 723:StandSpeed_Balance.c ****      *  Saturate: '<Root>/Saturation1'
+ 724:StandSpeed_Balance.c ****      */
+ 725:StandSpeed_Balance.c ****     StandSpeed_Balance_B.Saturation1 = -4200;
+ 726:StandSpeed_Balance.c ****   }
+ 727:StandSpeed_Balance.c **** 
+ 728:StandSpeed_Balance.c ****   /* End of Saturate: '<Root>/Saturation1' */
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccmTahDp.s 			page 50
+
+
+ 729:StandSpeed_Balance.c **** 
+ 730:StandSpeed_Balance.c ****   /* S-Function (StackLiteDualDrive_DataLinkInput): '<Root>/DataLinkInput' */
+ 731:StandSpeed_Balance.c **** 
+ 732:StandSpeed_Balance.c ****   /*Input Data*/
+ 733:StandSpeed_Balance.c ****   StandSpeed_Balance_B.DataLinkInput_o1= DataLink_RevData[0].point;
+ 1806              		.loc 1 733 3 is_stmt 1 view .LVU534
+ 1807              		.loc 1 733 61 is_stmt 0 view .LVU535
+ 1808 0b84 264A     		ldr	r2, .L165+48
+ 1809 0b86 D2F800C0 		ldr	ip, [r2]	@ unaligned
+ 1810              		.loc 1 733 40 view .LVU536
+ 1811 0b8a 1F4B     		ldr	r3, .L165+24
+ 1812 0b8c C3F820C0 		str	ip, [r3, #32]	@ float
+ 734:StandSpeed_Balance.c ****   StandSpeed_Balance_B.DataLinkInput_o2= DataLink_RevData[1].point;
+ 1813              		.loc 1 734 3 is_stmt 1 view .LVU537
+ 1814              		.loc 1 734 61 is_stmt 0 view .LVU538
+ 1815 0b90 5768     		ldr	r7, [r2, #4]	@ unaligned
+ 1816              		.loc 1 734 40 view .LVU539
+ 1817 0b92 5F62     		str	r7, [r3, #36]	@ float
+ 735:StandSpeed_Balance.c ****   StandSpeed_Balance_B.DataLinkInput_o3= DataLink_RevData[2].point;
+ 1818              		.loc 1 735 3 is_stmt 1 view .LVU540
+ 1819              		.loc 1 735 61 is_stmt 0 view .LVU541
+ 1820 0b94 9668     		ldr	r6, [r2, #8]	@ unaligned
+ 1821              		.loc 1 735 40 view .LVU542
+ 1822 0b96 9E62     		str	r6, [r3, #40]	@ float
+ 736:StandSpeed_Balance.c ****   StandSpeed_Balance_B.DataLinkInput_o4= DataLink_RevData[3].point;
+ 1823              		.loc 1 736 3 is_stmt 1 view .LVU543
+ 1824              		.loc 1 736 61 is_stmt 0 view .LVU544
+ 1825 0b98 D568     		ldr	r5, [r2, #12]	@ unaligned
+ 1826              		.loc 1 736 40 view .LVU545
+ 1827 0b9a DD62     		str	r5, [r3, #44]	@ float
+ 737:StandSpeed_Balance.c ****   StandSpeed_Balance_B.DataLinkInput_o5= DataLink_RevData[4].point;
+ 1828              		.loc 1 737 3 is_stmt 1 view .LVU546
+ 1829              		.loc 1 737 61 is_stmt 0 view .LVU547
+ 1830 0b9c 1469     		ldr	r4, [r2, #16]	@ unaligned
+ 1831              		.loc 1 737 40 view .LVU548
+ 1832 0b9e 1C63     		str	r4, [r3, #48]	@ float
+ 738:StandSpeed_Balance.c ****   StandSpeed_Balance_B.DataLinkInput_o6= DataLink_RevData[5].point;
+ 1833              		.loc 1 738 3 is_stmt 1 view .LVU549
+ 1834              		.loc 1 738 61 is_stmt 0 view .LVU550
+ 1835 0ba0 5069     		ldr	r0, [r2, #20]	@ unaligned
+ 1836              		.loc 1 738 40 view .LVU551
+ 1837 0ba2 5863     		str	r0, [r3, #52]	@ float
+ 739:StandSpeed_Balance.c ****   StandSpeed_Balance_B.DataLinkInput_o7= DataLink_RevData[6].point;
+ 1838              		.loc 1 739 3 is_stmt 1 view .LVU552
+ 1839              		.loc 1 739 61 is_stmt 0 view .LVU553
+ 1840 0ba4 9169     		ldr	r1, [r2, #24]	@ unaligned
+ 1841              		.loc 1 739 40 view .LVU554
+ 1842 0ba6 9963     		str	r1, [r3, #56]	@ float
+ 740:StandSpeed_Balance.c ****   StandSpeed_Balance_B.DataLinkInput_o8= DataLink_RevData[7].point;
+ 1843              		.loc 1 740 3 is_stmt 1 view .LVU555
+ 1844              		.loc 1 740 61 is_stmt 0 view .LVU556
+ 1845 0ba8 D2F81CE0 		ldr	lr, [r2, #28]	@ unaligned
+ 1846              		.loc 1 740 40 view .LVU557
+ 1847 0bac C3F83CE0 		str	lr, [r3, #60]	@ float
+ 741:StandSpeed_Balance.c ****   StandSpeed_Balance_B.DataLinkInput_o9= DataLink_RevData[8].point;
+ 1848              		.loc 1 741 3 is_stmt 1 view .LVU558
+ 1849              		.loc 1 741 61 is_stmt 0 view .LVU559
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccmTahDp.s 			page 51
+
+
+ 1850 0bb0 D2F820E0 		ldr	lr, [r2, #32]	@ unaligned
+ 1851              		.loc 1 741 40 view .LVU560
+ 1852 0bb4 C3F840E0 		str	lr, [r3, #64]	@ float
+ 742:StandSpeed_Balance.c ****   StandSpeed_Balance_B.DataLinkInput_o10= DataLink_RevData[9].point;
+ 1853              		.loc 1 742 3 is_stmt 1 view .LVU561
+ 1854              		.loc 1 742 62 is_stmt 0 view .LVU562
+ 1855 0bb8 526A     		ldr	r2, [r2, #36]	@ unaligned
+ 1856              		.loc 1 742 41 view .LVU563
+ 1857 0bba 5A64     		str	r2, [r3, #68]	@ float
+ 743:StandSpeed_Balance.c **** 
+ 744:StandSpeed_Balance.c ****   /* DataStoreWrite: '<Root>/Data Store Write1' */
+ 745:StandSpeed_Balance.c ****   StandSpeed_Balance_DW.machine_mid = StandSpeed_Balance_B.DataLinkInput_o1;
+ 1858              		.loc 1 745 3 is_stmt 1 view .LVU564
+ 1859              		.loc 1 745 37 is_stmt 0 view .LVU565
+ 1860 0bbc 154B     		ldr	r3, .L165+36
+ 1861 0bbe C3F8ECC0 		str	ip, [r3, #236]	@ float
+ 746:StandSpeed_Balance.c **** 
+ 747:StandSpeed_Balance.c ****   /* DataStoreWrite: '<Root>/Data Store Write2' */
+ 748:StandSpeed_Balance.c ****   StandSpeed_Balance_DW.tar_speed = StandSpeed_Balance_B.DataLinkInput_o2;
+ 1862              		.loc 1 748 3 is_stmt 1 view .LVU566
+ 1863              		.loc 1 748 35 is_stmt 0 view .LVU567
+ 1864 0bc2 C3F8D870 		str	r7, [r3, #216]	@ float
+ 749:StandSpeed_Balance.c **** 
+ 750:StandSpeed_Balance.c ****   /* DataStoreWrite: '<Root>/Data Store Write3' */
+ 751:StandSpeed_Balance.c ****   StandSpeed_Balance_DW.Kp_speed = StandSpeed_Balance_B.DataLinkInput_o3;
+ 1865              		.loc 1 751 3 is_stmt 1 view .LVU568
+ 1866              		.loc 1 751 34 is_stmt 0 view .LVU569
+ 1867 0bc6 C3F8DC60 		str	r6, [r3, #220]	@ float
+ 752:StandSpeed_Balance.c **** 
+ 753:StandSpeed_Balance.c ****   /* DataStoreWrite: '<Root>/Data Store Write4' */
+ 754:StandSpeed_Balance.c ****   StandSpeed_Balance_DW.Ki_speed = StandSpeed_Balance_B.DataLinkInput_o4;
+ 1868              		.loc 1 754 3 is_stmt 1 view .LVU570
+ 1869              		.loc 1 754 34 is_stmt 0 view .LVU571
+ 1870 0bca C3F8E050 		str	r5, [r3, #224]	@ float
+ 755:StandSpeed_Balance.c **** 
+ 756:StandSpeed_Balance.c ****   /* DataStoreWrite: '<Root>/Data Store Write5' */
+ 757:StandSpeed_Balance.c ****   StandSpeed_Balance_DW.Kd_speed = StandSpeed_Balance_B.DataLinkInput_o5;
+ 1871              		.loc 1 757 3 is_stmt 1 view .LVU572
+ 1872              		.loc 1 757 34 is_stmt 0 view .LVU573
+ 1873 0bce C3F8E440 		str	r4, [r3, #228]	@ float
+ 758:StandSpeed_Balance.c **** 
+ 759:StandSpeed_Balance.c ****   /* DataStoreWrite: '<Root>/Data Store Write8' */
+ 760:StandSpeed_Balance.c ****   StandSpeed_Balance_DW.Kp_angle = StandSpeed_Balance_B.DataLinkInput_o6;
+ 1874              		.loc 1 760 3 is_stmt 1 view .LVU574
+ 1875              		.loc 1 760 34 is_stmt 0 view .LVU575
+ 1876 0bd2 C3F8D400 		str	r0, [r3, #212]	@ float
+ 761:StandSpeed_Balance.c **** 
+ 762:StandSpeed_Balance.c ****   /* DataStoreWrite: '<Root>/Data Store Write9' */
+ 763:StandSpeed_Balance.c ****   StandSpeed_Balance_DW.Kd_angle = StandSpeed_Balance_B.DataLinkInput_o7;
+ 1877              		.loc 1 763 3 is_stmt 1 view .LVU576
+ 1878              		.loc 1 763 34 is_stmt 0 view .LVU577
+ 1879 0bd6 C3F8E810 		str	r1, [r3, #232]	@ float
+ 764:StandSpeed_Balance.c **** 
+ 765:StandSpeed_Balance.c ****   /* Update for UnitDelay: '<S28>/UD'
+ 766:StandSpeed_Balance.c ****    *
+ 767:StandSpeed_Balance.c ****    * Block description for '<S28>/UD':
+ 768:StandSpeed_Balance.c ****    *
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccmTahDp.s 			page 52
+
+
+ 769:StandSpeed_Balance.c ****    *  Store in Global RAM
+ 770:StandSpeed_Balance.c ****    */
+ 771:StandSpeed_Balance.c ****   StandSpeed_Balance_DW.UD_DSTATE = rtb_Add1_h;
+ 1880              		.loc 1 771 3 is_stmt 1 view .LVU578
+ 1881              		.loc 1 771 35 is_stmt 0 view .LVU579
+ 1882 0bda C3ED0B8A 		vstr.32	s17, [r3, #44]
+ 772:StandSpeed_Balance.c **** 
+ 773:StandSpeed_Balance.c ****   /* Update for UnitDelay: '<S32>/UD'
+ 774:StandSpeed_Balance.c ****    *
+ 775:StandSpeed_Balance.c ****    * Block description for '<S32>/UD':
+ 776:StandSpeed_Balance.c ****    *
+ 777:StandSpeed_Balance.c ****    *  Store in Global RAM
+ 778:StandSpeed_Balance.c ****    */
+ 779:StandSpeed_Balance.c ****   StandSpeed_Balance_DW.UD_DSTATE_o = rtb_Add1_d;
+ 1883              		.loc 1 779 3 is_stmt 1 view .LVU580
+ 1884              		.loc 1 779 37 is_stmt 0 view .LVU581
+ 1885 0bde 83ED0C8A 		vstr.32	s16, [r3, #48]
+ 780:StandSpeed_Balance.c **** }
+ 1886              		.loc 1 780 1 view .LVU582
+ 1887 0be2 BDEC048B 		vldm	sp!, {d8-d9}
+ 1888              	.LCFI2:
+ 1889              		.cfi_remember_state
+ 1890              		.cfi_restore 82
+ 1891              		.cfi_restore 83
+ 1892              		.cfi_restore 80
+ 1893              		.cfi_restore 81
+ 1894              		.cfi_def_cfa_offset 40
+ 1895              	.LVL165:
+ 1896              		.loc 1 780 1 view .LVU583
+ 1897 0be6 BDE8F88F 		pop	{r3, r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 1898              	.L166:
+ 1899              		.loc 1 780 1 view .LVU584
+ 1900 0bea 00BFAFF3 		.align	3
+ 1900      0080
+ 1901              	.L165:
+ 1902 0bf0 B81E85EB 		.word	-343597384
+ 1903 0bf4 51B89E3F 		.word	1067366481
+ 1904 0bf8 00000000 		.word	0
+ 1905 0bfc 0000F040 		.word	1089470464
+ 1906 0c00 00000000 		.word	0
+ 1907 0c04 00409FC0 		.word	-1063305216
+ 1908 0c08 00000000 		.word	.LANCHOR0
+ 1909 0c0c 00409F40 		.word	1084178432
+ 1910 0c10 00001C40 		.word	1075576832
+ 1911 0c14 00000000 		.word	.LANCHOR1
+ 1912 0c18 00001040 		.word	1074790400
+ 1913 0c1c 98EFFFFF 		.word	-4200
+ 1914 0c20 00000000 		.word	DataLink_RevData
+ 1915              	.LVL166:
+ 1916              	.L134:
+ 1917              	.LCFI3:
+ 1918              		.cfi_restore_state
+ 698:StandSpeed_Balance.c ****     if (rtIsNaN(rtb_Add_g3) || rtIsInf(rtb_Add_g3)) {
+ 1919              		.loc 1 698 5 is_stmt 1 view .LVU585
+ 698:StandSpeed_Balance.c ****     if (rtIsNaN(rtb_Add_g3) || rtIsInf(rtb_Add_g3)) {
+ 1920              		.loc 1 698 18 is_stmt 0 view .LVU586
+ 1921 0c24 45EC104B 		vmov	d0, r4, r5
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccmTahDp.s 			page 53
+
+
+ 1922 0c28 FFF7FEFF 		bl	floor
+ 1923              	.LVL167:
+ 1924 0c2c B0EE409A 		vmov.f32	s18, s0
+ 1925 0c30 F0EE609A 		vmov.f32	s19, s1
+ 1926              	.LVL168:
+ 699:StandSpeed_Balance.c ****       rtb_Add_g3 = 0.0;
+ 1927              		.loc 1 699 5 is_stmt 1 view .LVU587
+ 699:StandSpeed_Balance.c ****       rtb_Add_g3 = 0.0;
+ 1928              		.loc 1 699 9 is_stmt 0 view .LVU588
+ 1929 0c34 FFF7FEFF 		bl	rtIsNaN
+ 1930              	.LVL169:
+ 699:StandSpeed_Balance.c ****       rtb_Add_g3 = 0.0;
+ 1931              		.loc 1 699 8 view .LVU589
+ 1932 0c38 88B1     		cbz	r0, .L156
+ 700:StandSpeed_Balance.c ****     } else {
+ 1933              		.loc 1 700 18 view .LVU590
+ 1934 0c3a 0024     		movs	r4, #0
+ 1935 0c3c 0025     		movs	r5, #0
+ 1936              	.LVL170:
+ 1937              	.L77:
+ 708:StandSpeed_Balance.c ****       (int16_T)-(int16_T)(uint16_T)-rtb_Add_g3 : (int32_T)(int16_T)(uint16_T)
+ 1938              		.loc 1 708 5 is_stmt 1 view .LVU591
+ 708:StandSpeed_Balance.c ****       (int16_T)-(int16_T)(uint16_T)-rtb_Add_g3 : (int32_T)(int16_T)(uint16_T)
+ 1939              		.loc 1 708 40 is_stmt 0 view .LVU592
+ 1940 0c3e 0022     		movs	r2, #0
+ 1941 0c40 0023     		movs	r3, #0
+ 1942 0c42 2046     		mov	r0, r4
+ 1943 0c44 2946     		mov	r1, r5
+ 1944 0c46 FFF7FEFF 		bl	__aeabi_dcmplt
+ 1945              	.LVL171:
+ 1946 0c4a E8B9     		cbnz	r0, .L157
+ 709:StandSpeed_Balance.c ****       rtb_Add_g3);
+ 1947              		.loc 1 709 68 discriminator 2 view .LVU593
+ 1948 0c4c 2046     		mov	r0, r4
+ 1949 0c4e 2946     		mov	r1, r5
+ 1950 0c50 FFF7FEFF 		bl	__aeabi_d2uiz
+ 1951              	.LVL172:
+ 708:StandSpeed_Balance.c ****       (int16_T)-(int16_T)(uint16_T)-rtb_Add_g3 : (int32_T)(int16_T)(uint16_T)
+ 1952              		.loc 1 708 40 discriminator 2 view .LVU594
+ 1953 0c54 03B2     		sxth	r3, r0
+ 1954              	.L80:
+ 708:StandSpeed_Balance.c ****       (int16_T)-(int16_T)(uint16_T)-rtb_Add_g3 : (int32_T)(int16_T)(uint16_T)
+ 1955              		.loc 1 708 38 discriminator 4 view .LVU595
+ 1956 0c56 184A     		ldr	r2, .L167+8
+ 1957 0c58 A2F87A30 		strh	r3, [r2, #122]	@ movhi
+ 1958 0c5c 87E7     		b	.L70
+ 1959              	.LVL173:
+ 1960              	.L156:
+ 699:StandSpeed_Balance.c ****       rtb_Add_g3 = 0.0;
+ 1961              		.loc 1 699 32 discriminator 1 view .LVU596
+ 1962 0c5e B0EE490A 		vmov.f32	s0, s18
+ 1963 0c62 F0EE690A 		vmov.f32	s1, s19
+ 1964 0c66 FFF7FEFF 		bl	rtIsInf
+ 1965              	.LVL174:
+ 699:StandSpeed_Balance.c ****       rtb_Add_g3 = 0.0;
+ 1966              		.loc 1 699 29 discriminator 1 view .LVU597
+ 1967 0c6a 10B1     		cbz	r0, .L158
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccmTahDp.s 			page 54
+
+
+ 700:StandSpeed_Balance.c ****     } else {
+ 1968              		.loc 1 700 18 view .LVU598
+ 1969 0c6c 0024     		movs	r4, #0
+ 1970 0c6e 0025     		movs	r5, #0
+ 1971 0c70 E5E7     		b	.L77
+ 1972              	.L158:
+ 702:StandSpeed_Balance.c ****     }
+ 1973              		.loc 1 702 7 is_stmt 1 view .LVU599
+ 702:StandSpeed_Balance.c ****     }
+ 1974              		.loc 1 702 20 is_stmt 0 view .LVU600
+ 1975 0c72 9FED0F1B 		vldr.64	d1, .L167
+ 1976 0c76 B0EE490A 		vmov.f32	s0, s18
+ 1977 0c7a F0EE690A 		vmov.f32	s1, s19
+ 1978 0c7e FFF7FEFF 		bl	fmod
+ 1979              	.LVL175:
+ 1980 0c82 55EC104B 		vmov	r4, r5, d0
+ 1981              	.LVL176:
+ 702:StandSpeed_Balance.c ****     }
+ 1982              		.loc 1 702 20 view .LVU601
+ 1983 0c86 DAE7     		b	.L77
+ 1984              	.L157:
+ 709:StandSpeed_Balance.c ****       rtb_Add_g3);
+ 1985              		.loc 1 709 36 discriminator 1 view .LVU602
+ 1986 0c88 2046     		mov	r0, r4
+ 1987 0c8a 05F10041 		add	r1, r5, #-2147483648
+ 709:StandSpeed_Balance.c ****       rtb_Add_g3);
+ 1988              		.loc 1 709 26 discriminator 1 view .LVU603
+ 1989 0c8e FFF7FEFF 		bl	__aeabi_d2uiz
+ 1990              	.LVL177:
+ 1991 0c92 83B2     		uxth	r3, r0
+ 709:StandSpeed_Balance.c ****       rtb_Add_g3);
+ 1992              		.loc 1 709 7 discriminator 1 view .LVU604
+ 1993 0c94 5B42     		rsbs	r3, r3, #0
+ 708:StandSpeed_Balance.c ****       (int16_T)-(int16_T)(uint16_T)-rtb_Add_g3 : (int32_T)(int16_T)(uint16_T)
+ 1994              		.loc 1 708 40 discriminator 1 view .LVU605
+ 1995 0c96 1BB2     		sxth	r3, r3
+ 1996 0c98 DDE7     		b	.L80
+ 1997              	.LVL178:
+ 1998              	.L81:
+ 721:StandSpeed_Balance.c ****     /* Switch: '<S14>/Switch1' incorporates:
+ 1999              		.loc 1 721 10 is_stmt 1 view .LVU606
+ 721:StandSpeed_Balance.c ****     /* Switch: '<S14>/Switch1' incorporates:
+ 2000              		.loc 1 721 13 is_stmt 0 view .LVU607
+ 2001 0c9a 084A     		ldr	r2, .L167+12
+ 2002 0c9c 9342     		cmp	r3, r2
+ 2003 0c9e BFF671AF 		bge	.L82
+ 725:StandSpeed_Balance.c ****   }
+ 2004              		.loc 1 725 5 is_stmt 1 view .LVU608
+ 725:StandSpeed_Balance.c ****   }
+ 2005              		.loc 1 725 38 is_stmt 0 view .LVU609
+ 2006 0ca2 054B     		ldr	r3, .L167+8
+ 2007 0ca4 4EF69872 		movw	r2, #61336
+ 2008 0ca8 A3F87A20 		strh	r2, [r3, #122]	@ movhi
+ 2009 0cac 6AE7     		b	.L82
+ 2010              	.L168:
+ 2011 0cae 00BF     		.align	3
+ 2012              	.L167:
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccmTahDp.s 			page 55
+
+
+ 2013 0cb0 00000000 		.word	0
+ 2014 0cb4 0000F040 		.word	1089470464
+ 2015 0cb8 00000000 		.word	.LANCHOR0
+ 2016 0cbc 98EFFFFF 		.word	-4200
+ 2017              		.cfi_endproc
+ 2018              	.LFE238:
+ 2020              		.section	.text.StandSpeed_Balance_initialize,"ax",%progbits
+ 2021              		.align	1
+ 2022              		.global	StandSpeed_Balance_initialize
+ 2023              		.syntax unified
+ 2024              		.thumb
+ 2025              		.thumb_func
+ 2027              	StandSpeed_Balance_initialize:
+ 2028              	.LFB239:
+ 781:StandSpeed_Balance.c **** 
+ 782:StandSpeed_Balance.c **** /* Model initialize function */
+ 783:StandSpeed_Balance.c **** void StandSpeed_Balance_initialize(void)
+ 784:StandSpeed_Balance.c **** {
+ 2029              		.loc 1 784 1 is_stmt 1 view -0
+ 2030              		.cfi_startproc
+ 2031              		@ args = 0, pretend = 0, frame = 0
+ 2032              		@ frame_needed = 0, uses_anonymous_args = 0
+ 2033 0000 08B5     		push	{r3, lr}
+ 2034              	.LCFI4:
+ 2035              		.cfi_def_cfa_offset 8
+ 2036              		.cfi_offset 3, -8
+ 2037              		.cfi_offset 14, -4
+ 785:StandSpeed_Balance.c ****   /* Registration code */
+ 786:StandSpeed_Balance.c **** 
+ 787:StandSpeed_Balance.c ****   /* initialize non-finites */
+ 788:StandSpeed_Balance.c ****   rt_InitInfAndNaN(sizeof(real_T));
+ 2038              		.loc 1 788 3 view .LVU611
+ 2039 0002 0820     		movs	r0, #8
+ 2040 0004 FFF7FEFF 		bl	rt_InitInfAndNaN
+ 2041              	.LVL179:
+ 789:StandSpeed_Balance.c **** }
+ 2042              		.loc 1 789 1 is_stmt 0 view .LVU612
+ 2043 0008 08BD     		pop	{r3, pc}
+ 2044              		.cfi_endproc
+ 2045              	.LFE239:
+ 2047              		.section	.text.StandSpeed_Balance_terminate,"ax",%progbits
+ 2048              		.align	1
+ 2049              		.global	StandSpeed_Balance_terminate
+ 2050              		.syntax unified
+ 2051              		.thumb
+ 2052              		.thumb_func
+ 2054              	StandSpeed_Balance_terminate:
+ 2055              	.LFB240:
+ 790:StandSpeed_Balance.c **** 
+ 791:StandSpeed_Balance.c **** /* Model terminate function */
+ 792:StandSpeed_Balance.c **** void StandSpeed_Balance_terminate(void)
+ 793:StandSpeed_Balance.c **** {
+ 2056              		.loc 1 793 1 is_stmt 1 view -0
+ 2057              		.cfi_startproc
+ 2058              		@ args = 0, pretend = 0, frame = 0
+ 2059              		@ frame_needed = 0, uses_anonymous_args = 0
+ 2060              		@ link register save eliminated.
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccmTahDp.s 			page 56
+
+
+ 794:StandSpeed_Balance.c ****   /* (no terminate code required) */
+ 795:StandSpeed_Balance.c **** }
+ 2061              		.loc 1 795 1 view .LVU614
+ 2062 0000 7047     		bx	lr
+ 2063              		.cfi_endproc
+ 2064              	.LFE240:
+ 2066              		.global	StandSpeed_Balance_M
+ 2067              		.global	StandSpeed_Balance_DW
+ 2068              		.global	StandSpeed_Balance_B
+ 2069              		.global	StandSpeed_Balance_U8GND
+ 2070              		.section	.bss.StandSpeed_Balance_B,"aw",%nobits
+ 2071              		.align	3
+ 2072              		.set	.LANCHOR0,. + 0
+ 2075              	StandSpeed_Balance_B:
+ 2076 0000 00000000 		.space	128
+ 2076      00000000 
+ 2076      00000000 
+ 2076      00000000 
+ 2076      00000000 
+ 2077              		.section	.bss.StandSpeed_Balance_DW,"aw",%nobits
+ 2078              		.align	3
+ 2079              		.set	.LANCHOR1,. + 0
+ 2082              	StandSpeed_Balance_DW:
+ 2083 0000 00000000 		.space	248
+ 2083      00000000 
+ 2083      00000000 
+ 2083      00000000 
+ 2083      00000000 
+ 2084              		.section	.bss.StandSpeed_Balance_M_,"aw",%nobits
+ 2085              		.align	2
+ 2088              	StandSpeed_Balance_M_:
+ 2089 0000 00000000 		.space	4
+ 2090              		.section	.rodata.StandSpeed_Balance_M,"a"
+ 2091              		.align	2
+ 2094              	StandSpeed_Balance_M:
+ 2095 0000 00000000 		.word	StandSpeed_Balance_M_
+ 2096              		.section	.rodata.StandSpeed_Balance_U8GND,"a"
+ 2097              		.set	.LANCHOR2,. + 0
+ 2100              	StandSpeed_Balance_U8GND:
+ 2101 0000 00       		.space	1
+ 2102              		.text
+ 2103              	.Letext0:
+ 2104              		.file 2 "c:\\program files (x86)\\arm gnu toolchain arm-none-eabi\\11.2 2022.02\\arm-none-eabi\\in
+ 2105              		.file 3 "c:\\program files (x86)\\arm gnu toolchain arm-none-eabi\\11.2 2022.02\\arm-none-eabi\\in
+ 2106              		.file 4 "../STM32CUBEMX/Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f405xx.h"
+ 2107              		.file 5 "c:\\program files (x86)\\arm gnu toolchain arm-none-eabi\\11.2 2022.02\\lib\\gcc\\arm-non
+ 2108              		.file 6 "../STM32CUBEMX/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h"
+ 2109              		.file 7 "../STM32CUBEMX/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h"
+ 2110              		.file 8 "../STM32CUBEMX/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h"
+ 2111              		.file 9 "../STM32CUBEMX/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h"
+ 2112              		.file 10 "../STM32CUBEMX/Core/Inc/ifr-scope_device.h"
+ 2113              		.file 11 "../STM32CUBEMX/Core/Inc/tim.h"
+ 2114              		.file 12 "rtwtypes.h"
+ 2115              		.file 13 "StandSpeed_Balance_types.h"
+ 2116              		.file 14 "StandSpeed_Balance.h"
+ 2117              		.file 15 "rt_nonfinite.h"
+ 2118              		.file 16 "c:\\program files (x86)\\arm gnu toolchain arm-none-eabi\\11.2 2022.02\\arm-none-eabi\\i
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccmTahDp.s 			page 57
+
+
+ 2119              		.file 17 "c:\\program files (x86)\\arm gnu toolchain arm-none-eabi\\11.2 2022.02\\arm-none-eabi\\i
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccmTahDp.s 			page 58
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 StandSpeed_Balance.c
+C:\Users\ysl\AppData\Local\Temp\ccmTahDp.s:30     .text.StandSpeed_Balance_step:00000000 $t
+C:\Users\ysl\AppData\Local\Temp\ccmTahDp.s:36     .text.StandSpeed_Balance_step:00000000 StandSpeed_Balance_step
+C:\Users\ysl\AppData\Local\Temp\ccmTahDp.s:525    .text.StandSpeed_Balance_step:00000310 $d
+C:\Users\ysl\AppData\Local\Temp\ccmTahDp.s:548    .text.StandSpeed_Balance_step:00000360 $t
+C:\Users\ysl\AppData\Local\Temp\ccmTahDp.s:1008   .text.StandSpeed_Balance_step:00000630 $d
+C:\Users\ysl\AppData\Local\Temp\ccmTahDp.s:1031   .text.StandSpeed_Balance_step:00000680 $t
+C:\Users\ysl\AppData\Local\Temp\ccmTahDp.s:1393   .text.StandSpeed_Balance_step:000008c8 $d
+C:\Users\ysl\AppData\Local\Temp\ccmTahDp.s:1407   .text.StandSpeed_Balance_step:000008f4 $t
+C:\Users\ysl\AppData\Local\Temp\ccmTahDp.s:1902   .text.StandSpeed_Balance_step:00000bf0 $d
+C:\Users\ysl\AppData\Local\Temp\ccmTahDp.s:1921   .text.StandSpeed_Balance_step:00000c24 $t
+C:\Users\ysl\AppData\Local\Temp\ccmTahDp.s:2013   .text.StandSpeed_Balance_step:00000cb0 $d
+C:\Users\ysl\AppData\Local\Temp\ccmTahDp.s:2021   .text.StandSpeed_Balance_initialize:00000000 $t
+C:\Users\ysl\AppData\Local\Temp\ccmTahDp.s:2027   .text.StandSpeed_Balance_initialize:00000000 StandSpeed_Balance_initialize
+C:\Users\ysl\AppData\Local\Temp\ccmTahDp.s:2048   .text.StandSpeed_Balance_terminate:00000000 $t
+C:\Users\ysl\AppData\Local\Temp\ccmTahDp.s:2054   .text.StandSpeed_Balance_terminate:00000000 StandSpeed_Balance_terminate
+C:\Users\ysl\AppData\Local\Temp\ccmTahDp.s:2094   .rodata.StandSpeed_Balance_M:00000000 StandSpeed_Balance_M
+C:\Users\ysl\AppData\Local\Temp\ccmTahDp.s:2082   .bss.StandSpeed_Balance_DW:00000000 StandSpeed_Balance_DW
+C:\Users\ysl\AppData\Local\Temp\ccmTahDp.s:2075   .bss.StandSpeed_Balance_B:00000000 StandSpeed_Balance_B
+C:\Users\ysl\AppData\Local\Temp\ccmTahDp.s:2100   .rodata.StandSpeed_Balance_U8GND:00000000 StandSpeed_Balance_U8GND
+C:\Users\ysl\AppData\Local\Temp\ccmTahDp.s:2071   .bss.StandSpeed_Balance_B:00000000 $d
+C:\Users\ysl\AppData\Local\Temp\ccmTahDp.s:2078   .bss.StandSpeed_Balance_DW:00000000 $d
+C:\Users\ysl\AppData\Local\Temp\ccmTahDp.s:2085   .bss.StandSpeed_Balance_M_:00000000 $d
+C:\Users\ysl\AppData\Local\Temp\ccmTahDp.s:2088   .bss.StandSpeed_Balance_M_:00000000 StandSpeed_Balance_M_
+C:\Users\ysl\AppData\Local\Temp\ccmTahDp.s:2091   .rodata.StandSpeed_Balance_M:00000000 $d
+C:\Users\ysl\AppData\Local\Temp\ccmTahDp.s:2101   .rodata.StandSpeed_Balance_U8GND:00000000 $d
+
+UNDEFINED SYMBOLS
+__aeabi_f2d
+__aeabi_dmul
+__aeabi_d2f
+__aeabi_dadd
+__aeabi_dcmpgt
+__aeabi_dcmplt
+__aeabi_i2d
+__aeabi_dsub
+__aeabi_d2uiz
+__aeabi_d2iz
+HAL_GPIO_WritePin
+HI226_Angle
+HI226_AngleV
+htim5
+htim2
+adc_rawvalue
+DataLink_UpFrameData
+motor1_PwmData
+motor2_PwmData
+ws2812_data
+floor
+rtIsNaN
+fmod
+rtIsInf
+DataLink_RevData
+rt_InitInfAndNaN

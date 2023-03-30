@@ -1,0 +1,269 @@
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc0z5SHy.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"rtGetInf.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.text.rtGetInf,"ax",%progbits
+  20              		.align	1
+  21              		.global	rtGetInf
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	rtGetInf:
+  27              	.LFB0:
+  28              		.file 1 "rtGetInf.c"
+   1:rtGetInf.c    **** /*
+   2:rtGetInf.c    ****  * File: rtGetInf.c
+   3:rtGetInf.c    ****  *
+   4:rtGetInf.c    ****  * Code generated for Simulink model 'Stand_Balance'.
+   5:rtGetInf.c    ****  *
+   6:rtGetInf.c    ****  * Model version                  : 1.7
+   7:rtGetInf.c    ****  * Simulink Coder version         : 9.6 (R2021b) 14-May-2021
+   8:rtGetInf.c    ****  * C/C++ source code generated on : Wed Mar  1 10:54:59 2023
+   9:rtGetInf.c    ****  *
+  10:rtGetInf.c    ****  * Target selection: stacklite_dualdrive.tlc
+  11:rtGetInf.c    ****  * Embedded hardware selection: Intel->x86-64 (Windows64)
+  12:rtGetInf.c    ****  * Code generation objectives: Unspecified
+  13:rtGetInf.c    ****  * Validation result: Not run
+  14:rtGetInf.c    ****  */
+  15:rtGetInf.c    **** 
+  16:rtGetInf.c    **** /*
+  17:rtGetInf.c    ****  * Abstract:
+  18:rtGetInf.c    ****  *      Function to initialize non-finite, Inf
+  19:rtGetInf.c    ****  */
+  20:rtGetInf.c    **** #include "rtGetInf.h"
+  21:rtGetInf.c    **** #define NumBitsPerChar                 8U
+  22:rtGetInf.c    **** 
+  23:rtGetInf.c    **** /*
+  24:rtGetInf.c    ****  * Initialize rtInf needed by the generated code.
+  25:rtGetInf.c    ****  * Inf is initialized as non-signaling. Assumes IEEE.
+  26:rtGetInf.c    ****  */
+  27:rtGetInf.c    **** real_T rtGetInf(void)
+  28:rtGetInf.c    **** {
+  29              		.loc 1 28 1 view -0
+  30              		.cfi_startproc
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc0z5SHy.s 			page 2
+
+
+  31              		@ args = 0, pretend = 0, frame = 0
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33              		@ link register save eliminated.
+  29:rtGetInf.c    ****   size_t bitsPerReal = sizeof(real_T) * (NumBitsPerChar);
+  34              		.loc 1 29 3 view .LVU1
+  35              	.LVL0:
+  30:rtGetInf.c    ****   real_T inf = 0.0;
+  36              		.loc 1 30 3 view .LVU2
+  31:rtGetInf.c    ****   if (bitsPerReal == 32U) {
+  37              		.loc 1 31 3 view .LVU3
+  38              	.LBB2:
+  32:rtGetInf.c    ****     inf = rtGetInfF();
+  33:rtGetInf.c    ****   } else {
+  34:rtGetInf.c    ****     union {
+  39              		.loc 1 34 5 view .LVU4
+  35:rtGetInf.c    ****       LittleEndianIEEEDouble bitVal;
+  36:rtGetInf.c    ****       real_T fltVal;
+  37:rtGetInf.c    ****     } tmpVal;
+  38:rtGetInf.c    **** 
+  39:rtGetInf.c    ****     tmpVal.bitVal.words.wordH = 0x7FF00000U;
+  40              		.loc 1 39 5 view .LVU5
+  40:rtGetInf.c    ****     tmpVal.bitVal.words.wordL = 0x00000000U;
+  41              		.loc 1 40 5 view .LVU6
+  41:rtGetInf.c    ****     inf = tmpVal.fltVal;
+  42              		.loc 1 41 5 view .LVU7
+  43              		.loc 1 41 5 is_stmt 0 view .LVU8
+  44              	.LBE2:
+  42:rtGetInf.c    ****   }
+  43:rtGetInf.c    **** 
+  44:rtGetInf.c    ****   return inf;
+  45              		.loc 1 44 3 is_stmt 1 view .LVU9
+  45:rtGetInf.c    **** }
+  46              		.loc 1 45 1 is_stmt 0 view .LVU10
+  47 0000 9FED010B 		vldr.64	d0, .L2
+  48 0004 7047     		bx	lr
+  49              	.L3:
+  50 0006 00BF     		.align	3
+  51              	.L2:
+  52 0008 00000000 		.word	0
+  53 000c 0000F07F 		.word	2146435072
+  54              		.cfi_endproc
+  55              	.LFE0:
+  57              		.section	.text.rtGetInfF,"ax",%progbits
+  58              		.align	1
+  59              		.global	rtGetInfF
+  60              		.syntax unified
+  61              		.thumb
+  62              		.thumb_func
+  64              	rtGetInfF:
+  65              	.LFB1:
+  46:rtGetInf.c    **** 
+  47:rtGetInf.c    **** /*
+  48:rtGetInf.c    ****  * Initialize rtInfF needed by the generated code.
+  49:rtGetInf.c    ****  * Inf is initialized as non-signaling. Assumes IEEE.
+  50:rtGetInf.c    ****  */
+  51:rtGetInf.c    **** real32_T rtGetInfF(void)
+  52:rtGetInf.c    **** {
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc0z5SHy.s 			page 3
+
+
+  66              		.loc 1 52 1 is_stmt 1 view -0
+  67              		.cfi_startproc
+  68              		@ args = 0, pretend = 0, frame = 0
+  69              		@ frame_needed = 0, uses_anonymous_args = 0
+  70              		@ link register save eliminated.
+  53:rtGetInf.c    ****   IEEESingle infF;
+  71              		.loc 1 53 3 view .LVU12
+  54:rtGetInf.c    ****   infF.wordL.wordLuint = 0x7F800000U;
+  72              		.loc 1 54 3 view .LVU13
+  55:rtGetInf.c    ****   return infF.wordL.wordLreal;
+  73              		.loc 1 55 3 view .LVU14
+  56:rtGetInf.c    **** }
+  74              		.loc 1 56 1 is_stmt 0 view .LVU15
+  75 0000 9FED010A 		vldr.32	s0, .L5
+  76 0004 7047     		bx	lr
+  77              	.L6:
+  78 0006 00BF     		.align	2
+  79              	.L5:
+  80 0008 0000807F 		.word	2139095040
+  81              		.cfi_endproc
+  82              	.LFE1:
+  84              		.section	.text.rtGetMinusInf,"ax",%progbits
+  85              		.align	1
+  86              		.global	rtGetMinusInf
+  87              		.syntax unified
+  88              		.thumb
+  89              		.thumb_func
+  91              	rtGetMinusInf:
+  92              	.LFB2:
+  57:rtGetInf.c    **** 
+  58:rtGetInf.c    **** /*
+  59:rtGetInf.c    ****  * Initialize rtMinusInf needed by the generated code.
+  60:rtGetInf.c    ****  * Inf is initialized as non-signaling. Assumes IEEE.
+  61:rtGetInf.c    ****  */
+  62:rtGetInf.c    **** real_T rtGetMinusInf(void)
+  63:rtGetInf.c    **** {
+  93              		.loc 1 63 1 is_stmt 1 view -0
+  94              		.cfi_startproc
+  95              		@ args = 0, pretend = 0, frame = 0
+  96              		@ frame_needed = 0, uses_anonymous_args = 0
+  97              		@ link register save eliminated.
+  64:rtGetInf.c    ****   size_t bitsPerReal = sizeof(real_T) * (NumBitsPerChar);
+  98              		.loc 1 64 3 view .LVU17
+  99              	.LVL1:
+  65:rtGetInf.c    ****   real_T minf = 0.0;
+ 100              		.loc 1 65 3 view .LVU18
+  66:rtGetInf.c    ****   if (bitsPerReal == 32U) {
+ 101              		.loc 1 66 3 view .LVU19
+ 102              	.LBB3:
+  67:rtGetInf.c    ****     minf = rtGetMinusInfF();
+  68:rtGetInf.c    ****   } else {
+  69:rtGetInf.c    ****     union {
+ 103              		.loc 1 69 5 view .LVU20
+  70:rtGetInf.c    ****       LittleEndianIEEEDouble bitVal;
+  71:rtGetInf.c    ****       real_T fltVal;
+  72:rtGetInf.c    ****     } tmpVal;
+  73:rtGetInf.c    **** 
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc0z5SHy.s 			page 4
+
+
+  74:rtGetInf.c    ****     tmpVal.bitVal.words.wordH = 0xFFF00000U;
+ 104              		.loc 1 74 5 view .LVU21
+  75:rtGetInf.c    ****     tmpVal.bitVal.words.wordL = 0x00000000U;
+ 105              		.loc 1 75 5 view .LVU22
+  76:rtGetInf.c    ****     minf = tmpVal.fltVal;
+ 106              		.loc 1 76 5 view .LVU23
+ 107              		.loc 1 76 5 is_stmt 0 view .LVU24
+ 108              	.LBE3:
+  77:rtGetInf.c    ****   }
+  78:rtGetInf.c    **** 
+  79:rtGetInf.c    ****   return minf;
+ 109              		.loc 1 79 3 is_stmt 1 view .LVU25
+  80:rtGetInf.c    **** }
+ 110              		.loc 1 80 1 is_stmt 0 view .LVU26
+ 111 0000 9FED010B 		vldr.64	d0, .L8
+ 112 0004 7047     		bx	lr
+ 113              	.L9:
+ 114 0006 00BF     		.align	3
+ 115              	.L8:
+ 116 0008 00000000 		.word	0
+ 117 000c 0000F0FF 		.word	-1048576
+ 118              		.cfi_endproc
+ 119              	.LFE2:
+ 121              		.section	.text.rtGetMinusInfF,"ax",%progbits
+ 122              		.align	1
+ 123              		.global	rtGetMinusInfF
+ 124              		.syntax unified
+ 125              		.thumb
+ 126              		.thumb_func
+ 128              	rtGetMinusInfF:
+ 129              	.LFB3:
+  81:rtGetInf.c    **** 
+  82:rtGetInf.c    **** /*
+  83:rtGetInf.c    ****  * Initialize rtMinusInfF needed by the generated code.
+  84:rtGetInf.c    ****  * Inf is initialized as non-signaling. Assumes IEEE.
+  85:rtGetInf.c    ****  */
+  86:rtGetInf.c    **** real32_T rtGetMinusInfF(void)
+  87:rtGetInf.c    **** {
+ 130              		.loc 1 87 1 is_stmt 1 view -0
+ 131              		.cfi_startproc
+ 132              		@ args = 0, pretend = 0, frame = 0
+ 133              		@ frame_needed = 0, uses_anonymous_args = 0
+ 134              		@ link register save eliminated.
+  88:rtGetInf.c    ****   IEEESingle minfF;
+ 135              		.loc 1 88 3 view .LVU28
+  89:rtGetInf.c    ****   minfF.wordL.wordLuint = 0xFF800000U;
+ 136              		.loc 1 89 3 view .LVU29
+  90:rtGetInf.c    ****   return minfF.wordL.wordLreal;
+ 137              		.loc 1 90 3 view .LVU30
+  91:rtGetInf.c    **** }
+ 138              		.loc 1 91 1 is_stmt 0 view .LVU31
+ 139 0000 9FED010A 		vldr.32	s0, .L11
+ 140 0004 7047     		bx	lr
+ 141              	.L12:
+ 142 0006 00BF     		.align	2
+ 143              	.L11:
+ 144 0008 000080FF 		.word	-8388608
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc0z5SHy.s 			page 5
+
+
+ 145              		.cfi_endproc
+ 146              	.LFE3:
+ 148              		.text
+ 149              	.Letext0:
+ 150              		.file 2 "c:\\program files (x86)\\arm gnu toolchain arm-none-eabi\\11.2 2022.02\\lib\\gcc\\arm-non
+ 151              		.file 3 "rtwtypes.h"
+ 152              		.file 4 "rt_nonfinite.h"
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc0z5SHy.s 			page 6
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 rtGetInf.c
+C:\Users\ysl\AppData\Local\Temp\cc0z5SHy.s:20     .text.rtGetInf:00000000 $t
+C:\Users\ysl\AppData\Local\Temp\cc0z5SHy.s:26     .text.rtGetInf:00000000 rtGetInf
+C:\Users\ysl\AppData\Local\Temp\cc0z5SHy.s:52     .text.rtGetInf:00000008 $d
+C:\Users\ysl\AppData\Local\Temp\cc0z5SHy.s:58     .text.rtGetInfF:00000000 $t
+C:\Users\ysl\AppData\Local\Temp\cc0z5SHy.s:64     .text.rtGetInfF:00000000 rtGetInfF
+C:\Users\ysl\AppData\Local\Temp\cc0z5SHy.s:80     .text.rtGetInfF:00000008 $d
+C:\Users\ysl\AppData\Local\Temp\cc0z5SHy.s:85     .text.rtGetMinusInf:00000000 $t
+C:\Users\ysl\AppData\Local\Temp\cc0z5SHy.s:91     .text.rtGetMinusInf:00000000 rtGetMinusInf
+C:\Users\ysl\AppData\Local\Temp\cc0z5SHy.s:116    .text.rtGetMinusInf:00000008 $d
+C:\Users\ysl\AppData\Local\Temp\cc0z5SHy.s:122    .text.rtGetMinusInfF:00000000 $t
+C:\Users\ysl\AppData\Local\Temp\cc0z5SHy.s:128    .text.rtGetMinusInfF:00000000 rtGetMinusInfF
+C:\Users\ysl\AppData\Local\Temp\cc0z5SHy.s:144    .text.rtGetMinusInfF:00000008 $d
+
+NO UNDEFINED SYMBOLS

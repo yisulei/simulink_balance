@@ -1,0 +1,3687 @@
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc6jImNK.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"StandTurn_Balance.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.global	__aeabi_dmul
+  20              		.global	__aeabi_f2d
+  21              		.global	__aeabi_d2f
+  22              		.global	__aeabi_dadd
+  23              		.global	__aeabi_i2d
+  24              		.global	__aeabi_dcmpgt
+  25              		.global	__aeabi_dcmplt
+  26              		.global	__aeabi_dsub
+  27              		.global	__aeabi_d2uiz
+  28              		.global	__aeabi_d2iz
+  29              		.global	__aeabi_dcmpeq
+  30              		.section	.text.StandTurn_Balance_step,"ax",%progbits
+  31              		.align	1
+  32              		.global	StandTurn_Balance_step
+  33              		.syntax unified
+  34              		.thumb
+  35              		.thumb_func
+  37              	StandTurn_Balance_step:
+  38              	.LFB238:
+  39              		.file 1 "StandTurn_Balance.c"
+   1:StandTurn_Balance.c **** /*
+   2:StandTurn_Balance.c ****  * File: StandTurn_Balance.c
+   3:StandTurn_Balance.c ****  *
+   4:StandTurn_Balance.c ****  * Code generated for Simulink model 'StandTurn_Balance'.
+   5:StandTurn_Balance.c ****  *
+   6:StandTurn_Balance.c ****  * Model version                  : 1.2
+   7:StandTurn_Balance.c ****  * Simulink Coder version         : 9.6 (R2021b) 14-May-2021
+   8:StandTurn_Balance.c ****  * C/C++ source code generated on : Tue Mar 21 20:39:47 2023
+   9:StandTurn_Balance.c ****  *
+  10:StandTurn_Balance.c ****  * Target selection: stacklite_dualdrive.tlc
+  11:StandTurn_Balance.c ****  * Embedded hardware selection: Intel->x86-64 (Windows64)
+  12:StandTurn_Balance.c ****  * Code generation objectives: Unspecified
+  13:StandTurn_Balance.c ****  * Validation result: Not run
+  14:StandTurn_Balance.c ****  */
+  15:StandTurn_Balance.c **** 
+  16:StandTurn_Balance.c **** #include "ifr-scope_device.h"
+  17:StandTurn_Balance.c **** #include "main.h"
+  18:StandTurn_Balance.c **** #include "tim.h"
+  19:StandTurn_Balance.c **** #include "gpio.h"
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc6jImNK.s 			page 2
+
+
+  20:StandTurn_Balance.c **** #include "stdio.h"
+  21:StandTurn_Balance.c **** #include <string.h>
+  22:StandTurn_Balance.c **** #include "StandTurn_Balance.h"
+  23:StandTurn_Balance.c **** #include "StandTurn_Balance_private.h"
+  24:StandTurn_Balance.c **** 
+  25:StandTurn_Balance.c **** const uint8_T StandTurn_Balance_U8GND = 0U;/* uint8_T ground */
+  26:StandTurn_Balance.c **** 
+  27:StandTurn_Balance.c **** /* Block signals (default storage) */
+  28:StandTurn_Balance.c **** B_StandTurn_Balance_T StandTurn_Balance_B;
+  29:StandTurn_Balance.c **** 
+  30:StandTurn_Balance.c **** /* Block states (default storage) */
+  31:StandTurn_Balance.c **** DW_StandTurn_Balance_T StandTurn_Balance_DW;
+  32:StandTurn_Balance.c **** 
+  33:StandTurn_Balance.c **** /* Real-time model */
+  34:StandTurn_Balance.c **** static RT_MODEL_StandTurn_Balance_T StandTurn_Balance_M_;
+  35:StandTurn_Balance.c **** RT_MODEL_StandTurn_Balance_T *const StandTurn_Balance_M = &StandTurn_Balance_M_;
+  36:StandTurn_Balance.c **** extern struct _datalink_upframedata DataLink_UpFrameData;//data Up to Host
+  37:StandTurn_Balance.c **** extern int16_t HI226_Angle[3];
+  38:StandTurn_Balance.c **** extern int16_t HI226_AngleV[3];
+  39:StandTurn_Balance.c **** extern int16_t adc_rawvalue[2][5];
+  40:StandTurn_Balance.c **** extern int16_t motor1_PwmData;
+  41:StandTurn_Balance.c **** extern int16_t motor2_PwmData;
+  42:StandTurn_Balance.c **** extern uint8_t led_data;
+  43:StandTurn_Balance.c **** extern uint8_t ws2812_data[3];
+  44:StandTurn_Balance.c **** extern union _floatchar DataLink_RevData[10];//data config from host
+  45:StandTurn_Balance.c **** 
+  46:StandTurn_Balance.c **** /* Model step function */
+  47:StandTurn_Balance.c **** void StandTurn_Balance_step(void)
+  48:StandTurn_Balance.c **** {
+  40              		.loc 1 48 1 view -0
+  41              		.cfi_startproc
+  42              		@ args = 0, pretend = 0, frame = 16
+  43              		@ frame_needed = 0, uses_anonymous_args = 0
+  44 0000 2DE9F04F 		push	{r4, r5, r6, r7, r8, r9, r10, fp, lr}
+  45              	.LCFI0:
+  46              		.cfi_def_cfa_offset 36
+  47              		.cfi_offset 4, -36
+  48              		.cfi_offset 5, -32
+  49              		.cfi_offset 6, -28
+  50              		.cfi_offset 7, -24
+  51              		.cfi_offset 8, -20
+  52              		.cfi_offset 9, -16
+  53              		.cfi_offset 10, -12
+  54              		.cfi_offset 11, -8
+  55              		.cfi_offset 14, -4
+  56 0004 2DED048B 		vpush.64	{d8, d9}
+  57              	.LCFI1:
+  58              		.cfi_def_cfa_offset 52
+  59              		.cfi_offset 80, -52
+  60              		.cfi_offset 81, -48
+  61              		.cfi_offset 82, -44
+  62              		.cfi_offset 83, -40
+  63 0008 85B0     		sub	sp, sp, #20
+  64              	.LCFI2:
+  65              		.cfi_def_cfa_offset 72
+  49:StandTurn_Balance.c ****   real_T rtb_Add_a;
+  66              		.loc 1 49 3 view .LVU1
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc6jImNK.s 			page 3
+
+
+  50:StandTurn_Balance.c ****   int32_T angle_yaw;
+  67              		.loc 1 50 3 view .LVU2
+  51:StandTurn_Balance.c ****   int32_T rtb_Add1_m;
+  68              		.loc 1 51 3 view .LVU3
+  52:StandTurn_Balance.c ****   real32_T rtb_Add1_js;
+  69              		.loc 1 52 3 view .LVU4
+  53:StandTurn_Balance.c ****   real32_T rtb_Add1_o;
+  70              		.loc 1 53 3 view .LVU5
+  54:StandTurn_Balance.c **** 
+  55:StandTurn_Balance.c ****   /* S-Function (StackLiteDualDrive_Input): '<Root>/Input' */
+  56:StandTurn_Balance.c ****   /*Input Data*/
+  57:StandTurn_Balance.c ****   memcpy(&StandTurn_Balance_B.angle[0],HI226_Angle,3*2);
+  71              		.loc 1 57 3 view .LVU6
+  72 000a D94B     		ldr	r3, .L171+8
+  73 000c D94A     		ldr	r2, .L171+12
+  74 000e 1068     		ldr	r0, [r2]	@ unaligned
+  75 0010 9865     		str	r0, [r3, #88]
+  76 0012 9288     		ldrh	r2, [r2, #4]	@ unaligned
+  77 0014 A3F85C20 		strh	r2, [r3, #92]	@ unaligned
+  58:StandTurn_Balance.c ****   memcpy(&StandTurn_Balance_B.anglev[0],HI226_AngleV,3*2);
+  78              		.loc 1 58 3 view .LVU7
+  79 0018 D74A     		ldr	r2, .L171+16
+  80 001a 1168     		ldr	r1, [r2]	@ unaligned
+  81 001c C3F85E10 		str	r1, [r3, #94]	@ unaligned
+  82 0020 9288     		ldrh	r2, [r2, #4]	@ unaligned
+  83 0022 A3F86220 		strh	r2, [r3, #98]	@ unaligned
+  59:StandTurn_Balance.c ****   StandTurn_Balance_B.encoder1= (int32_t)(__HAL_TIM_GetCounter(&htim5));
+  84              		.loc 1 59 3 view .LVU8
+  85              		.loc 1 59 43 is_stmt 0 view .LVU9
+  86 0026 D54A     		ldr	r2, .L171+20
+  87 0028 1268     		ldr	r2, [r2]
+  88 002a 526A     		ldr	r2, [r2, #36]
+  89              		.loc 1 59 31 view .LVU10
+  90 002c 1A65     		str	r2, [r3, #80]
+  60:StandTurn_Balance.c ****   StandTurn_Balance_B.encoder2= -(int32_t)(__HAL_TIM_GetCounter(&htim2));
+  91              		.loc 1 60 3 is_stmt 1 view .LVU11
+  92              		.loc 1 60 44 is_stmt 0 view .LVU12
+  93 002e D44A     		ldr	r2, .L171+24
+  94 0030 1268     		ldr	r2, [r2]
+  95 0032 526A     		ldr	r2, [r2, #36]
+  96              		.loc 1 60 33 view .LVU13
+  97 0034 5242     		rsbs	r2, r2, #0
+  98              		.loc 1 60 31 view .LVU14
+  99 0036 5A65     		str	r2, [r3, #84]
+  61:StandTurn_Balance.c ****   memcpy(&StandTurn_Balance_B.current1[0],adc_rawvalue[0],5*2);
+ 100              		.loc 1 61 3 is_stmt 1 view .LVU15
+ 101 0038 D24A     		ldr	r2, .L171+28
+ 102 003a 03F16404 		add	r4, r3, #100
+ 103 003e 1068     		ldr	r0, [r2]	@ unaligned
+ 104 0040 5168     		ldr	r1, [r2, #4]	@ unaligned
+ 105 0042 03C4     		stmia	r4!, {r0, r1}
+ 106 0044 1189     		ldrh	r1, [r2, #8]	@ unaligned
+ 107 0046 2180     		strh	r1, [r4]	@ unaligned
+  62:StandTurn_Balance.c ****   memcpy(&StandTurn_Balance_B.current2[0],adc_rawvalue[1],5*2);
+ 108              		.loc 1 62 3 view .LVU16
+ 109 0048 D2F80A00 		ldr	r0, [r2, #10]	@ unaligned
+ 110 004c D2F80E10 		ldr	r1, [r2, #14]	@ unaligned
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc6jImNK.s 			page 4
+
+
+ 111 0050 C3F86E00 		str	r0, [r3, #110]	@ unaligned
+ 112 0054 C3F87210 		str	r1, [r3, #114]	@ unaligned
+ 113 0058 528A     		ldrh	r2, [r2, #18]	@ unaligned
+ 114 005a A3F87620 		strh	r2, [r3, #118]	@ unaligned
+  63:StandTurn_Balance.c **** 
+  64:StandTurn_Balance.c ****   /* Sum: '<S12>/Add4' incorporates:
+  65:StandTurn_Balance.c ****    *  Delay: '<S12>/Delay One Step'
+  66:StandTurn_Balance.c ****    *  Gain: '<S12>/Gain'
+  67:StandTurn_Balance.c ****    *  Gain: '<S12>/Gain1'
+  68:StandTurn_Balance.c ****    *  Gain: '<S12>/Gain2'
+  69:StandTurn_Balance.c ****    *  Gain: '<S12>/Gain3'
+  70:StandTurn_Balance.c ****    *  Gain: '<S12>/Gain4'
+  71:StandTurn_Balance.c ****    *  Gain: '<S12>/Gain5'
+  72:StandTurn_Balance.c ****    *  Gain: '<S12>/Gain6'
+  73:StandTurn_Balance.c ****    *  Gain: '<S12>/Gain7'
+  74:StandTurn_Balance.c ****    *  Gain: '<S12>/Gain8'
+  75:StandTurn_Balance.c ****    *  Gain: '<S12>/Gain9'
+  76:StandTurn_Balance.c ****    *  Sum: '<S12>/Add'
+  77:StandTurn_Balance.c ****    *  Sum: '<S12>/Add1'
+  78:StandTurn_Balance.c ****    *  Sum: '<S12>/Add2'
+  79:StandTurn_Balance.c ****    *  Sum: '<S12>/Add3'
+  80:StandTurn_Balance.c ****    */
+  81:StandTurn_Balance.c ****   StandTurn_Balance_DW.DelayOneStep_DSTATE = ((((0.95F *
+ 115              		.loc 1 81 3 view .LVU17
+  82:StandTurn_Balance.c ****     StandTurn_Balance_DW.DelayOneStep_DSTATE + 0.0499992371F * (real32_T)
+ 116              		.loc 1 82 25 is_stmt 0 view .LVU18
+ 117 005e CA4C     		ldr	r4, .L171+32
+ 118 0060 D4ED0E7A 		vldr.32	s15, [r4, #56]
+  81:StandTurn_Balance.c ****     StandTurn_Balance_DW.DelayOneStep_DSTATE + 0.0499992371F * (real32_T)
+ 119              		.loc 1 81 56 view .LVU19
+ 120 0064 DFEDC96A 		vldr.32	s13, .L171+36
+ 121 0068 67EEA67A 		vmul.f32	s15, s15, s13
+  83:StandTurn_Balance.c ****     StandTurn_Balance_B.current1[0]) * 0.95F + 0.0499992371F * (real32_T)
+ 122              		.loc 1 83 33 view .LVU20
+ 123 006c B3F96420 		ldrsh	r2, [r3, #100]
+ 124 0070 06EE102A 		vmov	s12, r2	@ int
+  82:StandTurn_Balance.c ****     StandTurn_Balance_DW.DelayOneStep_DSTATE + 0.0499992371F * (real32_T)
+ 125              		.loc 1 82 64 view .LVU21
+ 126 0074 B8EEC66A 		vcvt.f32.s32	s12, s12
+  82:StandTurn_Balance.c ****     StandTurn_Balance_DW.DelayOneStep_DSTATE + 0.0499992371F * (real32_T)
+ 127              		.loc 1 82 62 view .LVU22
+ 128 0078 9FEDC57A 		vldr.32	s14, .L171+40
+ 129 007c 26EE076A 		vmul.f32	s12, s12, s14
+  82:StandTurn_Balance.c ****     StandTurn_Balance_DW.DelayOneStep_DSTATE + 0.0499992371F * (real32_T)
+ 130              		.loc 1 82 46 view .LVU23
+ 131 0080 77EE867A 		vadd.f32	s15, s15, s12
+ 132              		.loc 1 83 38 view .LVU24
+ 133 0084 67EEA67A 		vmul.f32	s15, s15, s13
+  84:StandTurn_Balance.c ****     StandTurn_Balance_B.current1[1]) * 0.95F + 0.0499992371F * (real32_T)
+ 134              		.loc 1 84 33 view .LVU25
+ 135 0088 B3F96620 		ldrsh	r2, [r3, #102]
+ 136 008c 06EE102A 		vmov	s12, r2	@ int
+  83:StandTurn_Balance.c ****     StandTurn_Balance_B.current1[0]) * 0.95F + 0.0499992371F * (real32_T)
+ 137              		.loc 1 83 64 view .LVU26
+ 138 0090 B8EEC66A 		vcvt.f32.s32	s12, s12
+  83:StandTurn_Balance.c ****     StandTurn_Balance_B.current1[0]) * 0.95F + 0.0499992371F * (real32_T)
+ 139              		.loc 1 83 62 view .LVU27
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc6jImNK.s 			page 5
+
+
+ 140 0094 26EE076A 		vmul.f32	s12, s12, s14
+  83:StandTurn_Balance.c ****     StandTurn_Balance_B.current1[0]) * 0.95F + 0.0499992371F * (real32_T)
+ 141              		.loc 1 83 46 view .LVU28
+ 142 0098 77EE867A 		vadd.f32	s15, s15, s12
+ 143              		.loc 1 84 38 view .LVU29
+ 144 009c 67EEA67A 		vmul.f32	s15, s15, s13
+  85:StandTurn_Balance.c ****     StandTurn_Balance_B.current1[2]) * 0.95F + 0.0499992371F * (real32_T)
+ 145              		.loc 1 85 33 view .LVU30
+ 146 00a0 B3F96820 		ldrsh	r2, [r3, #104]
+ 147 00a4 06EE102A 		vmov	s12, r2	@ int
+  84:StandTurn_Balance.c ****     StandTurn_Balance_B.current1[1]) * 0.95F + 0.0499992371F * (real32_T)
+ 148              		.loc 1 84 64 view .LVU31
+ 149 00a8 B8EEC66A 		vcvt.f32.s32	s12, s12
+  84:StandTurn_Balance.c ****     StandTurn_Balance_B.current1[1]) * 0.95F + 0.0499992371F * (real32_T)
+ 150              		.loc 1 84 62 view .LVU32
+ 151 00ac 26EE076A 		vmul.f32	s12, s12, s14
+  84:StandTurn_Balance.c ****     StandTurn_Balance_B.current1[1]) * 0.95F + 0.0499992371F * (real32_T)
+ 152              		.loc 1 84 46 view .LVU33
+ 153 00b0 77EE867A 		vadd.f32	s15, s15, s12
+ 154              		.loc 1 85 38 view .LVU34
+ 155 00b4 67EEA67A 		vmul.f32	s15, s15, s13
+  86:StandTurn_Balance.c ****     StandTurn_Balance_B.current1[3]) * 0.95F + 0.0499992371F * (real32_T)
+ 156              		.loc 1 86 33 view .LVU35
+ 157 00b8 B3F96A20 		ldrsh	r2, [r3, #106]
+ 158 00bc 06EE102A 		vmov	s12, r2	@ int
+  85:StandTurn_Balance.c ****     StandTurn_Balance_B.current1[2]) * 0.95F + 0.0499992371F * (real32_T)
+ 159              		.loc 1 85 64 view .LVU36
+ 160 00c0 B8EEC66A 		vcvt.f32.s32	s12, s12
+  85:StandTurn_Balance.c ****     StandTurn_Balance_B.current1[2]) * 0.95F + 0.0499992371F * (real32_T)
+ 161              		.loc 1 85 62 view .LVU37
+ 162 00c4 26EE076A 		vmul.f32	s12, s12, s14
+  85:StandTurn_Balance.c ****     StandTurn_Balance_B.current1[2]) * 0.95F + 0.0499992371F * (real32_T)
+ 163              		.loc 1 85 46 view .LVU38
+ 164 00c8 77EE867A 		vadd.f32	s15, s15, s12
+ 165              		.loc 1 86 38 view .LVU39
+ 166 00cc 67EEA67A 		vmul.f32	s15, s15, s13
+  87:StandTurn_Balance.c ****     StandTurn_Balance_B.current1[4];
+ 167              		.loc 1 87 33 view .LVU40
+ 168 00d0 B3F96C20 		ldrsh	r2, [r3, #108]
+ 169 00d4 06EE102A 		vmov	s12, r2	@ int
+  86:StandTurn_Balance.c ****     StandTurn_Balance_B.current1[3]) * 0.95F + 0.0499992371F * (real32_T)
+ 170              		.loc 1 86 64 view .LVU41
+ 171 00d8 B8EEC66A 		vcvt.f32.s32	s12, s12
+  86:StandTurn_Balance.c ****     StandTurn_Balance_B.current1[3]) * 0.95F + 0.0499992371F * (real32_T)
+ 172              		.loc 1 86 62 view .LVU42
+ 173 00dc 26EE076A 		vmul.f32	s12, s12, s14
+  86:StandTurn_Balance.c ****     StandTurn_Balance_B.current1[3]) * 0.95F + 0.0499992371F * (real32_T)
+ 174              		.loc 1 86 46 view .LVU43
+ 175 00e0 77EE867A 		vadd.f32	s15, s15, s12
+  81:StandTurn_Balance.c ****     StandTurn_Balance_DW.DelayOneStep_DSTATE + 0.0499992371F * (real32_T)
+ 176              		.loc 1 81 44 view .LVU44
+ 177 00e4 C4ED0E7A 		vstr.32	s15, [r4, #56]
+  88:StandTurn_Balance.c **** 
+  89:StandTurn_Balance.c ****   /* Sum: '<S13>/Add4' incorporates:
+  90:StandTurn_Balance.c ****    *  Delay: '<S13>/Delay One Step'
+  91:StandTurn_Balance.c ****    *  Gain: '<S13>/Gain'
+  92:StandTurn_Balance.c ****    *  Gain: '<S13>/Gain1'
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc6jImNK.s 			page 6
+
+
+  93:StandTurn_Balance.c ****    *  Gain: '<S13>/Gain2'
+  94:StandTurn_Balance.c ****    *  Gain: '<S13>/Gain3'
+  95:StandTurn_Balance.c ****    *  Gain: '<S13>/Gain4'
+  96:StandTurn_Balance.c ****    *  Gain: '<S13>/Gain5'
+  97:StandTurn_Balance.c ****    *  Gain: '<S13>/Gain6'
+  98:StandTurn_Balance.c ****    *  Gain: '<S13>/Gain7'
+  99:StandTurn_Balance.c ****    *  Gain: '<S13>/Gain8'
+ 100:StandTurn_Balance.c ****    *  Gain: '<S13>/Gain9'
+ 101:StandTurn_Balance.c ****    *  Sum: '<S13>/Add'
+ 102:StandTurn_Balance.c ****    *  Sum: '<S13>/Add1'
+ 103:StandTurn_Balance.c ****    *  Sum: '<S13>/Add2'
+ 104:StandTurn_Balance.c ****    *  Sum: '<S13>/Add3'
+ 105:StandTurn_Balance.c ****    */
+ 106:StandTurn_Balance.c ****   StandTurn_Balance_DW.DelayOneStep_DSTATE_d = ((((0.95F *
+ 178              		.loc 1 106 3 is_stmt 1 view .LVU45
+ 107:StandTurn_Balance.c ****     StandTurn_Balance_DW.DelayOneStep_DSTATE_d + 0.0499992371F * (real32_T)
+ 179              		.loc 1 107 25 is_stmt 0 view .LVU46
+ 180 00e8 D4ED0F7A 		vldr.32	s15, [r4, #60]
+ 106:StandTurn_Balance.c ****     StandTurn_Balance_DW.DelayOneStep_DSTATE_d + 0.0499992371F * (real32_T)
+ 181              		.loc 1 106 58 view .LVU47
+ 182 00ec 67EEA67A 		vmul.f32	s15, s15, s13
+ 108:StandTurn_Balance.c ****     StandTurn_Balance_B.current2[0]) * 0.95F + 0.0499992371F * (real32_T)
+ 183              		.loc 1 108 33 view .LVU48
+ 184 00f0 B3F96E20 		ldrsh	r2, [r3, #110]
+ 185 00f4 06EE102A 		vmov	s12, r2	@ int
+ 107:StandTurn_Balance.c ****     StandTurn_Balance_DW.DelayOneStep_DSTATE_d + 0.0499992371F * (real32_T)
+ 186              		.loc 1 107 66 view .LVU49
+ 187 00f8 B8EEC66A 		vcvt.f32.s32	s12, s12
+ 107:StandTurn_Balance.c ****     StandTurn_Balance_DW.DelayOneStep_DSTATE_d + 0.0499992371F * (real32_T)
+ 188              		.loc 1 107 64 view .LVU50
+ 189 00fc 26EE076A 		vmul.f32	s12, s12, s14
+ 107:StandTurn_Balance.c ****     StandTurn_Balance_DW.DelayOneStep_DSTATE_d + 0.0499992371F * (real32_T)
+ 190              		.loc 1 107 48 view .LVU51
+ 191 0100 77EE867A 		vadd.f32	s15, s15, s12
+ 192              		.loc 1 108 38 view .LVU52
+ 193 0104 67EEA67A 		vmul.f32	s15, s15, s13
+ 109:StandTurn_Balance.c ****     StandTurn_Balance_B.current2[1]) * 0.95F + 0.0499992371F * (real32_T)
+ 194              		.loc 1 109 33 view .LVU53
+ 195 0108 B3F97020 		ldrsh	r2, [r3, #112]
+ 196 010c 06EE102A 		vmov	s12, r2	@ int
+ 108:StandTurn_Balance.c ****     StandTurn_Balance_B.current2[0]) * 0.95F + 0.0499992371F * (real32_T)
+ 197              		.loc 1 108 64 view .LVU54
+ 198 0110 B8EEC66A 		vcvt.f32.s32	s12, s12
+ 108:StandTurn_Balance.c ****     StandTurn_Balance_B.current2[0]) * 0.95F + 0.0499992371F * (real32_T)
+ 199              		.loc 1 108 62 view .LVU55
+ 200 0114 26EE076A 		vmul.f32	s12, s12, s14
+ 108:StandTurn_Balance.c ****     StandTurn_Balance_B.current2[0]) * 0.95F + 0.0499992371F * (real32_T)
+ 201              		.loc 1 108 46 view .LVU56
+ 202 0118 77EE867A 		vadd.f32	s15, s15, s12
+ 203              		.loc 1 109 38 view .LVU57
+ 204 011c 67EEA67A 		vmul.f32	s15, s15, s13
+ 110:StandTurn_Balance.c ****     StandTurn_Balance_B.current2[2]) * 0.95F + 0.0499992371F * (real32_T)
+ 205              		.loc 1 110 33 view .LVU58
+ 206 0120 B3F97220 		ldrsh	r2, [r3, #114]
+ 207 0124 06EE102A 		vmov	s12, r2	@ int
+ 109:StandTurn_Balance.c ****     StandTurn_Balance_B.current2[1]) * 0.95F + 0.0499992371F * (real32_T)
+ 208              		.loc 1 109 64 view .LVU59
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc6jImNK.s 			page 7
+
+
+ 209 0128 B8EEC66A 		vcvt.f32.s32	s12, s12
+ 109:StandTurn_Balance.c ****     StandTurn_Balance_B.current2[1]) * 0.95F + 0.0499992371F * (real32_T)
+ 210              		.loc 1 109 62 view .LVU60
+ 211 012c 26EE076A 		vmul.f32	s12, s12, s14
+ 109:StandTurn_Balance.c ****     StandTurn_Balance_B.current2[1]) * 0.95F + 0.0499992371F * (real32_T)
+ 212              		.loc 1 109 46 view .LVU61
+ 213 0130 77EE867A 		vadd.f32	s15, s15, s12
+ 214              		.loc 1 110 38 view .LVU62
+ 215 0134 67EEA67A 		vmul.f32	s15, s15, s13
+ 111:StandTurn_Balance.c ****     StandTurn_Balance_B.current2[3]) * 0.95F + 0.0499992371F * (real32_T)
+ 216              		.loc 1 111 33 view .LVU63
+ 217 0138 B3F97420 		ldrsh	r2, [r3, #116]
+ 218 013c 06EE102A 		vmov	s12, r2	@ int
+ 110:StandTurn_Balance.c ****     StandTurn_Balance_B.current2[2]) * 0.95F + 0.0499992371F * (real32_T)
+ 219              		.loc 1 110 64 view .LVU64
+ 220 0140 B8EEC66A 		vcvt.f32.s32	s12, s12
+ 110:StandTurn_Balance.c ****     StandTurn_Balance_B.current2[2]) * 0.95F + 0.0499992371F * (real32_T)
+ 221              		.loc 1 110 62 view .LVU65
+ 222 0144 26EE076A 		vmul.f32	s12, s12, s14
+ 110:StandTurn_Balance.c ****     StandTurn_Balance_B.current2[2]) * 0.95F + 0.0499992371F * (real32_T)
+ 223              		.loc 1 110 46 view .LVU66
+ 224 0148 77EE867A 		vadd.f32	s15, s15, s12
+ 225              		.loc 1 111 38 view .LVU67
+ 226 014c 67EEA67A 		vmul.f32	s15, s15, s13
+ 112:StandTurn_Balance.c ****     StandTurn_Balance_B.current2[4];
+ 227              		.loc 1 112 33 view .LVU68
+ 228 0150 B3F97620 		ldrsh	r2, [r3, #118]
+ 229 0154 06EE902A 		vmov	s13, r2	@ int
+ 111:StandTurn_Balance.c ****     StandTurn_Balance_B.current2[3]) * 0.95F + 0.0499992371F * (real32_T)
+ 230              		.loc 1 111 64 view .LVU69
+ 231 0158 F8EEE66A 		vcvt.f32.s32	s13, s13
+ 111:StandTurn_Balance.c ****     StandTurn_Balance_B.current2[3]) * 0.95F + 0.0499992371F * (real32_T)
+ 232              		.loc 1 111 62 view .LVU70
+ 233 015c 26EE877A 		vmul.f32	s14, s13, s14
+ 111:StandTurn_Balance.c ****     StandTurn_Balance_B.current2[3]) * 0.95F + 0.0499992371F * (real32_T)
+ 234              		.loc 1 111 46 view .LVU71
+ 235 0160 77EE877A 		vadd.f32	s15, s15, s14
+ 106:StandTurn_Balance.c ****     StandTurn_Balance_DW.DelayOneStep_DSTATE_d + 0.0499992371F * (real32_T)
+ 236              		.loc 1 106 46 view .LVU72
+ 237 0164 C4ED0F7A 		vstr.32	s15, [r4, #60]
+ 113:StandTurn_Balance.c **** 
+ 114:StandTurn_Balance.c ****   /* Gain: '<Root>/Gain3' incorporates:
+ 115:StandTurn_Balance.c ****    *  DataStoreWrite: '<Root>/Data Store Write8'
+ 116:StandTurn_Balance.c ****    */
+ 117:StandTurn_Balance.c ****   angle_yaw = 26214 * StandTurn_Balance_B.angle[2];
+ 238              		.loc 1 117 3 is_stmt 1 view .LVU73
+ 239              		.loc 1 117 48 is_stmt 0 view .LVU74
+ 240 0168 B3F95CB0 		ldrsh	fp, [r3, #92]
+ 241              		.loc 1 117 13 view .LVU75
+ 242 016c 46F26662 		movw	r2, #26214
+ 243 0170 02FB0BF2 		mul	r2, r2, fp
+ 244 0174 0192     		str	r2, [sp, #4]
+ 245              	.LVL0:
+ 118:StandTurn_Balance.c **** 
+ 119:StandTurn_Balance.c ****   /* S-Function (StackLiteDualDrive_DataLinkOutput): '<Root>/DataLinkOutput' */
+ 120:StandTurn_Balance.c ****   /*Output Data*/
+ 121:StandTurn_Balance.c ****   DataLink_UpFrameData.data[0].point= StandTurn_Balance_B.DataTypeConversion;
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc6jImNK.s 			page 8
+
+
+ 246              		.loc 1 121 3 is_stmt 1 view .LVU76
+ 247              		.loc 1 121 37 is_stmt 0 view .LVU77
+ 248 0176 8749     		ldr	r1, .L171+44
+ 249 0178 9A69     		ldr	r2, [r3, #24]	@ float
+ 250              	.LVL1:
+ 251              		.loc 1 121 37 view .LVU78
+ 252 017a C1F80920 		str	r2, [r1, #9]	@ unaligned
+ 122:StandTurn_Balance.c ****   DataLink_UpFrameData.data[1].point= StandTurn_Balance_B.DataTypeConversion1;
+ 253              		.loc 1 122 3 is_stmt 1 view .LVU79
+ 254              		.loc 1 122 37 is_stmt 0 view .LVU80
+ 255 017e DA69     		ldr	r2, [r3, #28]	@ float
+ 256 0180 C1F80D20 		str	r2, [r1, #13]	@ unaligned
+ 123:StandTurn_Balance.c ****   DataLink_UpFrameData.data[2].point= 0.0F;
+ 257              		.loc 1 123 3 is_stmt 1 view .LVU81
+ 258              		.loc 1 123 37 is_stmt 0 view .LVU82
+ 259 0184 0022     		movs	r2, #0
+ 260 0186 C1F81120 		str	r2, [r1, #17]	@ unaligned
+ 124:StandTurn_Balance.c ****   DataLink_UpFrameData.data[3].point= 0.0F;
+ 261              		.loc 1 124 3 is_stmt 1 view .LVU83
+ 262              		.loc 1 124 37 is_stmt 0 view .LVU84
+ 263 018a C1F81520 		str	r2, [r1, #21]	@ unaligned
+ 125:StandTurn_Balance.c ****   DataLink_UpFrameData.data[4].point= 0.0F;
+ 264              		.loc 1 125 3 is_stmt 1 view .LVU85
+ 265              		.loc 1 125 37 is_stmt 0 view .LVU86
+ 266 018e C1F81920 		str	r2, [r1, #25]	@ unaligned
+ 126:StandTurn_Balance.c ****   DataLink_UpFrameData.data[5].point= 0.0F;
+ 267              		.loc 1 126 3 is_stmt 1 view .LVU87
+ 268              		.loc 1 126 37 is_stmt 0 view .LVU88
+ 269 0192 C1F81D20 		str	r2, [r1, #29]	@ unaligned
+ 127:StandTurn_Balance.c ****   DataLink_UpFrameData.data[6].point= 0.0F;
+ 270              		.loc 1 127 3 is_stmt 1 view .LVU89
+ 271              		.loc 1 127 37 is_stmt 0 view .LVU90
+ 272 0196 C1F82120 		str	r2, [r1, #33]	@ unaligned
+ 128:StandTurn_Balance.c ****   DataLink_UpFrameData.data[7].point= 0.0F;
+ 273              		.loc 1 128 3 is_stmt 1 view .LVU91
+ 274              		.loc 1 128 37 is_stmt 0 view .LVU92
+ 275 019a C1F82520 		str	r2, [r1, #37]	@ unaligned
+ 129:StandTurn_Balance.c ****   DataLink_UpFrameData.data[8].point= 0.0F;
+ 276              		.loc 1 129 3 is_stmt 1 view .LVU93
+ 277              		.loc 1 129 37 is_stmt 0 view .LVU94
+ 278 019e C1F82920 		str	r2, [r1, #41]	@ unaligned
+ 130:StandTurn_Balance.c ****   DataLink_UpFrameData.data[9].point= 0.0F;
+ 279              		.loc 1 130 3 is_stmt 1 view .LVU95
+ 280              		.loc 1 130 37 is_stmt 0 view .LVU96
+ 281 01a2 C1F82D20 		str	r2, [r1, #45]	@ unaligned
+ 131:StandTurn_Balance.c ****   DataLink_UpFrameData.data[10].point= 0.0F;
+ 282              		.loc 1 131 3 is_stmt 1 view .LVU97
+ 283              		.loc 1 131 38 is_stmt 0 view .LVU98
+ 284 01a6 C1F83120 		str	r2, [r1, #49]	@ unaligned
+ 132:StandTurn_Balance.c ****   DataLink_UpFrameData.data[11].point= 0.0F;
+ 285              		.loc 1 132 3 is_stmt 1 view .LVU99
+ 286              		.loc 1 132 38 is_stmt 0 view .LVU100
+ 287 01aa C1F83520 		str	r2, [r1, #53]	@ unaligned
+ 133:StandTurn_Balance.c ****   DataLink_UpFrameData.data[12].point= 0.0F;
+ 288              		.loc 1 133 3 is_stmt 1 view .LVU101
+ 289              		.loc 1 133 38 is_stmt 0 view .LVU102
+ 290 01ae C1F83920 		str	r2, [r1, #57]	@ unaligned
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc6jImNK.s 			page 9
+
+
+ 134:StandTurn_Balance.c ****   DataLink_UpFrameData.data[13].point= 0.0F;
+ 291              		.loc 1 134 3 is_stmt 1 view .LVU103
+ 292              		.loc 1 134 38 is_stmt 0 view .LVU104
+ 293 01b2 C1F83D20 		str	r2, [r1, #61]	@ unaligned
+ 135:StandTurn_Balance.c ****   DataLink_UpFrameData.data[14].point= 0.0F;
+ 294              		.loc 1 135 3 is_stmt 1 view .LVU105
+ 295              		.loc 1 135 38 is_stmt 0 view .LVU106
+ 296 01b6 C1F84120 		str	r2, [r1, #65]	@ unaligned
+ 136:StandTurn_Balance.c ****   DataLink_UpFrameData.data[15].point= 0.0F;
+ 297              		.loc 1 136 3 is_stmt 1 view .LVU107
+ 298              		.loc 1 136 38 is_stmt 0 view .LVU108
+ 299 01ba C1F84520 		str	r2, [r1, #69]	@ unaligned
+ 137:StandTurn_Balance.c ****   DataLink_UpFrameData.data[16].point= 0.0F;
+ 300              		.loc 1 137 3 is_stmt 1 view .LVU109
+ 301              		.loc 1 137 38 is_stmt 0 view .LVU110
+ 302 01be C1F84920 		str	r2, [r1, #73]	@ unaligned
+ 138:StandTurn_Balance.c ****   DataLink_UpFrameData.data[17].point= 0.0F;
+ 303              		.loc 1 138 3 is_stmt 1 view .LVU111
+ 304              		.loc 1 138 38 is_stmt 0 view .LVU112
+ 305 01c2 C1F84D20 		str	r2, [r1, #77]	@ unaligned
+ 139:StandTurn_Balance.c ****   DataLink_UpFrameData.data[18].point= 0.0F;
+ 306              		.loc 1 139 3 is_stmt 1 view .LVU113
+ 307              		.loc 1 139 38 is_stmt 0 view .LVU114
+ 308 01c6 C1F85120 		str	r2, [r1, #81]	@ unaligned
+ 140:StandTurn_Balance.c ****   DataLink_UpFrameData.data[19].point= 0.0F;
+ 309              		.loc 1 140 3 is_stmt 1 view .LVU115
+ 310              		.loc 1 140 38 is_stmt 0 view .LVU116
+ 311 01ca C1F85520 		str	r2, [r1, #85]	@ unaligned
+ 141:StandTurn_Balance.c **** 
+ 142:StandTurn_Balance.c ****   /* S-Function (StackLiteDualDrive_Output): '<Root>/Output' */
+ 143:StandTurn_Balance.c ****   /*Output Data*/
+ 144:StandTurn_Balance.c ****   motor1_PwmData= StandTurn_Balance_B.Saturation;
+ 312              		.loc 1 144 3 is_stmt 1 view .LVU117
+ 313              		.loc 1 144 38 is_stmt 0 view .LVU118
+ 314 01ce B3F97800 		ldrsh	r0, [r3, #120]
+ 315              		.loc 1 144 17 view .LVU119
+ 316 01d2 7149     		ldr	r1, .L171+48
+ 317 01d4 0880     		strh	r0, [r1]	@ movhi
+ 145:StandTurn_Balance.c ****   motor2_PwmData= StandTurn_Balance_B.Saturation1;
+ 318              		.loc 1 145 3 is_stmt 1 view .LVU120
+ 319              		.loc 1 145 38 is_stmt 0 view .LVU121
+ 320 01d6 B3F97A10 		ldrsh	r1, [r3, #122]
+ 321              		.loc 1 145 17 view .LVU122
+ 322 01da 704B     		ldr	r3, .L171+52
+ 323 01dc 1980     		strh	r1, [r3]	@ movhi
+ 146:StandTurn_Balance.c ****   HAL_GPIO_WritePin(USER_LED_GPIO_Port,USER_LED_Pin,(GPIO_PinState)((uint8_T)0U));
+ 324              		.loc 1 146 3 is_stmt 1 view .LVU123
+ 325 01de 4FF48041 		mov	r1, #16384
+ 326 01e2 6F48     		ldr	r0, .L171+56
+ 327 01e4 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 328              	.LVL2:
+ 147:StandTurn_Balance.c ****   memcpy(ws2812_data,((const uint8_T*) &StandTurn_Balance_U8GND),3);
+ 329              		.loc 1 147 3 view .LVU124
+ 330 01e8 6E4B     		ldr	r3, .L171+60
+ 331 01ea 6F4A     		ldr	r2, .L171+64
+ 332 01ec 1188     		ldrh	r1, [r2]	@ unaligned
+ 333 01ee 9278     		ldrb	r2, [r2, #2]	@ zero_extendqisi2
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc6jImNK.s 			page 10
+
+
+ 334 01f0 1980     		strh	r1, [r3]	@ unaligned
+ 335 01f2 9A70     		strb	r2, [r3, #2]
+ 148:StandTurn_Balance.c **** 
+ 149:StandTurn_Balance.c ****   /* Outputs for Enabled SubSystem: '<Root>/encoder to rpm' incorporates:
+ 150:StandTurn_Balance.c ****    *  EnablePort: '<S15>/Enable'
+ 151:StandTurn_Balance.c ****    */
+ 152:StandTurn_Balance.c ****   /* RelationalOperator: '<S2>/Compare' incorporates:
+ 153:StandTurn_Balance.c ****    *  Constant: '<S2>/Constant'
+ 154:StandTurn_Balance.c ****    *  UnitDelay: '<S8>/Output'
+ 155:StandTurn_Balance.c ****    */
+ 156:StandTurn_Balance.c ****   if (StandTurn_Balance_DW.Output_DSTATE == 1) {
+ 336              		.loc 1 156 3 view .LVU125
+ 337              		.loc 1 156 27 is_stmt 0 view .LVU126
+ 338 01f4 94F80841 		ldrb	r4, [r4, #264]	@ zero_extendqisi2
+ 339              		.loc 1 156 6 view .LVU127
+ 340 01f8 012C     		cmp	r4, #1
+ 341 01fa 6ED0     		beq	.L148
+ 342              	.L2:
+ 157:StandTurn_Balance.c ****     /* Product: '<S15>/Divide' incorporates:
+ 158:StandTurn_Balance.c ****      *  Constant: '<S15>/Constant'
+ 159:StandTurn_Balance.c ****      *  Constant: '<S15>/Constant1'
+ 160:StandTurn_Balance.c ****      *  Constant: '<S15>/Constant2'
+ 161:StandTurn_Balance.c ****      *  Delay: '<S15>/Delay'
+ 162:StandTurn_Balance.c ****      *  Product: '<S15>/Product'
+ 163:StandTurn_Balance.c ****      *  Product: '<S15>/Product1'
+ 164:StandTurn_Balance.c ****      *  Sum: '<S15>/Add1'
+ 165:StandTurn_Balance.c ****      */
+ 166:StandTurn_Balance.c ****     StandTurn_Balance_B.Divide = (real32_T)(StandTurn_Balance_B.encoder1 -
+ 167:StandTurn_Balance.c ****       StandTurn_Balance_DW.Delay_DSTATE_o[0]) * 100.0F * 60.0F / 40000.0F;
+ 168:StandTurn_Balance.c **** 
+ 169:StandTurn_Balance.c ****     /* Product: '<S15>/Divide1' incorporates:
+ 170:StandTurn_Balance.c ****      *  Constant: '<S15>/Constant3'
+ 171:StandTurn_Balance.c ****      *  Constant: '<S15>/Constant4'
+ 172:StandTurn_Balance.c ****      *  Constant: '<S15>/Constant5'
+ 173:StandTurn_Balance.c ****      *  Delay: '<S15>/Delay1'
+ 174:StandTurn_Balance.c ****      *  Product: '<S15>/Product2'
+ 175:StandTurn_Balance.c ****      *  Product: '<S15>/Product3'
+ 176:StandTurn_Balance.c ****      *  Sum: '<S15>/Add2'
+ 177:StandTurn_Balance.c ****      */
+ 178:StandTurn_Balance.c ****     StandTurn_Balance_B.Divide1 = (real32_T)(StandTurn_Balance_B.encoder2 -
+ 179:StandTurn_Balance.c ****       StandTurn_Balance_DW.Delay1_DSTATE[0]) * 100.0F * 60.0F / 40000.0F;
+ 180:StandTurn_Balance.c ****     for (rtb_Add1_m = 0; rtb_Add1_m < 18; rtb_Add1_m++) {
+ 181:StandTurn_Balance.c ****       /* Update for Delay: '<S15>/Delay' */
+ 182:StandTurn_Balance.c ****       StandTurn_Balance_DW.Delay_DSTATE_o[rtb_Add1_m] =
+ 183:StandTurn_Balance.c ****         StandTurn_Balance_DW.Delay_DSTATE_o[rtb_Add1_m + 1];
+ 184:StandTurn_Balance.c **** 
+ 185:StandTurn_Balance.c ****       /* Update for Delay: '<S15>/Delay1' */
+ 186:StandTurn_Balance.c ****       StandTurn_Balance_DW.Delay1_DSTATE[rtb_Add1_m] =
+ 187:StandTurn_Balance.c ****         StandTurn_Balance_DW.Delay1_DSTATE[rtb_Add1_m + 1];
+ 188:StandTurn_Balance.c ****     }
+ 189:StandTurn_Balance.c **** 
+ 190:StandTurn_Balance.c ****     /* Update for Delay: '<S15>/Delay' */
+ 191:StandTurn_Balance.c ****     StandTurn_Balance_DW.Delay_DSTATE_o[18] = StandTurn_Balance_B.encoder1;
+ 192:StandTurn_Balance.c **** 
+ 193:StandTurn_Balance.c ****     /* Update for Delay: '<S15>/Delay1' */
+ 194:StandTurn_Balance.c ****     StandTurn_Balance_DW.Delay1_DSTATE[18] = StandTurn_Balance_B.encoder2;
+ 195:StandTurn_Balance.c ****   }
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc6jImNK.s 			page 11
+
+
+ 196:StandTurn_Balance.c **** 
+ 197:StandTurn_Balance.c ****   /* End of RelationalOperator: '<S2>/Compare' */
+ 198:StandTurn_Balance.c ****   /* End of Outputs for SubSystem: '<Root>/encoder to rpm' */
+ 199:StandTurn_Balance.c **** 
+ 200:StandTurn_Balance.c ****   /* Outputs for Enabled SubSystem: '<Root>/speedPID_motor' incorporates:
+ 201:StandTurn_Balance.c ****    *  EnablePort: '<S16>/Enable'
+ 202:StandTurn_Balance.c ****    */
+ 203:StandTurn_Balance.c ****   /* RelationalOperator: '<S3>/Compare' incorporates:
+ 204:StandTurn_Balance.c ****    *  Constant: '<S3>/Constant'
+ 205:StandTurn_Balance.c ****    *  UnitDelay: '<S9>/Output'
+ 206:StandTurn_Balance.c ****    */
+ 207:StandTurn_Balance.c ****   if (StandTurn_Balance_DW.Output_DSTATE_i == 1) {
+ 343              		.loc 1 207 3 is_stmt 1 view .LVU128
+ 344              		.loc 1 207 27 is_stmt 0 view .LVU129
+ 345 01fc 624B     		ldr	r3, .L171+32
+ 346 01fe 93F809A1 		ldrb	r10, [r3, #265]	@ zero_extendqisi2
+ 347              		.loc 1 207 6 view .LVU130
+ 348 0202 BAF1010F 		cmp	r10, #1
+ 349 0206 00F0DD80 		beq	.L149
+ 350              	.L5:
+ 208:StandTurn_Balance.c ****     /* Sum: '<S41>/Add1' incorporates:
+ 209:StandTurn_Balance.c ****      *  DataStoreRead: '<Root>/Data Store Read4'
+ 210:StandTurn_Balance.c ****      *  Sum: '<S41>/Add2'
+ 211:StandTurn_Balance.c ****      */
+ 212:StandTurn_Balance.c ****     rtb_Add1_o = StandTurn_Balance_DW.tar_speed - (StandTurn_Balance_B.Divide +
+ 213:StandTurn_Balance.c ****       StandTurn_Balance_B.Divide1);
+ 214:StandTurn_Balance.c **** 
+ 215:StandTurn_Balance.c ****     /* Gain: '<S43>/Gain1' incorporates:
+ 216:StandTurn_Balance.c ****      *  DataStoreRead: '<S43>/Data Store Read1'
+ 217:StandTurn_Balance.c ****      *  Delay: '<S43>/Delay'
+ 218:StandTurn_Balance.c ****      *  Gain: '<S43>/Gain'
+ 219:StandTurn_Balance.c ****      *  Product: '<S43>/Product3'
+ 220:StandTurn_Balance.c ****      *  Sum: '<S43>/Add2'
+ 221:StandTurn_Balance.c ****      */
+ 222:StandTurn_Balance.c ****     StandTurn_Balance_DW.Delay_DSTATE_i = ((real32_T)(0.001 *
+ 223:StandTurn_Balance.c ****       StandTurn_Balance_DW.Ki_speed * rtb_Add1_o) +
+ 224:StandTurn_Balance.c ****       StandTurn_Balance_DW.Delay_DSTATE_i) * 0.995F;
+ 225:StandTurn_Balance.c **** 
+ 226:StandTurn_Balance.c ****     /* Saturate: '<S43>/Saturation2' */
+ 227:StandTurn_Balance.c ****     if (StandTurn_Balance_DW.Delay_DSTATE_i > 1500.0F) {
+ 228:StandTurn_Balance.c ****       /* Gain: '<S43>/Gain1' */
+ 229:StandTurn_Balance.c ****       StandTurn_Balance_DW.Delay_DSTATE_i = 1500.0F;
+ 230:StandTurn_Balance.c ****     } else if (StandTurn_Balance_DW.Delay_DSTATE_i < -1500.0F) {
+ 231:StandTurn_Balance.c ****       /* Gain: '<S43>/Gain1' */
+ 232:StandTurn_Balance.c ****       StandTurn_Balance_DW.Delay_DSTATE_i = -1500.0F;
+ 233:StandTurn_Balance.c ****     }
+ 234:StandTurn_Balance.c **** 
+ 235:StandTurn_Balance.c ****     /* End of Saturate: '<S43>/Saturation2' */
+ 236:StandTurn_Balance.c **** 
+ 237:StandTurn_Balance.c ****     /* Sum: '<S41>/Add' incorporates:
+ 238:StandTurn_Balance.c ****      *  DataStoreRead: '<S42>/Data Store Read2'
+ 239:StandTurn_Balance.c ****      *  DataStoreRead: '<S44>/Data Store Read'
+ 240:StandTurn_Balance.c ****      *  Delay: '<S43>/Delay'
+ 241:StandTurn_Balance.c ****      *  Gain: '<S42>/Gain'
+ 242:StandTurn_Balance.c ****      *  Gain: '<S44>/Gain'
+ 243:StandTurn_Balance.c ****      *  Product: '<S42>/Product2'
+ 244:StandTurn_Balance.c ****      *  Product: '<S44>/Product'
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc6jImNK.s 			page 12
+
+
+ 245:StandTurn_Balance.c ****      *  Sum: '<S45>/Diff'
+ 246:StandTurn_Balance.c ****      *  UnitDelay: '<S45>/UD'
+ 247:StandTurn_Balance.c ****      *
+ 248:StandTurn_Balance.c ****      * Block description for '<S45>/Diff':
+ 249:StandTurn_Balance.c ****      *
+ 250:StandTurn_Balance.c ****      *  Add in CPU
+ 251:StandTurn_Balance.c ****      *
+ 252:StandTurn_Balance.c ****      * Block description for '<S45>/UD':
+ 253:StandTurn_Balance.c ****      *
+ 254:StandTurn_Balance.c ****      *  Store in Global RAM
+ 255:StandTurn_Balance.c ****      */
+ 256:StandTurn_Balance.c ****     StandTurn_Balance_B.Add_b = (0.001 * StandTurn_Balance_DW.Kp_speed *
+ 257:StandTurn_Balance.c ****       rtb_Add1_o + StandTurn_Balance_DW.Delay_DSTATE_i) + 0.001 *
+ 258:StandTurn_Balance.c ****       StandTurn_Balance_DW.Kd_speed * (rtb_Add1_o -
+ 259:StandTurn_Balance.c ****       StandTurn_Balance_DW.UD_DSTATE_o);
+ 260:StandTurn_Balance.c **** 
+ 261:StandTurn_Balance.c ****     /* Update for UnitDelay: '<S45>/UD'
+ 262:StandTurn_Balance.c ****      *
+ 263:StandTurn_Balance.c ****      * Block description for '<S45>/UD':
+ 264:StandTurn_Balance.c ****      *
+ 265:StandTurn_Balance.c ****      *  Store in Global RAM
+ 266:StandTurn_Balance.c ****      */
+ 267:StandTurn_Balance.c ****     StandTurn_Balance_DW.UD_DSTATE_o = rtb_Add1_o;
+ 268:StandTurn_Balance.c ****   }
+ 269:StandTurn_Balance.c **** 
+ 270:StandTurn_Balance.c ****   /* End of RelationalOperator: '<S3>/Compare' */
+ 271:StandTurn_Balance.c ****   /* End of Outputs for SubSystem: '<Root>/speedPID_motor' */
+ 272:StandTurn_Balance.c **** 
+ 273:StandTurn_Balance.c ****   /* Sum: '<Root>/Add1' incorporates:
+ 274:StandTurn_Balance.c ****    *  DataStoreRead: '<Root>/Data Store Read13'
+ 275:StandTurn_Balance.c ****    *  DataStoreRead: '<Root>/Data Store Read8'
+ 276:StandTurn_Balance.c ****    */
+ 277:StandTurn_Balance.c ****   rtb_Add1_m = angle_yaw - StandTurn_Balance_DW.yaw_begin;
+ 351              		.loc 1 277 3 is_stmt 1 view .LVU131
+ 352              		.loc 1 277 48 is_stmt 0 view .LVU132
+ 353 020a 5F4A     		ldr	r2, .L171+32
+ 354 020c D2F8FC30 		ldr	r3, [r2, #252]
+ 355              		.loc 1 277 14 view .LVU133
+ 356 0210 0199     		ldr	r1, [sp, #4]
+ 357 0212 CB1A     		subs	r3, r1, r3
+ 358 0214 08EE103A 		vmov	s16, r3	@ int
+ 359              	.LVL3:
+ 278:StandTurn_Balance.c **** 
+ 279:StandTurn_Balance.c ****   /* Outputs for Enabled SubSystem: '<Root>/turnPID' incorporates:
+ 280:StandTurn_Balance.c ****    *  EnablePort: '<S17>/Enable'
+ 281:StandTurn_Balance.c ****    */
+ 282:StandTurn_Balance.c ****   /* RelationalOperator: '<S4>/Compare' incorporates:
+ 283:StandTurn_Balance.c ****    *  Constant: '<S4>/Constant'
+ 284:StandTurn_Balance.c ****    *  UnitDelay: '<S10>/Output'
+ 285:StandTurn_Balance.c ****    */
+ 286:StandTurn_Balance.c ****   if (StandTurn_Balance_DW.Output_DSTATE_a == 1) {
+ 360              		.loc 1 286 3 is_stmt 1 view .LVU134
+ 361              		.loc 1 286 27 is_stmt 0 view .LVU135
+ 362 0218 92F80A51 		ldrb	r5, [r2, #266]	@ zero_extendqisi2
+ 363              		.loc 1 286 6 view .LVU136
+ 364 021c 012D     		cmp	r5, #1
+ 365 021e 00F05281 		beq	.L150
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc6jImNK.s 			page 13
+
+
+ 366              	.LVL4:
+ 367              	.L10:
+ 287:StandTurn_Balance.c ****     /* Product: '<S47>/Product3' incorporates:
+ 288:StandTurn_Balance.c ****      *  DataStoreRead: '<Root>/Data Store Read5'
+ 289:StandTurn_Balance.c ****      *  Product: '<S48>/Product'
+ 290:StandTurn_Balance.c ****      *  Sum: '<Root>/Add1'
+ 291:StandTurn_Balance.c ****      *  Sum: '<S17>/Add1'
+ 292:StandTurn_Balance.c ****      */
+ 293:StandTurn_Balance.c ****     rtb_Add_a = (real_T)(StandTurn_Balance_DW.tar_yaw - rtb_Add1_m) *
+ 294:StandTurn_Balance.c ****       3.814697265625E-6;
+ 295:StandTurn_Balance.c **** 
+ 296:StandTurn_Balance.c ****     /* Sum: '<S47>/Add2' incorporates:
+ 297:StandTurn_Balance.c ****      *  DataStoreRead: '<S47>/Data Store Read1'
+ 298:StandTurn_Balance.c ****      *  Delay: '<S47>/Delay'
+ 299:StandTurn_Balance.c ****      *  Gain: '<S47>/Gain'
+ 300:StandTurn_Balance.c ****      *  ManualSwitch: '<S47>/Manual Switch1'
+ 301:StandTurn_Balance.c ****      *  Product: '<S47>/Product3'
+ 302:StandTurn_Balance.c ****      */
+ 303:StandTurn_Balance.c ****     StandTurn_Balance_DW.Delay_DSTATE_n += (real32_T)(0.01 *
+ 304:StandTurn_Balance.c ****       StandTurn_Balance_DW.Ki_turn * rtb_Add_a);
+ 305:StandTurn_Balance.c **** 
+ 306:StandTurn_Balance.c ****     /* Saturate: '<S47>/Saturation' */
+ 307:StandTurn_Balance.c ****     if (StandTurn_Balance_DW.Delay_DSTATE_n > 2000.0) {
+ 308:StandTurn_Balance.c ****       /* Sum: '<S47>/Add2' */
+ 309:StandTurn_Balance.c ****       StandTurn_Balance_DW.Delay_DSTATE_n = 2000.0;
+ 310:StandTurn_Balance.c ****     } else if (StandTurn_Balance_DW.Delay_DSTATE_n < -2000.0) {
+ 311:StandTurn_Balance.c ****       /* Sum: '<S47>/Add2' */
+ 312:StandTurn_Balance.c ****       StandTurn_Balance_DW.Delay_DSTATE_n = -2000.0;
+ 313:StandTurn_Balance.c ****     }
+ 314:StandTurn_Balance.c **** 
+ 315:StandTurn_Balance.c ****     /* End of Saturate: '<S47>/Saturation' */
+ 316:StandTurn_Balance.c **** 
+ 317:StandTurn_Balance.c ****     /* Sum: '<S17>/Add' incorporates:
+ 318:StandTurn_Balance.c ****      *  DataStoreRead: '<S46>/Data Store Read2'
+ 319:StandTurn_Balance.c ****      *  DataStoreRead: '<S48>/Data Store Read'
+ 320:StandTurn_Balance.c ****      *  Delay: '<S47>/Delay'
+ 321:StandTurn_Balance.c ****      *  Gain: '<Root>/Gain2'
+ 322:StandTurn_Balance.c ****      *  ManualSwitch: '<S46>/Manual Switch2'
+ 323:StandTurn_Balance.c ****      *  ManualSwitch: '<S48>/Manual Switch'
+ 324:StandTurn_Balance.c ****      *  Product: '<S46>/Product2'
+ 325:StandTurn_Balance.c ****      *  Product: '<S48>/Product'
+ 326:StandTurn_Balance.c ****      */
+ 327:StandTurn_Balance.c ****     StandTurn_Balance_B.Add = 26214.0 * (real_T)StandTurn_Balance_B.anglev[2] *
+ 328:StandTurn_Balance.c ****       3.814697265625E-6 * StandTurn_Balance_DW.Kd_turn + (rtb_Add_a *
+ 329:StandTurn_Balance.c ****       StandTurn_Balance_DW.Kp_turn + StandTurn_Balance_DW.Delay_DSTATE_n);
+ 330:StandTurn_Balance.c ****   }
+ 331:StandTurn_Balance.c **** 
+ 332:StandTurn_Balance.c ****   /* End of RelationalOperator: '<S4>/Compare' */
+ 333:StandTurn_Balance.c ****   /* End of Outputs for SubSystem: '<Root>/turnPID' */
+ 334:StandTurn_Balance.c **** 
+ 335:StandTurn_Balance.c ****   /* Outputs for Enabled SubSystem: '<Root>/anglePID' incorporates:
+ 336:StandTurn_Balance.c ****    *  EnablePort: '<S11>/Enable'
+ 337:StandTurn_Balance.c ****    */
+ 338:StandTurn_Balance.c ****   /* RelationalOperator: '<S1>/Compare' incorporates:
+ 339:StandTurn_Balance.c ****    *  Constant: '<S1>/Constant'
+ 340:StandTurn_Balance.c ****    *  UnitDelay: '<S7>/Output'
+ 341:StandTurn_Balance.c ****    */
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc6jImNK.s 			page 14
+
+
+ 342:StandTurn_Balance.c ****   if (StandTurn_Balance_DW.Output_DSTATE_i5 == 1) {
+ 368              		.loc 1 342 3 is_stmt 1 view .LVU137
+ 369              		.loc 1 342 27 is_stmt 0 view .LVU138
+ 370 0222 594B     		ldr	r3, .L171+32
+ 371 0224 93F80B61 		ldrb	r6, [r3, #267]	@ zero_extendqisi2
+ 372              		.loc 1 342 6 view .LVU139
+ 373 0228 012E     		cmp	r6, #1
+ 374 022a 00F0BF81 		beq	.L151
+ 375              	.L15:
+ 343:StandTurn_Balance.c ****     int16_T tmp;
+ 344:StandTurn_Balance.c **** 
+ 345:StandTurn_Balance.c ****     /* Abs: '<Root>/Abs' */
+ 346:StandTurn_Balance.c ****     if (StandTurn_Balance_B.angle[1] < 0) {
+ 347:StandTurn_Balance.c ****       tmp = (int16_T)-StandTurn_Balance_B.angle[1];
+ 348:StandTurn_Balance.c ****     } else {
+ 349:StandTurn_Balance.c ****       tmp = StandTurn_Balance_B.angle[1];
+ 350:StandTurn_Balance.c ****     }
+ 351:StandTurn_Balance.c **** 
+ 352:StandTurn_Balance.c ****     /* End of Abs: '<Root>/Abs' */
+ 353:StandTurn_Balance.c **** 
+ 354:StandTurn_Balance.c ****     /* Switch: '<Root>/Switch' incorporates:
+ 355:StandTurn_Balance.c ****      *  Constant: '<Root>/Constant'
+ 356:StandTurn_Balance.c ****      *  Gain: '<Root>/Gain'
+ 357:StandTurn_Balance.c ****      */
+ 358:StandTurn_Balance.c ****     if (tmp > 3500) {
+ 359:StandTurn_Balance.c ****       rtb_Add_a = 0.0;
+ 360:StandTurn_Balance.c ****     } else {
+ 361:StandTurn_Balance.c ****       rtb_Add_a = 20972.0 * (real_T)StandTurn_Balance_B.angle[1] *
+ 362:StandTurn_Balance.c ****         4.76837158203125E-7;
+ 363:StandTurn_Balance.c ****     }
+ 364:StandTurn_Balance.c **** 
+ 365:StandTurn_Balance.c ****     /* End of Switch: '<Root>/Switch' */
+ 366:StandTurn_Balance.c **** 
+ 367:StandTurn_Balance.c ****     /* Sum: '<S11>/Add' incorporates:
+ 368:StandTurn_Balance.c ****      *  Constant: '<S29>/Constant2'
+ 369:StandTurn_Balance.c ****      *  Constant: '<S30>/Constant'
+ 370:StandTurn_Balance.c ****      *  DataStoreRead: '<Root>/Data Store Read1'
+ 371:StandTurn_Balance.c ****      *  Gain: '<Root>/Gain1'
+ 372:StandTurn_Balance.c ****      *  Product: '<S29>/Product2'
+ 373:StandTurn_Balance.c ****      *  Product: '<S30>/Product'
+ 374:StandTurn_Balance.c ****      *  Sum: '<Root>/Add'
+ 375:StandTurn_Balance.c ****      *  Sum: '<S11>/Add1'
+ 376:StandTurn_Balance.c ****      */
+ 377:StandTurn_Balance.c ****     StandTurn_Balance_B.Add_o = ((StandTurn_Balance_B.Add_b +
+ 378:StandTurn_Balance.c ****       StandTurn_Balance_DW.machine_mid) - rtb_Add_a) * 70.0 + 26214.0 * (real_T)
+ 379:StandTurn_Balance.c ****       StandTurn_Balance_B.anglev[0] * 3.814697265625E-6 * 0.1;
+ 380:StandTurn_Balance.c ****   }
+ 381:StandTurn_Balance.c **** 
+ 382:StandTurn_Balance.c ****   /* End of RelationalOperator: '<S1>/Compare' */
+ 383:StandTurn_Balance.c ****   /* End of Outputs for SubSystem: '<Root>/anglePID' */
+ 384:StandTurn_Balance.c **** 
+ 385:StandTurn_Balance.c ****   /* Switch: '<S22>/FixPt Switch' incorporates:
+ 386:StandTurn_Balance.c ****    *  Constant: '<S21>/FixPt Constant'
+ 387:StandTurn_Balance.c ****    *  Constant: '<S22>/Constant'
+ 388:StandTurn_Balance.c ****    *  Sum: '<S21>/FixPt Sum1'
+ 389:StandTurn_Balance.c ****    *  UnitDelay: '<S7>/Output'
+ 390:StandTurn_Balance.c ****    */
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc6jImNK.s 			page 15
+
+
+ 391:StandTurn_Balance.c ****   if ((uint8_T)(StandTurn_Balance_DW.Output_DSTATE_i5 + 1) > 1) {
+ 376              		.loc 1 391 3 is_stmt 1 view .LVU140
+ 377              		.loc 1 391 7 is_stmt 0 view .LVU141
+ 378 022e 0136     		adds	r6, r6, #1
+ 379 0230 F6B2     		uxtb	r6, r6
+ 380              		.loc 1 391 6 view .LVU142
+ 381 0232 012E     		cmp	r6, #1
+ 382 0234 40F20782 		bls	.L18
+ 392:StandTurn_Balance.c ****     StandTurn_Balance_DW.Output_DSTATE_i5 = 0U;
+ 383              		.loc 1 392 5 is_stmt 1 view .LVU143
+ 384              		.loc 1 392 43 is_stmt 0 view .LVU144
+ 385 0238 534B     		ldr	r3, .L171+32
+ 386 023a 0022     		movs	r2, #0
+ 387 023c 83F80B21 		strb	r2, [r3, #267]
+ 388              	.L19:
+ 393:StandTurn_Balance.c ****   } else {
+ 394:StandTurn_Balance.c ****     StandTurn_Balance_DW.Output_DSTATE_i5++;
+ 395:StandTurn_Balance.c ****   }
+ 396:StandTurn_Balance.c **** 
+ 397:StandTurn_Balance.c ****   /* End of Switch: '<S22>/FixPt Switch' */
+ 398:StandTurn_Balance.c **** 
+ 399:StandTurn_Balance.c ****   /* Switch: '<S24>/FixPt Switch' incorporates:
+ 400:StandTurn_Balance.c ****    *  Constant: '<S23>/FixPt Constant'
+ 401:StandTurn_Balance.c ****    *  Constant: '<S24>/Constant'
+ 402:StandTurn_Balance.c ****    *  Sum: '<S23>/FixPt Sum1'
+ 403:StandTurn_Balance.c ****    *  UnitDelay: '<S8>/Output'
+ 404:StandTurn_Balance.c ****    */
+ 405:StandTurn_Balance.c ****   if ((uint8_T)(StandTurn_Balance_DW.Output_DSTATE + 1) > 1) {
+ 389              		.loc 1 405 3 is_stmt 1 view .LVU145
+ 390              		.loc 1 405 7 is_stmt 0 view .LVU146
+ 391 0240 0134     		adds	r4, r4, #1
+ 392 0242 E4B2     		uxtb	r4, r4
+ 393              		.loc 1 405 6 view .LVU147
+ 394 0244 012C     		cmp	r4, #1
+ 395 0246 40F20282 		bls	.L20
+ 406:StandTurn_Balance.c ****     StandTurn_Balance_DW.Output_DSTATE = 0U;
+ 396              		.loc 1 406 5 is_stmt 1 view .LVU148
+ 397              		.loc 1 406 40 is_stmt 0 view .LVU149
+ 398 024a 4F4B     		ldr	r3, .L171+32
+ 399 024c 0022     		movs	r2, #0
+ 400 024e 83F80821 		strb	r2, [r3, #264]
+ 401              	.L21:
+ 407:StandTurn_Balance.c ****   } else {
+ 408:StandTurn_Balance.c ****     StandTurn_Balance_DW.Output_DSTATE++;
+ 409:StandTurn_Balance.c ****   }
+ 410:StandTurn_Balance.c **** 
+ 411:StandTurn_Balance.c ****   /* End of Switch: '<S24>/FixPt Switch' */
+ 412:StandTurn_Balance.c **** 
+ 413:StandTurn_Balance.c ****   /* Switch: '<S26>/FixPt Switch' incorporates:
+ 414:StandTurn_Balance.c ****    *  Constant: '<S25>/FixPt Constant'
+ 415:StandTurn_Balance.c ****    *  Constant: '<S26>/Constant'
+ 416:StandTurn_Balance.c ****    *  Sum: '<S25>/FixPt Sum1'
+ 417:StandTurn_Balance.c ****    *  UnitDelay: '<S9>/Output'
+ 418:StandTurn_Balance.c ****    */
+ 419:StandTurn_Balance.c ****   if ((uint8_T)(StandTurn_Balance_DW.Output_DSTATE_i + 1) > 1) {
+ 402              		.loc 1 419 3 is_stmt 1 view .LVU150
+ 403              		.loc 1 419 7 is_stmt 0 view .LVU151
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc6jImNK.s 			page 16
+
+
+ 404 0252 0AF1010A 		add	r10, r10, #1
+ 405 0256 5FFA8AFA 		uxtb	r10, r10
+ 406              		.loc 1 419 6 view .LVU152
+ 407 025a BAF1010F 		cmp	r10, #1
+ 408 025e 40F2FA81 		bls	.L22
+ 420:StandTurn_Balance.c ****     StandTurn_Balance_DW.Output_DSTATE_i = 0U;
+ 409              		.loc 1 420 5 is_stmt 1 view .LVU153
+ 410              		.loc 1 420 42 is_stmt 0 view .LVU154
+ 411 0262 494B     		ldr	r3, .L171+32
+ 412 0264 0022     		movs	r2, #0
+ 413 0266 83F80921 		strb	r2, [r3, #265]
+ 414              	.L23:
+ 421:StandTurn_Balance.c ****   } else {
+ 422:StandTurn_Balance.c ****     StandTurn_Balance_DW.Output_DSTATE_i++;
+ 423:StandTurn_Balance.c ****   }
+ 424:StandTurn_Balance.c **** 
+ 425:StandTurn_Balance.c ****   /* End of Switch: '<S26>/FixPt Switch' */
+ 426:StandTurn_Balance.c **** 
+ 427:StandTurn_Balance.c ****   /* Switch: '<S28>/FixPt Switch' incorporates:
+ 428:StandTurn_Balance.c ****    *  Constant: '<S27>/FixPt Constant'
+ 429:StandTurn_Balance.c ****    *  Constant: '<S28>/Constant'
+ 430:StandTurn_Balance.c ****    *  Sum: '<S27>/FixPt Sum1'
+ 431:StandTurn_Balance.c ****    *  UnitDelay: '<S10>/Output'
+ 432:StandTurn_Balance.c ****    */
+ 433:StandTurn_Balance.c ****   if ((uint8_T)(StandTurn_Balance_DW.Output_DSTATE_a + 1) > 1) {
+ 415              		.loc 1 433 3 is_stmt 1 view .LVU155
+ 416              		.loc 1 433 7 is_stmt 0 view .LVU156
+ 417 026a 0135     		adds	r5, r5, #1
+ 418 026c EDB2     		uxtb	r5, r5
+ 419              		.loc 1 433 6 view .LVU157
+ 420 026e 012D     		cmp	r5, #1
+ 421 0270 40F2F581 		bls	.L24
+ 434:StandTurn_Balance.c ****     StandTurn_Balance_DW.Output_DSTATE_a = 0U;
+ 422              		.loc 1 434 5 is_stmt 1 view .LVU158
+ 423              		.loc 1 434 42 is_stmt 0 view .LVU159
+ 424 0274 444B     		ldr	r3, .L171+32
+ 425 0276 0022     		movs	r2, #0
+ 426 0278 83F80A21 		strb	r2, [r3, #266]
+ 427              	.L25:
+ 435:StandTurn_Balance.c ****   } else {
+ 436:StandTurn_Balance.c ****     StandTurn_Balance_DW.Output_DSTATE_a++;
+ 437:StandTurn_Balance.c ****   }
+ 438:StandTurn_Balance.c **** 
+ 439:StandTurn_Balance.c ****   /* End of Switch: '<S28>/FixPt Switch' */
+ 440:StandTurn_Balance.c **** 
+ 441:StandTurn_Balance.c ****   /* DataTypeConversion: '<Root>/Data Type Conversion' incorporates:
+ 442:StandTurn_Balance.c ****    *  DataStoreRead: '<Root>/Data Store Read9'
+ 443:StandTurn_Balance.c ****    */
+ 444:StandTurn_Balance.c ****   StandTurn_Balance_B.DataTypeConversion = (real32_T)
+ 428              		.loc 1 444 3 is_stmt 1 view .LVU160
+ 445:StandTurn_Balance.c ****     StandTurn_Balance_DW.tar_yaw * 3.81469727E-6F;
+ 429              		.loc 1 445 25 is_stmt 0 view .LVU161
+ 430 027c 424B     		ldr	r3, .L171+32
+ 431 027e D3ED407A 		vldr.32	s15, [r3, #256]	@ int
+ 444:StandTurn_Balance.c ****     StandTurn_Balance_DW.tar_yaw * 3.81469727E-6F;
+ 432              		.loc 1 444 44 view .LVU162
+ 433 0282 F8EEE77A 		vcvt.f32.s32	s15, s15
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc6jImNK.s 			page 17
+
+
+ 434              		.loc 1 445 34 view .LVU163
+ 435 0286 9FED497A 		vldr.32	s14, .L171+68
+ 436 028a 67EE877A 		vmul.f32	s15, s15, s14
+ 444:StandTurn_Balance.c ****     StandTurn_Balance_DW.tar_yaw * 3.81469727E-6F;
+ 437              		.loc 1 444 42 view .LVU164
+ 438 028e 3849     		ldr	r1, .L171+8
+ 439 0290 C1ED067A 		vstr.32	s15, [r1, #24]
+ 446:StandTurn_Balance.c **** 
+ 447:StandTurn_Balance.c ****   /* DataTypeConversion: '<Root>/Data Type Conversion1' incorporates:
+ 448:StandTurn_Balance.c ****    *  Sum: '<Root>/Add1'
+ 449:StandTurn_Balance.c ****    */
+ 450:StandTurn_Balance.c ****   StandTurn_Balance_B.DataTypeConversion1 = (real32_T)rtb_Add1_m *
+ 440              		.loc 1 450 3 is_stmt 1 view .LVU165
+ 441              		.loc 1 450 45 is_stmt 0 view .LVU166
+ 442 0294 B8EEC88A 		vcvt.f32.s32	s16, s16
+ 443              	.LVL5:
+ 444              		.loc 1 450 66 view .LVU167
+ 445 0298 28EE078A 		vmul.f32	s16, s16, s14
+ 446              		.loc 1 450 43 view .LVU168
+ 447 029c 81ED078A 		vstr.32	s16, [r1, #28]
+ 451:StandTurn_Balance.c ****     3.81469727E-6F;
+ 452:StandTurn_Balance.c **** 
+ 453:StandTurn_Balance.c ****   /* Sum: '<Root>/Add2' */
+ 454:StandTurn_Balance.c ****   rtb_Add_a = StandTurn_Balance_B.Add + StandTurn_Balance_B.Add_o;
+ 448              		.loc 1 454 3 is_stmt 1 view .LVU169
+ 449              		.loc 1 454 13 is_stmt 0 view .LVU170
+ 450 02a0 D1E90423 		ldrd	r2, [r1, #16]
+ 451 02a4 D1E90001 		ldrd	r0, [r1]
+ 452 02a8 FFF7FEFF 		bl	__aeabi_dadd
+ 453              	.LVL6:
+ 454 02ac 0246     		mov	r2, r0
+ 455 02ae 0B46     		mov	r3, r1
+ 456 02b0 43EC182B 		vmov	d8, r2, r3
+ 457              	.LVL7:
+ 455:StandTurn_Balance.c **** 
+ 456:StandTurn_Balance.c ****   /* Saturate: '<Root>/Saturation3' */
+ 457:StandTurn_Balance.c ****   if (rtb_Add_a > 2048.0) {
+ 458              		.loc 1 457 3 is_stmt 1 view .LVU171
+ 459              		.loc 1 457 6 is_stmt 0 view .LVU172
+ 460 02b4 0022     		movs	r2, #0
+ 461              	.LVL8:
+ 462              		.loc 1 457 6 view .LVU173
+ 463 02b6 3E4B     		ldr	r3, .L171+72
+ 464 02b8 FFF7FEFF 		bl	__aeabi_dcmpgt
+ 465              	.LVL9:
+ 466 02bc 0028     		cmp	r0, #0
+ 467 02be 40F0FD81 		bne	.L92
+ 458:StandTurn_Balance.c ****     rtb_Add_a = 2048.0;
+ 459:StandTurn_Balance.c ****   } else if (rtb_Add_a < -2048.0) {
+ 468              		.loc 1 459 10 is_stmt 1 view .LVU174
+ 469              		.loc 1 459 13 is_stmt 0 view .LVU175
+ 470 02c2 0022     		movs	r2, #0
+ 471 02c4 3B4B     		ldr	r3, .L171+76
+ 472 02c6 51EC180B 		vmov	r0, r1, d8
+ 473 02ca FFF7FEFF 		bl	__aeabi_dcmplt
+ 474              	.LVL10:
+ 475 02ce 0028     		cmp	r0, #0
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc6jImNK.s 			page 18
+
+
+ 476 02d0 00F0F681 		beq	.L26
+ 460:StandTurn_Balance.c ****     rtb_Add_a = -2048.0;
+ 477              		.loc 1 460 15 view .LVU176
+ 478 02d4 9FED248B 		vldr.64	d8, .L171
+ 479              	.LVL11:
+ 480              		.loc 1 460 15 view .LVU177
+ 481 02d8 F2E1     		b	.L26
+ 482              	.L148:
+ 166:StandTurn_Balance.c ****       StandTurn_Balance_DW.Delay_DSTATE_o[0]) * 100.0F * 60.0F / 40000.0F;
+ 483              		.loc 1 166 5 is_stmt 1 view .LVU178
+ 166:StandTurn_Balance.c ****       StandTurn_Balance_DW.Delay_DSTATE_o[0]) * 100.0F * 60.0F / 40000.0F;
+ 484              		.loc 1 166 64 is_stmt 0 view .LVU179
+ 485 02da 254A     		ldr	r2, .L171+8
+ 486 02dc 166D     		ldr	r6, [r2, #80]
+ 167:StandTurn_Balance.c **** 
+ 487              		.loc 1 167 42 view .LVU180
+ 488 02de 2A49     		ldr	r1, .L171+32
+ 489 02e0 4B6D     		ldr	r3, [r1, #84]
+ 166:StandTurn_Balance.c ****       StandTurn_Balance_DW.Delay_DSTATE_o[0]) * 100.0F * 60.0F / 40000.0F;
+ 490              		.loc 1 166 74 view .LVU181
+ 491 02e2 F31A     		subs	r3, r6, r3
+ 492 02e4 07EE903A 		vmov	s15, r3	@ int
+ 166:StandTurn_Balance.c ****       StandTurn_Balance_DW.Delay_DSTATE_o[0]) * 100.0F * 60.0F / 40000.0F;
+ 493              		.loc 1 166 34 view .LVU182
+ 494 02e8 F8EEE77A 		vcvt.f32.s32	s15, s15
+ 167:StandTurn_Balance.c **** 
+ 495              		.loc 1 167 47 view .LVU183
+ 496 02ec 9FED326A 		vldr.32	s12, .L171+80
+ 497 02f0 67EE867A 		vmul.f32	s15, s15, s12
+ 167:StandTurn_Balance.c **** 
+ 498              		.loc 1 167 56 view .LVU184
+ 499 02f4 DFED316A 		vldr.32	s13, .L171+84
+ 500 02f8 67EEA67A 		vmul.f32	s15, s15, s13
+ 167:StandTurn_Balance.c **** 
+ 501              		.loc 1 167 64 view .LVU185
+ 502 02fc 9FED307A 		vldr.32	s14, .L171+88
+ 503 0300 C7EE875A 		vdiv.f32	s11, s15, s14
+ 166:StandTurn_Balance.c ****       StandTurn_Balance_DW.Delay_DSTATE_o[0]) * 100.0F * 60.0F / 40000.0F;
+ 504              		.loc 1 166 32 view .LVU186
+ 505 0304 C2ED125A 		vstr.32	s11, [r2, #72]
+ 178:StandTurn_Balance.c ****       StandTurn_Balance_DW.Delay1_DSTATE[0]) * 100.0F * 60.0F / 40000.0F;
+ 506              		.loc 1 178 5 is_stmt 1 view .LVU187
+ 178:StandTurn_Balance.c ****       StandTurn_Balance_DW.Delay1_DSTATE[0]) * 100.0F * 60.0F / 40000.0F;
+ 507              		.loc 1 178 65 is_stmt 0 view .LVU188
+ 508 0308 556D     		ldr	r5, [r2, #84]
+ 179:StandTurn_Balance.c ****     for (rtb_Add1_m = 0; rtb_Add1_m < 18; rtb_Add1_m++) {
+ 509              		.loc 1 179 41 view .LVU189
+ 510 030a D1F8A030 		ldr	r3, [r1, #160]
+ 178:StandTurn_Balance.c ****       StandTurn_Balance_DW.Delay1_DSTATE[0]) * 100.0F * 60.0F / 40000.0F;
+ 511              		.loc 1 178 75 view .LVU190
+ 512 030e EB1A     		subs	r3, r5, r3
+ 513 0310 07EE903A 		vmov	s15, r3	@ int
+ 178:StandTurn_Balance.c ****       StandTurn_Balance_DW.Delay1_DSTATE[0]) * 100.0F * 60.0F / 40000.0F;
+ 514              		.loc 1 178 35 view .LVU191
+ 515 0314 F8EEE77A 		vcvt.f32.s32	s15, s15
+ 179:StandTurn_Balance.c ****     for (rtb_Add1_m = 0; rtb_Add1_m < 18; rtb_Add1_m++) {
+ 516              		.loc 1 179 46 view .LVU192
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc6jImNK.s 			page 19
+
+
+ 517 0318 67EE867A 		vmul.f32	s15, s15, s12
+ 179:StandTurn_Balance.c ****     for (rtb_Add1_m = 0; rtb_Add1_m < 18; rtb_Add1_m++) {
+ 518              		.loc 1 179 55 view .LVU193
+ 519 031c 67EEA67A 		vmul.f32	s15, s15, s13
+ 179:StandTurn_Balance.c ****     for (rtb_Add1_m = 0; rtb_Add1_m < 18; rtb_Add1_m++) {
+ 520              		.loc 1 179 63 view .LVU194
+ 521 0320 C7EE876A 		vdiv.f32	s13, s15, s14
+ 178:StandTurn_Balance.c ****       StandTurn_Balance_DW.Delay1_DSTATE[0]) * 100.0F * 60.0F / 40000.0F;
+ 522              		.loc 1 178 33 view .LVU195
+ 523 0324 C2ED136A 		vstr.32	s13, [r2, #76]
+ 180:StandTurn_Balance.c ****       /* Update for Delay: '<S15>/Delay' */
+ 524              		.loc 1 180 5 is_stmt 1 view .LVU196
+ 525              	.LVL12:
+ 180:StandTurn_Balance.c ****       /* Update for Delay: '<S15>/Delay' */
+ 526              		.loc 1 180 21 is_stmt 0 view .LVU197
+ 527 0328 0023     		movs	r3, #0
+ 180:StandTurn_Balance.c ****       /* Update for Delay: '<S15>/Delay' */
+ 528              		.loc 1 180 5 view .LVU198
+ 529 032a 13E0     		b	.L3
+ 530              	.LVL13:
+ 531              	.L4:
+ 182:StandTurn_Balance.c ****         StandTurn_Balance_DW.Delay_DSTATE_o[rtb_Add1_m + 1];
+ 532              		.loc 1 182 7 is_stmt 1 discriminator 3 view .LVU199
+ 183:StandTurn_Balance.c **** 
+ 533              		.loc 1 183 44 is_stmt 0 discriminator 3 view .LVU200
+ 534 032c 164A     		ldr	r2, .L171+32
+ 535 032e 03F11501 		add	r1, r3, #21
+ 536 0332 02EB8101 		add	r1, r2, r1, lsl #2
+ 537 0336 4868     		ldr	r0, [r1, #4]
+ 182:StandTurn_Balance.c ****         StandTurn_Balance_DW.Delay_DSTATE_o[rtb_Add1_m + 1];
+ 538              		.loc 1 182 55 discriminator 3 view .LVU201
+ 539 0338 03F11401 		add	r1, r3, #20
+ 540 033c 02EB8101 		add	r1, r2, r1, lsl #2
+ 541 0340 4860     		str	r0, [r1, #4]
+ 186:StandTurn_Balance.c ****         StandTurn_Balance_DW.Delay1_DSTATE[rtb_Add1_m + 1];
+ 542              		.loc 1 186 7 is_stmt 1 discriminator 3 view .LVU202
+ 187:StandTurn_Balance.c ****     }
+ 543              		.loc 1 187 43 is_stmt 0 discriminator 3 view .LVU203
+ 544 0342 03F12901 		add	r1, r3, #41
+ 545 0346 52F82100 		ldr	r0, [r2, r1, lsl #2]
+ 186:StandTurn_Balance.c ****         StandTurn_Balance_DW.Delay1_DSTATE[rtb_Add1_m + 1];
+ 546              		.loc 1 186 54 discriminator 3 view .LVU204
+ 547 034a 03F12801 		add	r1, r3, #40
+ 548 034e 42F82100 		str	r0, [r2, r1, lsl #2]
+ 180:StandTurn_Balance.c ****       /* Update for Delay: '<S15>/Delay' */
+ 549              		.loc 1 180 53 is_stmt 1 discriminator 3 view .LVU205
+ 550              	.LVL14:
+ 180:StandTurn_Balance.c ****       /* Update for Delay: '<S15>/Delay' */
+ 551              		.loc 1 180 53 is_stmt 0 discriminator 3 view .LVU206
+ 552 0352 0133     		adds	r3, r3, #1
+ 553              	.LVL15:
+ 554              	.L3:
+ 180:StandTurn_Balance.c ****       /* Update for Delay: '<S15>/Delay' */
+ 555              		.loc 1 180 37 is_stmt 1 discriminator 1 view .LVU207
+ 556 0354 112B     		cmp	r3, #17
+ 557 0356 E9DD     		ble	.L4
+ 191:StandTurn_Balance.c **** 
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc6jImNK.s 			page 20
+
+
+ 558              		.loc 1 191 5 view .LVU208
+ 191:StandTurn_Balance.c **** 
+ 559              		.loc 1 191 45 is_stmt 0 view .LVU209
+ 560 0358 0B4B     		ldr	r3, .L171+32
+ 561              	.LVL16:
+ 191:StandTurn_Balance.c **** 
+ 562              		.loc 1 191 45 view .LVU210
+ 563 035a C3F89C60 		str	r6, [r3, #156]
+ 194:StandTurn_Balance.c ****   }
+ 564              		.loc 1 194 5 is_stmt 1 view .LVU211
+ 194:StandTurn_Balance.c ****   }
+ 565              		.loc 1 194 44 is_stmt 0 view .LVU212
+ 566 035e C3F8E850 		str	r5, [r3, #232]
+ 567 0362 4BE7     		b	.L2
+ 568              	.L172:
+ 569 0364 AFF30080 		.align	3
+ 570              	.L171:
+ 571 0368 00000000 		.word	0
+ 572 036c 0000A0C0 		.word	-1063256064
+ 573 0370 00000000 		.word	.LANCHOR0
+ 574 0374 00000000 		.word	HI226_Angle
+ 575 0378 00000000 		.word	HI226_AngleV
+ 576 037c 00000000 		.word	htim5
+ 577 0380 00000000 		.word	htim2
+ 578 0384 00000000 		.word	adc_rawvalue
+ 579 0388 00000000 		.word	.LANCHOR1
+ 580 038c 3333733F 		.word	1064514355
+ 581 0390 00CC4C3D 		.word	1028443136
+ 582 0394 00000000 		.word	DataLink_UpFrameData
+ 583 0398 00000000 		.word	motor1_PwmData
+ 584 039c 00000000 		.word	motor2_PwmData
+ 585 03a0 00080240 		.word	1073874944
+ 586 03a4 00000000 		.word	ws2812_data
+ 587 03a8 00000000 		.word	.LANCHOR2
+ 588 03ac 00008036 		.word	914358272
+ 589 03b0 0000A040 		.word	1084227584
+ 590 03b4 0000A0C0 		.word	-1063256064
+ 591 03b8 0000C842 		.word	1120403456
+ 592 03bc 00007042 		.word	1114636288
+ 593 03c0 00401C47 		.word	1193033728
+ 594              	.L149:
+ 212:StandTurn_Balance.c ****       StandTurn_Balance_B.Divide1);
+ 595              		.loc 1 212 5 is_stmt 1 view .LVU213
+ 212:StandTurn_Balance.c ****       StandTurn_Balance_B.Divide1);
+ 596              		.loc 1 212 38 is_stmt 0 view .LVU214
+ 597 03c4 1D46     		mov	r5, r3
+ 598 03c6 93ED3B8A 		vldr.32	s16, [r3, #236]
+ 212:StandTurn_Balance.c ****       StandTurn_Balance_B.Divide1);
+ 599              		.loc 1 212 71 view .LVU215
+ 600 03ca B34B     		ldr	r3, .L173+48
+ 601 03cc D3ED127A 		vldr.32	s15, [r3, #72]
+ 213:StandTurn_Balance.c **** 
+ 602              		.loc 1 213 26 view .LVU216
+ 603 03d0 93ED137A 		vldr.32	s14, [r3, #76]
+ 212:StandTurn_Balance.c ****       StandTurn_Balance_B.Divide1);
+ 604              		.loc 1 212 79 view .LVU217
+ 605 03d4 77EE877A 		vadd.f32	s15, s15, s14
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc6jImNK.s 			page 21
+
+
+ 212:StandTurn_Balance.c ****       StandTurn_Balance_B.Divide1);
+ 606              		.loc 1 212 16 view .LVU218
+ 607 03d8 38EE678A 		vsub.f32	s16, s16, s15
+ 608              	.LVL17:
+ 222:StandTurn_Balance.c ****       StandTurn_Balance_DW.Ki_speed * rtb_Add1_o) +
+ 609              		.loc 1 222 5 is_stmt 1 view .LVU219
+ 222:StandTurn_Balance.c ****       StandTurn_Balance_DW.Ki_speed * rtb_Add1_o) +
+ 610              		.loc 1 222 61 is_stmt 0 view .LVU220
+ 611 03dc A2A3     		adr	r3, .L173
+ 612 03de D3E90023 		ldrd	r2, [r3]
+ 613 03e2 D5E90801 		ldrd	r0, [r5, #32]
+ 614 03e6 FFF7FEFF 		bl	__aeabi_dmul
+ 615              	.LVL18:
+ 616 03ea 8046     		mov	r8, r0
+ 617 03ec 8946     		mov	r9, r1
+ 223:StandTurn_Balance.c ****       StandTurn_Balance_DW.Delay_DSTATE_i) * 0.995F;
+ 618              		.loc 1 223 37 view .LVU221
+ 619 03ee 18EE100A 		vmov	r0, s16
+ 620 03f2 FFF7FEFF 		bl	__aeabi_f2d
+ 621              	.LVL19:
+ 622 03f6 0646     		mov	r6, r0
+ 623 03f8 0F46     		mov	r7, r1
+ 624 03fa 0246     		mov	r2, r0
+ 625 03fc 0B46     		mov	r3, r1
+ 626 03fe 4046     		mov	r0, r8
+ 627 0400 4946     		mov	r1, r9
+ 628 0402 FFF7FEFF 		bl	__aeabi_dmul
+ 629              	.LVL20:
+ 222:StandTurn_Balance.c ****       StandTurn_Balance_DW.Ki_speed * rtb_Add1_o) +
+ 630              		.loc 1 222 44 view .LVU222
+ 631 0406 FFF7FEFF 		bl	__aeabi_d2f
+ 632              	.LVL21:
+ 633 040a 07EE900A 		vmov	s15, r0
+ 224:StandTurn_Balance.c **** 
+ 634              		.loc 1 224 27 view .LVU223
+ 635 040e 95ED137A 		vldr.32	s14, [r5, #76]
+ 223:StandTurn_Balance.c ****       StandTurn_Balance_DW.Delay_DSTATE_i) * 0.995F;
+ 636              		.loc 1 223 51 view .LVU224
+ 637 0412 77EE877A 		vadd.f32	s15, s15, s14
+ 224:StandTurn_Balance.c **** 
+ 638              		.loc 1 224 44 view .LVU225
+ 639 0416 9FEDA17A 		vldr.32	s14, .L173+52
+ 640 041a 67EE877A 		vmul.f32	s15, s15, s14
+ 222:StandTurn_Balance.c ****       StandTurn_Balance_DW.Ki_speed * rtb_Add1_o) +
+ 641              		.loc 1 222 41 view .LVU226
+ 642 041e C5ED137A 		vstr.32	s15, [r5, #76]
+ 227:StandTurn_Balance.c ****       /* Gain: '<S43>/Gain1' */
+ 643              		.loc 1 227 5 is_stmt 1 view .LVU227
+ 227:StandTurn_Balance.c ****       /* Gain: '<S43>/Gain1' */
+ 644              		.loc 1 227 8 is_stmt 0 view .LVU228
+ 645 0422 9FED9F7A 		vldr.32	s14, .L173+56
+ 646 0426 F4EEC77A 		vcmpe.f32	s15, s14
+ 647 042a F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 648 042e 3FDD     		ble	.L129
+ 229:StandTurn_Balance.c ****     } else if (StandTurn_Balance_DW.Delay_DSTATE_i < -1500.0F) {
+ 649              		.loc 1 229 7 is_stmt 1 view .LVU229
+ 229:StandTurn_Balance.c ****     } else if (StandTurn_Balance_DW.Delay_DSTATE_i < -1500.0F) {
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc6jImNK.s 			page 22
+
+
+ 650              		.loc 1 229 43 is_stmt 0 view .LVU230
+ 651 0430 85ED137A 		vstr.32	s14, [r5, #76]
+ 652              	.L8:
+ 256:StandTurn_Balance.c ****       rtb_Add1_o + StandTurn_Balance_DW.Delay_DSTATE_i) + 0.001 *
+ 653              		.loc 1 256 5 is_stmt 1 view .LVU231
+ 256:StandTurn_Balance.c ****       rtb_Add1_o + StandTurn_Balance_DW.Delay_DSTATE_i) + 0.001 *
+ 654              		.loc 1 256 62 is_stmt 0 view .LVU232
+ 655 0434 9B4D     		ldr	r5, .L173+60
+ 256:StandTurn_Balance.c ****       rtb_Add1_o + StandTurn_Balance_DW.Delay_DSTATE_i) + 0.001 *
+ 656              		.loc 1 256 40 view .LVU233
+ 657 0436 8CA3     		adr	r3, .L173
+ 658 0438 D3E90023 		ldrd	r2, [r3]
+ 659 043c D5E90601 		ldrd	r0, [r5, #24]
+ 660 0440 FFF7FEFF 		bl	__aeabi_dmul
+ 661              	.LVL22:
+ 662 0444 0246     		mov	r2, r0
+ 663 0446 0B46     		mov	r3, r1
+ 256:StandTurn_Balance.c ****       rtb_Add1_o + StandTurn_Balance_DW.Delay_DSTATE_i) + 0.001 *
+ 664              		.loc 1 256 72 view .LVU234
+ 665 0448 3046     		mov	r0, r6
+ 666 044a 3946     		mov	r1, r7
+ 667 044c FFF7FEFF 		bl	__aeabi_dmul
+ 668              	.LVL23:
+ 669 0450 0646     		mov	r6, r0
+ 670 0452 0F46     		mov	r7, r1
+ 257:StandTurn_Balance.c ****       StandTurn_Balance_DW.Kd_speed * (rtb_Add1_o -
+ 671              		.loc 1 257 40 view .LVU235
+ 672 0454 E86C     		ldr	r0, [r5, #76]	@ float
+ 673 0456 FFF7FEFF 		bl	__aeabi_f2d
+ 674              	.LVL24:
+ 675 045a 0246     		mov	r2, r0
+ 676 045c 0B46     		mov	r3, r1
+ 257:StandTurn_Balance.c ****       StandTurn_Balance_DW.Kd_speed * (rtb_Add1_o -
+ 677              		.loc 1 257 18 view .LVU236
+ 678 045e 3046     		mov	r0, r6
+ 679 0460 3946     		mov	r1, r7
+ 680 0462 FFF7FEFF 		bl	__aeabi_dadd
+ 681              	.LVL25:
+ 682 0466 0646     		mov	r6, r0
+ 683 0468 0F46     		mov	r7, r1
+ 257:StandTurn_Balance.c ****       StandTurn_Balance_DW.Kd_speed * (rtb_Add1_o -
+ 684              		.loc 1 257 65 view .LVU237
+ 685 046a 7FA3     		adr	r3, .L173
+ 686 046c D3E90023 		ldrd	r2, [r3]
+ 687 0470 D5E90A01 		ldrd	r0, [r5, #40]
+ 688 0474 FFF7FEFF 		bl	__aeabi_dmul
+ 689              	.LVL26:
+ 690 0478 8046     		mov	r8, r0
+ 691 047a 8946     		mov	r9, r1
+ 259:StandTurn_Balance.c **** 
+ 692              		.loc 1 259 27 view .LVU238
+ 693 047c D5ED147A 		vldr.32	s15, [r5, #80]
+ 258:StandTurn_Balance.c ****       StandTurn_Balance_DW.UD_DSTATE_o);
+ 694              		.loc 1 258 51 view .LVU239
+ 695 0480 78EE677A 		vsub.f32	s15, s16, s15
+ 696 0484 17EE900A 		vmov	r0, s15
+ 697 0488 FFF7FEFF 		bl	__aeabi_f2d
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc6jImNK.s 			page 23
+
+
+ 698              	.LVL27:
+ 699 048c 0246     		mov	r2, r0
+ 700 048e 0B46     		mov	r3, r1
+ 258:StandTurn_Balance.c ****       StandTurn_Balance_DW.UD_DSTATE_o);
+ 701              		.loc 1 258 37 view .LVU240
+ 702 0490 4046     		mov	r0, r8
+ 703 0492 4946     		mov	r1, r9
+ 704 0494 FFF7FEFF 		bl	__aeabi_dmul
+ 705              	.LVL28:
+ 706 0498 0246     		mov	r2, r0
+ 707 049a 0B46     		mov	r3, r1
+ 257:StandTurn_Balance.c ****       StandTurn_Balance_DW.Kd_speed * (rtb_Add1_o -
+ 708              		.loc 1 257 57 view .LVU241
+ 709 049c 3046     		mov	r0, r6
+ 710 049e 3946     		mov	r1, r7
+ 711 04a0 FFF7FEFF 		bl	__aeabi_dadd
+ 712              	.LVL29:
+ 256:StandTurn_Balance.c ****       rtb_Add1_o + StandTurn_Balance_DW.Delay_DSTATE_i) + 0.001 *
+ 713              		.loc 1 256 31 view .LVU242
+ 714 04a4 7C4B     		ldr	r3, .L173+48
+ 715 04a6 C3E90201 		strd	r0, [r3, #8]
+ 267:StandTurn_Balance.c ****   }
+ 716              		.loc 1 267 5 is_stmt 1 view .LVU243
+ 267:StandTurn_Balance.c ****   }
+ 717              		.loc 1 267 38 is_stmt 0 view .LVU244
+ 718 04aa 85ED148A 		vstr.32	s16, [r5, #80]
+ 719 04ae ACE6     		b	.L5
+ 720              	.L129:
+ 230:StandTurn_Balance.c ****       /* Gain: '<S43>/Gain1' */
+ 721              		.loc 1 230 12 is_stmt 1 view .LVU245
+ 230:StandTurn_Balance.c ****       /* Gain: '<S43>/Gain1' */
+ 722              		.loc 1 230 15 is_stmt 0 view .LVU246
+ 723 04b0 9FED7D7A 		vldr.32	s14, .L173+64
+ 724 04b4 F4EEC77A 		vcmpe.f32	s15, s14
+ 725 04b8 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 726 04bc BAD5     		bpl	.L8
+ 232:StandTurn_Balance.c ****     }
+ 727              		.loc 1 232 7 is_stmt 1 view .LVU247
+ 232:StandTurn_Balance.c ****     }
+ 728              		.loc 1 232 43 is_stmt 0 view .LVU248
+ 729 04be 794B     		ldr	r3, .L173+60
+ 730 04c0 83ED137A 		vstr.32	s14, [r3, #76]
+ 731 04c4 B6E7     		b	.L8
+ 732              	.LVL30:
+ 733              	.L150:
+ 293:StandTurn_Balance.c ****       3.814697265625E-6;
+ 734              		.loc 1 293 5 is_stmt 1 view .LVU249
+ 293:StandTurn_Balance.c ****       3.814697265625E-6;
+ 735              		.loc 1 293 46 is_stmt 0 view .LVU250
+ 736 04c6 1646     		mov	r6, r2
+ 737 04c8 D2F80001 		ldr	r0, [r2, #256]
+ 293:StandTurn_Balance.c ****       3.814697265625E-6;
+ 738              		.loc 1 293 17 view .LVU251
+ 739 04cc C01A     		subs	r0, r0, r3
+ 740 04ce FFF7FEFF 		bl	__aeabi_i2d
+ 741              	.LVL31:
+ 293:StandTurn_Balance.c ****       3.814697265625E-6;
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc6jImNK.s 			page 24
+
+
+ 742              		.loc 1 293 15 view .LVU252
+ 743 04d2 0022     		movs	r2, #0
+ 744 04d4 754B     		ldr	r3, .L173+68
+ 745 04d6 FFF7FEFF 		bl	__aeabi_dmul
+ 746              	.LVL32:
+ 747 04da 0746     		mov	r7, r0
+ 748 04dc 8846     		mov	r8, r1
+ 749 04de CDE90278 		strd	r7, [sp, #8]
+ 750              	.LVL33:
+ 303:StandTurn_Balance.c ****       StandTurn_Balance_DW.Ki_turn * rtb_Add_a);
+ 751              		.loc 1 303 5 is_stmt 1 view .LVU253
+ 304:StandTurn_Balance.c **** 
+ 752              		.loc 1 304 27 is_stmt 0 view .LVU254
+ 753 04e2 D6F8F400 		ldr	r0, [r6, #244]	@ float
+ 754 04e6 FFF7FEFF 		bl	__aeabi_f2d
+ 755              	.LVL34:
+ 303:StandTurn_Balance.c ****       StandTurn_Balance_DW.Ki_turn * rtb_Add_a);
+ 756              		.loc 1 303 60 view .LVU255
+ 757 04ea 61A3     		adr	r3, .L173+8
+ 758 04ec D3E90023 		ldrd	r2, [r3]
+ 759 04f0 FFF7FEFF 		bl	__aeabi_dmul
+ 760              	.LVL35:
+ 304:StandTurn_Balance.c **** 
+ 761              		.loc 1 304 36 view .LVU256
+ 762 04f4 3A46     		mov	r2, r7
+ 763 04f6 4346     		mov	r3, r8
+ 764 04f8 FFF7FEFF 		bl	__aeabi_dmul
+ 765              	.LVL36:
+ 303:StandTurn_Balance.c ****       StandTurn_Balance_DW.Ki_turn * rtb_Add_a);
+ 766              		.loc 1 303 44 view .LVU257
+ 767 04fc FFF7FEFF 		bl	__aeabi_d2f
+ 768              	.LVL37:
+ 769 0500 FFF7FEFF 		bl	__aeabi_f2d
+ 770              	.LVL38:
+ 303:StandTurn_Balance.c ****       StandTurn_Balance_DW.Ki_turn * rtb_Add_a);
+ 771              		.loc 1 303 41 view .LVU258
+ 772 0504 D6E90223 		ldrd	r2, [r6, #8]
+ 773 0508 FFF7FEFF 		bl	__aeabi_dadd
+ 774              	.LVL39:
+ 775 050c 8046     		mov	r8, r0
+ 776 050e 8946     		mov	r9, r1
+ 777 0510 C6E90289 		strd	r8, [r6, #8]
+ 307:StandTurn_Balance.c ****       /* Sum: '<S47>/Add2' */
+ 778              		.loc 1 307 5 is_stmt 1 view .LVU259
+ 307:StandTurn_Balance.c ****       /* Sum: '<S47>/Add2' */
+ 779              		.loc 1 307 8 is_stmt 0 view .LVU260
+ 780 0514 0022     		movs	r2, #0
+ 781 0516 664B     		ldr	r3, .L173+72
+ 782 0518 FFF7FEFF 		bl	__aeabi_dcmpgt
+ 783              	.LVL40:
+ 784 051c 0028     		cmp	r0, #0
+ 785 051e 35D0     		beq	.L130
+ 309:StandTurn_Balance.c ****     } else if (StandTurn_Balance_DW.Delay_DSTATE_n < -2000.0) {
+ 786              		.loc 1 309 7 is_stmt 1 view .LVU261
+ 309:StandTurn_Balance.c ****     } else if (StandTurn_Balance_DW.Delay_DSTATE_n < -2000.0) {
+ 787              		.loc 1 309 43 is_stmt 0 view .LVU262
+ 788 0520 0020     		movs	r0, #0
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc6jImNK.s 			page 25
+
+
+ 789 0522 6349     		ldr	r1, .L173+72
+ 790 0524 C6E90201 		strd	r0, [r6, #8]
+ 791              	.L13:
+ 327:StandTurn_Balance.c ****       3.814697265625E-6 * StandTurn_Balance_DW.Kd_turn + (rtb_Add_a *
+ 792              		.loc 1 327 5 is_stmt 1 view .LVU263
+ 327:StandTurn_Balance.c ****       3.814697265625E-6 * StandTurn_Balance_DW.Kd_turn + (rtb_Add_a *
+ 793              		.loc 1 327 75 is_stmt 0 view .LVU264
+ 794 0528 5B4F     		ldr	r7, .L173+48
+ 795              	.LVL41:
+ 327:StandTurn_Balance.c ****       3.814697265625E-6 * StandTurn_Balance_DW.Kd_turn + (rtb_Add_a *
+ 796              		.loc 1 327 41 view .LVU265
+ 797 052a B7F96200 		ldrsh	r0, [r7, #98]
+ 798 052e FFF7FEFF 		bl	__aeabi_i2d
+ 799              	.LVL42:
+ 327:StandTurn_Balance.c ****       3.814697265625E-6 * StandTurn_Balance_DW.Kd_turn + (rtb_Add_a *
+ 800              		.loc 1 327 39 view .LVU266
+ 801 0532 51A3     		adr	r3, .L173+16
+ 802 0534 D3E90023 		ldrd	r2, [r3]
+ 803 0538 FFF7FEFF 		bl	__aeabi_dmul
+ 804              	.LVL43:
+ 327:StandTurn_Balance.c ****       3.814697265625E-6 * StandTurn_Balance_DW.Kd_turn + (rtb_Add_a *
+ 805              		.loc 1 327 79 view .LVU267
+ 806 053c 0022     		movs	r2, #0
+ 807 053e 5B4B     		ldr	r3, .L173+68
+ 808 0540 FFF7FEFF 		bl	__aeabi_dmul
+ 809              	.LVL44:
+ 810 0544 8046     		mov	r8, r0
+ 811 0546 8946     		mov	r9, r1
+ 328:StandTurn_Balance.c ****       StandTurn_Balance_DW.Kp_turn + StandTurn_Balance_DW.Delay_DSTATE_n);
+ 812              		.loc 1 328 47 view .LVU268
+ 813 0548 564E     		ldr	r6, .L173+60
+ 814 054a D6F8F800 		ldr	r0, [r6, #248]	@ float
+ 815 054e FFF7FEFF 		bl	__aeabi_f2d
+ 816              	.LVL45:
+ 817 0552 0246     		mov	r2, r0
+ 818 0554 0B46     		mov	r3, r1
+ 328:StandTurn_Balance.c ****       StandTurn_Balance_DW.Kp_turn + StandTurn_Balance_DW.Delay_DSTATE_n);
+ 819              		.loc 1 328 25 view .LVU269
+ 820 0556 4046     		mov	r0, r8
+ 821 0558 4946     		mov	r1, r9
+ 822 055a FFF7FEFF 		bl	__aeabi_dmul
+ 823              	.LVL46:
+ 824 055e 8046     		mov	r8, r0
+ 825 0560 8946     		mov	r9, r1
+ 329:StandTurn_Balance.c ****   }
+ 826              		.loc 1 329 27 view .LVU270
+ 827 0562 D6F8F000 		ldr	r0, [r6, #240]	@ float
+ 828 0566 FFF7FEFF 		bl	__aeabi_f2d
+ 829              	.LVL47:
+ 328:StandTurn_Balance.c ****       StandTurn_Balance_DW.Kp_turn + StandTurn_Balance_DW.Delay_DSTATE_n);
+ 830              		.loc 1 328 69 view .LVU271
+ 831 056a DDE90223 		ldrd	r2, [sp, #8]
+ 832 056e FFF7FEFF 		bl	__aeabi_dmul
+ 833              	.LVL48:
+ 329:StandTurn_Balance.c ****   }
+ 834              		.loc 1 329 36 view .LVU272
+ 835 0572 D6E90223 		ldrd	r2, [r6, #8]
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc6jImNK.s 			page 26
+
+
+ 836 0576 FFF7FEFF 		bl	__aeabi_dadd
+ 837              	.LVL49:
+ 838 057a 0246     		mov	r2, r0
+ 839 057c 0B46     		mov	r3, r1
+ 328:StandTurn_Balance.c ****       StandTurn_Balance_DW.Kp_turn + StandTurn_Balance_DW.Delay_DSTATE_n);
+ 840              		.loc 1 328 56 view .LVU273
+ 841 057e 4046     		mov	r0, r8
+ 842 0580 4946     		mov	r1, r9
+ 843 0582 FFF7FEFF 		bl	__aeabi_dadd
+ 844              	.LVL50:
+ 327:StandTurn_Balance.c ****       3.814697265625E-6 * StandTurn_Balance_DW.Kd_turn + (rtb_Add_a *
+ 845              		.loc 1 327 29 view .LVU274
+ 846 0586 C7E90001 		strd	r0, [r7]
+ 847 058a 4AE6     		b	.L10
+ 848              	.LVL51:
+ 849              	.L130:
+ 310:StandTurn_Balance.c ****       /* Sum: '<S47>/Add2' */
+ 850              		.loc 1 310 12 is_stmt 1 view .LVU275
+ 310:StandTurn_Balance.c ****       /* Sum: '<S47>/Add2' */
+ 851              		.loc 1 310 15 is_stmt 0 view .LVU276
+ 852 058c 3CA3     		adr	r3, .L173+24
+ 853 058e D3E90023 		ldrd	r2, [r3]
+ 854 0592 4046     		mov	r0, r8
+ 855 0594 4946     		mov	r1, r9
+ 856 0596 FFF7FEFF 		bl	__aeabi_dcmplt
+ 857              	.LVL52:
+ 858 059a 0028     		cmp	r0, #0
+ 859 059c C4D0     		beq	.L13
+ 312:StandTurn_Balance.c ****     }
+ 860              		.loc 1 312 7 is_stmt 1 view .LVU277
+ 312:StandTurn_Balance.c ****     }
+ 861              		.loc 1 312 43 is_stmt 0 view .LVU278
+ 862 059e 414B     		ldr	r3, .L173+60
+ 863 05a0 37A1     		adr	r1, .L173+24
+ 864 05a2 D1E90001 		ldrd	r0, [r1]
+ 865 05a6 C3E90201 		strd	r0, [r3, #8]
+ 866 05aa BDE7     		b	.L13
+ 867              	.LVL53:
+ 868              	.L151:
+ 869              	.LBB2:
+ 343:StandTurn_Balance.c **** 
+ 870              		.loc 1 343 5 is_stmt 1 view .LVU279
+ 346:StandTurn_Balance.c ****       tmp = (int16_T)-StandTurn_Balance_B.angle[1];
+ 871              		.loc 1 346 5 view .LVU280
+ 346:StandTurn_Balance.c ****       tmp = (int16_T)-StandTurn_Balance_B.angle[1];
+ 872              		.loc 1 346 34 is_stmt 0 view .LVU281
+ 873 05ac 3A4B     		ldr	r3, .L173+48
+ 874 05ae B3F95A00 		ldrsh	r0, [r3, #90]
+ 346:StandTurn_Balance.c ****       tmp = (int16_T)-StandTurn_Balance_B.angle[1];
+ 875              		.loc 1 346 8 view .LVU282
+ 876 05b2 0028     		cmp	r0, #0
+ 877 05b4 3EDB     		blt	.L152
+ 349:StandTurn_Balance.c ****     }
+ 878              		.loc 1 349 11 view .LVU283
+ 879 05b6 0346     		mov	r3, r0
+ 880              	.L16:
+ 881              	.LVL54:
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc6jImNK.s 			page 27
+
+
+ 358:StandTurn_Balance.c ****       rtb_Add_a = 0.0;
+ 882              		.loc 1 358 5 is_stmt 1 view .LVU284
+ 358:StandTurn_Balance.c ****       rtb_Add_a = 0.0;
+ 883              		.loc 1 358 8 is_stmt 0 view .LVU285
+ 884 05b8 40F6AC52 		movw	r2, #3500
+ 885 05bc 9342     		cmp	r3, r2
+ 886 05be 3DDC     		bgt	.L91
+ 361:StandTurn_Balance.c ****         4.76837158203125E-7;
+ 887              		.loc 1 361 7 is_stmt 1 view .LVU286
+ 361:StandTurn_Balance.c ****         4.76837158203125E-7;
+ 888              		.loc 1 361 29 is_stmt 0 view .LVU287
+ 889 05c0 FFF7FEFF 		bl	__aeabi_i2d
+ 890              	.LVL55:
+ 361:StandTurn_Balance.c ****         4.76837158203125E-7;
+ 891              		.loc 1 361 27 view .LVU288
+ 892 05c4 30A3     		adr	r3, .L173+32
+ 893 05c6 D3E90023 		ldrd	r2, [r3]
+ 894 05ca FFF7FEFF 		bl	__aeabi_dmul
+ 895              	.LVL56:
+ 361:StandTurn_Balance.c ****         4.76837158203125E-7;
+ 896              		.loc 1 361 17 view .LVU289
+ 897 05ce 0022     		movs	r2, #0
+ 898 05d0 384B     		ldr	r3, .L173+76
+ 899 05d2 FFF7FEFF 		bl	__aeabi_dmul
+ 900              	.LVL57:
+ 901 05d6 8046     		mov	r8, r0
+ 902 05d8 8946     		mov	r9, r1
+ 903              	.LVL58:
+ 904              	.L17:
+ 377:StandTurn_Balance.c ****       StandTurn_Balance_DW.machine_mid) - rtb_Add_a) * 70.0 + 26214.0 * (real_T)
+ 905              		.loc 1 377 5 is_stmt 1 view .LVU290
+ 377:StandTurn_Balance.c ****       StandTurn_Balance_DW.machine_mid) - rtb_Add_a) * 70.0 + 26214.0 * (real_T)
+ 906              		.loc 1 377 54 is_stmt 0 view .LVU291
+ 907 05da 2F4F     		ldr	r7, .L173+48
+ 377:StandTurn_Balance.c ****       StandTurn_Balance_DW.machine_mid) - rtb_Add_a) * 70.0 + 26214.0 * (real_T)
+ 908              		.loc 1 377 61 view .LVU292
+ 909 05dc 314B     		ldr	r3, .L173+60
+ 910 05de D3E90C23 		ldrd	r2, [r3, #48]
+ 911 05e2 D7E90201 		ldrd	r0, [r7, #8]
+ 912 05e6 FFF7FEFF 		bl	__aeabi_dadd
+ 913              	.LVL59:
+ 378:StandTurn_Balance.c ****       StandTurn_Balance_B.anglev[0] * 3.814697265625E-6 * 0.1;
+ 914              		.loc 1 378 41 view .LVU293
+ 915 05ea 4246     		mov	r2, r8
+ 916 05ec 4B46     		mov	r3, r9
+ 917 05ee FFF7FEFF 		bl	__aeabi_dsub
+ 918              	.LVL60:
+ 378:StandTurn_Balance.c ****       StandTurn_Balance_B.anglev[0] * 3.814697265625E-6 * 0.1;
+ 919              		.loc 1 378 54 view .LVU294
+ 920 05f2 0022     		movs	r2, #0
+ 921 05f4 304B     		ldr	r3, .L173+80
+ 922 05f6 FFF7FEFF 		bl	__aeabi_dmul
+ 923              	.LVL61:
+ 924 05fa 8046     		mov	r8, r0
+ 925              	.LVL62:
+ 378:StandTurn_Balance.c ****       StandTurn_Balance_B.anglev[0] * 3.814697265625E-6 * 0.1;
+ 926              		.loc 1 378 54 view .LVU295
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc6jImNK.s 			page 28
+
+
+ 927 05fc 8946     		mov	r9, r1
+ 378:StandTurn_Balance.c ****       StandTurn_Balance_B.anglev[0] * 3.814697265625E-6 * 0.1;
+ 928              		.loc 1 378 73 view .LVU296
+ 929 05fe B7F95E00 		ldrsh	r0, [r7, #94]
+ 930 0602 FFF7FEFF 		bl	__aeabi_i2d
+ 931              	.LVL63:
+ 378:StandTurn_Balance.c ****       StandTurn_Balance_B.anglev[0] * 3.814697265625E-6 * 0.1;
+ 932              		.loc 1 378 71 view .LVU297
+ 933 0606 1CA3     		adr	r3, .L173+16
+ 934 0608 D3E90023 		ldrd	r2, [r3]
+ 935 060c FFF7FEFF 		bl	__aeabi_dmul
+ 936              	.LVL64:
+ 379:StandTurn_Balance.c ****   }
+ 937              		.loc 1 379 37 view .LVU298
+ 938 0610 0022     		movs	r2, #0
+ 939 0612 264B     		ldr	r3, .L173+68
+ 940 0614 FFF7FEFF 		bl	__aeabi_dmul
+ 941              	.LVL65:
+ 379:StandTurn_Balance.c ****   }
+ 942              		.loc 1 379 57 view .LVU299
+ 943 0618 1DA3     		adr	r3, .L173+40
+ 944 061a D3E90023 		ldrd	r2, [r3]
+ 945 061e FFF7FEFF 		bl	__aeabi_dmul
+ 946              	.LVL66:
+ 947 0622 0246     		mov	r2, r0
+ 948 0624 0B46     		mov	r3, r1
+ 378:StandTurn_Balance.c ****       StandTurn_Balance_B.anglev[0] * 3.814697265625E-6 * 0.1;
+ 949              		.loc 1 378 61 view .LVU300
+ 950 0626 4046     		mov	r0, r8
+ 951 0628 4946     		mov	r1, r9
+ 952 062a FFF7FEFF 		bl	__aeabi_dadd
+ 953              	.LVL67:
+ 377:StandTurn_Balance.c ****       StandTurn_Balance_DW.machine_mid) - rtb_Add_a) * 70.0 + 26214.0 * (real_T)
+ 954              		.loc 1 377 31 view .LVU301
+ 955 062e C7E90401 		strd	r0, [r7, #16]
+ 956 0632 FCE5     		b	.L15
+ 957              	.L152:
+ 347:StandTurn_Balance.c ****     } else {
+ 958              		.loc 1 347 7 is_stmt 1 view .LVU302
+ 347:StandTurn_Balance.c ****     } else {
+ 959              		.loc 1 347 48 is_stmt 0 view .LVU303
+ 960 0634 83B2     		uxth	r3, r0
+ 347:StandTurn_Balance.c ****     } else {
+ 961              		.loc 1 347 13 view .LVU304
+ 962 0636 5B42     		rsbs	r3, r3, #0
+ 347:StandTurn_Balance.c ****     } else {
+ 963              		.loc 1 347 11 view .LVU305
+ 964 0638 1BB2     		sxth	r3, r3
+ 965              	.LVL68:
+ 347:StandTurn_Balance.c ****     } else {
+ 966              		.loc 1 347 11 view .LVU306
+ 967 063a BDE7     		b	.L16
+ 968              	.L91:
+ 359:StandTurn_Balance.c ****     } else {
+ 969              		.loc 1 359 17 view .LVU307
+ 970 063c 4FF00008 		mov	r8, #0
+ 971 0640 4FF00009 		mov	r9, #0
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc6jImNK.s 			page 29
+
+
+ 972 0644 C9E7     		b	.L17
+ 973              	.LVL69:
+ 974              	.L18:
+ 359:StandTurn_Balance.c ****     } else {
+ 975              		.loc 1 359 17 view .LVU308
+ 976              	.LBE2:
+ 394:StandTurn_Balance.c ****   }
+ 977              		.loc 1 394 5 is_stmt 1 view .LVU309
+ 394:StandTurn_Balance.c ****   }
+ 978              		.loc 1 394 42 is_stmt 0 view .LVU310
+ 979 0646 174B     		ldr	r3, .L173+60
+ 980 0648 83F80B61 		strb	r6, [r3, #267]
+ 981 064c F8E5     		b	.L19
+ 982              	.L20:
+ 408:StandTurn_Balance.c ****   }
+ 983              		.loc 1 408 5 is_stmt 1 view .LVU311
+ 408:StandTurn_Balance.c ****   }
+ 984              		.loc 1 408 39 is_stmt 0 view .LVU312
+ 985 064e 154B     		ldr	r3, .L173+60
+ 986 0650 83F80841 		strb	r4, [r3, #264]
+ 987 0654 FDE5     		b	.L21
+ 988              	.L22:
+ 422:StandTurn_Balance.c ****   }
+ 989              		.loc 1 422 5 is_stmt 1 view .LVU313
+ 422:StandTurn_Balance.c ****   }
+ 990              		.loc 1 422 41 is_stmt 0 view .LVU314
+ 991 0656 134B     		ldr	r3, .L173+60
+ 992 0658 83F809A1 		strb	r10, [r3, #265]
+ 993 065c 05E6     		b	.L23
+ 994              	.L24:
+ 436:StandTurn_Balance.c ****   }
+ 995              		.loc 1 436 5 is_stmt 1 view .LVU315
+ 436:StandTurn_Balance.c ****   }
+ 996              		.loc 1 436 41 is_stmt 0 view .LVU316
+ 997 065e 114B     		ldr	r3, .L173+60
+ 998 0660 83F80A51 		strb	r5, [r3, #266]
+ 999 0664 0AE6     		b	.L25
+ 1000              	.L174:
+ 1001 0666 00BF     		.align	3
+ 1002              	.L173:
+ 1003 0668 FCA9F1D2 		.word	-755914244
+ 1004 066c 4D62503F 		.word	1062232653
+ 1005 0670 7B14AE47 		.word	1202590843
+ 1006 0674 E17A843F 		.word	1065646817
+ 1007 0678 00000000 		.word	0
+ 1008 067c 8099D940 		.word	1088002432
+ 1009 0680 00000000 		.word	0
+ 1010 0684 00409FC0 		.word	-1063305216
+ 1011 0688 00000000 		.word	0
+ 1012 068c 007BD440 		.word	1087666944
+ 1013 0690 9A999999 		.word	-1717986918
+ 1014 0694 9999B93F 		.word	1069128089
+ 1015 0698 00000000 		.word	.LANCHOR0
+ 1016 069c 52B87E3F 		.word	1065269330
+ 1017 06a0 0080BB44 		.word	1153138688
+ 1018 06a4 00000000 		.word	.LANCHOR1
+ 1019 06a8 0080BBC4 		.word	-994344960
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc6jImNK.s 			page 30
+
+
+ 1020 06ac 0000D03E 		.word	1053818880
+ 1021 06b0 00409F40 		.word	1084178432
+ 1022 06b4 0000A03E 		.word	1050673152
+ 1023 06b8 00805140 		.word	1079083008
+ 1024              	.LVL70:
+ 1025              	.L92:
+ 458:StandTurn_Balance.c ****   } else if (rtb_Add_a < -2048.0) {
+ 1026              		.loc 1 458 15 view .LVU317
+ 1027 06bc 9FEDC68B 		vldr.64	d8, .L175
+ 1028              	.LVL71:
+ 1029              	.L26:
+ 461:StandTurn_Balance.c ****   }
+ 462:StandTurn_Balance.c **** 
+ 463:StandTurn_Balance.c ****   rtb_Add_a = floor(rtb_Add_a);
+ 1030              		.loc 1 463 3 is_stmt 1 view .LVU318
+ 1031              		.loc 1 463 15 is_stmt 0 view .LVU319
+ 1032 06c0 B0EE480A 		vmov.f32	s0, s16
+ 1033 06c4 F0EE680A 		vmov.f32	s1, s17
+ 1034 06c8 FFF7FEFF 		bl	floor
+ 1035              	.LVL72:
+ 1036 06cc B0EE408A 		vmov.f32	s16, s0
+ 1037 06d0 F0EE608A 		vmov.f32	s17, s1
+ 1038              	.LVL73:
+ 464:StandTurn_Balance.c ****   if (rtIsNaN(rtb_Add_a)) {
+ 1039              		.loc 1 464 3 is_stmt 1 view .LVU320
+ 1040              		.loc 1 464 7 is_stmt 0 view .LVU321
+ 1041 06d4 FFF7FEFF 		bl	rtIsNaN
+ 1042              	.LVL74:
+ 1043              		.loc 1 464 6 view .LVU322
+ 1044 06d8 0028     		cmp	r0, #0
+ 1045 06da 3BD0     		beq	.L153
+ 465:StandTurn_Balance.c ****     rtb_Add_a = 0.0;
+ 1046              		.loc 1 465 15 view .LVU323
+ 1047 06dc 0024     		movs	r4, #0
+ 1048 06de 0025     		movs	r5, #0
+ 1049              	.LVL75:
+ 1050              	.L27:
+ 466:StandTurn_Balance.c ****   } else {
+ 467:StandTurn_Balance.c ****     rtb_Add_a = fmod(rtb_Add_a, 65536.0);
+ 468:StandTurn_Balance.c ****   }
+ 469:StandTurn_Balance.c **** 
+ 470:StandTurn_Balance.c ****   /* Switch: '<S19>/Switch1' incorporates:
+ 471:StandTurn_Balance.c ****    *  Saturate: '<Root>/Saturation3'
+ 472:StandTurn_Balance.c ****    */
+ 473:StandTurn_Balance.c ****   StandTurn_Balance_B.Saturation = (int16_T)(rtb_Add_a < 0.0 ? (int32_T)(int16_T)
+ 1051              		.loc 1 473 3 is_stmt 1 view .LVU324
+ 1052              		.loc 1 473 36 is_stmt 0 view .LVU325
+ 1053 06e0 0022     		movs	r2, #0
+ 1054 06e2 0023     		movs	r3, #0
+ 1055 06e4 2046     		mov	r0, r4
+ 1056 06e6 2946     		mov	r1, r5
+ 1057 06e8 FFF7FEFF 		bl	__aeabi_dcmplt
+ 1058              	.LVL76:
+ 1059 06ec 0028     		cmp	r0, #0
+ 1060 06ee 3CD1     		bne	.L154
+ 474:StandTurn_Balance.c ****     -(int16_T)(uint16_T)-rtb_Add_a : (int32_T)(int16_T)(uint16_T)rtb_Add_a);
+ 1061              		.loc 1 474 56 discriminator 2 view .LVU326
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc6jImNK.s 			page 31
+
+
+ 1062 06f0 2046     		mov	r0, r4
+ 1063 06f2 2946     		mov	r1, r5
+ 1064 06f4 FFF7FEFF 		bl	__aeabi_d2uiz
+ 1065              	.LVL77:
+ 473:StandTurn_Balance.c ****     -(int16_T)(uint16_T)-rtb_Add_a : (int32_T)(int16_T)(uint16_T)rtb_Add_a);
+ 1066              		.loc 1 473 36 discriminator 2 view .LVU327
+ 1067 06f8 00B2     		sxth	r0, r0
+ 1068              	.L30:
+ 473:StandTurn_Balance.c ****     -(int16_T)(uint16_T)-rtb_Add_a : (int32_T)(int16_T)(uint16_T)rtb_Add_a);
+ 1069              		.loc 1 473 34 discriminator 4 view .LVU328
+ 1070 06fa C14B     		ldr	r3, .L175+40
+ 1071 06fc A3F87800 		strh	r0, [r3, #120]	@ movhi
+ 475:StandTurn_Balance.c **** 
+ 476:StandTurn_Balance.c ****   /* RateLimiter: '<Root>/Rate Limiter1' */
+ 477:StandTurn_Balance.c ****   if (StandTurn_Balance_B.Saturation - StandTurn_Balance_DW.PrevY > 5) {
+ 1072              		.loc 1 477 3 is_stmt 1 discriminator 4 view .LVU329
+ 1073              		.loc 1 477 60 is_stmt 0 discriminator 4 view .LVU330
+ 1074 0700 C04B     		ldr	r3, .L175+44
+ 1075 0702 B3F90431 		ldrsh	r3, [r3, #260]
+ 1076              		.loc 1 477 38 discriminator 4 view .LVU331
+ 1077 0706 C01A     		subs	r0, r0, r3
+ 1078              		.loc 1 477 6 discriminator 4 view .LVU332
+ 1079 0708 0528     		cmp	r0, #5
+ 1080 070a 37DD     		ble	.L31
+ 478:StandTurn_Balance.c ****     /* Switch: '<S19>/Switch1' */
+ 479:StandTurn_Balance.c ****     StandTurn_Balance_B.Saturation = (int16_T)(StandTurn_Balance_DW.PrevY + 5);
+ 1081              		.loc 1 479 5 is_stmt 1 view .LVU333
+ 1082              		.loc 1 479 68 is_stmt 0 view .LVU334
+ 1083 070c 9BB2     		uxth	r3, r3
+ 1084              		.loc 1 479 75 view .LVU335
+ 1085 070e 0533     		adds	r3, r3, #5
+ 1086              		.loc 1 479 36 view .LVU336
+ 1087 0710 BB4A     		ldr	r2, .L175+40
+ 1088 0712 A2F87830 		strh	r3, [r2, #120]	@ movhi
+ 1089              	.L32:
+ 480:StandTurn_Balance.c ****   } else if (StandTurn_Balance_B.Saturation - StandTurn_Balance_DW.PrevY < -5) {
+ 481:StandTurn_Balance.c ****     /* Switch: '<S19>/Switch1' */
+ 482:StandTurn_Balance.c ****     StandTurn_Balance_B.Saturation = (int16_T)(StandTurn_Balance_DW.PrevY + -5);
+ 483:StandTurn_Balance.c ****   }
+ 484:StandTurn_Balance.c **** 
+ 485:StandTurn_Balance.c ****   StandTurn_Balance_DW.PrevY = StandTurn_Balance_B.Saturation;
+ 1090              		.loc 1 485 3 is_stmt 1 view .LVU337
+ 1091              		.loc 1 485 51 is_stmt 0 view .LVU338
+ 1092 0716 BA49     		ldr	r1, .L175+40
+ 1093 0718 B1F97820 		ldrsh	r2, [r1, #120]
+ 1094              		.loc 1 485 30 view .LVU339
+ 1095 071c B94B     		ldr	r3, .L175+44
+ 1096 071e A3F80421 		strh	r2, [r3, #260]	@ movhi
+ 486:StandTurn_Balance.c **** 
+ 487:StandTurn_Balance.c ****   /* End of RateLimiter: '<Root>/Rate Limiter1' */
+ 488:StandTurn_Balance.c **** 
+ 489:StandTurn_Balance.c ****   /* Sum: '<Root>/Add3' */
+ 490:StandTurn_Balance.c ****   rtb_Add_a = StandTurn_Balance_B.Add_o - StandTurn_Balance_B.Add;
+ 1097              		.loc 1 490 3 is_stmt 1 view .LVU340
+ 1098              		.loc 1 490 13 is_stmt 0 view .LVU341
+ 1099 0722 D1E90023 		ldrd	r2, [r1]
+ 1100 0726 D1E90401 		ldrd	r0, [r1, #16]
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc6jImNK.s 			page 32
+
+
+ 1101 072a FFF7FEFF 		bl	__aeabi_dsub
+ 1102              	.LVL78:
+ 1103 072e 0246     		mov	r2, r0
+ 1104 0730 0B46     		mov	r3, r1
+ 1105 0732 43EC182B 		vmov	d8, r2, r3
+ 1106              	.LVL79:
+ 491:StandTurn_Balance.c **** 
+ 492:StandTurn_Balance.c ****   /* Saturate: '<Root>/Saturation2' */
+ 493:StandTurn_Balance.c ****   if (rtb_Add_a > 2048.0) {
+ 1107              		.loc 1 493 3 is_stmt 1 view .LVU342
+ 1108              		.loc 1 493 6 is_stmt 0 view .LVU343
+ 1109 0736 0022     		movs	r2, #0
+ 1110              	.LVL80:
+ 1111              		.loc 1 493 6 view .LVU344
+ 1112 0738 B34B     		ldr	r3, .L175+48
+ 1113 073a FFF7FEFF 		bl	__aeabi_dcmpgt
+ 1114              	.LVL81:
+ 1115 073e 30BB     		cbnz	r0, .L95
+ 494:StandTurn_Balance.c ****     rtb_Add_a = 2048.0;
+ 495:StandTurn_Balance.c ****   } else if (rtb_Add_a < -2048.0) {
+ 1116              		.loc 1 495 10 is_stmt 1 view .LVU345
+ 1117              		.loc 1 495 13 is_stmt 0 view .LVU346
+ 1118 0740 0022     		movs	r2, #0
+ 1119 0742 B24B     		ldr	r3, .L175+52
+ 1120 0744 51EC180B 		vmov	r0, r1, d8
+ 1121 0748 FFF7FEFF 		bl	__aeabi_dcmplt
+ 1122              	.LVL82:
+ 1123 074c 08B3     		cbz	r0, .L33
+ 496:StandTurn_Balance.c ****     rtb_Add_a = -2048.0;
+ 1124              		.loc 1 496 15 view .LVU347
+ 1125 074e 9FEDA48B 		vldr.64	d8, .L175+8
+ 1126              	.LVL83:
+ 1127              		.loc 1 496 15 view .LVU348
+ 1128 0752 1EE0     		b	.L33
+ 1129              	.LVL84:
+ 1130              	.L153:
+ 467:StandTurn_Balance.c ****   }
+ 1131              		.loc 1 467 5 is_stmt 1 view .LVU349
+ 467:StandTurn_Balance.c ****   }
+ 1132              		.loc 1 467 17 is_stmt 0 view .LVU350
+ 1133 0754 9FEDA41B 		vldr.64	d1, .L175+16
+ 1134 0758 B0EE480A 		vmov.f32	s0, s16
+ 1135 075c F0EE680A 		vmov.f32	s1, s17
+ 1136 0760 FFF7FEFF 		bl	fmod
+ 1137              	.LVL85:
+ 1138 0764 55EC104B 		vmov	r4, r5, d0
+ 1139              	.LVL86:
+ 467:StandTurn_Balance.c ****   }
+ 1140              		.loc 1 467 17 view .LVU351
+ 1141 0768 BAE7     		b	.L27
+ 1142              	.L154:
+ 474:StandTurn_Balance.c **** 
+ 1143              		.loc 1 474 25 discriminator 1 view .LVU352
+ 1144 076a 2046     		mov	r0, r4
+ 1145 076c 05F10041 		add	r1, r5, #-2147483648
+ 474:StandTurn_Balance.c **** 
+ 1146              		.loc 1 474 15 discriminator 1 view .LVU353
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc6jImNK.s 			page 33
+
+
+ 1147 0770 FFF7FEFF 		bl	__aeabi_d2uiz
+ 1148              	.LVL87:
+ 1149 0774 80B2     		uxth	r0, r0
+ 473:StandTurn_Balance.c ****     -(int16_T)(uint16_T)-rtb_Add_a : (int32_T)(int16_T)(uint16_T)rtb_Add_a);
+ 1150              		.loc 1 473 73 discriminator 1 view .LVU354
+ 1151 0776 4042     		rsbs	r0, r0, #0
+ 473:StandTurn_Balance.c ****     -(int16_T)(uint16_T)-rtb_Add_a : (int32_T)(int16_T)(uint16_T)rtb_Add_a);
+ 1152              		.loc 1 473 36 discriminator 1 view .LVU355
+ 1153 0778 00B2     		sxth	r0, r0
+ 1154 077a BEE7     		b	.L30
+ 1155              	.L31:
+ 480:StandTurn_Balance.c ****     /* Switch: '<S19>/Switch1' */
+ 1156              		.loc 1 480 10 is_stmt 1 view .LVU356
+ 480:StandTurn_Balance.c ****     /* Switch: '<S19>/Switch1' */
+ 1157              		.loc 1 480 13 is_stmt 0 view .LVU357
+ 1158 077c 10F1050F 		cmn	r0, #5
+ 1159 0780 C9DA     		bge	.L32
+ 482:StandTurn_Balance.c ****   }
+ 1160              		.loc 1 482 5 is_stmt 1 view .LVU358
+ 482:StandTurn_Balance.c ****   }
+ 1161              		.loc 1 482 68 is_stmt 0 view .LVU359
+ 1162 0782 9BB2     		uxth	r3, r3
+ 482:StandTurn_Balance.c ****   }
+ 1163              		.loc 1 482 75 view .LVU360
+ 1164 0784 053B     		subs	r3, r3, #5
+ 482:StandTurn_Balance.c ****   }
+ 1165              		.loc 1 482 36 view .LVU361
+ 1166 0786 9E4A     		ldr	r2, .L175+40
+ 1167 0788 A2F87830 		strh	r3, [r2, #120]	@ movhi
+ 1168 078c C3E7     		b	.L32
+ 1169              	.LVL88:
+ 1170              	.L95:
+ 494:StandTurn_Balance.c ****   } else if (rtb_Add_a < -2048.0) {
+ 1171              		.loc 1 494 15 view .LVU362
+ 1172 078e 9FED928B 		vldr.64	d8, .L175
+ 1173              	.LVL89:
+ 1174              	.L33:
+ 497:StandTurn_Balance.c ****   }
+ 498:StandTurn_Balance.c **** 
+ 499:StandTurn_Balance.c ****   rtb_Add_a = floor(rtb_Add_a);
+ 1175              		.loc 1 499 3 is_stmt 1 view .LVU363
+ 1176              		.loc 1 499 15 is_stmt 0 view .LVU364
+ 1177 0792 B0EE480A 		vmov.f32	s0, s16
+ 1178 0796 F0EE680A 		vmov.f32	s1, s17
+ 1179 079a FFF7FEFF 		bl	floor
+ 1180              	.LVL90:
+ 1181 079e B0EE408A 		vmov.f32	s16, s0
+ 1182 07a2 F0EE608A 		vmov.f32	s17, s1
+ 1183              	.LVL91:
+ 500:StandTurn_Balance.c ****   if (rtIsNaN(rtb_Add_a)) {
+ 1184              		.loc 1 500 3 is_stmt 1 view .LVU365
+ 1185              		.loc 1 500 7 is_stmt 0 view .LVU366
+ 1186 07a6 FFF7FEFF 		bl	rtIsNaN
+ 1187              	.LVL92:
+ 1188              		.loc 1 500 6 view .LVU367
+ 1189 07aa 0028     		cmp	r0, #0
+ 1190 07ac 00F08A80 		beq	.L155
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc6jImNK.s 			page 34
+
+
+ 501:StandTurn_Balance.c ****     rtb_Add_a = 0.0;
+ 1191              		.loc 1 501 15 view .LVU368
+ 1192 07b0 0024     		movs	r4, #0
+ 1193 07b2 0025     		movs	r5, #0
+ 1194              	.LVL93:
+ 1195              	.L34:
+ 502:StandTurn_Balance.c ****   } else {
+ 503:StandTurn_Balance.c ****     rtb_Add_a = fmod(rtb_Add_a, 65536.0);
+ 504:StandTurn_Balance.c ****   }
+ 505:StandTurn_Balance.c **** 
+ 506:StandTurn_Balance.c ****   /* Switch: '<S20>/Switch1' incorporates:
+ 507:StandTurn_Balance.c ****    *  Saturate: '<Root>/Saturation2'
+ 508:StandTurn_Balance.c ****    */
+ 509:StandTurn_Balance.c ****   StandTurn_Balance_B.Saturation1 = (int16_T)(rtb_Add_a < 0.0 ? (int32_T)
+ 1196              		.loc 1 509 3 is_stmt 1 view .LVU369
+ 1197              		.loc 1 509 37 is_stmt 0 view .LVU370
+ 1198 07b4 0022     		movs	r2, #0
+ 1199 07b6 0023     		movs	r3, #0
+ 1200 07b8 2046     		mov	r0, r4
+ 1201 07ba 2946     		mov	r1, r5
+ 1202 07bc FFF7FEFF 		bl	__aeabi_dcmplt
+ 1203              	.LVL94:
+ 1204 07c0 0028     		cmp	r0, #0
+ 1205 07c2 40F08A80 		bne	.L156
+ 510:StandTurn_Balance.c ****     (int16_T)-(int16_T)(uint16_T)-rtb_Add_a : (int32_T)(int16_T)(uint16_T)
+ 1206              		.loc 1 510 65 discriminator 2 view .LVU371
+ 1207 07c6 2046     		mov	r0, r4
+ 1208 07c8 2946     		mov	r1, r5
+ 1209 07ca FFF7FEFF 		bl	__aeabi_d2uiz
+ 1210              	.LVL95:
+ 509:StandTurn_Balance.c ****     (int16_T)-(int16_T)(uint16_T)-rtb_Add_a : (int32_T)(int16_T)(uint16_T)
+ 1211              		.loc 1 509 37 discriminator 2 view .LVU372
+ 1212 07ce 00B2     		sxth	r0, r0
+ 1213              	.L37:
+ 509:StandTurn_Balance.c ****     (int16_T)-(int16_T)(uint16_T)-rtb_Add_a : (int32_T)(int16_T)(uint16_T)
+ 1214              		.loc 1 509 35 discriminator 4 view .LVU373
+ 1215 07d0 8B4B     		ldr	r3, .L175+40
+ 1216 07d2 A3F87A00 		strh	r0, [r3, #122]	@ movhi
+ 511:StandTurn_Balance.c ****     rtb_Add_a);
+ 512:StandTurn_Balance.c **** 
+ 513:StandTurn_Balance.c ****   /* RateLimiter: '<Root>/Rate Limiter2' */
+ 514:StandTurn_Balance.c ****   rtb_Add1_m = StandTurn_Balance_B.Saturation1 - StandTurn_Balance_DW.PrevY_n;
+ 1217              		.loc 1 514 3 is_stmt 1 discriminator 4 view .LVU374
+ 1218              		.loc 1 514 70 is_stmt 0 discriminator 4 view .LVU375
+ 1219 07d6 8B4B     		ldr	r3, .L175+44
+ 1220 07d8 B3F90631 		ldrsh	r3, [r3, #262]
+ 1221              		.loc 1 514 14 discriminator 4 view .LVU376
+ 1222 07dc C01A     		subs	r0, r0, r3
+ 1223              	.LVL96:
+ 515:StandTurn_Balance.c ****   if (rtb_Add1_m > 5) {
+ 1224              		.loc 1 515 3 is_stmt 1 discriminator 4 view .LVU377
+ 1225              		.loc 1 515 6 is_stmt 0 discriminator 4 view .LVU378
+ 1226 07de 0528     		cmp	r0, #5
+ 1227 07e0 40F38480 		ble	.L38
+ 516:StandTurn_Balance.c ****     /* Switch: '<S20>/Switch1' */
+ 517:StandTurn_Balance.c ****     StandTurn_Balance_B.Saturation1 = (int16_T)(StandTurn_Balance_DW.PrevY_n + 5);
+ 1228              		.loc 1 517 5 is_stmt 1 view .LVU379
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc6jImNK.s 			page 35
+
+
+ 1229              		.loc 1 517 69 is_stmt 0 view .LVU380
+ 1230 07e4 9BB2     		uxth	r3, r3
+ 1231              		.loc 1 517 78 view .LVU381
+ 1232 07e6 0533     		adds	r3, r3, #5
+ 1233              		.loc 1 517 37 view .LVU382
+ 1234 07e8 854A     		ldr	r2, .L175+40
+ 1235 07ea A2F87A30 		strh	r3, [r2, #122]	@ movhi
+ 1236              	.L39:
+ 518:StandTurn_Balance.c ****   } else if (rtb_Add1_m < -5) {
+ 519:StandTurn_Balance.c ****     /* Switch: '<S20>/Switch1' */
+ 520:StandTurn_Balance.c ****     StandTurn_Balance_B.Saturation1 = (int16_T)(StandTurn_Balance_DW.PrevY_n +
+ 521:StandTurn_Balance.c ****       -5);
+ 522:StandTurn_Balance.c ****   }
+ 523:StandTurn_Balance.c **** 
+ 524:StandTurn_Balance.c ****   StandTurn_Balance_DW.PrevY_n = StandTurn_Balance_B.Saturation1;
+ 1237              		.loc 1 524 3 is_stmt 1 view .LVU383
+ 1238              		.loc 1 524 53 is_stmt 0 view .LVU384
+ 1239 07ee 844B     		ldr	r3, .L175+40
+ 1240 07f0 B3F97A20 		ldrsh	r2, [r3, #122]
+ 1241              		.loc 1 524 32 view .LVU385
+ 1242 07f4 834C     		ldr	r4, .L175+44
+ 1243              	.LVL97:
+ 1244              		.loc 1 524 32 view .LVU386
+ 1245 07f6 A4F80621 		strh	r2, [r4, #262]	@ movhi
+ 525:StandTurn_Balance.c **** 
+ 526:StandTurn_Balance.c ****   /* End of RateLimiter: '<Root>/Rate Limiter2' */
+ 527:StandTurn_Balance.c **** 
+ 528:StandTurn_Balance.c ****   /* Sum: '<S31>/Add1' incorporates:
+ 529:StandTurn_Balance.c ****    *  DataStoreWrite: '<Root>/Data Store Write6'
+ 530:StandTurn_Balance.c ****    *  Delay: '<S12>/Delay One Step'
+ 531:StandTurn_Balance.c ****    */
+ 532:StandTurn_Balance.c ****   rtb_Add1_o = (real32_T)StandTurn_Balance_B.Saturation -
+ 1246              		.loc 1 532 3 is_stmt 1 view .LVU387
+ 1247              		.loc 1 532 45 is_stmt 0 view .LVU388
+ 1248 07fa B3F97830 		ldrsh	r3, [r3, #120]
+ 1249 07fe 08EE903A 		vmov	s17, r3	@ int
+ 1250              		.loc 1 532 16 view .LVU389
+ 1251 0802 F8EEE88A 		vcvt.f32.s32	s17, s17
+ 533:StandTurn_Balance.c ****     StandTurn_Balance_DW.DelayOneStep_DSTATE;
+ 1252              		.loc 1 533 25 view .LVU390
+ 1253 0806 94ED0E8A 		vldr.32	s16, [r4, #56]
+ 532:StandTurn_Balance.c ****     StandTurn_Balance_DW.DelayOneStep_DSTATE;
+ 1254              		.loc 1 532 14 view .LVU391
+ 1255 080a 78EEC88A 		vsub.f32	s17, s17, s16
+ 1256              	.LVL98:
+ 534:StandTurn_Balance.c **** 
+ 535:StandTurn_Balance.c ****   /* Sum: '<S34>/Add2' incorporates:
+ 536:StandTurn_Balance.c ****    *  Constant: '<S34>/Constant1'
+ 537:StandTurn_Balance.c ****    *  Delay: '<S34>/Delay'
+ 538:StandTurn_Balance.c ****    *  Gain: '<S34>/Gain'
+ 539:StandTurn_Balance.c ****    *  Product: '<S34>/Product3'
+ 540:StandTurn_Balance.c ****    */
+ 541:StandTurn_Balance.c ****   StandTurn_Balance_DW.Delay_DSTATE += (real32_T)(0.03 * rtb_Add1_o);
+ 1257              		.loc 1 541 3 is_stmt 1 view .LVU392
+ 1258              		.loc 1 541 56 is_stmt 0 view .LVU393
+ 1259 080e 18EE900A 		vmov	r0, s17
+ 1260              	.LVL99:
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc6jImNK.s 			page 36
+
+
+ 1261              		.loc 1 541 56 view .LVU394
+ 1262 0812 FFF7FEFF 		bl	__aeabi_f2d
+ 1263              	.LVL100:
+ 1264 0816 0646     		mov	r6, r0
+ 1265 0818 0F46     		mov	r7, r1
+ 1266 081a 75A3     		adr	r3, .L175+24
+ 1267 081c D3E90023 		ldrd	r2, [r3]
+ 1268 0820 FFF7FEFF 		bl	__aeabi_dmul
+ 1269              	.LVL101:
+ 1270              		.loc 1 541 40 view .LVU395
+ 1271 0824 FFF7FEFF 		bl	__aeabi_d2f
+ 1272              	.LVL102:
+ 1273 0828 FFF7FEFF 		bl	__aeabi_f2d
+ 1274              	.LVL103:
+ 1275              		.loc 1 541 37 view .LVU396
+ 1276 082c D4E90023 		ldrd	r2, [r4]
+ 1277 0830 FFF7FEFF 		bl	__aeabi_dadd
+ 1278              	.LVL104:
+ 1279 0834 8046     		mov	r8, r0
+ 1280 0836 8946     		mov	r9, r1
+ 1281 0838 C4E90089 		strd	r8, [r4]
+ 542:StandTurn_Balance.c **** 
+ 543:StandTurn_Balance.c ****   /* Saturate: '<S34>/Saturation' */
+ 544:StandTurn_Balance.c ****   if (StandTurn_Balance_DW.Delay_DSTATE > 2000.0) {
+ 1282              		.loc 1 544 3 is_stmt 1 view .LVU397
+ 1283              		.loc 1 544 6 is_stmt 0 view .LVU398
+ 1284 083c 0022     		movs	r2, #0
+ 1285 083e 744B     		ldr	r3, .L175+56
+ 1286 0840 FFF7FEFF 		bl	__aeabi_dcmpgt
+ 1287              	.LVL105:
+ 1288 0844 0028     		cmp	r0, #0
+ 1289 0846 5BD0     		beq	.L133
+ 545:StandTurn_Balance.c ****     /* Sum: '<S34>/Add2' */
+ 546:StandTurn_Balance.c ****     StandTurn_Balance_DW.Delay_DSTATE = 2000.0;
+ 1290              		.loc 1 546 5 is_stmt 1 view .LVU399
+ 1291              		.loc 1 546 39 is_stmt 0 view .LVU400
+ 1292 0848 0020     		movs	r0, #0
+ 1293 084a 7149     		ldr	r1, .L175+56
+ 1294 084c C4E90001 		strd	r0, [r4]
+ 1295              	.L42:
+ 547:StandTurn_Balance.c ****   } else if (StandTurn_Balance_DW.Delay_DSTATE < -2000.0) {
+ 548:StandTurn_Balance.c ****     /* Sum: '<S34>/Add2' */
+ 549:StandTurn_Balance.c ****     StandTurn_Balance_DW.Delay_DSTATE = -2000.0;
+ 550:StandTurn_Balance.c ****   }
+ 551:StandTurn_Balance.c **** 
+ 552:StandTurn_Balance.c ****   /* End of Saturate: '<S34>/Saturation' */
+ 553:StandTurn_Balance.c **** 
+ 554:StandTurn_Balance.c ****   /* Sum: '<S31>/Add' incorporates:
+ 555:StandTurn_Balance.c ****    *  Constant: '<S33>/Constant2'
+ 556:StandTurn_Balance.c ****    *  Constant: '<S35>/Constant'
+ 557:StandTurn_Balance.c ****    *  Delay: '<S34>/Delay'
+ 558:StandTurn_Balance.c ****    *  Product: '<S33>/Product2'
+ 559:StandTurn_Balance.c ****    *  Product: '<S35>/Product'
+ 560:StandTurn_Balance.c ****    *  Sum: '<S36>/Diff'
+ 561:StandTurn_Balance.c ****    *  UnitDelay: '<S36>/UD'
+ 562:StandTurn_Balance.c ****    *
+ 563:StandTurn_Balance.c ****    * Block description for '<S36>/Diff':
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc6jImNK.s 			page 37
+
+
+ 564:StandTurn_Balance.c ****    *
+ 565:StandTurn_Balance.c ****    *  Add in CPU
+ 566:StandTurn_Balance.c ****    *
+ 567:StandTurn_Balance.c ****    * Block description for '<S36>/UD':
+ 568:StandTurn_Balance.c ****    *
+ 569:StandTurn_Balance.c ****    *  Store in Global RAM
+ 570:StandTurn_Balance.c ****    */
+ 571:StandTurn_Balance.c ****   rtb_Add_a = (7.0 * rtb_Add1_o + StandTurn_Balance_DW.Delay_DSTATE) +
+ 1296              		.loc 1 571 3 is_stmt 1 view .LVU401
+ 1297              		.loc 1 571 20 is_stmt 0 view .LVU402
+ 1298 0850 0022     		movs	r2, #0
+ 1299 0852 704B     		ldr	r3, .L175+60
+ 1300 0854 3046     		mov	r0, r6
+ 1301 0856 3946     		mov	r1, r7
+ 1302 0858 FFF7FEFF 		bl	__aeabi_dmul
+ 1303              	.LVL106:
+ 1304              		.loc 1 571 55 view .LVU403
+ 1305 085c 694C     		ldr	r4, .L175+44
+ 1306              		.loc 1 571 33 view .LVU404
+ 1307 085e D4E90023 		ldrd	r2, [r4]
+ 1308 0862 FFF7FEFF 		bl	__aeabi_dadd
+ 1309              	.LVL107:
+ 1310 0866 0646     		mov	r6, r0
+ 1311 0868 0F46     		mov	r7, r1
+ 572:StandTurn_Balance.c ****     (rtb_Add1_o - StandTurn_Balance_DW.UD_DSTATE) * 5.0;
+ 1312              		.loc 1 572 39 view .LVU405
+ 1313 086a D4ED107A 		vldr.32	s15, [r4, #64]
+ 1314              		.loc 1 572 17 view .LVU406
+ 1315 086e 78EEE77A 		vsub.f32	s15, s17, s15
+ 1316 0872 17EE900A 		vmov	r0, s15
+ 1317 0876 FFF7FEFF 		bl	__aeabi_f2d
+ 1318              	.LVL108:
+ 1319              		.loc 1 572 51 view .LVU407
+ 1320 087a 0022     		movs	r2, #0
+ 1321 087c 664B     		ldr	r3, .L175+64
+ 1322 087e FFF7FEFF 		bl	__aeabi_dmul
+ 1323              	.LVL109:
+ 1324 0882 0246     		mov	r2, r0
+ 1325 0884 0B46     		mov	r3, r1
+ 571:StandTurn_Balance.c ****     (rtb_Add1_o - StandTurn_Balance_DW.UD_DSTATE) * 5.0;
+ 1326              		.loc 1 571 13 view .LVU408
+ 1327 0886 3046     		mov	r0, r6
+ 1328 0888 3946     		mov	r1, r7
+ 1329 088a FFF7FEFF 		bl	__aeabi_dadd
+ 1330              	.LVL110:
+ 1331 088e 0446     		mov	r4, r0
+ 1332 0890 0D46     		mov	r5, r1
+ 1333              	.LVL111:
+ 573:StandTurn_Balance.c **** 
+ 574:StandTurn_Balance.c ****   /* Switch: '<S19>/Switch1' incorporates:
+ 575:StandTurn_Balance.c ****    *  DataStoreWrite: '<Root>/Data Store Write6'
+ 576:StandTurn_Balance.c ****    *  Delay: '<S12>/Delay One Step'
+ 577:StandTurn_Balance.c ****    *  Switch: '<S19>/Switch3'
+ 578:StandTurn_Balance.c ****    */
+ 579:StandTurn_Balance.c ****   if (StandTurn_Balance_DW.DelayOneStep_DSTATE > -30.0F) {
+ 1334              		.loc 1 579 3 is_stmt 1 view .LVU409
+ 1335              		.loc 1 579 6 is_stmt 0 view .LVU410
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc6jImNK.s 			page 38
+
+
+ 1336 0892 FBEE0E7A 		vmov.f32	s15, #-3.0e+1
+ 1337 0896 B4EEE78A 		vcmpe.f32	s16, s15
+ 1338 089a F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 1339 089e 40F3BD80 		ble	.L134
+ 580:StandTurn_Balance.c ****     /* Switch: '<S19>/Switch' */
+ 581:StandTurn_Balance.c ****     if (StandTurn_Balance_DW.DelayOneStep_DSTATE > 30.0F) {
+ 1340              		.loc 1 581 5 is_stmt 1 view .LVU411
+ 1341              		.loc 1 581 8 is_stmt 0 view .LVU412
+ 1342 08a2 F3EE0E7A 		vmov.f32	s15, #3.0e+1
+ 1343 08a6 B4EEE78A 		vcmpe.f32	s16, s15
+ 1344 08aa F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 1345 08ae 57DD     		ble	.L135
+ 582:StandTurn_Balance.c ****       /* Switch: '<S19>/Switch2' */
+ 583:StandTurn_Balance.c ****       if (rtb_Add_a > 0.0) {
+ 1346              		.loc 1 583 7 is_stmt 1 view .LVU413
+ 1347              		.loc 1 583 10 is_stmt 0 view .LVU414
+ 1348 08b0 0022     		movs	r2, #0
+ 1349 08b2 0023     		movs	r3, #0
+ 1350 08b4 FFF7FEFF 		bl	__aeabi_dcmpgt
+ 1351              	.LVL112:
+ 1352 08b8 90BB     		cbnz	r0, .L157
+ 584:StandTurn_Balance.c ****         rtb_Add_a = floor(rtb_Add_a);
+ 585:StandTurn_Balance.c ****         if (rtIsInf(rtb_Add_a)) {
+ 586:StandTurn_Balance.c ****           /* Switch: '<S19>/Switch1' */
+ 587:StandTurn_Balance.c ****           StandTurn_Balance_B.Saturation = 0;
+ 588:StandTurn_Balance.c ****         } else {
+ 589:StandTurn_Balance.c ****           /* Switch: '<S19>/Switch1' */
+ 590:StandTurn_Balance.c ****           StandTurn_Balance_B.Saturation = (int16_T)(int32_T)fmod(rtb_Add_a,
+ 591:StandTurn_Balance.c ****             65536.0);
+ 592:StandTurn_Balance.c ****         }
+ 593:StandTurn_Balance.c ****       } else {
+ 594:StandTurn_Balance.c ****         /* Switch: '<S19>/Switch1' incorporates:
+ 595:StandTurn_Balance.c ****          *  Constant: '<S19>/Constant'
+ 596:StandTurn_Balance.c ****          */
+ 597:StandTurn_Balance.c ****         StandTurn_Balance_B.Saturation = 10;
+ 1353              		.loc 1 597 9 is_stmt 1 view .LVU415
+ 1354              		.loc 1 597 40 is_stmt 0 view .LVU416
+ 1355 08ba 514B     		ldr	r3, .L175+40
+ 1356 08bc 0A22     		movs	r2, #10
+ 1357 08be A3F87820 		strh	r2, [r3, #120]	@ movhi
+ 1358 08c2 B6E0     		b	.L51
+ 1359              	.LVL113:
+ 1360              	.L155:
+ 503:StandTurn_Balance.c ****   }
+ 1361              		.loc 1 503 5 is_stmt 1 view .LVU417
+ 503:StandTurn_Balance.c ****   }
+ 1362              		.loc 1 503 17 is_stmt 0 view .LVU418
+ 1363 08c4 9FED481B 		vldr.64	d1, .L175+16
+ 1364 08c8 B0EE480A 		vmov.f32	s0, s16
+ 1365 08cc F0EE680A 		vmov.f32	s1, s17
+ 1366 08d0 FFF7FEFF 		bl	fmod
+ 1367              	.LVL114:
+ 1368 08d4 55EC104B 		vmov	r4, r5, d0
+ 1369              	.LVL115:
+ 503:StandTurn_Balance.c ****   }
+ 1370              		.loc 1 503 17 view .LVU419
+ 1371 08d8 6CE7     		b	.L34
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc6jImNK.s 			page 39
+
+
+ 1372              	.L156:
+ 510:StandTurn_Balance.c ****     rtb_Add_a);
+ 1373              		.loc 1 510 34 discriminator 1 view .LVU420
+ 1374 08da 2046     		mov	r0, r4
+ 1375 08dc 05F10041 		add	r1, r5, #-2147483648
+ 510:StandTurn_Balance.c ****     rtb_Add_a);
+ 1376              		.loc 1 510 24 discriminator 1 view .LVU421
+ 1377 08e0 FFF7FEFF 		bl	__aeabi_d2uiz
+ 1378              	.LVL116:
+ 1379 08e4 80B2     		uxth	r0, r0
+ 510:StandTurn_Balance.c ****     rtb_Add_a);
+ 1380              		.loc 1 510 5 discriminator 1 view .LVU422
+ 1381 08e6 4042     		rsbs	r0, r0, #0
+ 509:StandTurn_Balance.c ****     (int16_T)-(int16_T)(uint16_T)-rtb_Add_a : (int32_T)(int16_T)(uint16_T)
+ 1382              		.loc 1 509 37 discriminator 1 view .LVU423
+ 1383 08e8 00B2     		sxth	r0, r0
+ 1384 08ea 71E7     		b	.L37
+ 1385              	.LVL117:
+ 1386              	.L38:
+ 518:StandTurn_Balance.c ****     /* Switch: '<S20>/Switch1' */
+ 1387              		.loc 1 518 10 is_stmt 1 view .LVU424
+ 518:StandTurn_Balance.c ****     /* Switch: '<S20>/Switch1' */
+ 1388              		.loc 1 518 13 is_stmt 0 view .LVU425
+ 1389 08ec 10F1050F 		cmn	r0, #5
+ 1390 08f0 BFF67DAF 		bge	.L39
+ 520:StandTurn_Balance.c ****       -5);
+ 1391              		.loc 1 520 5 is_stmt 1 view .LVU426
+ 520:StandTurn_Balance.c ****       -5);
+ 1392              		.loc 1 520 69 is_stmt 0 view .LVU427
+ 1393 08f4 9BB2     		uxth	r3, r3
+ 520:StandTurn_Balance.c ****       -5);
+ 1394              		.loc 1 520 78 view .LVU428
+ 1395 08f6 053B     		subs	r3, r3, #5
+ 520:StandTurn_Balance.c ****       -5);
+ 1396              		.loc 1 520 37 view .LVU429
+ 1397 08f8 414A     		ldr	r2, .L175+40
+ 1398 08fa A2F87A30 		strh	r3, [r2, #122]	@ movhi
+ 1399 08fe 76E7     		b	.L39
+ 1400              	.LVL118:
+ 1401              	.L133:
+ 547:StandTurn_Balance.c ****     /* Sum: '<S34>/Add2' */
+ 1402              		.loc 1 547 10 is_stmt 1 view .LVU430
+ 547:StandTurn_Balance.c ****     /* Sum: '<S34>/Add2' */
+ 1403              		.loc 1 547 13 is_stmt 0 view .LVU431
+ 1404 0900 3DA3     		adr	r3, .L175+32
+ 1405 0902 D3E90023 		ldrd	r2, [r3]
+ 1406 0906 4046     		mov	r0, r8
+ 1407 0908 4946     		mov	r1, r9
+ 1408 090a FFF7FEFF 		bl	__aeabi_dcmplt
+ 1409              	.LVL119:
+ 1410 090e 0028     		cmp	r0, #0
+ 1411 0910 9ED0     		beq	.L42
+ 549:StandTurn_Balance.c ****   }
+ 1412              		.loc 1 549 5 is_stmt 1 view .LVU432
+ 549:StandTurn_Balance.c ****   }
+ 1413              		.loc 1 549 39 is_stmt 0 view .LVU433
+ 1414 0912 3C4B     		ldr	r3, .L175+44
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc6jImNK.s 			page 40
+
+
+ 1415 0914 38A1     		adr	r1, .L175+32
+ 1416 0916 D1E90001 		ldrd	r0, [r1]
+ 1417 091a C3E90001 		strd	r0, [r3]
+ 1418 091e 97E7     		b	.L42
+ 1419              	.LVL120:
+ 1420              	.L157:
+ 584:StandTurn_Balance.c ****         if (rtIsInf(rtb_Add_a)) {
+ 1421              		.loc 1 584 9 is_stmt 1 view .LVU434
+ 584:StandTurn_Balance.c ****         if (rtIsInf(rtb_Add_a)) {
+ 1422              		.loc 1 584 21 is_stmt 0 view .LVU435
+ 1423 0920 45EC104B 		vmov	d0, r4, r5
+ 1424 0924 FFF7FEFF 		bl	floor
+ 1425              	.LVL121:
+ 1426 0928 B0EE409A 		vmov.f32	s18, s0
+ 1427 092c F0EE609A 		vmov.f32	s19, s1
+ 1428              	.LVL122:
+ 585:StandTurn_Balance.c ****           /* Switch: '<S19>/Switch1' */
+ 1429              		.loc 1 585 9 is_stmt 1 view .LVU436
+ 585:StandTurn_Balance.c ****           /* Switch: '<S19>/Switch1' */
+ 1430              		.loc 1 585 13 is_stmt 0 view .LVU437
+ 1431 0930 FFF7FEFF 		bl	rtIsInf
+ 1432              	.LVL123:
+ 585:StandTurn_Balance.c ****           /* Switch: '<S19>/Switch1' */
+ 1433              		.loc 1 585 12 view .LVU438
+ 1434 0934 20B1     		cbz	r0, .L50
+ 587:StandTurn_Balance.c ****         } else {
+ 1435              		.loc 1 587 11 is_stmt 1 view .LVU439
+ 587:StandTurn_Balance.c ****         } else {
+ 1436              		.loc 1 587 42 is_stmt 0 view .LVU440
+ 1437 0936 324B     		ldr	r3, .L175+40
+ 1438 0938 0022     		movs	r2, #0
+ 1439 093a A3F87820 		strh	r2, [r3, #120]	@ movhi
+ 1440 093e 78E0     		b	.L51
+ 1441              	.L50:
+ 590:StandTurn_Balance.c ****             65536.0);
+ 1442              		.loc 1 590 11 is_stmt 1 view .LVU441
+ 590:StandTurn_Balance.c ****             65536.0);
+ 1443              		.loc 1 590 62 is_stmt 0 view .LVU442
+ 1444 0940 9FED291B 		vldr.64	d1, .L175+16
+ 1445 0944 B0EE490A 		vmov.f32	s0, s18
+ 1446 0948 F0EE690A 		vmov.f32	s1, s19
+ 1447 094c FFF7FEFF 		bl	fmod
+ 1448              	.LVL124:
+ 1449 0950 51EC100B 		vmov	r0, r1, d0
+ 590:StandTurn_Balance.c ****             65536.0);
+ 1450              		.loc 1 590 53 view .LVU443
+ 1451 0954 FFF7FEFF 		bl	__aeabi_d2iz
+ 1452              	.LVL125:
+ 590:StandTurn_Balance.c ****             65536.0);
+ 1453              		.loc 1 590 42 view .LVU444
+ 1454 0958 294B     		ldr	r3, .L175+40
+ 1455 095a A3F87800 		strh	r0, [r3, #120]	@ movhi
+ 1456 095e 68E0     		b	.L51
+ 1457              	.LVL126:
+ 1458              	.L135:
+ 598:StandTurn_Balance.c ****       }
+ 599:StandTurn_Balance.c **** 
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc6jImNK.s 			page 41
+
+
+ 600:StandTurn_Balance.c ****       /* End of Switch: '<S19>/Switch2' */
+ 601:StandTurn_Balance.c ****     } else {
+ 602:StandTurn_Balance.c ****       rtb_Add_a = floor(rtb_Add_a);
+ 1459              		.loc 1 602 7 is_stmt 1 view .LVU445
+ 1460              		.loc 1 602 19 is_stmt 0 view .LVU446
+ 1461 0960 45EC104B 		vmov	d0, r4, r5
+ 1462 0964 FFF7FEFF 		bl	floor
+ 1463              	.LVL127:
+ 1464 0968 B0EE409A 		vmov.f32	s18, s0
+ 1465 096c F0EE609A 		vmov.f32	s19, s1
+ 1466              	.LVL128:
+ 603:StandTurn_Balance.c ****       if (rtIsNaN(rtb_Add_a) || rtIsInf(rtb_Add_a)) {
+ 1467              		.loc 1 603 7 is_stmt 1 view .LVU447
+ 1468              		.loc 1 603 11 is_stmt 0 view .LVU448
+ 1469 0970 FFF7FEFF 		bl	rtIsNaN
+ 1470              	.LVL129:
+ 1471              		.loc 1 603 10 view .LVU449
+ 1472 0974 88B1     		cbz	r0, .L158
+ 604:StandTurn_Balance.c ****         rtb_Add_a = 0.0;
+ 1473              		.loc 1 604 19 view .LVU450
+ 1474 0976 0024     		movs	r4, #0
+ 1475 0978 0025     		movs	r5, #0
+ 1476              	.LVL130:
+ 1477              	.L52:
+ 605:StandTurn_Balance.c ****       } else {
+ 606:StandTurn_Balance.c ****         rtb_Add_a = fmod(rtb_Add_a, 65536.0);
+ 607:StandTurn_Balance.c ****       }
+ 608:StandTurn_Balance.c **** 
+ 609:StandTurn_Balance.c ****       /* Switch: '<S19>/Switch1' */
+ 610:StandTurn_Balance.c ****       StandTurn_Balance_B.Saturation = (int16_T)(rtb_Add_a < 0.0 ? (int32_T)
+ 1478              		.loc 1 610 7 is_stmt 1 view .LVU451
+ 1479              		.loc 1 610 40 is_stmt 0 view .LVU452
+ 1480 097a 0022     		movs	r2, #0
+ 1481 097c 0023     		movs	r3, #0
+ 1482 097e 2046     		mov	r0, r4
+ 1483 0980 2946     		mov	r1, r5
+ 1484 0982 FFF7FEFF 		bl	__aeabi_dcmplt
+ 1485              	.LVL131:
+ 1486 0986 E8B9     		cbnz	r0, .L159
+ 611:StandTurn_Balance.c ****         (int16_T)-(int16_T)(uint16_T)-rtb_Add_a : (int32_T)(int16_T)(uint16_T)
+ 1487              		.loc 1 611 69 discriminator 2 view .LVU453
+ 1488 0988 2046     		mov	r0, r4
+ 1489 098a 2946     		mov	r1, r5
+ 1490 098c FFF7FEFF 		bl	__aeabi_d2uiz
+ 1491              	.LVL132:
+ 610:StandTurn_Balance.c ****         (int16_T)-(int16_T)(uint16_T)-rtb_Add_a : (int32_T)(int16_T)(uint16_T)
+ 1492              		.loc 1 610 40 discriminator 2 view .LVU454
+ 1493 0990 03B2     		sxth	r3, r0
+ 1494              	.L55:
+ 610:StandTurn_Balance.c ****         (int16_T)-(int16_T)(uint16_T)-rtb_Add_a : (int32_T)(int16_T)(uint16_T)
+ 1495              		.loc 1 610 38 discriminator 4 view .LVU455
+ 1496 0992 1B4A     		ldr	r2, .L175+40
+ 1497 0994 A2F87830 		strh	r3, [r2, #120]	@ movhi
+ 1498 0998 4BE0     		b	.L51
+ 1499              	.LVL133:
+ 1500              	.L158:
+ 603:StandTurn_Balance.c ****         rtb_Add_a = 0.0;
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc6jImNK.s 			page 42
+
+
+ 1501              		.loc 1 603 33 discriminator 1 view .LVU456
+ 1502 099a B0EE490A 		vmov.f32	s0, s18
+ 1503 099e F0EE690A 		vmov.f32	s1, s19
+ 1504 09a2 FFF7FEFF 		bl	rtIsInf
+ 1505              	.LVL134:
+ 603:StandTurn_Balance.c ****         rtb_Add_a = 0.0;
+ 1506              		.loc 1 603 30 discriminator 1 view .LVU457
+ 1507 09a6 10B1     		cbz	r0, .L160
+ 604:StandTurn_Balance.c ****       } else {
+ 1508              		.loc 1 604 19 view .LVU458
+ 1509 09a8 0024     		movs	r4, #0
+ 1510 09aa 0025     		movs	r5, #0
+ 1511 09ac E5E7     		b	.L52
+ 1512              	.L160:
+ 606:StandTurn_Balance.c ****       }
+ 1513              		.loc 1 606 9 is_stmt 1 view .LVU459
+ 606:StandTurn_Balance.c ****       }
+ 1514              		.loc 1 606 21 is_stmt 0 view .LVU460
+ 1515 09ae 9FED0E1B 		vldr.64	d1, .L175+16
+ 1516 09b2 B0EE490A 		vmov.f32	s0, s18
+ 1517 09b6 F0EE690A 		vmov.f32	s1, s19
+ 1518 09ba FFF7FEFF 		bl	fmod
+ 1519              	.LVL135:
+ 1520 09be 55EC104B 		vmov	r4, r5, d0
+ 1521              	.LVL136:
+ 606:StandTurn_Balance.c ****       }
+ 1522              		.loc 1 606 21 view .LVU461
+ 1523 09c2 DAE7     		b	.L52
+ 1524              	.L159:
+ 1525              		.loc 1 611 38 discriminator 1 view .LVU462
+ 1526 09c4 2046     		mov	r0, r4
+ 1527 09c6 05F10041 		add	r1, r5, #-2147483648
+ 1528              		.loc 1 611 28 discriminator 1 view .LVU463
+ 1529 09ca FFF7FEFF 		bl	__aeabi_d2uiz
+ 1530              	.LVL137:
+ 1531 09ce 83B2     		uxth	r3, r0
+ 1532              		.loc 1 611 9 discriminator 1 view .LVU464
+ 1533 09d0 5B42     		rsbs	r3, r3, #0
+ 610:StandTurn_Balance.c ****         (int16_T)-(int16_T)(uint16_T)-rtb_Add_a : (int32_T)(int16_T)(uint16_T)
+ 1534              		.loc 1 610 40 discriminator 1 view .LVU465
+ 1535 09d2 1BB2     		sxth	r3, r3
+ 1536 09d4 DDE7     		b	.L55
+ 1537              	.L176:
+ 1538 09d6 00BF     		.align	3
+ 1539              	.L175:
+ 1540 09d8 00000000 		.word	0
+ 1541 09dc 0000A040 		.word	1084227584
+ 1542 09e0 00000000 		.word	0
+ 1543 09e4 0000A0C0 		.word	-1063256064
+ 1544 09e8 00000000 		.word	0
+ 1545 09ec 0000F040 		.word	1089470464
+ 1546 09f0 B81E85EB 		.word	-343597384
+ 1547 09f4 51B89E3F 		.word	1067366481
+ 1548 09f8 00000000 		.word	0
+ 1549 09fc 00409FC0 		.word	-1063305216
+ 1550 0a00 00000000 		.word	.LANCHOR0
+ 1551 0a04 00000000 		.word	.LANCHOR1
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc6jImNK.s 			page 43
+
+
+ 1552 0a08 0000A040 		.word	1084227584
+ 1553 0a0c 0000A0C0 		.word	-1063256064
+ 1554 0a10 00409F40 		.word	1084178432
+ 1555 0a14 00001C40 		.word	1075576832
+ 1556 0a18 00001440 		.word	1075052544
+ 1557              	.L134:
+ 612:StandTurn_Balance.c ****         rtb_Add_a);
+ 613:StandTurn_Balance.c ****     }
+ 614:StandTurn_Balance.c **** 
+ 615:StandTurn_Balance.c ****     /* End of Switch: '<S19>/Switch' */
+ 616:StandTurn_Balance.c ****   } else if (rtb_Add_a > 0.0) {
+ 1558              		.loc 1 616 10 is_stmt 1 view .LVU466
+ 1559              		.loc 1 616 13 is_stmt 0 view .LVU467
+ 1560 0a1c 0022     		movs	r2, #0
+ 1561 0a1e 0023     		movs	r3, #0
+ 1562 0a20 FFF7FEFF 		bl	__aeabi_dcmpgt
+ 1563              	.LVL138:
+ 1564 0a24 0028     		cmp	r0, #0
+ 1565 0a26 7CD0     		beq	.L138
+ 617:StandTurn_Balance.c ****     /* Switch: '<S19>/Switch1' incorporates:
+ 618:StandTurn_Balance.c ****      *  Constant: '<S19>/Constant1'
+ 619:StandTurn_Balance.c ****      *  Switch: '<S19>/Switch3'
+ 620:StandTurn_Balance.c ****      */
+ 621:StandTurn_Balance.c ****     StandTurn_Balance_B.Saturation = -10;
+ 1566              		.loc 1 621 5 is_stmt 1 view .LVU468
+ 1567              		.loc 1 621 36 is_stmt 0 view .LVU469
+ 1568 0a28 BF4B     		ldr	r3, .L177+16
+ 1569 0a2a 4FF6F672 		movw	r2, #65526
+ 1570 0a2e A3F87820 		strh	r2, [r3, #120]	@ movhi
+ 1571              	.LVL139:
+ 1572              	.L51:
+ 622:StandTurn_Balance.c ****   } else {
+ 623:StandTurn_Balance.c ****     /* Switch: '<S19>/Switch3' */
+ 624:StandTurn_Balance.c ****     rtb_Add_a = floor(rtb_Add_a);
+ 625:StandTurn_Balance.c ****     if (rtIsNaN(rtb_Add_a) || rtIsInf(rtb_Add_a)) {
+ 626:StandTurn_Balance.c ****       rtb_Add_a = 0.0;
+ 627:StandTurn_Balance.c ****     } else {
+ 628:StandTurn_Balance.c ****       rtb_Add_a = fmod(rtb_Add_a, 65536.0);
+ 629:StandTurn_Balance.c ****     }
+ 630:StandTurn_Balance.c **** 
+ 631:StandTurn_Balance.c ****     /* Switch: '<S19>/Switch1' incorporates:
+ 632:StandTurn_Balance.c ****      *  Switch: '<S19>/Switch3'
+ 633:StandTurn_Balance.c ****      */
+ 634:StandTurn_Balance.c ****     StandTurn_Balance_B.Saturation = (int16_T)(rtb_Add_a < 0.0 ? (int32_T)
+ 635:StandTurn_Balance.c ****       (int16_T)-(int16_T)(uint16_T)-rtb_Add_a : (int32_T)(int16_T)(uint16_T)
+ 636:StandTurn_Balance.c ****       rtb_Add_a);
+ 637:StandTurn_Balance.c ****   }
+ 638:StandTurn_Balance.c **** 
+ 639:StandTurn_Balance.c ****   /* End of Switch: '<S19>/Switch1' */
+ 640:StandTurn_Balance.c **** 
+ 641:StandTurn_Balance.c ****   /* Saturate: '<Root>/Saturation' */
+ 642:StandTurn_Balance.c ****   if (StandTurn_Balance_B.Saturation > 4200) {
+ 1573              		.loc 1 642 3 is_stmt 1 view .LVU470
+ 1574              		.loc 1 642 26 is_stmt 0 view .LVU471
+ 1575 0a32 BD4B     		ldr	r3, .L177+16
+ 1576 0a34 B3F97830 		ldrsh	r3, [r3, #120]
+ 1577              		.loc 1 642 6 view .LVU472
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc6jImNK.s 			page 44
+
+
+ 1578 0a38 41F26802 		movw	r2, #4200
+ 1579 0a3c 9342     		cmp	r3, r2
+ 1580 0a3e 40F3AB80 		ble	.L62
+ 643:StandTurn_Balance.c ****     /* Switch: '<S19>/Switch1' incorporates:
+ 644:StandTurn_Balance.c ****      *  Saturate: '<Root>/Saturation'
+ 645:StandTurn_Balance.c ****      */
+ 646:StandTurn_Balance.c ****     StandTurn_Balance_B.Saturation = 4200;
+ 1581              		.loc 1 646 5 is_stmt 1 view .LVU473
+ 1582              		.loc 1 646 36 is_stmt 0 view .LVU474
+ 1583 0a42 B94B     		ldr	r3, .L177+16
+ 1584 0a44 A3F87820 		strh	r2, [r3, #120]	@ movhi
+ 1585              	.L63:
+ 647:StandTurn_Balance.c ****   } else if (StandTurn_Balance_B.Saturation < -4200) {
+ 648:StandTurn_Balance.c ****     /* Switch: '<S19>/Switch1' incorporates:
+ 649:StandTurn_Balance.c ****      *  Saturate: '<Root>/Saturation'
+ 650:StandTurn_Balance.c ****      */
+ 651:StandTurn_Balance.c ****     StandTurn_Balance_B.Saturation = -4200;
+ 652:StandTurn_Balance.c ****   }
+ 653:StandTurn_Balance.c **** 
+ 654:StandTurn_Balance.c ****   /* End of Saturate: '<Root>/Saturation' */
+ 655:StandTurn_Balance.c **** 
+ 656:StandTurn_Balance.c ****   /* Sum: '<S32>/Add1' incorporates:
+ 657:StandTurn_Balance.c ****    *  DataStoreWrite: '<Root>/Data Store Write7'
+ 658:StandTurn_Balance.c ****    *  Delay: '<S13>/Delay One Step'
+ 659:StandTurn_Balance.c ****    */
+ 660:StandTurn_Balance.c ****   rtb_Add1_js = (real32_T)StandTurn_Balance_B.Saturation1 -
+ 1586              		.loc 1 660 3 is_stmt 1 view .LVU475
+ 1587              		.loc 1 660 46 is_stmt 0 view .LVU476
+ 1588 0a48 B74B     		ldr	r3, .L177+16
+ 1589 0a4a B3F97A30 		ldrsh	r3, [r3, #122]
+ 1590 0a4e 08EE103A 		vmov	s16, r3	@ int
+ 1591              		.loc 1 660 17 view .LVU477
+ 1592 0a52 B8EEC88A 		vcvt.f32.s32	s16, s16
+ 661:StandTurn_Balance.c ****     StandTurn_Balance_DW.DelayOneStep_DSTATE_d;
+ 1593              		.loc 1 661 25 view .LVU478
+ 1594 0a56 B54C     		ldr	r4, .L177+20
+ 1595 0a58 94ED0F9A 		vldr.32	s18, [r4, #60]
+ 660:StandTurn_Balance.c ****     StandTurn_Balance_DW.DelayOneStep_DSTATE_d;
+ 1596              		.loc 1 660 15 view .LVU479
+ 1597 0a5c 38EE498A 		vsub.f32	s16, s16, s18
+ 1598              	.LVL140:
+ 662:StandTurn_Balance.c **** 
+ 663:StandTurn_Balance.c ****   /* Sum: '<S38>/Add2' incorporates:
+ 664:StandTurn_Balance.c ****    *  Constant: '<S38>/Constant1'
+ 665:StandTurn_Balance.c ****    *  Delay: '<S38>/Delay'
+ 666:StandTurn_Balance.c ****    *  Gain: '<S38>/Gain'
+ 667:StandTurn_Balance.c ****    *  Product: '<S38>/Product3'
+ 668:StandTurn_Balance.c ****    */
+ 669:StandTurn_Balance.c ****   StandTurn_Balance_DW.Delay_DSTATE_g += (real32_T)(0.03 * rtb_Add1_js);
+ 1599              		.loc 1 669 3 is_stmt 1 view .LVU480
+ 1600              		.loc 1 669 58 is_stmt 0 view .LVU481
+ 1601 0a60 18EE100A 		vmov	r0, s16
+ 1602 0a64 FFF7FEFF 		bl	__aeabi_f2d
+ 1603              	.LVL141:
+ 1604 0a68 0646     		mov	r6, r0
+ 1605 0a6a 0F46     		mov	r7, r1
+ 1606 0a6c AAA3     		adr	r3, .L177
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc6jImNK.s 			page 45
+
+
+ 1607 0a6e D3E90023 		ldrd	r2, [r3]
+ 1608 0a72 FFF7FEFF 		bl	__aeabi_dmul
+ 1609              	.LVL142:
+ 1610              		.loc 1 669 42 view .LVU482
+ 1611 0a76 FFF7FEFF 		bl	__aeabi_d2f
+ 1612              	.LVL143:
+ 1613 0a7a 07EE900A 		vmov	s15, r0
+ 1614              		.loc 1 669 39 view .LVU483
+ 1615 0a7e 94ED117A 		vldr.32	s14, [r4, #68]
+ 1616 0a82 77EE877A 		vadd.f32	s15, s15, s14
+ 1617 0a86 C4ED117A 		vstr.32	s15, [r4, #68]
+ 670:StandTurn_Balance.c **** 
+ 671:StandTurn_Balance.c ****   /* Saturate: '<S38>/Saturation' */
+ 672:StandTurn_Balance.c ****   if (StandTurn_Balance_DW.Delay_DSTATE_g > 2000.0F) {
+ 1618              		.loc 1 672 3 is_stmt 1 view .LVU484
+ 1619              		.loc 1 672 6 is_stmt 0 view .LVU485
+ 1620 0a8a 9FEDA97A 		vldr.32	s14, .L177+24
+ 1621 0a8e F4EEC77A 		vcmpe.f32	s15, s14
+ 1622 0a92 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 1623 0a96 40F38980 		ble	.L140
+ 673:StandTurn_Balance.c ****     /* Sum: '<S38>/Add2' */
+ 674:StandTurn_Balance.c ****     StandTurn_Balance_DW.Delay_DSTATE_g = 2000.0F;
+ 1624              		.loc 1 674 5 is_stmt 1 view .LVU486
+ 1625              		.loc 1 674 41 is_stmt 0 view .LVU487
+ 1626 0a9a 84ED117A 		vstr.32	s14, [r4, #68]
+ 1627              	.L66:
+ 675:StandTurn_Balance.c ****   } else if (StandTurn_Balance_DW.Delay_DSTATE_g < -2000.0F) {
+ 676:StandTurn_Balance.c ****     /* Sum: '<S38>/Add2' */
+ 677:StandTurn_Balance.c ****     StandTurn_Balance_DW.Delay_DSTATE_g = -2000.0F;
+ 678:StandTurn_Balance.c ****   }
+ 679:StandTurn_Balance.c **** 
+ 680:StandTurn_Balance.c ****   /* End of Saturate: '<S38>/Saturation' */
+ 681:StandTurn_Balance.c **** 
+ 682:StandTurn_Balance.c ****   /* Sum: '<S32>/Add' incorporates:
+ 683:StandTurn_Balance.c ****    *  Constant: '<S37>/Constant2'
+ 684:StandTurn_Balance.c ****    *  Constant: '<S39>/Constant'
+ 685:StandTurn_Balance.c ****    *  Delay: '<S38>/Delay'
+ 686:StandTurn_Balance.c ****    *  Product: '<S37>/Product2'
+ 687:StandTurn_Balance.c ****    *  Product: '<S39>/Product'
+ 688:StandTurn_Balance.c ****    *  Sum: '<S40>/Diff'
+ 689:StandTurn_Balance.c ****    *  UnitDelay: '<S40>/UD'
+ 690:StandTurn_Balance.c ****    *
+ 691:StandTurn_Balance.c ****    * Block description for '<S40>/Diff':
+ 692:StandTurn_Balance.c ****    *
+ 693:StandTurn_Balance.c ****    *  Add in CPU
+ 694:StandTurn_Balance.c ****    *
+ 695:StandTurn_Balance.c ****    * Block description for '<S40>/UD':
+ 696:StandTurn_Balance.c ****    *
+ 697:StandTurn_Balance.c ****    *  Store in Global RAM
+ 698:StandTurn_Balance.c ****    */
+ 699:StandTurn_Balance.c ****   rtb_Add_a = (7.0 * rtb_Add1_js + StandTurn_Balance_DW.Delay_DSTATE_g) +
+ 1628              		.loc 1 699 3 is_stmt 1 view .LVU488
+ 1629              		.loc 1 699 20 is_stmt 0 view .LVU489
+ 1630 0a9e 0022     		movs	r2, #0
+ 1631 0aa0 A44B     		ldr	r3, .L177+28
+ 1632 0aa2 3046     		mov	r0, r6
+ 1633 0aa4 3946     		mov	r1, r7
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc6jImNK.s 			page 46
+
+
+ 1634 0aa6 FFF7FEFF 		bl	__aeabi_dmul
+ 1635              	.LVL144:
+ 1636 0aaa 0446     		mov	r4, r0
+ 1637 0aac 0D46     		mov	r5, r1
+ 1638              		.loc 1 699 56 view .LVU490
+ 1639 0aae 9F4E     		ldr	r6, .L177+20
+ 1640 0ab0 706C     		ldr	r0, [r6, #68]	@ float
+ 1641 0ab2 FFF7FEFF 		bl	__aeabi_f2d
+ 1642              	.LVL145:
+ 1643 0ab6 0246     		mov	r2, r0
+ 1644 0ab8 0B46     		mov	r3, r1
+ 1645              		.loc 1 699 34 view .LVU491
+ 1646 0aba 2046     		mov	r0, r4
+ 1647 0abc 2946     		mov	r1, r5
+ 1648 0abe FFF7FEFF 		bl	__aeabi_dadd
+ 1649              	.LVL146:
+ 1650 0ac2 0446     		mov	r4, r0
+ 1651 0ac4 0D46     		mov	r5, r1
+ 700:StandTurn_Balance.c ****     (rtb_Add1_js - StandTurn_Balance_DW.UD_DSTATE_k) * 4.0;
+ 1652              		.loc 1 700 40 view .LVU492
+ 1653 0ac6 D6ED127A 		vldr.32	s15, [r6, #72]
+ 1654              		.loc 1 700 18 view .LVU493
+ 1655 0aca 78EE677A 		vsub.f32	s15, s16, s15
+ 1656 0ace 17EE900A 		vmov	r0, s15
+ 1657 0ad2 FFF7FEFF 		bl	__aeabi_f2d
+ 1658              	.LVL147:
+ 1659              		.loc 1 700 54 view .LVU494
+ 1660 0ad6 0022     		movs	r2, #0
+ 1661 0ad8 974B     		ldr	r3, .L177+32
+ 1662 0ada FFF7FEFF 		bl	__aeabi_dmul
+ 1663              	.LVL148:
+ 1664 0ade 0246     		mov	r2, r0
+ 1665 0ae0 0B46     		mov	r3, r1
+ 699:StandTurn_Balance.c ****     (rtb_Add1_js - StandTurn_Balance_DW.UD_DSTATE_k) * 4.0;
+ 1666              		.loc 1 699 13 view .LVU495
+ 1667 0ae2 2046     		mov	r0, r4
+ 1668 0ae4 2946     		mov	r1, r5
+ 1669 0ae6 FFF7FEFF 		bl	__aeabi_dadd
+ 1670              	.LVL149:
+ 1671 0aea 0446     		mov	r4, r0
+ 1672 0aec 0D46     		mov	r5, r1
+ 1673              	.LVL150:
+ 701:StandTurn_Balance.c **** 
+ 702:StandTurn_Balance.c ****   /* Switch: '<S20>/Switch1' incorporates:
+ 703:StandTurn_Balance.c ****    *  DataStoreWrite: '<Root>/Data Store Write7'
+ 704:StandTurn_Balance.c ****    *  Delay: '<S13>/Delay One Step'
+ 705:StandTurn_Balance.c ****    *  Switch: '<S20>/Switch3'
+ 706:StandTurn_Balance.c ****    */
+ 707:StandTurn_Balance.c ****   if (StandTurn_Balance_DW.DelayOneStep_DSTATE_d > -30.0F) {
+ 1674              		.loc 1 707 3 is_stmt 1 view .LVU496
+ 1675              		.loc 1 707 6 is_stmt 0 view .LVU497
+ 1676 0aee FBEE0E7A 		vmov.f32	s15, #-3.0e+1
+ 1677 0af2 B4EEE79A 		vcmpe.f32	s18, s15
+ 1678 0af6 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 1679 0afa 40F3BE80 		ble	.L141
+ 708:StandTurn_Balance.c ****     /* Switch: '<S20>/Switch' */
+ 709:StandTurn_Balance.c ****     if (StandTurn_Balance_DW.DelayOneStep_DSTATE_d > 30.0F) {
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc6jImNK.s 			page 47
+
+
+ 1680              		.loc 1 709 5 is_stmt 1 view .LVU498
+ 1681              		.loc 1 709 8 is_stmt 0 view .LVU499
+ 1682 0afe F3EE0E7A 		vmov.f32	s15, #3.0e+1
+ 1683 0b02 B4EEE79A 		vcmpe.f32	s18, s15
+ 1684 0b06 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 1685 0b0a 7BDD     		ble	.L142
+ 710:StandTurn_Balance.c ****       /* Switch: '<S20>/Switch2' */
+ 711:StandTurn_Balance.c ****       if (rtb_Add_a > 0.0) {
+ 1686              		.loc 1 711 7 is_stmt 1 view .LVU500
+ 1687              		.loc 1 711 10 is_stmt 0 view .LVU501
+ 1688 0b0c 0022     		movs	r2, #0
+ 1689 0b0e 0023     		movs	r3, #0
+ 1690 0b10 FFF7FEFF 		bl	__aeabi_dcmpgt
+ 1691              	.LVL151:
+ 1692 0b14 0028     		cmp	r0, #0
+ 1693 0b16 55D1     		bne	.L161
+ 712:StandTurn_Balance.c ****         rtb_Add_a = floor(rtb_Add_a);
+ 713:StandTurn_Balance.c ****         if (rtIsInf(rtb_Add_a)) {
+ 714:StandTurn_Balance.c ****           /* Switch: '<S20>/Switch1' */
+ 715:StandTurn_Balance.c ****           StandTurn_Balance_B.Saturation1 = 0;
+ 716:StandTurn_Balance.c ****         } else {
+ 717:StandTurn_Balance.c ****           /* Switch: '<S20>/Switch1' */
+ 718:StandTurn_Balance.c ****           StandTurn_Balance_B.Saturation1 = (int16_T)(int32_T)fmod(rtb_Add_a,
+ 719:StandTurn_Balance.c ****             65536.0);
+ 720:StandTurn_Balance.c ****         }
+ 721:StandTurn_Balance.c ****       } else {
+ 722:StandTurn_Balance.c ****         /* Switch: '<S20>/Switch1' incorporates:
+ 723:StandTurn_Balance.c ****          *  Constant: '<S20>/Constant'
+ 724:StandTurn_Balance.c ****          */
+ 725:StandTurn_Balance.c ****         StandTurn_Balance_B.Saturation1 = 10;
+ 1694              		.loc 1 725 9 is_stmt 1 view .LVU502
+ 1695              		.loc 1 725 41 is_stmt 0 view .LVU503
+ 1696 0b18 834B     		ldr	r3, .L177+16
+ 1697 0b1a 0A22     		movs	r2, #10
+ 1698 0b1c A3F87A20 		strh	r2, [r3, #122]	@ movhi
+ 1699 0b20 B6E0     		b	.L75
+ 1700              	.LVL152:
+ 1701              	.L138:
+ 624:StandTurn_Balance.c ****     if (rtIsNaN(rtb_Add_a) || rtIsInf(rtb_Add_a)) {
+ 1702              		.loc 1 624 5 is_stmt 1 view .LVU504
+ 624:StandTurn_Balance.c ****     if (rtIsNaN(rtb_Add_a) || rtIsInf(rtb_Add_a)) {
+ 1703              		.loc 1 624 17 is_stmt 0 view .LVU505
+ 1704 0b22 45EC104B 		vmov	d0, r4, r5
+ 1705 0b26 FFF7FEFF 		bl	floor
+ 1706              	.LVL153:
+ 1707 0b2a B0EE409A 		vmov.f32	s18, s0
+ 1708 0b2e F0EE609A 		vmov.f32	s19, s1
+ 1709              	.LVL154:
+ 625:StandTurn_Balance.c ****       rtb_Add_a = 0.0;
+ 1710              		.loc 1 625 5 is_stmt 1 view .LVU506
+ 625:StandTurn_Balance.c ****       rtb_Add_a = 0.0;
+ 1711              		.loc 1 625 9 is_stmt 0 view .LVU507
+ 1712 0b32 FFF7FEFF 		bl	rtIsNaN
+ 1713              	.LVL155:
+ 625:StandTurn_Balance.c ****       rtb_Add_a = 0.0;
+ 1714              		.loc 1 625 8 view .LVU508
+ 1715 0b36 88B1     		cbz	r0, .L162
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc6jImNK.s 			page 48
+
+
+ 626:StandTurn_Balance.c ****     } else {
+ 1716              		.loc 1 626 17 view .LVU509
+ 1717 0b38 0024     		movs	r4, #0
+ 1718 0b3a 0025     		movs	r5, #0
+ 1719              	.LVL156:
+ 1720              	.L58:
+ 634:StandTurn_Balance.c ****       (int16_T)-(int16_T)(uint16_T)-rtb_Add_a : (int32_T)(int16_T)(uint16_T)
+ 1721              		.loc 1 634 5 is_stmt 1 view .LVU510
+ 634:StandTurn_Balance.c ****       (int16_T)-(int16_T)(uint16_T)-rtb_Add_a : (int32_T)(int16_T)(uint16_T)
+ 1722              		.loc 1 634 38 is_stmt 0 view .LVU511
+ 1723 0b3c 0022     		movs	r2, #0
+ 1724 0b3e 0023     		movs	r3, #0
+ 1725 0b40 2046     		mov	r0, r4
+ 1726 0b42 2946     		mov	r1, r5
+ 1727 0b44 FFF7FEFF 		bl	__aeabi_dcmplt
+ 1728              	.LVL157:
+ 1729 0b48 E8B9     		cbnz	r0, .L163
+ 635:StandTurn_Balance.c ****       rtb_Add_a);
+ 1730              		.loc 1 635 67 discriminator 2 view .LVU512
+ 1731 0b4a 2046     		mov	r0, r4
+ 1732 0b4c 2946     		mov	r1, r5
+ 1733 0b4e FFF7FEFF 		bl	__aeabi_d2uiz
+ 1734              	.LVL158:
+ 634:StandTurn_Balance.c ****       (int16_T)-(int16_T)(uint16_T)-rtb_Add_a : (int32_T)(int16_T)(uint16_T)
+ 1735              		.loc 1 634 38 discriminator 2 view .LVU513
+ 1736 0b52 03B2     		sxth	r3, r0
+ 1737              	.L61:
+ 634:StandTurn_Balance.c ****       (int16_T)-(int16_T)(uint16_T)-rtb_Add_a : (int32_T)(int16_T)(uint16_T)
+ 1738              		.loc 1 634 36 discriminator 4 view .LVU514
+ 1739 0b54 744A     		ldr	r2, .L177+16
+ 1740 0b56 A2F87830 		strh	r3, [r2, #120]	@ movhi
+ 1741 0b5a 6AE7     		b	.L51
+ 1742              	.LVL159:
+ 1743              	.L162:
+ 625:StandTurn_Balance.c ****       rtb_Add_a = 0.0;
+ 1744              		.loc 1 625 31 discriminator 1 view .LVU515
+ 1745 0b5c B0EE490A 		vmov.f32	s0, s18
+ 1746 0b60 F0EE690A 		vmov.f32	s1, s19
+ 1747 0b64 FFF7FEFF 		bl	rtIsInf
+ 1748              	.LVL160:
+ 625:StandTurn_Balance.c ****       rtb_Add_a = 0.0;
+ 1749              		.loc 1 625 28 discriminator 1 view .LVU516
+ 1750 0b68 10B1     		cbz	r0, .L164
+ 626:StandTurn_Balance.c ****     } else {
+ 1751              		.loc 1 626 17 view .LVU517
+ 1752 0b6a 0024     		movs	r4, #0
+ 1753 0b6c 0025     		movs	r5, #0
+ 1754 0b6e E5E7     		b	.L58
+ 1755              	.L164:
+ 628:StandTurn_Balance.c ****     }
+ 1756              		.loc 1 628 7 is_stmt 1 view .LVU518
+ 628:StandTurn_Balance.c ****     }
+ 1757              		.loc 1 628 19 is_stmt 0 view .LVU519
+ 1758 0b70 9FED6B1B 		vldr.64	d1, .L177+8
+ 1759 0b74 B0EE490A 		vmov.f32	s0, s18
+ 1760 0b78 F0EE690A 		vmov.f32	s1, s19
+ 1761 0b7c FFF7FEFF 		bl	fmod
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc6jImNK.s 			page 49
+
+
+ 1762              	.LVL161:
+ 1763 0b80 55EC104B 		vmov	r4, r5, d0
+ 1764              	.LVL162:
+ 628:StandTurn_Balance.c ****     }
+ 1765              		.loc 1 628 19 view .LVU520
+ 1766 0b84 DAE7     		b	.L58
+ 1767              	.L163:
+ 635:StandTurn_Balance.c ****       rtb_Add_a);
+ 1768              		.loc 1 635 36 discriminator 1 view .LVU521
+ 1769 0b86 2046     		mov	r0, r4
+ 1770 0b88 05F10041 		add	r1, r5, #-2147483648
+ 635:StandTurn_Balance.c ****       rtb_Add_a);
+ 1771              		.loc 1 635 26 discriminator 1 view .LVU522
+ 1772 0b8c FFF7FEFF 		bl	__aeabi_d2uiz
+ 1773              	.LVL163:
+ 1774 0b90 83B2     		uxth	r3, r0
+ 635:StandTurn_Balance.c ****       rtb_Add_a);
+ 1775              		.loc 1 635 7 discriminator 1 view .LVU523
+ 1776 0b92 5B42     		rsbs	r3, r3, #0
+ 634:StandTurn_Balance.c ****       (int16_T)-(int16_T)(uint16_T)-rtb_Add_a : (int32_T)(int16_T)(uint16_T)
+ 1777              		.loc 1 634 38 discriminator 1 view .LVU524
+ 1778 0b94 1BB2     		sxth	r3, r3
+ 1779 0b96 DDE7     		b	.L61
+ 1780              	.LVL164:
+ 1781              	.L62:
+ 647:StandTurn_Balance.c ****     /* Switch: '<S19>/Switch1' incorporates:
+ 1782              		.loc 1 647 10 is_stmt 1 view .LVU525
+ 647:StandTurn_Balance.c ****     /* Switch: '<S19>/Switch1' incorporates:
+ 1783              		.loc 1 647 13 is_stmt 0 view .LVU526
+ 1784 0b98 684A     		ldr	r2, .L177+36
+ 1785 0b9a 9342     		cmp	r3, r2
+ 1786 0b9c BFF654AF 		bge	.L63
+ 651:StandTurn_Balance.c ****   }
+ 1787              		.loc 1 651 5 is_stmt 1 view .LVU527
+ 651:StandTurn_Balance.c ****   }
+ 1788              		.loc 1 651 36 is_stmt 0 view .LVU528
+ 1789 0ba0 614B     		ldr	r3, .L177+16
+ 1790 0ba2 4EF69872 		movw	r2, #61336
+ 1791 0ba6 A3F87820 		strh	r2, [r3, #120]	@ movhi
+ 1792 0baa 4DE7     		b	.L63
+ 1793              	.LVL165:
+ 1794              	.L140:
+ 675:StandTurn_Balance.c ****     /* Sum: '<S38>/Add2' */
+ 1795              		.loc 1 675 10 is_stmt 1 view .LVU529
+ 675:StandTurn_Balance.c ****     /* Sum: '<S38>/Add2' */
+ 1796              		.loc 1 675 13 is_stmt 0 view .LVU530
+ 1797 0bac 9FED647A 		vldr.32	s14, .L177+40
+ 1798 0bb0 F4EEC77A 		vcmpe.f32	s15, s14
+ 1799 0bb4 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 1800 0bb8 7FF571AF 		bpl	.L66
+ 677:StandTurn_Balance.c ****   }
+ 1801              		.loc 1 677 5 is_stmt 1 view .LVU531
+ 677:StandTurn_Balance.c ****   }
+ 1802              		.loc 1 677 41 is_stmt 0 view .LVU532
+ 1803 0bbc 5B4B     		ldr	r3, .L177+20
+ 1804 0bbe 83ED117A 		vstr.32	s14, [r3, #68]
+ 1805 0bc2 6CE7     		b	.L66
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc6jImNK.s 			page 50
+
+
+ 1806              	.LVL166:
+ 1807              	.L161:
+ 712:StandTurn_Balance.c ****         if (rtIsInf(rtb_Add_a)) {
+ 1808              		.loc 1 712 9 is_stmt 1 view .LVU533
+ 712:StandTurn_Balance.c ****         if (rtIsInf(rtb_Add_a)) {
+ 1809              		.loc 1 712 21 is_stmt 0 view .LVU534
+ 1810 0bc4 45EC104B 		vmov	d0, r4, r5
+ 1811 0bc8 FFF7FEFF 		bl	floor
+ 1812              	.LVL167:
+ 1813 0bcc B0EE409A 		vmov.f32	s18, s0
+ 1814 0bd0 F0EE609A 		vmov.f32	s19, s1
+ 1815              	.LVL168:
+ 713:StandTurn_Balance.c ****           /* Switch: '<S20>/Switch1' */
+ 1816              		.loc 1 713 9 is_stmt 1 view .LVU535
+ 713:StandTurn_Balance.c ****           /* Switch: '<S20>/Switch1' */
+ 1817              		.loc 1 713 13 is_stmt 0 view .LVU536
+ 1818 0bd4 FFF7FEFF 		bl	rtIsInf
+ 1819              	.LVL169:
+ 713:StandTurn_Balance.c ****           /* Switch: '<S20>/Switch1' */
+ 1820              		.loc 1 713 12 view .LVU537
+ 1821 0bd8 20B1     		cbz	r0, .L74
+ 715:StandTurn_Balance.c ****         } else {
+ 1822              		.loc 1 715 11 is_stmt 1 view .LVU538
+ 715:StandTurn_Balance.c ****         } else {
+ 1823              		.loc 1 715 43 is_stmt 0 view .LVU539
+ 1824 0bda 534B     		ldr	r3, .L177+16
+ 1825 0bdc 0022     		movs	r2, #0
+ 1826 0bde A3F87A20 		strh	r2, [r3, #122]	@ movhi
+ 1827 0be2 55E0     		b	.L75
+ 1828              	.L74:
+ 718:StandTurn_Balance.c ****             65536.0);
+ 1829              		.loc 1 718 11 is_stmt 1 view .LVU540
+ 718:StandTurn_Balance.c ****             65536.0);
+ 1830              		.loc 1 718 63 is_stmt 0 view .LVU541
+ 1831 0be4 9FED4E1B 		vldr.64	d1, .L177+8
+ 1832 0be8 B0EE490A 		vmov.f32	s0, s18
+ 1833 0bec F0EE690A 		vmov.f32	s1, s19
+ 1834 0bf0 FFF7FEFF 		bl	fmod
+ 1835              	.LVL170:
+ 1836 0bf4 51EC100B 		vmov	r0, r1, d0
+ 718:StandTurn_Balance.c ****             65536.0);
+ 1837              		.loc 1 718 54 view .LVU542
+ 1838 0bf8 FFF7FEFF 		bl	__aeabi_d2iz
+ 1839              	.LVL171:
+ 718:StandTurn_Balance.c ****             65536.0);
+ 1840              		.loc 1 718 43 view .LVU543
+ 1841 0bfc 4A4B     		ldr	r3, .L177+16
+ 1842 0bfe A3F87A00 		strh	r0, [r3, #122]	@ movhi
+ 1843 0c02 45E0     		b	.L75
+ 1844              	.LVL172:
+ 1845              	.L142:
+ 726:StandTurn_Balance.c ****       }
+ 727:StandTurn_Balance.c **** 
+ 728:StandTurn_Balance.c ****       /* End of Switch: '<S20>/Switch2' */
+ 729:StandTurn_Balance.c ****     } else {
+ 730:StandTurn_Balance.c ****       rtb_Add_a = floor(rtb_Add_a);
+ 1846              		.loc 1 730 7 is_stmt 1 view .LVU544
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc6jImNK.s 			page 51
+
+
+ 1847              		.loc 1 730 19 is_stmt 0 view .LVU545
+ 1848 0c04 45EC104B 		vmov	d0, r4, r5
+ 1849 0c08 FFF7FEFF 		bl	floor
+ 1850              	.LVL173:
+ 1851 0c0c B0EE409A 		vmov.f32	s18, s0
+ 1852 0c10 F0EE609A 		vmov.f32	s19, s1
+ 1853              	.LVL174:
+ 731:StandTurn_Balance.c ****       if (rtIsNaN(rtb_Add_a) || rtIsInf(rtb_Add_a)) {
+ 1854              		.loc 1 731 7 is_stmt 1 view .LVU546
+ 1855              		.loc 1 731 11 is_stmt 0 view .LVU547
+ 1856 0c14 FFF7FEFF 		bl	rtIsNaN
+ 1857              	.LVL175:
+ 1858              		.loc 1 731 10 view .LVU548
+ 1859 0c18 88B1     		cbz	r0, .L165
+ 732:StandTurn_Balance.c ****         rtb_Add_a = 0.0;
+ 1860              		.loc 1 732 19 view .LVU549
+ 1861 0c1a 0024     		movs	r4, #0
+ 1862 0c1c 0025     		movs	r5, #0
+ 1863              	.LVL176:
+ 1864              	.L76:
+ 733:StandTurn_Balance.c ****       } else {
+ 734:StandTurn_Balance.c ****         rtb_Add_a = fmod(rtb_Add_a, 65536.0);
+ 735:StandTurn_Balance.c ****       }
+ 736:StandTurn_Balance.c **** 
+ 737:StandTurn_Balance.c ****       /* Switch: '<S20>/Switch1' */
+ 738:StandTurn_Balance.c ****       StandTurn_Balance_B.Saturation1 = (int16_T)(rtb_Add_a < 0.0 ? (int32_T)
+ 1865              		.loc 1 738 7 is_stmt 1 view .LVU550
+ 1866              		.loc 1 738 41 is_stmt 0 view .LVU551
+ 1867 0c1e 0022     		movs	r2, #0
+ 1868 0c20 0023     		movs	r3, #0
+ 1869 0c22 2046     		mov	r0, r4
+ 1870 0c24 2946     		mov	r1, r5
+ 1871 0c26 FFF7FEFF 		bl	__aeabi_dcmplt
+ 1872              	.LVL177:
+ 1873 0c2a E8B9     		cbnz	r0, .L166
+ 739:StandTurn_Balance.c ****         (int16_T)-(int16_T)(uint16_T)-rtb_Add_a : (int32_T)(int16_T)(uint16_T)
+ 1874              		.loc 1 739 69 discriminator 2 view .LVU552
+ 1875 0c2c 2046     		mov	r0, r4
+ 1876 0c2e 2946     		mov	r1, r5
+ 1877 0c30 FFF7FEFF 		bl	__aeabi_d2uiz
+ 1878              	.LVL178:
+ 738:StandTurn_Balance.c ****         (int16_T)-(int16_T)(uint16_T)-rtb_Add_a : (int32_T)(int16_T)(uint16_T)
+ 1879              		.loc 1 738 41 discriminator 2 view .LVU553
+ 1880 0c34 03B2     		sxth	r3, r0
+ 1881              	.L79:
+ 738:StandTurn_Balance.c ****         (int16_T)-(int16_T)(uint16_T)-rtb_Add_a : (int32_T)(int16_T)(uint16_T)
+ 1882              		.loc 1 738 39 discriminator 4 view .LVU554
+ 1883 0c36 3C4A     		ldr	r2, .L177+16
+ 1884 0c38 A2F87A30 		strh	r3, [r2, #122]	@ movhi
+ 1885 0c3c 28E0     		b	.L75
+ 1886              	.LVL179:
+ 1887              	.L165:
+ 731:StandTurn_Balance.c ****         rtb_Add_a = 0.0;
+ 1888              		.loc 1 731 33 discriminator 1 view .LVU555
+ 1889 0c3e B0EE490A 		vmov.f32	s0, s18
+ 1890 0c42 F0EE690A 		vmov.f32	s1, s19
+ 1891 0c46 FFF7FEFF 		bl	rtIsInf
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc6jImNK.s 			page 52
+
+
+ 1892              	.LVL180:
+ 731:StandTurn_Balance.c ****         rtb_Add_a = 0.0;
+ 1893              		.loc 1 731 30 discriminator 1 view .LVU556
+ 1894 0c4a 10B1     		cbz	r0, .L167
+ 732:StandTurn_Balance.c ****       } else {
+ 1895              		.loc 1 732 19 view .LVU557
+ 1896 0c4c 0024     		movs	r4, #0
+ 1897 0c4e 0025     		movs	r5, #0
+ 1898 0c50 E5E7     		b	.L76
+ 1899              	.L167:
+ 734:StandTurn_Balance.c ****       }
+ 1900              		.loc 1 734 9 is_stmt 1 view .LVU558
+ 734:StandTurn_Balance.c ****       }
+ 1901              		.loc 1 734 21 is_stmt 0 view .LVU559
+ 1902 0c52 9FED331B 		vldr.64	d1, .L177+8
+ 1903 0c56 B0EE490A 		vmov.f32	s0, s18
+ 1904 0c5a F0EE690A 		vmov.f32	s1, s19
+ 1905 0c5e FFF7FEFF 		bl	fmod
+ 1906              	.LVL181:
+ 1907 0c62 55EC104B 		vmov	r4, r5, d0
+ 1908              	.LVL182:
+ 734:StandTurn_Balance.c ****       }
+ 1909              		.loc 1 734 21 view .LVU560
+ 1910 0c66 DAE7     		b	.L76
+ 1911              	.L166:
+ 1912              		.loc 1 739 38 discriminator 1 view .LVU561
+ 1913 0c68 2046     		mov	r0, r4
+ 1914 0c6a 05F10041 		add	r1, r5, #-2147483648
+ 1915              		.loc 1 739 28 discriminator 1 view .LVU562
+ 1916 0c6e FFF7FEFF 		bl	__aeabi_d2uiz
+ 1917              	.LVL183:
+ 1918 0c72 83B2     		uxth	r3, r0
+ 1919              		.loc 1 739 9 discriminator 1 view .LVU563
+ 1920 0c74 5B42     		rsbs	r3, r3, #0
+ 738:StandTurn_Balance.c ****         (int16_T)-(int16_T)(uint16_T)-rtb_Add_a : (int32_T)(int16_T)(uint16_T)
+ 1921              		.loc 1 738 41 discriminator 1 view .LVU564
+ 1922 0c76 1BB2     		sxth	r3, r3
+ 1923 0c78 DDE7     		b	.L79
+ 1924              	.L141:
+ 740:StandTurn_Balance.c ****         rtb_Add_a);
+ 741:StandTurn_Balance.c ****     }
+ 742:StandTurn_Balance.c **** 
+ 743:StandTurn_Balance.c ****     /* End of Switch: '<S20>/Switch' */
+ 744:StandTurn_Balance.c ****   } else if (rtb_Add_a > 0.0) {
+ 1925              		.loc 1 744 10 is_stmt 1 view .LVU565
+ 1926              		.loc 1 744 13 is_stmt 0 view .LVU566
+ 1927 0c7a 0022     		movs	r2, #0
+ 1928 0c7c 0023     		movs	r3, #0
+ 1929 0c7e FFF7FEFF 		bl	__aeabi_dcmpgt
+ 1930              	.LVL184:
+ 1931 0c82 0028     		cmp	r0, #0
+ 1932 0c84 62D0     		beq	.L145
+ 745:StandTurn_Balance.c ****     /* Switch: '<S20>/Switch1' incorporates:
+ 746:StandTurn_Balance.c ****      *  Constant: '<S20>/Constant1'
+ 747:StandTurn_Balance.c ****      *  Switch: '<S20>/Switch3'
+ 748:StandTurn_Balance.c ****      */
+ 749:StandTurn_Balance.c ****     StandTurn_Balance_B.Saturation1 = -10;
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc6jImNK.s 			page 53
+
+
+ 1933              		.loc 1 749 5 is_stmt 1 view .LVU567
+ 1934              		.loc 1 749 37 is_stmt 0 view .LVU568
+ 1935 0c86 284B     		ldr	r3, .L177+16
+ 1936 0c88 4FF6F672 		movw	r2, #65526
+ 1937 0c8c A3F87A20 		strh	r2, [r3, #122]	@ movhi
+ 1938              	.LVL185:
+ 1939              	.L75:
+ 750:StandTurn_Balance.c ****   } else {
+ 751:StandTurn_Balance.c ****     /* Switch: '<S20>/Switch3' */
+ 752:StandTurn_Balance.c ****     rtb_Add_a = floor(rtb_Add_a);
+ 753:StandTurn_Balance.c ****     if (rtIsNaN(rtb_Add_a) || rtIsInf(rtb_Add_a)) {
+ 754:StandTurn_Balance.c ****       rtb_Add_a = 0.0;
+ 755:StandTurn_Balance.c ****     } else {
+ 756:StandTurn_Balance.c ****       rtb_Add_a = fmod(rtb_Add_a, 65536.0);
+ 757:StandTurn_Balance.c ****     }
+ 758:StandTurn_Balance.c **** 
+ 759:StandTurn_Balance.c ****     /* Switch: '<S20>/Switch1' incorporates:
+ 760:StandTurn_Balance.c ****      *  Switch: '<S20>/Switch3'
+ 761:StandTurn_Balance.c ****      */
+ 762:StandTurn_Balance.c ****     StandTurn_Balance_B.Saturation1 = (int16_T)(rtb_Add_a < 0.0 ? (int32_T)
+ 763:StandTurn_Balance.c ****       (int16_T)-(int16_T)(uint16_T)-rtb_Add_a : (int32_T)(int16_T)(uint16_T)
+ 764:StandTurn_Balance.c ****       rtb_Add_a);
+ 765:StandTurn_Balance.c ****   }
+ 766:StandTurn_Balance.c **** 
+ 767:StandTurn_Balance.c ****   /* End of Switch: '<S20>/Switch1' */
+ 768:StandTurn_Balance.c **** 
+ 769:StandTurn_Balance.c ****   /* Saturate: '<Root>/Saturation1' */
+ 770:StandTurn_Balance.c ****   if (StandTurn_Balance_B.Saturation1 > 4200) {
+ 1940              		.loc 1 770 3 is_stmt 1 view .LVU569
+ 1941              		.loc 1 770 26 is_stmt 0 view .LVU570
+ 1942 0c90 254B     		ldr	r3, .L177+16
+ 1943 0c92 B3F97A30 		ldrsh	r3, [r3, #122]
+ 1944              		.loc 1 770 6 view .LVU571
+ 1945 0c96 41F26802 		movw	r2, #4200
+ 1946 0c9a 9342     		cmp	r3, r2
+ 1947 0c9c 40F39180 		ble	.L86
+ 771:StandTurn_Balance.c ****     /* Switch: '<S20>/Switch1' incorporates:
+ 772:StandTurn_Balance.c ****      *  Saturate: '<Root>/Saturation1'
+ 773:StandTurn_Balance.c ****      */
+ 774:StandTurn_Balance.c ****     StandTurn_Balance_B.Saturation1 = 4200;
+ 1948              		.loc 1 774 5 is_stmt 1 view .LVU572
+ 1949              		.loc 1 774 37 is_stmt 0 view .LVU573
+ 1950 0ca0 214B     		ldr	r3, .L177+16
+ 1951 0ca2 A3F87A20 		strh	r2, [r3, #122]	@ movhi
+ 1952              	.L87:
+ 775:StandTurn_Balance.c ****   } else if (StandTurn_Balance_B.Saturation1 < -4200) {
+ 776:StandTurn_Balance.c ****     /* Switch: '<S20>/Switch1' incorporates:
+ 777:StandTurn_Balance.c ****      *  Saturate: '<Root>/Saturation1'
+ 778:StandTurn_Balance.c ****      */
+ 779:StandTurn_Balance.c ****     StandTurn_Balance_B.Saturation1 = -4200;
+ 780:StandTurn_Balance.c ****   }
+ 781:StandTurn_Balance.c **** 
+ 782:StandTurn_Balance.c ****   /* End of Saturate: '<Root>/Saturation1' */
+ 783:StandTurn_Balance.c **** 
+ 784:StandTurn_Balance.c ****   /* S-Function (StackLiteDualDrive_DataLinkInput): '<Root>/DataLinkInput' */
+ 785:StandTurn_Balance.c **** 
+ 786:StandTurn_Balance.c ****   /*Input Data*/
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc6jImNK.s 			page 54
+
+
+ 787:StandTurn_Balance.c ****   StandTurn_Balance_B.DataLinkInput_o1= DataLink_RevData[0].point;
+ 1953              		.loc 1 787 3 is_stmt 1 view .LVU574
+ 1954              		.loc 1 787 60 is_stmt 0 view .LVU575
+ 1955 0ca6 274A     		ldr	r2, .L177+44
+ 1956 0ca8 1568     		ldr	r5, [r2]	@ unaligned
+ 1957              		.loc 1 787 39 view .LVU576
+ 1958 0caa 1F4B     		ldr	r3, .L177+16
+ 1959 0cac 1D62     		str	r5, [r3, #32]	@ float
+ 788:StandTurn_Balance.c ****   StandTurn_Balance_B.DataLinkInput_o2= DataLink_RevData[1].point;
+ 1960              		.loc 1 788 3 is_stmt 1 view .LVU577
+ 1961              		.loc 1 788 60 is_stmt 0 view .LVU578
+ 1962 0cae 5468     		ldr	r4, [r2, #4]	@ unaligned
+ 1963              		.loc 1 788 39 view .LVU579
+ 1964 0cb0 5C62     		str	r4, [r3, #36]	@ float
+ 789:StandTurn_Balance.c ****   StandTurn_Balance_B.DataLinkInput_o3= DataLink_RevData[2].point;
+ 1965              		.loc 1 789 3 is_stmt 1 view .LVU580
+ 1966              		.loc 1 789 60 is_stmt 0 view .LVU581
+ 1967 0cb2 9068     		ldr	r0, [r2, #8]	@ unaligned
+ 1968              		.loc 1 789 39 view .LVU582
+ 1969 0cb4 9862     		str	r0, [r3, #40]	@ float
+ 790:StandTurn_Balance.c ****   StandTurn_Balance_B.DataLinkInput_o4= DataLink_RevData[3].point;
+ 1970              		.loc 1 790 3 is_stmt 1 view .LVU583
+ 1971              		.loc 1 790 60 is_stmt 0 view .LVU584
+ 1972 0cb6 D168     		ldr	r1, [r2, #12]	@ unaligned
+ 1973              		.loc 1 790 39 view .LVU585
+ 1974 0cb8 D962     		str	r1, [r3, #44]	@ float
+ 791:StandTurn_Balance.c ****   StandTurn_Balance_B.DataLinkInput_o5= DataLink_RevData[4].point;
+ 1975              		.loc 1 791 3 is_stmt 1 view .LVU586
+ 1976              		.loc 1 791 60 is_stmt 0 view .LVU587
+ 1977 0cba 1169     		ldr	r1, [r2, #16]	@ unaligned
+ 1978              		.loc 1 791 39 view .LVU588
+ 1979 0cbc 1963     		str	r1, [r3, #48]	@ float
+ 792:StandTurn_Balance.c ****   StandTurn_Balance_B.DataLinkInput_o6= DataLink_RevData[5].point;
+ 1980              		.loc 1 792 3 is_stmt 1 view .LVU589
+ 1981              		.loc 1 792 60 is_stmt 0 view .LVU590
+ 1982 0cbe 5169     		ldr	r1, [r2, #20]	@ unaligned
+ 1983              		.loc 1 792 39 view .LVU591
+ 1984 0cc0 5963     		str	r1, [r3, #52]	@ float
+ 793:StandTurn_Balance.c ****   StandTurn_Balance_B.DataLinkInput_o7= DataLink_RevData[6].point;
+ 1985              		.loc 1 793 3 is_stmt 1 view .LVU592
+ 1986              		.loc 1 793 60 is_stmt 0 view .LVU593
+ 1987 0cc2 9169     		ldr	r1, [r2, #24]	@ unaligned
+ 1988              		.loc 1 793 39 view .LVU594
+ 1989 0cc4 9963     		str	r1, [r3, #56]	@ float
+ 794:StandTurn_Balance.c ****   StandTurn_Balance_B.DataLinkInput_o8= DataLink_RevData[7].point;
+ 1990              		.loc 1 794 3 is_stmt 1 view .LVU595
+ 1991              		.loc 1 794 60 is_stmt 0 view .LVU596
+ 1992 0cc6 D169     		ldr	r1, [r2, #28]	@ unaligned
+ 1993              		.loc 1 794 39 view .LVU597
+ 1994 0cc8 D963     		str	r1, [r3, #60]	@ float
+ 795:StandTurn_Balance.c ****   StandTurn_Balance_B.DataLinkInput_o9= DataLink_RevData[8].point;
+ 1995              		.loc 1 795 3 is_stmt 1 view .LVU598
+ 1996              		.loc 1 795 60 is_stmt 0 view .LVU599
+ 1997 0cca 116A     		ldr	r1, [r2, #32]	@ unaligned
+ 1998              		.loc 1 795 39 view .LVU600
+ 1999 0ccc 1964     		str	r1, [r3, #64]	@ float
+ 796:StandTurn_Balance.c ****   StandTurn_Balance_B.DataLinkInput_o10= DataLink_RevData[9].point;
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc6jImNK.s 			page 55
+
+
+ 2000              		.loc 1 796 3 is_stmt 1 view .LVU601
+ 2001              		.loc 1 796 61 is_stmt 0 view .LVU602
+ 2002 0cce 526A     		ldr	r2, [r2, #36]	@ unaligned
+ 2003              		.loc 1 796 40 view .LVU603
+ 2004 0cd0 5A64     		str	r2, [r3, #68]	@ float
+ 797:StandTurn_Balance.c **** 
+ 798:StandTurn_Balance.c ****   /* DataStoreWrite: '<Root>/Data Store Write1' */
+ 799:StandTurn_Balance.c ****   StandTurn_Balance_DW.Kp_turn = StandTurn_Balance_B.DataLinkInput_o1;
+ 2005              		.loc 1 799 3 is_stmt 1 view .LVU604
+ 2006              		.loc 1 799 32 is_stmt 0 view .LVU605
+ 2007 0cd2 1649     		ldr	r1, .L177+20
+ 2008 0cd4 C1F8F050 		str	r5, [r1, #240]	@ float
+ 800:StandTurn_Balance.c **** 
+ 801:StandTurn_Balance.c ****   /* DataStoreWrite: '<Root>/Data Store Write2' */
+ 802:StandTurn_Balance.c ****   StandTurn_Balance_DW.Ki_turn = StandTurn_Balance_B.DataLinkInput_o2;
+ 2009              		.loc 1 802 3 is_stmt 1 view .LVU606
+ 2010              		.loc 1 802 32 is_stmt 0 view .LVU607
+ 2011 0cd8 C1F8F440 		str	r4, [r1, #244]	@ float
+ 803:StandTurn_Balance.c **** 
+ 804:StandTurn_Balance.c ****   /* DataStoreWrite: '<Root>/Data Store Write3' */
+ 805:StandTurn_Balance.c ****   StandTurn_Balance_DW.Kd_turn = StandTurn_Balance_B.DataLinkInput_o3;
+ 2012              		.loc 1 805 3 is_stmt 1 view .LVU608
+ 2013              		.loc 1 805 32 is_stmt 0 view .LVU609
+ 2014 0cdc C1F8F800 		str	r0, [r1, #248]	@ float
+ 806:StandTurn_Balance.c **** 
+ 807:StandTurn_Balance.c ****   /* Outputs for Enabled SubSystem: '<Root>/yaw to zero' incorporates:
+ 808:StandTurn_Balance.c ****    *  EnablePort: '<S18>/Enable'
+ 809:StandTurn_Balance.c ****    */
+ 810:StandTurn_Balance.c ****   /* Logic: '<Root>/AND' incorporates:
+ 811:StandTurn_Balance.c ****    *  Constant: '<S5>/Constant'
+ 812:StandTurn_Balance.c ****    *  DataStoreRead: '<Root>/Data Store Read11'
+ 813:StandTurn_Balance.c ****    *  DataStoreRead: '<Root>/Data Store Read12'
+ 814:StandTurn_Balance.c ****    *  RelationalOperator: '<S5>/Compare'
+ 815:StandTurn_Balance.c ****    *  RelationalOperator: '<S6>/Compare'
+ 816:StandTurn_Balance.c ****    */
+ 817:StandTurn_Balance.c ****   if ((StandTurn_Balance_DW.flag == 0.0) && (angle_yaw != 0)) {
+ 2015              		.loc 1 817 3 is_stmt 1 view .LVU610
+ 2016              		.loc 1 817 6 is_stmt 0 view .LVU611
+ 2017 0ce0 0022     		movs	r2, #0
+ 2018 0ce2 0023     		movs	r3, #0
+ 2019 0ce4 D1E90401 		ldrd	r0, [r1, #16]
+ 2020 0ce8 FFF7FEFF 		bl	__aeabi_dcmpeq
+ 2021              	.LVL186:
+ 2022 0cec 50B1     		cbz	r0, .L88
+ 2023              		.loc 1 817 42 discriminator 1 view .LVU612
+ 2024 0cee BBF1000F 		cmp	fp, #0
+ 2025 0cf2 07D0     		beq	.L88
+ 818:StandTurn_Balance.c ****     /* DataStoreWrite: '<S18>/Data Store Write1' incorporates:
+ 819:StandTurn_Balance.c ****      *  Constant: '<S18>/Constant'
+ 820:StandTurn_Balance.c ****      */
+ 821:StandTurn_Balance.c ****     StandTurn_Balance_DW.flag = 1.0;
+ 2026              		.loc 1 821 5 is_stmt 1 view .LVU613
+ 2027              		.loc 1 821 31 is_stmt 0 view .LVU614
+ 2028 0cf4 0D4B     		ldr	r3, .L177+20
+ 2029 0cf6 0020     		movs	r0, #0
+ 2030 0cf8 1349     		ldr	r1, .L177+48
+ 2031 0cfa C3E90401 		strd	r0, [r3, #16]
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc6jImNK.s 			page 56
+
+
+ 822:StandTurn_Balance.c **** 
+ 823:StandTurn_Balance.c ****     /* DataStoreWrite: '<S18>/Data Store Write' incorporates:
+ 824:StandTurn_Balance.c ****      *  DataStoreRead: '<S18>/Data Store Read'
+ 825:StandTurn_Balance.c ****      */
+ 826:StandTurn_Balance.c ****     StandTurn_Balance_DW.yaw_begin = angle_yaw;
+ 2032              		.loc 1 826 5 is_stmt 1 view .LVU615
+ 2033              		.loc 1 826 36 is_stmt 0 view .LVU616
+ 2034 0cfe 019A     		ldr	r2, [sp, #4]
+ 2035 0d00 C3F8FC20 		str	r2, [r3, #252]
+ 2036              	.L88:
+ 827:StandTurn_Balance.c ****   }
+ 828:StandTurn_Balance.c **** 
+ 829:StandTurn_Balance.c ****   /* End of Logic: '<Root>/AND' */
+ 830:StandTurn_Balance.c ****   /* End of Outputs for SubSystem: '<Root>/yaw to zero' */
+ 831:StandTurn_Balance.c **** 
+ 832:StandTurn_Balance.c ****   /* Update for UnitDelay: '<S36>/UD'
+ 833:StandTurn_Balance.c ****    *
+ 834:StandTurn_Balance.c ****    * Block description for '<S36>/UD':
+ 835:StandTurn_Balance.c ****    *
+ 836:StandTurn_Balance.c ****    *  Store in Global RAM
+ 837:StandTurn_Balance.c ****    */
+ 838:StandTurn_Balance.c ****   StandTurn_Balance_DW.UD_DSTATE = rtb_Add1_o;
+ 2037              		.loc 1 838 3 is_stmt 1 view .LVU617
+ 2038              		.loc 1 838 34 is_stmt 0 view .LVU618
+ 2039 0d04 094B     		ldr	r3, .L177+20
+ 2040 0d06 C3ED108A 		vstr.32	s17, [r3, #64]
+ 839:StandTurn_Balance.c **** 
+ 840:StandTurn_Balance.c ****   /* Update for UnitDelay: '<S40>/UD'
+ 841:StandTurn_Balance.c ****    *
+ 842:StandTurn_Balance.c ****    * Block description for '<S40>/UD':
+ 843:StandTurn_Balance.c ****    *
+ 844:StandTurn_Balance.c ****    *  Store in Global RAM
+ 845:StandTurn_Balance.c ****    */
+ 846:StandTurn_Balance.c ****   StandTurn_Balance_DW.UD_DSTATE_k = rtb_Add1_js;
+ 2041              		.loc 1 846 3 is_stmt 1 view .LVU619
+ 2042              		.loc 1 846 36 is_stmt 0 view .LVU620
+ 2043 0d0a 83ED128A 		vstr.32	s16, [r3, #72]
+ 847:StandTurn_Balance.c **** }
+ 2044              		.loc 1 847 1 view .LVU621
+ 2045 0d0e 05B0     		add	sp, sp, #20
+ 2046              	.LCFI3:
+ 2047              		.cfi_remember_state
+ 2048              		.cfi_def_cfa_offset 52
+ 2049              		@ sp needed
+ 2050 0d10 BDEC048B 		vldm	sp!, {d8-d9}
+ 2051              	.LCFI4:
+ 2052              		.cfi_restore 82
+ 2053              		.cfi_restore 83
+ 2054              		.cfi_restore 80
+ 2055              		.cfi_restore 81
+ 2056              		.cfi_def_cfa_offset 36
+ 2057              	.LVL187:
+ 2058              		.loc 1 847 1 view .LVU622
+ 2059 0d14 BDE8F08F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 2060              	.LVL188:
+ 2061              	.L178:
+ 2062              		.loc 1 847 1 view .LVU623
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc6jImNK.s 			page 57
+
+
+ 2063              		.align	3
+ 2064              	.L177:
+ 2065 0d18 B81E85EB 		.word	-343597384
+ 2066 0d1c 51B89E3F 		.word	1067366481
+ 2067 0d20 00000000 		.word	0
+ 2068 0d24 0000F040 		.word	1089470464
+ 2069 0d28 00000000 		.word	.LANCHOR0
+ 2070 0d2c 00000000 		.word	.LANCHOR1
+ 2071 0d30 0000FA44 		.word	1157234688
+ 2072 0d34 00001C40 		.word	1075576832
+ 2073 0d38 00001040 		.word	1074790400
+ 2074 0d3c 98EFFFFF 		.word	-4200
+ 2075 0d40 0000FAC4 		.word	-990248960
+ 2076 0d44 00000000 		.word	DataLink_RevData
+ 2077 0d48 0000F03F 		.word	1072693248
+ 2078              	.LVL189:
+ 2079              	.L145:
+ 2080              	.LCFI5:
+ 2081              		.cfi_restore_state
+ 752:StandTurn_Balance.c ****     if (rtIsNaN(rtb_Add_a) || rtIsInf(rtb_Add_a)) {
+ 2082              		.loc 1 752 5 is_stmt 1 view .LVU624
+ 752:StandTurn_Balance.c ****     if (rtIsNaN(rtb_Add_a) || rtIsInf(rtb_Add_a)) {
+ 2083              		.loc 1 752 17 is_stmt 0 view .LVU625
+ 2084 0d4c 45EC104B 		vmov	d0, r4, r5
+ 2085 0d50 FFF7FEFF 		bl	floor
+ 2086              	.LVL190:
+ 2087 0d54 B0EE409A 		vmov.f32	s18, s0
+ 2088 0d58 F0EE609A 		vmov.f32	s19, s1
+ 2089              	.LVL191:
+ 753:StandTurn_Balance.c ****       rtb_Add_a = 0.0;
+ 2090              		.loc 1 753 5 is_stmt 1 view .LVU626
+ 753:StandTurn_Balance.c ****       rtb_Add_a = 0.0;
+ 2091              		.loc 1 753 9 is_stmt 0 view .LVU627
+ 2092 0d5c FFF7FEFF 		bl	rtIsNaN
+ 2093              	.LVL192:
+ 753:StandTurn_Balance.c ****       rtb_Add_a = 0.0;
+ 2094              		.loc 1 753 8 view .LVU628
+ 2095 0d60 88B1     		cbz	r0, .L168
+ 754:StandTurn_Balance.c ****     } else {
+ 2096              		.loc 1 754 17 view .LVU629
+ 2097 0d62 0024     		movs	r4, #0
+ 2098 0d64 0025     		movs	r5, #0
+ 2099              	.LVL193:
+ 2100              	.L82:
+ 762:StandTurn_Balance.c ****       (int16_T)-(int16_T)(uint16_T)-rtb_Add_a : (int32_T)(int16_T)(uint16_T)
+ 2101              		.loc 1 762 5 is_stmt 1 view .LVU630
+ 762:StandTurn_Balance.c ****       (int16_T)-(int16_T)(uint16_T)-rtb_Add_a : (int32_T)(int16_T)(uint16_T)
+ 2102              		.loc 1 762 39 is_stmt 0 view .LVU631
+ 2103 0d66 0022     		movs	r2, #0
+ 2104 0d68 0023     		movs	r3, #0
+ 2105 0d6a 2046     		mov	r0, r4
+ 2106 0d6c 2946     		mov	r1, r5
+ 2107 0d6e FFF7FEFF 		bl	__aeabi_dcmplt
+ 2108              	.LVL194:
+ 2109 0d72 E8B9     		cbnz	r0, .L169
+ 763:StandTurn_Balance.c ****       rtb_Add_a);
+ 2110              		.loc 1 763 67 discriminator 2 view .LVU632
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc6jImNK.s 			page 58
+
+
+ 2111 0d74 2046     		mov	r0, r4
+ 2112 0d76 2946     		mov	r1, r5
+ 2113 0d78 FFF7FEFF 		bl	__aeabi_d2uiz
+ 2114              	.LVL195:
+ 762:StandTurn_Balance.c ****       (int16_T)-(int16_T)(uint16_T)-rtb_Add_a : (int32_T)(int16_T)(uint16_T)
+ 2115              		.loc 1 762 39 discriminator 2 view .LVU633
+ 2116 0d7c 03B2     		sxth	r3, r0
+ 2117              	.L85:
+ 762:StandTurn_Balance.c ****       (int16_T)-(int16_T)(uint16_T)-rtb_Add_a : (int32_T)(int16_T)(uint16_T)
+ 2118              		.loc 1 762 37 discriminator 4 view .LVU634
+ 2119 0d7e 184A     		ldr	r2, .L179+8
+ 2120 0d80 A2F87A30 		strh	r3, [r2, #122]	@ movhi
+ 2121 0d84 84E7     		b	.L75
+ 2122              	.LVL196:
+ 2123              	.L168:
+ 753:StandTurn_Balance.c ****       rtb_Add_a = 0.0;
+ 2124              		.loc 1 753 31 discriminator 1 view .LVU635
+ 2125 0d86 B0EE490A 		vmov.f32	s0, s18
+ 2126 0d8a F0EE690A 		vmov.f32	s1, s19
+ 2127 0d8e FFF7FEFF 		bl	rtIsInf
+ 2128              	.LVL197:
+ 753:StandTurn_Balance.c ****       rtb_Add_a = 0.0;
+ 2129              		.loc 1 753 28 discriminator 1 view .LVU636
+ 2130 0d92 10B1     		cbz	r0, .L170
+ 754:StandTurn_Balance.c ****     } else {
+ 2131              		.loc 1 754 17 view .LVU637
+ 2132 0d94 0024     		movs	r4, #0
+ 2133 0d96 0025     		movs	r5, #0
+ 2134 0d98 E5E7     		b	.L82
+ 2135              	.L170:
+ 756:StandTurn_Balance.c ****     }
+ 2136              		.loc 1 756 7 is_stmt 1 view .LVU638
+ 756:StandTurn_Balance.c ****     }
+ 2137              		.loc 1 756 19 is_stmt 0 view .LVU639
+ 2138 0d9a 9FED0F1B 		vldr.64	d1, .L179
+ 2139 0d9e B0EE490A 		vmov.f32	s0, s18
+ 2140 0da2 F0EE690A 		vmov.f32	s1, s19
+ 2141 0da6 FFF7FEFF 		bl	fmod
+ 2142              	.LVL198:
+ 2143 0daa 55EC104B 		vmov	r4, r5, d0
+ 2144              	.LVL199:
+ 756:StandTurn_Balance.c ****     }
+ 2145              		.loc 1 756 19 view .LVU640
+ 2146 0dae DAE7     		b	.L82
+ 2147              	.L169:
+ 763:StandTurn_Balance.c ****       rtb_Add_a);
+ 2148              		.loc 1 763 36 discriminator 1 view .LVU641
+ 2149 0db0 2046     		mov	r0, r4
+ 2150 0db2 05F10041 		add	r1, r5, #-2147483648
+ 763:StandTurn_Balance.c ****       rtb_Add_a);
+ 2151              		.loc 1 763 26 discriminator 1 view .LVU642
+ 2152 0db6 FFF7FEFF 		bl	__aeabi_d2uiz
+ 2153              	.LVL200:
+ 2154 0dba 83B2     		uxth	r3, r0
+ 763:StandTurn_Balance.c ****       rtb_Add_a);
+ 2155              		.loc 1 763 7 discriminator 1 view .LVU643
+ 2156 0dbc 5B42     		rsbs	r3, r3, #0
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc6jImNK.s 			page 59
+
+
+ 762:StandTurn_Balance.c ****       (int16_T)-(int16_T)(uint16_T)-rtb_Add_a : (int32_T)(int16_T)(uint16_T)
+ 2157              		.loc 1 762 39 discriminator 1 view .LVU644
+ 2158 0dbe 1BB2     		sxth	r3, r3
+ 2159 0dc0 DDE7     		b	.L85
+ 2160              	.LVL201:
+ 2161              	.L86:
+ 775:StandTurn_Balance.c ****     /* Switch: '<S20>/Switch1' incorporates:
+ 2162              		.loc 1 775 10 is_stmt 1 view .LVU645
+ 775:StandTurn_Balance.c ****     /* Switch: '<S20>/Switch1' incorporates:
+ 2163              		.loc 1 775 13 is_stmt 0 view .LVU646
+ 2164 0dc2 084A     		ldr	r2, .L179+12
+ 2165 0dc4 9342     		cmp	r3, r2
+ 2166 0dc6 BFF66EAF 		bge	.L87
+ 779:StandTurn_Balance.c ****   }
+ 2167              		.loc 1 779 5 is_stmt 1 view .LVU647
+ 779:StandTurn_Balance.c ****   }
+ 2168              		.loc 1 779 37 is_stmt 0 view .LVU648
+ 2169 0dca 054B     		ldr	r3, .L179+8
+ 2170 0dcc 4EF69872 		movw	r2, #61336
+ 2171 0dd0 A3F87A20 		strh	r2, [r3, #122]	@ movhi
+ 2172 0dd4 67E7     		b	.L87
+ 2173              	.L180:
+ 2174 0dd6 00BF     		.align	3
+ 2175              	.L179:
+ 2176 0dd8 00000000 		.word	0
+ 2177 0ddc 0000F040 		.word	1089470464
+ 2178 0de0 00000000 		.word	.LANCHOR0
+ 2179 0de4 98EFFFFF 		.word	-4200
+ 2180              		.cfi_endproc
+ 2181              	.LFE238:
+ 2183              		.section	.text.StandTurn_Balance_initialize,"ax",%progbits
+ 2184              		.align	1
+ 2185              		.global	StandTurn_Balance_initialize
+ 2186              		.syntax unified
+ 2187              		.thumb
+ 2188              		.thumb_func
+ 2190              	StandTurn_Balance_initialize:
+ 2191              	.LFB239:
+ 848:StandTurn_Balance.c **** 
+ 849:StandTurn_Balance.c **** /* Model initialize function */
+ 850:StandTurn_Balance.c **** void StandTurn_Balance_initialize(void)
+ 851:StandTurn_Balance.c **** {
+ 2192              		.loc 1 851 1 is_stmt 1 view -0
+ 2193              		.cfi_startproc
+ 2194              		@ args = 0, pretend = 0, frame = 0
+ 2195              		@ frame_needed = 0, uses_anonymous_args = 0
+ 2196 0000 08B5     		push	{r3, lr}
+ 2197              	.LCFI6:
+ 2198              		.cfi_def_cfa_offset 8
+ 2199              		.cfi_offset 3, -8
+ 2200              		.cfi_offset 14, -4
+ 852:StandTurn_Balance.c ****   /* Registration code */
+ 853:StandTurn_Balance.c **** 
+ 854:StandTurn_Balance.c ****   /* initialize non-finites */
+ 855:StandTurn_Balance.c ****   rt_InitInfAndNaN(sizeof(real_T));
+ 2201              		.loc 1 855 3 view .LVU650
+ 2202 0002 0820     		movs	r0, #8
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc6jImNK.s 			page 60
+
+
+ 2203 0004 FFF7FEFF 		bl	rt_InitInfAndNaN
+ 2204              	.LVL202:
+ 856:StandTurn_Balance.c **** }
+ 2205              		.loc 1 856 1 is_stmt 0 view .LVU651
+ 2206 0008 08BD     		pop	{r3, pc}
+ 2207              		.cfi_endproc
+ 2208              	.LFE239:
+ 2210              		.section	.text.StandTurn_Balance_terminate,"ax",%progbits
+ 2211              		.align	1
+ 2212              		.global	StandTurn_Balance_terminate
+ 2213              		.syntax unified
+ 2214              		.thumb
+ 2215              		.thumb_func
+ 2217              	StandTurn_Balance_terminate:
+ 2218              	.LFB240:
+ 857:StandTurn_Balance.c **** 
+ 858:StandTurn_Balance.c **** /* Model terminate function */
+ 859:StandTurn_Balance.c **** void StandTurn_Balance_terminate(void)
+ 860:StandTurn_Balance.c **** {
+ 2219              		.loc 1 860 1 is_stmt 1 view -0
+ 2220              		.cfi_startproc
+ 2221              		@ args = 0, pretend = 0, frame = 0
+ 2222              		@ frame_needed = 0, uses_anonymous_args = 0
+ 2223              		@ link register save eliminated.
+ 861:StandTurn_Balance.c ****   /* (no terminate code required) */
+ 862:StandTurn_Balance.c **** }
+ 2224              		.loc 1 862 1 view .LVU653
+ 2225 0000 7047     		bx	lr
+ 2226              		.cfi_endproc
+ 2227              	.LFE240:
+ 2229              		.global	StandTurn_Balance_M
+ 2230              		.global	StandTurn_Balance_DW
+ 2231              		.global	StandTurn_Balance_B
+ 2232              		.global	StandTurn_Balance_U8GND
+ 2233              		.section	.bss.StandTurn_Balance_B,"aw",%nobits
+ 2234              		.align	3
+ 2235              		.set	.LANCHOR0,. + 0
+ 2238              	StandTurn_Balance_B:
+ 2239 0000 00000000 		.space	128
+ 2239      00000000 
+ 2239      00000000 
+ 2239      00000000 
+ 2239      00000000 
+ 2240              		.section	.bss.StandTurn_Balance_DW,"aw",%nobits
+ 2241              		.align	3
+ 2242              		.set	.LANCHOR1,. + 0
+ 2245              	StandTurn_Balance_DW:
+ 2246 0000 00000000 		.space	272
+ 2246      00000000 
+ 2246      00000000 
+ 2246      00000000 
+ 2246      00000000 
+ 2247              		.section	.bss.StandTurn_Balance_M_,"aw",%nobits
+ 2248              		.align	2
+ 2251              	StandTurn_Balance_M_:
+ 2252 0000 00000000 		.space	4
+ 2253              		.section	.rodata.StandTurn_Balance_M,"a"
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc6jImNK.s 			page 61
+
+
+ 2254              		.align	2
+ 2257              	StandTurn_Balance_M:
+ 2258 0000 00000000 		.word	StandTurn_Balance_M_
+ 2259              		.section	.rodata.StandTurn_Balance_U8GND,"a"
+ 2260              		.set	.LANCHOR2,. + 0
+ 2263              	StandTurn_Balance_U8GND:
+ 2264 0000 00       		.space	1
+ 2265              		.text
+ 2266              	.Letext0:
+ 2267              		.file 2 "c:\\program files (x86)\\arm gnu toolchain arm-none-eabi\\11.2 2022.02\\arm-none-eabi\\in
+ 2268              		.file 3 "c:\\program files (x86)\\arm gnu toolchain arm-none-eabi\\11.2 2022.02\\arm-none-eabi\\in
+ 2269              		.file 4 "../STM32CUBEMX/Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f405xx.h"
+ 2270              		.file 5 "c:\\program files (x86)\\arm gnu toolchain arm-none-eabi\\11.2 2022.02\\lib\\gcc\\arm-non
+ 2271              		.file 6 "../STM32CUBEMX/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h"
+ 2272              		.file 7 "../STM32CUBEMX/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h"
+ 2273              		.file 8 "../STM32CUBEMX/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h"
+ 2274              		.file 9 "../STM32CUBEMX/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h"
+ 2275              		.file 10 "../STM32CUBEMX/Core/Inc/ifr-scope_device.h"
+ 2276              		.file 11 "../STM32CUBEMX/Core/Inc/tim.h"
+ 2277              		.file 12 "rtwtypes.h"
+ 2278              		.file 13 "StandTurn_Balance_types.h"
+ 2279              		.file 14 "StandTurn_Balance.h"
+ 2280              		.file 15 "rt_nonfinite.h"
+ 2281              		.file 16 "c:\\program files (x86)\\arm gnu toolchain arm-none-eabi\\11.2 2022.02\\arm-none-eabi\\i
+ 2282              		.file 17 "c:\\program files (x86)\\arm gnu toolchain arm-none-eabi\\11.2 2022.02\\arm-none-eabi\\i
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\cc6jImNK.s 			page 62
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 StandTurn_Balance.c
+C:\Users\ysl\AppData\Local\Temp\cc6jImNK.s:31     .text.StandTurn_Balance_step:00000000 $t
+C:\Users\ysl\AppData\Local\Temp\cc6jImNK.s:37     .text.StandTurn_Balance_step:00000000 StandTurn_Balance_step
+C:\Users\ysl\AppData\Local\Temp\cc6jImNK.s:571    .text.StandTurn_Balance_step:00000368 $d
+C:\Users\ysl\AppData\Local\Temp\cc6jImNK.s:597    .text.StandTurn_Balance_step:000003c4 $t
+C:\Users\ysl\AppData\Local\Temp\cc6jImNK.s:1003   .text.StandTurn_Balance_step:00000668 $d
+C:\Users\ysl\AppData\Local\Temp\cc6jImNK.s:1027   .text.StandTurn_Balance_step:000006bc $t
+C:\Users\ysl\AppData\Local\Temp\cc6jImNK.s:1540   .text.StandTurn_Balance_step:000009d8 $d
+C:\Users\ysl\AppData\Local\Temp\cc6jImNK.s:1560   .text.StandTurn_Balance_step:00000a1c $t
+C:\Users\ysl\AppData\Local\Temp\cc6jImNK.s:2065   .text.StandTurn_Balance_step:00000d18 $d
+C:\Users\ysl\AppData\Local\Temp\cc6jImNK.s:2084   .text.StandTurn_Balance_step:00000d4c $t
+C:\Users\ysl\AppData\Local\Temp\cc6jImNK.s:2176   .text.StandTurn_Balance_step:00000dd8 $d
+C:\Users\ysl\AppData\Local\Temp\cc6jImNK.s:2184   .text.StandTurn_Balance_initialize:00000000 $t
+C:\Users\ysl\AppData\Local\Temp\cc6jImNK.s:2190   .text.StandTurn_Balance_initialize:00000000 StandTurn_Balance_initialize
+C:\Users\ysl\AppData\Local\Temp\cc6jImNK.s:2211   .text.StandTurn_Balance_terminate:00000000 $t
+C:\Users\ysl\AppData\Local\Temp\cc6jImNK.s:2217   .text.StandTurn_Balance_terminate:00000000 StandTurn_Balance_terminate
+C:\Users\ysl\AppData\Local\Temp\cc6jImNK.s:2257   .rodata.StandTurn_Balance_M:00000000 StandTurn_Balance_M
+C:\Users\ysl\AppData\Local\Temp\cc6jImNK.s:2245   .bss.StandTurn_Balance_DW:00000000 StandTurn_Balance_DW
+C:\Users\ysl\AppData\Local\Temp\cc6jImNK.s:2238   .bss.StandTurn_Balance_B:00000000 StandTurn_Balance_B
+C:\Users\ysl\AppData\Local\Temp\cc6jImNK.s:2263   .rodata.StandTurn_Balance_U8GND:00000000 StandTurn_Balance_U8GND
+C:\Users\ysl\AppData\Local\Temp\cc6jImNK.s:2234   .bss.StandTurn_Balance_B:00000000 $d
+C:\Users\ysl\AppData\Local\Temp\cc6jImNK.s:2241   .bss.StandTurn_Balance_DW:00000000 $d
+C:\Users\ysl\AppData\Local\Temp\cc6jImNK.s:2248   .bss.StandTurn_Balance_M_:00000000 $d
+C:\Users\ysl\AppData\Local\Temp\cc6jImNK.s:2251   .bss.StandTurn_Balance_M_:00000000 StandTurn_Balance_M_
+C:\Users\ysl\AppData\Local\Temp\cc6jImNK.s:2254   .rodata.StandTurn_Balance_M:00000000 $d
+C:\Users\ysl\AppData\Local\Temp\cc6jImNK.s:2264   .rodata.StandTurn_Balance_U8GND:00000000 $d
+
+UNDEFINED SYMBOLS
+__aeabi_dmul
+__aeabi_f2d
+__aeabi_d2f
+__aeabi_dadd
+__aeabi_i2d
+__aeabi_dcmpgt
+__aeabi_dcmplt
+__aeabi_dsub
+__aeabi_d2uiz
+__aeabi_d2iz
+__aeabi_dcmpeq
+HAL_GPIO_WritePin
+HI226_Angle
+HI226_AngleV
+htim5
+htim2
+adc_rawvalue
+DataLink_UpFrameData
+motor1_PwmData
+motor2_PwmData
+ws2812_data
+floor
+rtIsNaN
+fmod
+rtIsInf
+DataLink_RevData
+rt_InitInfAndNaN
