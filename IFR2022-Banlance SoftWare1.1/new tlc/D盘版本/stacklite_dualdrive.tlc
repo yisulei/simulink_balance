@@ -1,0 +1,61 @@
+%% SYSTLC: IFR StackLite-DualDrive Base on stm32f405RGT6\
+%%    TMF: stacklite_dualdrive.tmf MAKE: make_rtw EXTMODE: ext_comm
+%%    
+%%    $FileName: stacklite_dualdrive.tlc
+%% 	  $Revision: 1.0
+%%    $Date: 2022
+%%
+%% Copyright 2022 The RCP For stacklite_dualdrive.
+%% Abstract: Embedded real-time system target file.
+%%
+%selectfile NULL_FILE
+
+%assign CodeFormat = "Embedded-C"
+
+%assign TargetType = "RT"
+%assign Language   = "C"
+%assign PreCodeGenExecCompliant = 1
+
+%if !EXISTS(AutoBuildProcedure)
+  %if EXISTS(GenerateSampleERTMain)
+    %assign AutoBuildProcedure = !GenerateSampleERTMain
+  %else
+    %% This is for the targets that use ert.tlc and are required to work
+    %% without Embedded Coder. This is to enable auto build procedure since
+    %% the GenerateSampleERTMain is always set to true for these targets.
+    %assign AutoBuildProcedure = TLC_TRUE
+  %endif
+%endif
+
+%% The model_SetEventsForThisBaseRate function is not required for the
+%% VxWorks environment, i.e., when using an operating system.
+%assign SuppressSetEventsForThisBaseRateFcn = (TargetOS == "VxWorksExample") 
+%if !EXISTS(InlineSetEventsForThisBaseRateFcn)
+  %assign InlineSetEventsForThisBaseRateFcn  = TLC_TRUE
+%endif
+%if !EXISTS(SuppressMultiTaskScheduler)
+  %assign SuppressMultiTaskScheduler = TLC_TRUE
+%endif
+
+%assign TargetRegistMutexOp   = 1 
+%assign TargetRegistSynchroOp = 1
+
+%include "codegenentry.tlc"
+
+
+/%
+  BEGIN_RTW_OPTIONS
+
+  %----------------------------------------%
+  % Configure code generation settings %
+  %----------------------------------------%
+  
+ 
+  rtwgensettings.DerivedFrom    = 'ert.tlc';
+  rtwgensettings.BuildDirSuffix = '_stm32_rtw';
+  rtwgensettings.Version        = '1'; % Specify callbacks' compliance with DAStudio dialog
+  rtwgensettings.SelectCallback = ['stacklite_dualdrive_callback_handler(hDlg, hSrc)']; 
+
+  END_RTW_OPTIONS 
+ %/
+

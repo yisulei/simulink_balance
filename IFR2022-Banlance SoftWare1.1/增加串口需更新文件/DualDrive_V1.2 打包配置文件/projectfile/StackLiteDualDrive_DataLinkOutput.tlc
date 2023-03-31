@@ -1,0 +1,82 @@
+%implements  StackLiteDualDrive_DataLinkOutput "C"
+
+%function BlockTypeSetup(block, system) void
+%assign sIdentifier =SFcnParamSettings.myIdentifier
+%assign sVerificatio_Code =SFcnParamSettings.myVerificatio_Code
+
+%assign SrcBaseName = LibGetMdlSrcBaseName()
+%assign modelCFile = LibCreateSourceFile("Source","Simulink",SrcBaseName)
+%openfile datalinkdeclarationbuf
+extern struct _datalink_upframedata DataLink_UpFrameData;//data Up to Host
+%closefile datalinkdeclarationbuf
+%<LibSetSourceFileSection(modelCFile,"Declarations",datalinkdeclarationbuf)>
+%openfile datalinkincludebuf
+#include "ifr-scope_device.h"
+%closefile datalinkincludebuf
+%<LibSetSourceFileSection(modelCFile,"Includes",datalinkincludebuf)>
+/%
+%assign modelHFile = LibCreateSourceFile("Header","Simulink",SrcBaseName)
+%openfile defineBuf
+#define DATALINK_IDENTIFIER "%<sIdentifier>"
+#define DATALINK_VERIFICATIO_CODE "%<sVerificatio_Code>"
+%closefile defineBuf
+%<LibSetSourceFileSection(modelHFile,"Defines",defineBuf)>
+%/
+%openfile SimulinkDefines = "simulink_defines.h" %%通过统一的Simulin Defines 传递宏定义
+#ifndef __SIMULINK_DEFINES_H__
+#define __SIMULINK_DEFINES_H__
+/* create by simulink */
+#define DATALINK_IDENTIFIER "%<sIdentifier>"
+#define DATALINK_VERIFICATIO_CODE "%<sVerificatio_Code>"
+#endif
+%closefile SimulinkDefines
+
+%openfile DataLinkOutput = "StackLiteDualDrive_DataLinkOutput.c" %%兼容simulink不怎么智能的MODULES tocken
+/* dummy by simulink */
+%closefile DataLinkOutput
+
+%endfunction
+
+%function Outputs(block, system) Output
+%assign data0 = LibBlockInputSignal(0, "", "",0)
+%assign data1 = LibBlockInputSignal(1, "", "",0)
+%assign data2 = LibBlockInputSignal(2, "", "",0)
+%assign data3 = LibBlockInputSignal(3, "", "",0)
+%assign data4 = LibBlockInputSignal(4, "", "",0)
+%assign data5 = LibBlockInputSignal(5, "", "",0)
+%assign data6 = LibBlockInputSignal(6, "", "",0)
+%assign data7 = LibBlockInputSignal(7, "", "",0)
+%assign data8 = LibBlockInputSignal(8, "", "",0)
+%assign data9 = LibBlockInputSignal(9, "", "",0)
+%assign data10 = LibBlockInputSignal(10, "", "",0)
+%assign data11 = LibBlockInputSignal(11, "", "",0)
+%assign data12 = LibBlockInputSignal(12, "", "",0)
+%assign data13 = LibBlockInputSignal(13, "", "",0)
+%assign data14 = LibBlockInputSignal(14, "", "",0)
+%assign data15 = LibBlockInputSignal(15, "", "",0)
+%assign data16 = LibBlockInputSignal(16, "", "",0)
+%assign data17 = LibBlockInputSignal(17, "", "",0)
+%assign data18 = LibBlockInputSignal(18, "", "",0)
+%assign data19 = LibBlockInputSignal(19, "", "",0)
+/*Output Data*/
+DataLink_UpFrameData.data[0].point=%<data0>;
+DataLink_UpFrameData.data[1].point=%<data1>;
+DataLink_UpFrameData.data[2].point=%<data2>;
+DataLink_UpFrameData.data[3].point=%<data3>;
+DataLink_UpFrameData.data[4].point=%<data4>;
+DataLink_UpFrameData.data[5].point=%<data5>;
+DataLink_UpFrameData.data[6].point=%<data6>;
+DataLink_UpFrameData.data[7].point=%<data7>;
+DataLink_UpFrameData.data[8].point=%<data8>;
+DataLink_UpFrameData.data[9].point=%<data9>;
+DataLink_UpFrameData.data[10].point=%<data10>;
+DataLink_UpFrameData.data[11].point=%<data11>;
+DataLink_UpFrameData.data[12].point=%<data12>;
+DataLink_UpFrameData.data[13].point=%<data13>;
+DataLink_UpFrameData.data[14].point=%<data14>;
+DataLink_UpFrameData.data[15].point=%<data15>;
+DataLink_UpFrameData.data[16].point=%<data16>;
+DataLink_UpFrameData.data[17].point=%<data17>;
+DataLink_UpFrameData.data[18].point=%<data18>;
+DataLink_UpFrameData.data[19].point=%<data19>;
+%endfunction

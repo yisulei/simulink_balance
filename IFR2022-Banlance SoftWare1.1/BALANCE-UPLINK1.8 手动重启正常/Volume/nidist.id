@@ -1,0 +1,10 @@
+[Volume Id]
+DistributionGUID={2D517B5E-862C-4590-832F-09DAA0D703C6}
+DistPackageGUID={8CCF1974-3176-4A53-AF54-9F728EBAE039}
+DistributionVersion=1.0.14
+DistributionType=MDF
+DistributionLanguage=2052
+Volume=1
+TotalNumberOfVolumesInDistribution=1
+ExePath=两轮自平衡机器人调试界面.exe
+UpdateInfoFile=supportfiles\updateInfo.xml
