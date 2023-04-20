@@ -1,4 +1,4 @@
-ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccQrNA9y.s 			page 1
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccDPUeSD.s 			page 1
 
 
    1              		.cpu cortex-m4
@@ -34,9 +34,9 @@ ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccQrNA9y.s 			page 1
    3:rt_nonfinite.c ****  *
    4:rt_nonfinite.c ****  * Code generated for Simulink model 'Follow_Balance'.
    5:rt_nonfinite.c ****  *
-   6:rt_nonfinite.c ****  * Model version                  : 1.5
+   6:rt_nonfinite.c ****  * Model version                  : 1.6
    7:rt_nonfinite.c ****  * Simulink Coder version         : 9.6 (R2021b) 14-May-2021
-   8:rt_nonfinite.c ****  * C/C++ source code generated on : Mon Mar 27 15:08:52 2023
+   8:rt_nonfinite.c ****  * C/C++ source code generated on : Tue Apr 11 20:11:05 2023
    9:rt_nonfinite.c ****  *
   10:rt_nonfinite.c ****  * Target selection: stacklite_dualdrive.tlc
   11:rt_nonfinite.c ****  * Embedded hardware selection: Intel->x86-64 (Windows64)
@@ -58,7 +58,7 @@ ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccQrNA9y.s 			page 1
   27:rt_nonfinite.c **** real_T rtMinusInf;
   28:rt_nonfinite.c **** real_T rtNaN;
   29:rt_nonfinite.c **** real32_T rtInfF;
-ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccQrNA9y.s 			page 2
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccDPUeSD.s 			page 2
 
 
   30:rt_nonfinite.c **** real32_T rtMinusInfF;
@@ -118,7 +118,7 @@ ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccQrNA9y.s 			page 1
   69              		.loc 1 44 3 is_stmt 1 view .LVU15
   70              		.loc 1 44 16 is_stmt 0 view .LVU16
   71 002a FFF7FEFF 		bl	rtGetMinusInf
-ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccQrNA9y.s 			page 3
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccDPUeSD.s 			page 3
 
 
   72              	.LVL5:
@@ -178,7 +178,7 @@ ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccQrNA9y.s 			page 1
  121              		.loc 1 51 3 is_stmt 1 view .LVU24
  122              		.loc 1 51 10 is_stmt 0 view .LVU25
  123 0006 10EE102A 		vmov	r2, s0	@ int
-ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccQrNA9y.s 			page 4
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccDPUeSD.s 			page 4
 
 
  124 000a 2B46     		mov	r3, r5
@@ -238,7 +238,7 @@ ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccQrNA9y.s 			page 1
  174              		@ link register save eliminated.
   57:rt_nonfinite.c ****   return (boolean_T)(((value)==rtInfF || (value)==rtMinusInfF) ? 1U : 0U);
  175              		.loc 1 57 3 view .LVU32
-ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccQrNA9y.s 			page 5
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccDPUeSD.s 			page 5
 
 
  176              		.loc 1 57 30 is_stmt 0 view .LVU33
@@ -298,7 +298,7 @@ ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccQrNA9y.s 			page 1
  226              	.LVL13:
   64:rt_nonfinite.c ****   size_t bitsPerReal = sizeof(real_T) * (NumBitsPerChar);
  227              		.loc 1 64 3 view .LVU42
-ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccQrNA9y.s 			page 6
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccDPUeSD.s 			page 6
 
 
   65:rt_nonfinite.c ****   if (bitsPerReal == 32U) {
@@ -358,7 +358,7 @@ ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccQrNA9y.s 			page 1
  263 0024 0000F07F 		.word	2146435072
  264              		.cfi_endproc
  265              	.LFE3:
-ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccQrNA9y.s 			page 7
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccDPUeSD.s 			page 7
 
 
  267              		.section	.text.rtIsNaNF,"ax",%progbits
@@ -418,7 +418,7 @@ ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccQrNA9y.s 			page 1
  311 001c 0BB9     		cbnz	r3, .L32
   87:rt_nonfinite.c ****   return (boolean_T)( (tmp.wordL.wordLuint & 0x7F800000) == 0x7F800000 &&
  312              		.loc 1 87 72 view .LVU65
-ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccQrNA9y.s 			page 8
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccDPUeSD.s 			page 8
 
 
  313 001e 0020     		movs	r0, #0
@@ -474,37 +474,37 @@ ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccQrNA9y.s 			page 1
  373              		.file 4 "rt_nonfinite.h"
  374              		.file 5 "rtGetInf.h"
  375              		.file 6 "rtGetNaN.h"
-ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccQrNA9y.s 			page 9
+ARM GAS  C:\Users\ysl\AppData\Local\Temp\ccDPUeSD.s 			page 9
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 rt_nonfinite.c
-C:\Users\ysl\AppData\Local\Temp\ccQrNA9y.s:20     .text.rt_InitInfAndNaN:00000000 $t
-C:\Users\ysl\AppData\Local\Temp\ccQrNA9y.s:26     .text.rt_InitInfAndNaN:00000000 rt_InitInfAndNaN
-C:\Users\ysl\AppData\Local\Temp\ccQrNA9y.s:88     .text.rt_InitInfAndNaN:00000040 $d
-C:\Users\ysl\AppData\Local\Temp\ccQrNA9y.s:99     .text.rtIsInf:00000000 $t
-C:\Users\ysl\AppData\Local\Temp\ccQrNA9y.s:105    .text.rtIsInf:00000000 rtIsInf
-C:\Users\ysl\AppData\Local\Temp\ccQrNA9y.s:155    .text.rtIsInf:00000034 $d
-C:\Users\ysl\AppData\Local\Temp\ccQrNA9y.s:161    .text.rtIsInfF:00000000 $t
-C:\Users\ysl\AppData\Local\Temp\ccQrNA9y.s:167    .text.rtIsInfF:00000000 rtIsInfF
-C:\Users\ysl\AppData\Local\Temp\ccQrNA9y.s:203    .text.rtIsInfF:0000002c $d
-C:\Users\ysl\AppData\Local\Temp\ccQrNA9y.s:209    .text.rtIsNaN:00000000 $t
-C:\Users\ysl\AppData\Local\Temp\ccQrNA9y.s:215    .text.rtIsNaN:00000000 rtIsNaN
-C:\Users\ysl\AppData\Local\Temp\ccQrNA9y.s:263    .text.rtIsNaN:00000024 $d
-C:\Users\ysl\AppData\Local\Temp\ccQrNA9y.s:268    .text.rtIsNaNF:00000000 $t
-C:\Users\ysl\AppData\Local\Temp\ccQrNA9y.s:274    .text.rtIsNaNF:00000000 rtIsNaNF
-C:\Users\ysl\AppData\Local\Temp\ccQrNA9y.s:367    .bss.rtNaNF:00000000 rtNaNF
-C:\Users\ysl\AppData\Local\Temp\ccQrNA9y.s:353    .bss.rtMinusInfF:00000000 rtMinusInfF
-C:\Users\ysl\AppData\Local\Temp\ccQrNA9y.s:339    .bss.rtInfF:00000000 rtInfF
-C:\Users\ysl\AppData\Local\Temp\ccQrNA9y.s:360    .bss.rtNaN:00000000 rtNaN
-C:\Users\ysl\AppData\Local\Temp\ccQrNA9y.s:346    .bss.rtMinusInf:00000000 rtMinusInf
-C:\Users\ysl\AppData\Local\Temp\ccQrNA9y.s:332    .bss.rtInf:00000000 rtInf
-C:\Users\ysl\AppData\Local\Temp\ccQrNA9y.s:328    .bss.rtInf:00000000 $d
-C:\Users\ysl\AppData\Local\Temp\ccQrNA9y.s:335    .bss.rtInfF:00000000 $d
-C:\Users\ysl\AppData\Local\Temp\ccQrNA9y.s:342    .bss.rtMinusInf:00000000 $d
-C:\Users\ysl\AppData\Local\Temp\ccQrNA9y.s:349    .bss.rtMinusInfF:00000000 $d
-C:\Users\ysl\AppData\Local\Temp\ccQrNA9y.s:356    .bss.rtNaN:00000000 $d
-C:\Users\ysl\AppData\Local\Temp\ccQrNA9y.s:363    .bss.rtNaNF:00000000 $d
+C:\Users\ysl\AppData\Local\Temp\ccDPUeSD.s:20     .text.rt_InitInfAndNaN:00000000 $t
+C:\Users\ysl\AppData\Local\Temp\ccDPUeSD.s:26     .text.rt_InitInfAndNaN:00000000 rt_InitInfAndNaN
+C:\Users\ysl\AppData\Local\Temp\ccDPUeSD.s:88     .text.rt_InitInfAndNaN:00000040 $d
+C:\Users\ysl\AppData\Local\Temp\ccDPUeSD.s:99     .text.rtIsInf:00000000 $t
+C:\Users\ysl\AppData\Local\Temp\ccDPUeSD.s:105    .text.rtIsInf:00000000 rtIsInf
+C:\Users\ysl\AppData\Local\Temp\ccDPUeSD.s:155    .text.rtIsInf:00000034 $d
+C:\Users\ysl\AppData\Local\Temp\ccDPUeSD.s:161    .text.rtIsInfF:00000000 $t
+C:\Users\ysl\AppData\Local\Temp\ccDPUeSD.s:167    .text.rtIsInfF:00000000 rtIsInfF
+C:\Users\ysl\AppData\Local\Temp\ccDPUeSD.s:203    .text.rtIsInfF:0000002c $d
+C:\Users\ysl\AppData\Local\Temp\ccDPUeSD.s:209    .text.rtIsNaN:00000000 $t
+C:\Users\ysl\AppData\Local\Temp\ccDPUeSD.s:215    .text.rtIsNaN:00000000 rtIsNaN
+C:\Users\ysl\AppData\Local\Temp\ccDPUeSD.s:263    .text.rtIsNaN:00000024 $d
+C:\Users\ysl\AppData\Local\Temp\ccDPUeSD.s:268    .text.rtIsNaNF:00000000 $t
+C:\Users\ysl\AppData\Local\Temp\ccDPUeSD.s:274    .text.rtIsNaNF:00000000 rtIsNaNF
+C:\Users\ysl\AppData\Local\Temp\ccDPUeSD.s:367    .bss.rtNaNF:00000000 rtNaNF
+C:\Users\ysl\AppData\Local\Temp\ccDPUeSD.s:353    .bss.rtMinusInfF:00000000 rtMinusInfF
+C:\Users\ysl\AppData\Local\Temp\ccDPUeSD.s:339    .bss.rtInfF:00000000 rtInfF
+C:\Users\ysl\AppData\Local\Temp\ccDPUeSD.s:360    .bss.rtNaN:00000000 rtNaN
+C:\Users\ysl\AppData\Local\Temp\ccDPUeSD.s:346    .bss.rtMinusInf:00000000 rtMinusInf
+C:\Users\ysl\AppData\Local\Temp\ccDPUeSD.s:332    .bss.rtInf:00000000 rtInf
+C:\Users\ysl\AppData\Local\Temp\ccDPUeSD.s:328    .bss.rtInf:00000000 $d
+C:\Users\ysl\AppData\Local\Temp\ccDPUeSD.s:335    .bss.rtInfF:00000000 $d
+C:\Users\ysl\AppData\Local\Temp\ccDPUeSD.s:342    .bss.rtMinusInf:00000000 $d
+C:\Users\ysl\AppData\Local\Temp\ccDPUeSD.s:349    .bss.rtMinusInfF:00000000 $d
+C:\Users\ysl\AppData\Local\Temp\ccDPUeSD.s:356    .bss.rtNaN:00000000 $d
+C:\Users\ysl\AppData\Local\Temp\ccDPUeSD.s:363    .bss.rtNaNF:00000000 $d
 
 UNDEFINED SYMBOLS
 rtGetNaN

@@ -3,9 +3,9 @@
  *
  * Code generated for Simulink model 'Follow_Balance'.
  *
- * Model version                  : 1.5
+ * Model version                  : 1.6
  * Simulink Coder version         : 9.6 (R2021b) 14-May-2021
- * C/C++ source code generated on : Mon Mar 27 15:08:52 2023
+ * C/C++ source code generated on : Tue Apr 11 20:11:05 2023
  *
  * Target selection: stacklite_dualdrive.tlc
  * Embedded hardware selection: Intel->x86-64 (Windows64)
@@ -42,12 +42,13 @@ extern int16_t motor2_PwmData;
 extern uint8_t led_data;
 extern uint8_t ws2812_data[3];
 extern union _floatchar DataLink_RevData[10];//data config from host
+extern int32_t RPi_Revdata[4];         //data rev from RPi
 
 /* Model step function */
 void Follow_Balance_step(void)
 {
   real_T rtb_Add1;
-  real_T rtb_Switch2;
+  real_T tmp;
   int32_T angle_yaw;
   int32_T rtb_Add1_m;
   real32_T rtb_Add1_e;
@@ -135,14 +136,14 @@ void Follow_Balance_step(void)
   DataLink_UpFrameData.data[13].point= 0.0F;
   DataLink_UpFrameData.data[14].point= 0.0F;
   DataLink_UpFrameData.data[15].point= 0.0F;
-  DataLink_UpFrameData.data[16].point= 0.0F;
-  DataLink_UpFrameData.data[17].point= 0.0F;
+  DataLink_UpFrameData.data[16].point= Follow_Balance_B.DataStoreRead14;
+  DataLink_UpFrameData.data[17].point= Follow_Balance_B.DataTypeConversion11;
   DataLink_UpFrameData.data[18].point= Follow_Balance_B.DataStoreRead19;
   DataLink_UpFrameData.data[19].point= Follow_Balance_B.DataStoreRead20;
 
   /* S-Function (StackLiteDualDrive_Output): '<Root>/Output' */
   /*Output Data*/
-  motor1_PwmData= Follow_Balance_B.Saturation;
+  motor1_PwmData= Follow_Balance_B.Saturation_d;
   motor2_PwmData= Follow_Balance_B.Saturation1;
   HAL_GPIO_WritePin(USER_LED_GPIO_Port,USER_LED_Pin,(GPIO_PinState)((uint8_T)0U));
   memcpy(ws2812_data,((const uint8_T*) &Follow_Balance_U8GND),3);
@@ -199,68 +200,68 @@ void Follow_Balance_step(void)
   /* End of Outputs for SubSystem: '<Root>/encoder to rpm' */
 
   /* Outputs for Enabled SubSystem: '<Root>/speedPID_motor' incorporates:
-   *  EnablePort: '<S17>/Enable'
+   *  EnablePort: '<S16>/Enable'
    */
   /* RelationalOperator: '<S3>/Compare' incorporates:
    *  Constant: '<S3>/Constant'
    *  UnitDelay: '<S9>/Output'
    */
   if (Follow_Balance_DW.Output_DSTATE_i == 1) {
-    /* Sum: '<S51>/Add1' incorporates:
+    /* Sum: '<S42>/Add1' incorporates:
      *  DataStoreRead: '<Root>/Data Store Read4'
-     *  Sum: '<S51>/Add2'
+     *  Sum: '<S42>/Add2'
      */
     rtb_Add1 = Follow_Balance_DW.tar_speed - (Follow_Balance_B.Divide +
       Follow_Balance_B.Divide1);
 
-    /* Gain: '<S53>/Gain1' incorporates:
-     *  DataStoreRead: '<S53>/Data Store Read1'
-     *  Delay: '<S53>/Delay'
-     *  Gain: '<S53>/Gain'
-     *  Product: '<S53>/Product3'
-     *  Sum: '<S53>/Add2'
+    /* Gain: '<S44>/Gain1' incorporates:
+     *  DataStoreRead: '<S44>/Data Store Read1'
+     *  Delay: '<S44>/Delay'
+     *  Gain: '<S44>/Gain'
+     *  Product: '<S44>/Product3'
+     *  Sum: '<S44>/Add2'
      */
     Follow_Balance_DW.Delay_DSTATE_i = ((real32_T)(0.001 *
       Follow_Balance_DW.Ki_speed * rtb_Add1) + Follow_Balance_DW.Delay_DSTATE_i)
       * 0.995F;
 
-    /* Saturate: '<S53>/Saturation2' */
+    /* Saturate: '<S44>/Saturation2' */
     if (Follow_Balance_DW.Delay_DSTATE_i > 1500.0F) {
-      /* Gain: '<S53>/Gain1' */
+      /* Gain: '<S44>/Gain1' */
       Follow_Balance_DW.Delay_DSTATE_i = 1500.0F;
     } else if (Follow_Balance_DW.Delay_DSTATE_i < -1500.0F) {
-      /* Gain: '<S53>/Gain1' */
+      /* Gain: '<S44>/Gain1' */
       Follow_Balance_DW.Delay_DSTATE_i = -1500.0F;
     }
 
-    /* End of Saturate: '<S53>/Saturation2' */
+    /* End of Saturate: '<S44>/Saturation2' */
 
-    /* Sum: '<S51>/Add' incorporates:
-     *  Constant: '<S54>/Constant'
-     *  DataStoreRead: '<S52>/Data Store Read2'
-     *  Delay: '<S53>/Delay'
-     *  Gain: '<S52>/Gain'
-     *  Gain: '<S54>/Gain'
-     *  Product: '<S52>/Product2'
-     *  Product: '<S54>/Product'
-     *  Sum: '<S55>/Diff'
-     *  UnitDelay: '<S55>/UD'
+    /* Sum: '<S42>/Add' incorporates:
+     *  Constant: '<S45>/Constant'
+     *  DataStoreRead: '<S43>/Data Store Read2'
+     *  Delay: '<S44>/Delay'
+     *  Gain: '<S43>/Gain'
+     *  Gain: '<S45>/Gain'
+     *  Product: '<S43>/Product2'
+     *  Product: '<S45>/Product'
+     *  Sum: '<S46>/Diff'
+     *  UnitDelay: '<S46>/UD'
      *
-     * Block description for '<S55>/Diff':
+     * Block description for '<S46>/Diff':
      *
      *  Add in CPU
      *
-     * Block description for '<S55>/UD':
+     * Block description for '<S46>/UD':
      *
      *  Store in Global RAM
      */
-    Follow_Balance_B.Add_b = (0.02 * rtb_Add1 + Follow_Balance_DW.Delay_DSTATE_i)
+    Follow_Balance_B.Add = (0.021 * rtb_Add1 + Follow_Balance_DW.Delay_DSTATE_i)
       + 0.001 * Follow_Balance_DW.Kd_speed * (rtb_Add1 -
       Follow_Balance_DW.UD_DSTATE_o);
 
-    /* Update for UnitDelay: '<S55>/UD'
+    /* Update for UnitDelay: '<S46>/UD'
      *
-     * Block description for '<S55>/UD':
+     * Block description for '<S46>/UD':
      *
      *  Store in Global RAM
      */
@@ -273,7 +274,7 @@ void Follow_Balance_step(void)
   /* Sum: '<Root>/Add' incorporates:
    *  DataStoreRead: '<Root>/Data Store Read1'
    */
-  rtb_Add1 = Follow_Balance_B.Add_b + Follow_Balance_DW.machine_mid;
+  rtb_Add1 = Follow_Balance_B.Add + Follow_Balance_DW.machine_mid;
 
   /* Sum: '<Root>/Add1' incorporates:
    *  DataStoreRead: '<Root>/Data Store Read13'
@@ -282,50 +283,65 @@ void Follow_Balance_step(void)
   rtb_Add1_m = angle_yaw - Follow_Balance_DW.yaw_begin;
 
   /* Outputs for Enabled SubSystem: '<Root>/turnPID' incorporates:
-   *  EnablePort: '<S18>/Enable'
+   *  EnablePort: '<S17>/Enable'
    */
   /* RelationalOperator: '<S4>/Compare' incorporates:
    *  Constant: '<S4>/Constant'
    *  UnitDelay: '<S10>/Output'
    */
   if (Follow_Balance_DW.Output_DSTATE_a == 1) {
-    /* Sum: '<S18>/Add1' incorporates:
+    /* Sum: '<S17>/Add1' incorporates:
      *  DataStoreRead: '<Root>/Data Store Read5'
      *  Sum: '<Root>/Add1'
      */
     rtb_Product3_p = Follow_Balance_DW.tar_yaw - (real32_T)rtb_Add1_m *
       3.81469727E-6F;
 
-    /* Sum: '<S57>/Add2' incorporates:
-     *  Constant: '<S57>/Constant1'
-     *  Delay: '<S57>/Delay'
-     *  Gain: '<S57>/Gain'
-     *  Product: '<S57>/Product3'
+    /* Sum: '<S48>/Add2' incorporates:
+     *  Constant: '<S48>/Constant1'
+     *  Delay: '<S48>/Delay'
+     *  Gain: '<S48>/Gain'
+     *  Product: '<S48>/Product3'
      */
-    Follow_Balance_DW.Delay_DSTATE_n += (real32_T)(-0.01 * rtb_Product3_p);
+    Follow_Balance_DW.Delay_DSTATE_n += (real32_T)(-0.02 * rtb_Product3_p);
 
-    /* Saturate: '<S57>/Saturation' */
+    /* Saturate: '<S48>/Saturation' */
     if (Follow_Balance_DW.Delay_DSTATE_n > 2000.0F) {
-      /* Sum: '<S57>/Add2' */
+      /* Sum: '<S48>/Add2' */
       Follow_Balance_DW.Delay_DSTATE_n = 2000.0F;
     } else if (Follow_Balance_DW.Delay_DSTATE_n < -2000.0F) {
-      /* Sum: '<S57>/Add2' */
+      /* Sum: '<S48>/Add2' */
       Follow_Balance_DW.Delay_DSTATE_n = -2000.0F;
     }
 
-    /* End of Saturate: '<S57>/Saturation' */
+    /* End of Saturate: '<S48>/Saturation' */
 
-    /* Sum: '<S18>/Add' incorporates:
-     *  Constant: '<S56>/Constant2'
-     *  Constant: '<S58>/Constant'
-     *  Delay: '<S57>/Delay'
+    /* Sum: '<S17>/Add' incorporates:
+     *  Constant: '<S47>/Constant2'
+     *  Constant: '<S49>/Constant'
+     *  Delay: '<S48>/Delay'
      *  Gain: '<Root>/Gain2'
-     *  Product: '<S56>/Product2'
-     *  Product: '<S58>/Product'
+     *  Product: '<S47>/Product2'
+     *  Product: '<S49>/Product'
      */
-    Follow_Balance_B.Add = 26214.0 * (real_T)Follow_Balance_B.anglev[2] *
-      3.814697265625E-6 * 2.0 + (-30.0 * rtb_Product3_p +
+    Follow_Balance_B.Saturation = 26214.0 * (real_T)Follow_Balance_B.anglev[2] *
+      3.814697265625E-6 * 3.0 + (-27.0 * rtb_Product3_p +
       Follow_Balance_DW.Delay_DSTATE_n);
+
+    /* Saturate: '<S17>/Saturation' */
+    if (Follow_Balance_B.Saturation > 1000.0) {
+      /* Sum: '<S17>/Add' incorporates:
+       *  Saturate: '<S17>/Saturation'
+       */
+      Follow_Balance_B.Saturation = 1000.0;
+    } else if (Follow_Balance_B.Saturation < -1000.0) {
+      /* Sum: '<S17>/Add' incorporates:
+       *  Saturate: '<S17>/Saturation'
+       */
+      Follow_Balance_B.Saturation = -1000.0;
+    }
+
+    /* End of Saturate: '<S17>/Saturation' */
   }
 
   /* End of RelationalOperator: '<S4>/Compare' */
@@ -339,13 +355,13 @@ void Follow_Balance_step(void)
    *  UnitDelay: '<S7>/Output'
    */
   if (Follow_Balance_DW.Output_DSTATE_i5 == 1) {
-    int16_T tmp;
+    int16_T tmp_0;
 
     /* Abs: '<Root>/Abs' */
     if (Follow_Balance_B.angle[1] < 0) {
-      tmp = (int16_T)-Follow_Balance_B.angle[1];
+      tmp_0 = (int16_T)-Follow_Balance_B.angle[1];
     } else {
-      tmp = Follow_Balance_B.angle[1];
+      tmp_0 = Follow_Balance_B.angle[1];
     }
 
     /* End of Abs: '<Root>/Abs' */
@@ -353,11 +369,10 @@ void Follow_Balance_step(void)
     /* Switch: '<Root>/Switch' incorporates:
      *  Gain: '<Root>/Gain'
      */
-    if (tmp > 3500) {
-      rtb_Switch2 = rtb_Add1;
+    if (tmp_0 > 3500) {
+      tmp = rtb_Add1;
     } else {
-      rtb_Switch2 = 20972.0 * (real_T)Follow_Balance_B.angle[1] *
-        4.76837158203125E-7;
+      tmp = 20972.0 * (real_T)Follow_Balance_B.angle[1] * 4.76837158203125E-7;
     }
 
     /* End of Switch: '<Root>/Switch' */
@@ -371,7 +386,7 @@ void Follow_Balance_step(void)
      *  Sum: '<S11>/Add1'
      */
     Follow_Balance_B.Add_o = 26214.0 * (real_T)Follow_Balance_B.anglev[0] *
-      3.814697265625E-6 * -3.0 + (rtb_Add1 - rtb_Switch2) * 50.0;
+      3.814697265625E-6 * -6.0 + (rtb_Add1 - tmp) * 54.0;
   }
 
   /* End of RelationalOperator: '<S1>/Compare' */
@@ -436,11 +451,19 @@ void Follow_Balance_step(void)
   /* DataStoreRead: '<Root>/Data Store Read10' */
   Follow_Balance_B.DataStoreRead10 = Follow_Balance_DW.tar_yaw;
 
+  /* DataStoreRead: '<Root>/Data Store Read14' */
+  Follow_Balance_B.DataStoreRead14 = Follow_Balance_DW.tar_yaw;
+
   /* DataStoreRead: '<Root>/Data Store Read19' */
   Follow_Balance_B.DataStoreRead19 = Follow_Balance_DW.usart_input3;
 
   /* DataStoreRead: '<Root>/Data Store Read20' */
   Follow_Balance_B.DataStoreRead20 = Follow_Balance_DW.usart_input4;
+
+  /* DataTypeConversion: '<Root>/Data Type Conversion11' incorporates:
+   *  DataStoreRead: '<Root>/Data Store Read9'
+   */
+  Follow_Balance_B.DataTypeConversion11 = (real32_T)angle_yaw * 3.81469727E-6F;
 
   /* DataTypeConversion: '<Root>/Data Type Conversion3' incorporates:
    *  Sum: '<Root>/Add1'
@@ -453,7 +476,7 @@ void Follow_Balance_step(void)
   Follow_Balance_B.DataTypeConversion8 = (real32_T)Follow_Balance_DW.tar_speed;
 
   /* Sum: '<Root>/Add2' */
-  rtb_Add1 = Follow_Balance_B.Add + Follow_Balance_B.Add_o;
+  rtb_Add1 = Follow_Balance_B.Saturation + Follow_Balance_B.Add_o;
 
   /* Saturate: '<Root>/Saturation3' */
   if (rtb_Add1 > 2048.0) {
@@ -462,34 +485,34 @@ void Follow_Balance_step(void)
     rtb_Add1 = -2048.0;
   }
 
-  rtb_Switch2 = floor(rtb_Add1);
-  if (rtIsNaN(rtb_Switch2)) {
-    rtb_Switch2 = 0.0;
+  tmp = floor(rtb_Add1);
+  if (rtIsNaN(tmp)) {
+    tmp = 0.0;
   } else {
-    rtb_Switch2 = fmod(rtb_Switch2, 65536.0);
+    tmp = fmod(tmp, 65536.0);
   }
 
   /* Switch: '<S20>/Switch1' incorporates:
    *  Saturate: '<Root>/Saturation3'
    */
-  Follow_Balance_B.Saturation = (int16_T)(rtb_Switch2 < 0.0 ? (int32_T)(int16_T)
-    -(int16_T)(uint16_T)-rtb_Switch2 : (int32_T)(int16_T)(uint16_T)rtb_Switch2);
+  Follow_Balance_B.Saturation_d = (int16_T)(tmp < 0.0 ? (int32_T)(int16_T)
+    -(int16_T)(uint16_T)-tmp : (int32_T)(int16_T)(uint16_T)tmp);
 
   /* RateLimiter: '<Root>/Rate Limiter1' */
-  if (Follow_Balance_B.Saturation - Follow_Balance_DW.PrevY > 5) {
+  if (Follow_Balance_B.Saturation_d - Follow_Balance_DW.PrevY > 5) {
     /* Switch: '<S20>/Switch1' */
-    Follow_Balance_B.Saturation = (int16_T)(Follow_Balance_DW.PrevY + 5);
-  } else if (Follow_Balance_B.Saturation - Follow_Balance_DW.PrevY < -5) {
+    Follow_Balance_B.Saturation_d = (int16_T)(Follow_Balance_DW.PrevY + 5);
+  } else if (Follow_Balance_B.Saturation_d - Follow_Balance_DW.PrevY < -5) {
     /* Switch: '<S20>/Switch1' */
-    Follow_Balance_B.Saturation = (int16_T)(Follow_Balance_DW.PrevY + -5);
+    Follow_Balance_B.Saturation_d = (int16_T)(Follow_Balance_DW.PrevY + -5);
   }
 
-  Follow_Balance_DW.PrevY = Follow_Balance_B.Saturation;
+  Follow_Balance_DW.PrevY = Follow_Balance_B.Saturation_d;
 
   /* End of RateLimiter: '<Root>/Rate Limiter1' */
 
   /* Sum: '<Root>/Add3' */
-  rtb_Add1 = Follow_Balance_B.Add_o - Follow_Balance_B.Add;
+  rtb_Add1 = Follow_Balance_B.Add_o - Follow_Balance_B.Saturation;
 
   /* Saturate: '<Root>/Saturation2' */
   if (rtb_Add1 > 2048.0) {
@@ -498,18 +521,18 @@ void Follow_Balance_step(void)
     rtb_Add1 = -2048.0;
   }
 
-  rtb_Switch2 = floor(rtb_Add1);
-  if (rtIsNaN(rtb_Switch2)) {
-    rtb_Switch2 = 0.0;
+  tmp = floor(rtb_Add1);
+  if (rtIsNaN(tmp)) {
+    tmp = 0.0;
   } else {
-    rtb_Switch2 = fmod(rtb_Switch2, 65536.0);
+    tmp = fmod(tmp, 65536.0);
   }
 
   /* Switch: '<S21>/Switch1' incorporates:
    *  Saturate: '<Root>/Saturation2'
    */
-  Follow_Balance_B.Saturation1 = (int16_T)(rtb_Switch2 < 0.0 ? (int32_T)(int16_T)
-    -(int16_T)(uint16_T)-rtb_Switch2 : (int32_T)(int16_T)(uint16_T)rtb_Switch2);
+  Follow_Balance_B.Saturation1 = (int16_T)(tmp < 0.0 ? (int32_T)(int16_T)
+    -(int16_T)(uint16_T)-tmp : (int32_T)(int16_T)(uint16_T)tmp);
 
   /* RateLimiter: '<Root>/Rate Limiter2' */
   rtb_Add1_m = Follow_Balance_B.Saturation1 - Follow_Balance_DW.PrevY_n;
@@ -529,7 +552,7 @@ void Follow_Balance_step(void)
    *  DataStoreWrite: '<Root>/Data Store Write6'
    *  Delay: '<S12>/Delay One Step'
    */
-  rtb_Product3_p = (real32_T)Follow_Balance_B.Saturation -
+  rtb_Product3_p = (real32_T)Follow_Balance_B.Saturation_d -
     Follow_Balance_DW.DelayOneStep_DSTATE;
 
   /* Sum: '<S35>/Add2' incorporates:
@@ -581,35 +604,33 @@ void Follow_Balance_step(void)
     if (Follow_Balance_DW.DelayOneStep_DSTATE > 30.0F) {
       /* Switch: '<S20>/Switch2' */
       if (rtb_Add1 > 0.0) {
-        rtb_Switch2 = floor(rtb_Add1);
-        if (rtIsInf(rtb_Switch2)) {
+        tmp = floor(rtb_Add1);
+        if (rtIsInf(tmp)) {
           /* Switch: '<S20>/Switch1' */
-          Follow_Balance_B.Saturation = 0;
+          Follow_Balance_B.Saturation_d = 0;
         } else {
           /* Switch: '<S20>/Switch1' */
-          Follow_Balance_B.Saturation = (int16_T)(int32_T)fmod(rtb_Switch2,
-            65536.0);
+          Follow_Balance_B.Saturation_d = (int16_T)(int32_T)fmod(tmp, 65536.0);
         }
       } else {
         /* Switch: '<S20>/Switch1' incorporates:
          *  Constant: '<S20>/Constant'
          */
-        Follow_Balance_B.Saturation = 10;
+        Follow_Balance_B.Saturation_d = 10;
       }
 
       /* End of Switch: '<S20>/Switch2' */
     } else {
-      rtb_Switch2 = floor(rtb_Add1);
-      if (rtIsNaN(rtb_Switch2) || rtIsInf(rtb_Switch2)) {
-        rtb_Switch2 = 0.0;
+      tmp = floor(rtb_Add1);
+      if (rtIsNaN(tmp) || rtIsInf(tmp)) {
+        tmp = 0.0;
       } else {
-        rtb_Switch2 = fmod(rtb_Switch2, 65536.0);
+        tmp = fmod(tmp, 65536.0);
       }
 
       /* Switch: '<S20>/Switch1' */
-      Follow_Balance_B.Saturation = (int16_T)(rtb_Switch2 < 0.0 ? (int32_T)
-        (int16_T)-(int16_T)(uint16_T)-rtb_Switch2 : (int32_T)(int16_T)(uint16_T)
-        rtb_Switch2);
+      Follow_Balance_B.Saturation_d = (int16_T)(tmp < 0.0 ? (int32_T)(int16_T)
+        -(int16_T)(uint16_T)-tmp : (int32_T)(int16_T)(uint16_T)tmp);
     }
 
     /* End of Switch: '<S20>/Switch' */
@@ -618,37 +639,36 @@ void Follow_Balance_step(void)
      *  Constant: '<S20>/Constant1'
      *  Switch: '<S20>/Switch3'
      */
-    Follow_Balance_B.Saturation = -10;
+    Follow_Balance_B.Saturation_d = -10;
   } else {
     /* Switch: '<S20>/Switch3' */
-    rtb_Switch2 = floor(rtb_Add1);
-    if (rtIsNaN(rtb_Switch2) || rtIsInf(rtb_Switch2)) {
-      rtb_Switch2 = 0.0;
+    tmp = floor(rtb_Add1);
+    if (rtIsNaN(tmp) || rtIsInf(tmp)) {
+      tmp = 0.0;
     } else {
-      rtb_Switch2 = fmod(rtb_Switch2, 65536.0);
+      tmp = fmod(tmp, 65536.0);
     }
 
     /* Switch: '<S20>/Switch1' incorporates:
      *  Switch: '<S20>/Switch3'
      */
-    Follow_Balance_B.Saturation = (int16_T)(rtb_Switch2 < 0.0 ? (int32_T)
-      (int16_T)-(int16_T)(uint16_T)-rtb_Switch2 : (int32_T)(int16_T)(uint16_T)
-      rtb_Switch2);
+    Follow_Balance_B.Saturation_d = (int16_T)(tmp < 0.0 ? (int32_T)(int16_T)
+      -(int16_T)(uint16_T)-tmp : (int32_T)(int16_T)(uint16_T)tmp);
   }
 
   /* End of Switch: '<S20>/Switch1' */
 
   /* Saturate: '<Root>/Saturation' */
-  if (Follow_Balance_B.Saturation > 4200) {
+  if (Follow_Balance_B.Saturation_d > 4200) {
     /* Switch: '<S20>/Switch1' incorporates:
      *  Saturate: '<Root>/Saturation'
      */
-    Follow_Balance_B.Saturation = 4200;
-  } else if (Follow_Balance_B.Saturation < -4200) {
+    Follow_Balance_B.Saturation_d = 4200;
+  } else if (Follow_Balance_B.Saturation_d < -4200) {
     /* Switch: '<S20>/Switch1' incorporates:
      *  Saturate: '<Root>/Saturation'
      */
-    Follow_Balance_B.Saturation = -4200;
+    Follow_Balance_B.Saturation_d = -4200;
   }
 
   /* End of Saturate: '<Root>/Saturation' */
@@ -709,14 +729,13 @@ void Follow_Balance_step(void)
     if (Follow_Balance_DW.DelayOneStep_DSTATE_d > 30.0F) {
       /* Switch: '<S21>/Switch2' */
       if (rtb_Add1 > 0.0) {
-        rtb_Switch2 = floor(rtb_Add1);
-        if (rtIsInf(rtb_Switch2)) {
+        tmp = floor(rtb_Add1);
+        if (rtIsInf(tmp)) {
           /* Switch: '<S21>/Switch1' */
           Follow_Balance_B.Saturation1 = 0;
         } else {
           /* Switch: '<S21>/Switch1' */
-          Follow_Balance_B.Saturation1 = (int16_T)(int32_T)fmod(rtb_Switch2,
-            65536.0);
+          Follow_Balance_B.Saturation1 = (int16_T)(int32_T)fmod(tmp, 65536.0);
         }
       } else {
         /* Switch: '<S21>/Switch1' incorporates:
@@ -727,17 +746,16 @@ void Follow_Balance_step(void)
 
       /* End of Switch: '<S21>/Switch2' */
     } else {
-      rtb_Switch2 = floor(rtb_Add1);
-      if (rtIsNaN(rtb_Switch2) || rtIsInf(rtb_Switch2)) {
-        rtb_Switch2 = 0.0;
+      tmp = floor(rtb_Add1);
+      if (rtIsNaN(tmp) || rtIsInf(tmp)) {
+        tmp = 0.0;
       } else {
-        rtb_Switch2 = fmod(rtb_Switch2, 65536.0);
+        tmp = fmod(tmp, 65536.0);
       }
 
       /* Switch: '<S21>/Switch1' */
-      Follow_Balance_B.Saturation1 = (int16_T)(rtb_Switch2 < 0.0 ? (int32_T)
-        (int16_T)-(int16_T)(uint16_T)-rtb_Switch2 : (int32_T)(int16_T)(uint16_T)
-        rtb_Switch2);
+      Follow_Balance_B.Saturation1 = (int16_T)(tmp < 0.0 ? (int32_T)(int16_T)
+        -(int16_T)(uint16_T)-tmp : (int32_T)(int16_T)(uint16_T)tmp);
     }
 
     /* End of Switch: '<S21>/Switch' */
@@ -749,19 +767,18 @@ void Follow_Balance_step(void)
     Follow_Balance_B.Saturation1 = -10;
   } else {
     /* Switch: '<S21>/Switch3' */
-    rtb_Switch2 = floor(rtb_Add1);
-    if (rtIsNaN(rtb_Switch2) || rtIsInf(rtb_Switch2)) {
-      rtb_Switch2 = 0.0;
+    tmp = floor(rtb_Add1);
+    if (rtIsNaN(tmp) || rtIsInf(tmp)) {
+      tmp = 0.0;
     } else {
-      rtb_Switch2 = fmod(rtb_Switch2, 65536.0);
+      tmp = fmod(tmp, 65536.0);
     }
 
     /* Switch: '<S21>/Switch1' incorporates:
      *  Switch: '<S21>/Switch3'
      */
-    Follow_Balance_B.Saturation1 = (int16_T)(rtb_Switch2 < 0.0 ? (int32_T)
-      (int16_T)-(int16_T)(uint16_T)-rtb_Switch2 : (int32_T)(int16_T)(uint16_T)
-      rtb_Switch2);
+    Follow_Balance_B.Saturation1 = (int16_T)(tmp < 0.0 ? (int32_T)(int16_T)
+      -(int16_T)(uint16_T)-tmp : (int32_T)(int16_T)(uint16_T)tmp);
   }
 
   /* End of Switch: '<S21>/Switch1' */
@@ -781,11 +798,10 @@ void Follow_Balance_step(void)
 
   /* End of Saturate: '<Root>/Saturation1' */
 
-  /* Gain: '<Root>/Gain5' incorporates:
-   *  DataStoreRead: '<Root>/Data Store Read18'
-   *  DataStoreWrite: '<Root>/Data Store Write11'
+  /* DataStoreWrite: '<Root>/Data Store Write15' incorporates:
+   *  Constant: '<Root>/Constant'
    */
-  Follow_Balance_DW.tar_yaw = -Follow_Balance_DW.usart_input3;
+  Follow_Balance_DW.machine_mid = 2.0;
 
   /* S-Function (StackLiteDualDrive_DataLinkInput): '<Root>/DataLinkInput' */
 
@@ -801,122 +817,163 @@ void Follow_Balance_step(void)
   Follow_Balance_B.DataLinkInput_o9= DataLink_RevData[8].point;
   Follow_Balance_B.DataLinkInput_o10= DataLink_RevData[9].point;
 
-  /* DataStoreWrite: '<Root>/Data Store Write10' */
-  Follow_Balance_DW.usart_input4 = Follow_Balance_B.DataLinkInput_o5;
+  /* S-Function (StackLiteDualDrive_RPiDataInput): '<Root>/RPiDataInput' */
 
-  /* DataStoreWrite: '<Root>/Data Store Write5' */
-  Follow_Balance_DW.usart_input3 = Follow_Balance_B.DataLinkInput_o4;
+  /*RPi Input Data*/
+  Follow_Balance_B.RPiDataInput_o1= RPi_Revdata[0];
+  Follow_Balance_B.RPiDataInput_o2= RPi_Revdata[1];
+  Follow_Balance_B.RPiDataInput_o3= RPi_Revdata[2];
+  Follow_Balance_B.RPiDataInput_o4= RPi_Revdata[3];
 
-  /* DataStoreRead: '<S16>/Data Store Read17' */
+  /* DataTypeConversion: '<Root>/Data Type Conversion4' incorporates:
+   *  DataStoreWrite: '<Root>/Data Store Write13'
+   */
+  Follow_Balance_DW.usart_input4 = (real32_T)Follow_Balance_B.RPiDataInput_o4;
+
+  /* DataTypeConversion: '<Root>/Data Type Conversion' incorporates:
+   *  DataStoreWrite: '<Root>/Data Store Write4'
+   */
+  Follow_Balance_DW.usart_input3 = (real32_T)Follow_Balance_B.RPiDataInput_o3;
+
+  /* DataStoreRead: '<S18>/Data Store Read17' */
   rtb_Add1 = Follow_Balance_DW.tar_lenth;
 
-  /* Gain: '<S44>/Gain1' incorporates:
-   *  DataStoreRead: '<S16>/Data Store Read17'
-   *  DataStoreWrite: '<Root>/Data Store Write2'
-   *  Delay: '<S44>/Delay'
-   *  ManualSwitch: '<S44>/Manual Switch1'
-   *  Product: '<S44>/Product3'
-   *  Sum: '<S44>/Add2'
+  /* Gain: '<S53>/Gain1' incorporates:
+   *  Constant: '<S53>/Constant1'
+   *  DataStoreRead: '<S18>/Data Store Read17'
+   *  Delay: '<S53>/Delay'
+   *  Product: '<S53>/Product3'
+   *  Sum: '<S53>/Add2'
    */
-  Follow_Balance_DW.Delay_DSTATE_a = ((real32_T)
-    (Follow_Balance_B.DataLinkInput_o2 * Follow_Balance_DW.tar_lenth) +
-    Follow_Balance_DW.Delay_DSTATE_a) * 0.995;
+  Follow_Balance_DW.Delay_DSTATE_a = ((real32_T)(-0.1 *
+    Follow_Balance_DW.tar_lenth) + Follow_Balance_DW.Delay_DSTATE_a) * 0.995;
 
-  /* Sum: '<S16>/Add4' incorporates:
-   *  DataStoreRead: '<S16>/Data Store Read17'
-   *  DataStoreWrite: '<Root>/Data Store Write1'
-   *  DataStoreWrite: '<Root>/Data Store Write3'
-   *  DataStoreWrite: '<S16>/Data Store Write14'
-   *  Delay: '<S44>/Delay'
-   *  ManualSwitch: '<S42>/Manual Switch2'
-   *  ManualSwitch: '<S45>/Manual Switch'
-   *  Product: '<S42>/Product2'
-   *  Product: '<S45>/Product'
-   *  Sum: '<S47>/Diff'
-   *  UnitDelay: '<S47>/UD'
+  /* Sum: '<S18>/Add4' incorporates:
+   *  Constant: '<S50>/Constant2'
+   *  Constant: '<S54>/Constant'
+   *  DataStoreRead: '<S18>/Data Store Read17'
+   *  DataStoreWrite: '<S18>/Data Store Write14'
+   *  Delay: '<S53>/Delay'
+   *  Product: '<S50>/Product2'
+   *  Product: '<S54>/Product'
+   *  Sum: '<S57>/Diff'
+   *  UnitDelay: '<S57>/UD'
    *
-   * Block description for '<S47>/Diff':
+   * Block description for '<S57>/Diff':
    *
    *  Add in CPU
    *
-   * Block description for '<S47>/UD':
+   * Block description for '<S57>/UD':
    *
    *  Store in Global RAM
    */
-  Follow_Balance_DW.tar_speed = (Follow_Balance_B.DataLinkInput_o1 *
-    Follow_Balance_DW.tar_lenth + Follow_Balance_DW.Delay_DSTATE_a) +
-    (Follow_Balance_DW.tar_lenth - Follow_Balance_DW.UD_DSTATE) *
-    Follow_Balance_B.DataLinkInput_o3;
+  Follow_Balance_DW.tar_speed = (-10.0 * Follow_Balance_DW.tar_lenth +
+    Follow_Balance_DW.Delay_DSTATE_a) + (Follow_Balance_DW.tar_lenth -
+    Follow_Balance_DW.UD_DSTATE) * 0.0;
 
-  /* Outputs for Enabled SubSystem: '<S16>/Enabled Subsystem' incorporates:
-   *  EnablePort: '<S43>/Enable'
+  /* Outputs for Enabled SubSystem: '<S18>/Enabled Subsystem' incorporates:
+   *  EnablePort: '<S51>/Enable'
    */
-  /* Switch: '<S16>/Switch3' incorporates:
-   *  DataStoreRead: '<S16>/Data Store Read16'
-   *  Logic: '<S46>/AND1'
-   *  Logic: '<S46>/AND2'
-   *  Logic: '<S46>/NOT'
-   *  Logic: '<S46>/NOT1'
-   *  Logic: '<S46>/NOT2'
-   *  Logic: '<S46>/OR'
+  /* Switch: '<S18>/Switch3' incorporates:
+   *  DataStoreRead: '<S18>/Data Store Read16'
+   *  Logic: '<S55>/AND1'
+   *  Logic: '<S55>/AND2'
+   *  Logic: '<S55>/NOT'
+   *  Logic: '<S55>/NOT1'
+   *  Logic: '<S55>/NOT2'
+   *  Logic: '<S55>/OR'
    */
   if (!(Follow_Balance_DW.usart_input4 != 0.0F)) {
-    /* DataStoreWrite: '<S43>/Data Store Write' incorporates:
-     *  Constant: '<S43>/Constant'
+    /* DataStoreWrite: '<S51>/Data Store Write' incorporates:
+     *  Constant: '<S51>/Constant'
      */
     Follow_Balance_DW.tar_lenth = 0.0;
   } else {
-    /* Outputs for Enabled SubSystem: '<S16>/Subsystem' incorporates:
-     *  EnablePort: '<S46>/Enable'
-     */
-    /* Switch: '<S46>/Switch2' */
-    rtb_Switch2 = (Follow_Balance_DW.usart_input4 > 37.0F);
+    int32_T rtb_Switch1_l;
 
-    /* Switch: '<S46>/Switch1' */
-    rtb_Add1_m = !(Follow_Balance_DW.usart_input4 > 32.0F);
-
-    /* Outputs for Enabled SubSystem: '<S46>/Enabled Subsystem' incorporates:
-     *  EnablePort: '<S48>/Enable'
+    /* Outputs for Enabled SubSystem: '<S18>/Subsystem' incorporates:
+     *  EnablePort: '<S55>/Enable'
      */
-    if ((!(rtb_Switch2 != 0.0)) && (rtb_Add1_m == 0)) {
-      /* DataStoreWrite: '<S48>/Data Store Write' incorporates:
-       *  Constant: '<S48>/Constant'
+    /* Switch: '<S55>/Switch2' */
+    rtb_Add1_m = (Follow_Balance_DW.usart_input4 > 37.0F);
+
+    /* Switch: '<S55>/Switch1' */
+    rtb_Switch1_l = !(Follow_Balance_DW.usart_input4 > 32.0F);
+
+    /* Outputs for Enabled SubSystem: '<S55>/Enabled Subsystem' incorporates:
+     *  EnablePort: '<S58>/Enable'
+     */
+    if ((rtb_Add1_m == 0) && (rtb_Switch1_l == 0)) {
+      /* DataStoreWrite: '<S58>/Data Store Write' incorporates:
+       *  Constant: '<S58>/Constant'
        */
       Follow_Balance_DW.tar_lenth = 0.0;
     }
 
-    /* End of Outputs for SubSystem: '<S46>/Enabled Subsystem' */
+    /* End of Outputs for SubSystem: '<S55>/Enabled Subsystem' */
 
-    /* Outputs for Enabled SubSystem: '<S46>/Enabled Subsystem1' incorporates:
-     *  EnablePort: '<S49>/Enable'
+    /* Outputs for Enabled SubSystem: '<S55>/Enabled Subsystem1' incorporates:
+     *  EnablePort: '<S59>/Enable'
      */
-    if ((rtb_Switch2 != 0.0) && (rtb_Add1_m == 0)) {
-      /* Sum: '<S49>/Add' incorporates:
-       *  Constant: '<S49>/Constant'
-       *  DataStoreWrite: '<S49>/Data Store Write'
+    if ((rtb_Add1_m != 0) && (rtb_Switch1_l == 0)) {
+      /* Sum: '<S59>/Add' incorporates:
+       *  Constant: '<S59>/Constant'
+       *  DataStoreWrite: '<S59>/Data Store Write'
        */
       Follow_Balance_DW.tar_lenth = 37.0 - Follow_Balance_DW.usart_input4;
     }
 
-    /* End of Outputs for SubSystem: '<S46>/Enabled Subsystem1' */
+    /* End of Outputs for SubSystem: '<S55>/Enabled Subsystem1' */
 
-    /* Outputs for Enabled SubSystem: '<S46>/Enabled Subsystem2' incorporates:
-     *  EnablePort: '<S50>/Enable'
+    /* Outputs for Enabled SubSystem: '<S55>/Enabled Subsystem2' incorporates:
+     *  EnablePort: '<S60>/Enable'
      */
-    if ((!(rtb_Switch2 != 0.0)) && (rtb_Add1_m != 0)) {
-      /* Sum: '<S50>/Add' incorporates:
-       *  Constant: '<S50>/Constant'
-       *  DataStoreWrite: '<S50>/Data Store Write'
+    if ((rtb_Add1_m == 0) && (rtb_Switch1_l != 0)) {
+      /* Sum: '<S60>/Add' incorporates:
+       *  Constant: '<S60>/Constant'
+       *  DataStoreWrite: '<S60>/Data Store Write'
        */
       Follow_Balance_DW.tar_lenth = 32.0 - Follow_Balance_DW.usart_input4;
     }
 
-    /* End of Outputs for SubSystem: '<S46>/Enabled Subsystem2' */
-    /* End of Outputs for SubSystem: '<S16>/Subsystem' */
+    /* End of Outputs for SubSystem: '<S55>/Enabled Subsystem2' */
+    /* End of Outputs for SubSystem: '<S18>/Subsystem' */
   }
 
-  /* End of Switch: '<S16>/Switch3' */
-  /* End of Outputs for SubSystem: '<S16>/Enabled Subsystem' */
+  /* End of Switch: '<S18>/Switch3' */
+  /* End of Outputs for SubSystem: '<S18>/Enabled Subsystem' */
+
+  /* Outputs for Enabled SubSystem: '<S18>/Subsystem1' incorporates:
+   *  EnablePort: '<S56>/Enable'
+   */
+  /* Switch: '<S18>/Switch1' incorporates:
+   *  DataStoreRead: '<S18>/Data Store Read18'
+   */
+  if ((boolean_T)(Follow_Balance_DW.usart_input3 != 0.0F)) {
+    /* Gain: '<S56>/Gain5' incorporates:
+     *  DataStoreWrite: '<S56>/Data Store Write11'
+     */
+    Follow_Balance_DW.tar_yaw = -Follow_Balance_DW.usart_input3;
+
+    /* Delay: '<S56>/Delay' */
+    Follow_Balance_B.Delay = Follow_Balance_DW.Delay_DSTATE_p;
+
+    /* Update for Delay: '<S56>/Delay' incorporates:
+     *  DataStoreWrite: '<S56>/Data Store Write11'
+     */
+    Follow_Balance_DW.Delay_DSTATE_p = Follow_Balance_DW.tar_yaw;
+  } else {
+    /* Outputs for Enabled SubSystem: '<S18>/Enabled Subsystem1' incorporates:
+     *  EnablePort: '<S52>/Enable'
+     */
+    /* DataStoreWrite: '<S52>/Data Store Write' */
+    Follow_Balance_DW.tar_yaw = Follow_Balance_B.Delay;
+
+    /* End of Outputs for SubSystem: '<S18>/Enabled Subsystem1' */
+  }
+
+  /* End of Switch: '<S18>/Switch1' */
+  /* End of Outputs for SubSystem: '<S18>/Subsystem1' */
 
   /* Outputs for Enabled SubSystem: '<Root>/yaw to zero' incorporates:
    *  EnablePort: '<S19>/Enable'
@@ -959,9 +1016,9 @@ void Follow_Balance_step(void)
    */
   Follow_Balance_DW.UD_DSTATE_k = rtb_Add1_e;
 
-  /* Update for UnitDelay: '<S47>/UD'
+  /* Update for UnitDelay: '<S57>/UD'
    *
-   * Block description for '<S47>/UD':
+   * Block description for '<S57>/UD':
    *
    *  Store in Global RAM
    */

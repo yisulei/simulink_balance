@@ -74,7 +74,7 @@ SYS_TARGET_FILE = stacklite_dualdrive.tlc
 #  MODELREFS           - List of referenced models
 
 MODEL                = Follow_Balance
-MODULES              = StackLiteDualDrive_DataLinkInput.c StackLiteDualDrive_DataLinkOutput.c StackLiteDualDrive_Input.c StackLiteDualDrive_Output.c main.c rtGetInf.c rtGetNaN.c rt_nonfinite.c
+MODULES              = StackLiteDualDrive_DataLinkInput.c StackLiteDualDrive_DataLinkOutput.c StackLiteDualDrive_Input.c StackLiteDualDrive_Output.c StackLiteDualDrive_RPiDataInput.c main.c rtGetInf.c rtGetNaN.c rt_nonfinite.c
 MAKEFILE             = Follow_Balance.mk
 MATLAB_ROOT          = D:\software\MATLAB2021b
 ALT_MATLAB_ROOT      = D:\software\MATLAB2021b
